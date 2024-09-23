@@ -659,6 +659,7 @@ public class BackupResult extends MorpheusModel {
 		START_REQUESTED,
 		INITIALIZING,
 		IN_PROGRESS,
+		FLATTENING,
 		CANCEL_REQUESTED,
 		CANCELLED,
 		SUCCEEDED,
