@@ -16,6 +16,7 @@
 
 package com.morpheusdata.model.event;
 
+import com.morpheusdata.model.ComputeServer;
 import com.morpheusdata.model.ComputeServerGroup;
 
 import java.io.Serializable;
@@ -24,6 +25,7 @@ public class ClusterEvent implements Event<ClusterEvent.ClusterEventType>, Seria
 	protected String message;
 	protected ClusterEvent.ClusterEventType type;
 	protected ComputeServerGroup cluster;
+	protected ComputeServer server;
 
 	@Override
 	public String getMessage() {
@@ -49,6 +51,14 @@ public class ClusterEvent implements Event<ClusterEvent.ClusterEventType>, Seria
 
 	public void setCluster(ComputeServerGroup cluster) {
 		this.cluster = cluster;
+	}
+
+	public ComputeServer getServer() {
+		return server;
+	}
+
+	public void setServer(ComputeServer server) {
+		this.server = server;
 	}
 
 	public enum ClusterEventType implements EventType {
