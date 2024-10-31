@@ -451,7 +451,7 @@ public class NetworkUtility {
 		return ipv6String.toSequentialRange().getCount();
 	}
 
-	static public String getNextIpv6Address(String ipAddress,Integer increment, String endAddress) {
+	static public String getNextIpv6Address(String ipAddress,Integer increment, String endAddress) throws AddressStringException, UnknownHostException {
 		String[] ipArgs = ipAddress.split(":");
 		String[] ipEndArgs = endAddress.split(":");
 
@@ -520,7 +520,7 @@ public class NetworkUtility {
 			finalAddressArgs.add(ipSegment);
 		}
 		String finalAddress = String.join(":",finalAddressArgs);
-		return finalAddress;
+		return normalizeIpAddress(finalAddress);
 	}
 
 
@@ -621,7 +621,7 @@ public class NetworkUtility {
 		} else if(ipAddress.contains(":")) {
 			IPAddressString str = new IPAddressString(ipAddress);
 			IPAddress addr = str.toAddress();
-			return addr.toCompressedString();
+			return addr.toNormalizedString();
 		}
 		return ipAddress;
 	}
