@@ -441,7 +441,7 @@ public class NetworkUtility {
 		String address = ipv6String.toSequentialRange().getUpper().toCanonicalString();
 		try {
 			address = normalizeIpAddress(address);
-		} catch(Exception ignored) {}
+		} catch(UnknownHostException ignored) {}
 		return address;
 	}
 
@@ -450,7 +450,7 @@ public class NetworkUtility {
 		String address = ipv6String.toSequentialRange().getLower().toCanonicalString();
 		try {
 			address = normalizeIpAddress(address);
-		} catch(Exception ignored) {}
+		} catch(UnknownHostException ignored) {}
 		return address;
 	}
 
