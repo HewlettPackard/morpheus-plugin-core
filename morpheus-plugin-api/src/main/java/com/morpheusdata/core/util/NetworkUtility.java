@@ -615,8 +615,15 @@ public class NetworkUtility {
 		}
 	}
 
-	static public String normalizeIpAddress(String ipAddress) throws UnknownHostException {
-		return InetAddress.getByName(ipAddress).getHostAddress();
+	static public String normalizeIpAddress(String ipAddress) throws UnknownHostException, AddressStringException {
+		if(ipAddress == null) {
+			return null;
+		} else if(ipAddress.contains(":")) {
+			IPAddressString str = new IPAddressString(ipAddress);
+			IPAddress addr = str.toAddress();
+			return addr.toCompressedString();
+		}
+		return ipAddress;
 	}
 
 	static public String getIpAddressIndex(String name) {
