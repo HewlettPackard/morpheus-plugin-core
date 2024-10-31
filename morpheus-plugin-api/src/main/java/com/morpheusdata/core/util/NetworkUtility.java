@@ -604,6 +604,18 @@ public class NetworkUtility {
 		return rtn;
 	}
 
+	static public Boolean checkIpv6InCidrRange(String ipAddress, String cidr) {
+		Boolean rtn = false;
+		try {
+			IPAddressString ipv6String = new IPAddressString(ipAddress);
+			IPAddressString ipv6Cidr = new IPAddressString(cidr);
+			rtn = ipv6Cidr.toAddress().contains(ipv6String.toAddress());
+		} catch (Exception e) {
+			log.error("error checking ipv6 in cidr range: {}", e.getMessage(), e);
+		}
+		return rtn;
+	}
+
 	static public String getIpAddressType(String ipAddress) throws UnknownHostException {
 		InetAddress address = InetAddress.getByName(ipAddress);
 		if (address instanceof Inet6Address) {
