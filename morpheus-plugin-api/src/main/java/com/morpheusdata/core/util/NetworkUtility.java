@@ -451,7 +451,7 @@ public class NetworkUtility {
 		return ipv6String.toSequentialRange().getCount();
 	}
 
-	static public String getNextIpv6Address(String ipAddress,Integer increment, String endAddress) {
+	static public String getNextIpv6Address(String ipAddress,Integer increment, String endAddress) throws AddressStringException, UnknownHostException {
 		String[] ipArgs = ipAddress.split(":");
 		String[] ipEndArgs = endAddress.split(":");
 
@@ -520,7 +520,7 @@ public class NetworkUtility {
 			finalAddressArgs.add(ipSegment);
 		}
 		String finalAddress = String.join(":",finalAddressArgs);
-		return finalAddress;
+		return normalizeIpAddress(finalAddress);
 	}
 
 
@@ -604,6 +604,18 @@ public class NetworkUtility {
 		return rtn;
 	}
 
+	static public Boolean checkIpv6InCidrRange(String ipAddress, String cidr) {
+		Boolean rtn = false;
+		try {
+			IPAddressString ipv6String = new IPAddressString(ipAddress);
+			IPAddressString ipv6Cidr = new IPAddressString(cidr);
+			rtn = ipv6Cidr.toAddress().contains(ipv6String.toAddress());
+		} catch (Exception e) {
+			log.error("error checking ipv6 in cidr range: {}", e.getMessage(), e);
+		}
+		return rtn;
+	}
+
 	static public String getIpAddressType(String ipAddress) throws UnknownHostException {
 		InetAddress address = InetAddress.getByName(ipAddress);
 		if (address instanceof Inet6Address) {
@@ -615,8 +627,15 @@ public class NetworkUtility {
 		}
 	}
 
-	static public String normalizeIpAddress(String ipAddress) throws UnknownHostException {
-		return InetAddress.getByName(ipAddress).getHostAddress();
+	static public String normalizeIpAddress(String ipAddress) throws UnknownHostException, AddressStringException {
+		if(ipAddress == null) {
+			return null;
+		} else if(ipAddress.contains(":")) {
+			IPAddressString str = new IPAddressString(ipAddress);
+			IPAddress addr = str.toAddress();
+			return addr.toNormalizedString();
+		}
+		return ipAddress;
 	}
 
 	static public String getIpAddressIndex(String name) {
