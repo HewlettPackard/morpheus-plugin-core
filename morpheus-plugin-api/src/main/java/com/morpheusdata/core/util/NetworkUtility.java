@@ -438,12 +438,20 @@ public class NetworkUtility {
 
 	static public String getIpEndAddressFromCidr(String cidr) throws AddressStringException {
 		IPAddressString ipv6String = new IPAddressString(cidr);
-		return ipv6String.toSequentialRange().getUpper().toCanonicalString();
+		String address = ipv6String.toSequentialRange().getUpper().toCanonicalString();
+		try {
+			address = normalizeIpAddress(address);
+		} catch(Exception ignored) {}
+		return address;
 	}
 
 	static public String getIpStartAddressFromCidr(String cidr) throws AddressStringException {
 		IPAddressString ipv6String = new IPAddressString(cidr);
-		return ipv6String.toSequentialRange().getLower().toCanonicalString();
+		String address = ipv6String.toSequentialRange().getLower().toCanonicalString();
+		try {
+			address = normalizeIpAddress(address);
+		} catch(Exception ignored) {}
+		return address;
 	}
 
 	static public BigInteger getIpCountFromCidr(String cidr) throws AddressStringException  {
