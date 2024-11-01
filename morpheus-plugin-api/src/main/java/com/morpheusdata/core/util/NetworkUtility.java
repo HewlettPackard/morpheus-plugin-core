@@ -638,10 +638,13 @@ public class NetworkUtility {
 	static public String normalizeIpAddress(String ipAddress) throws UnknownHostException, AddressStringException {
 		if(ipAddress == null) {
 			return null;
-		} else if(ipAddress.contains(":")) {
+		} else {
 			IPAddressString str = new IPAddressString(ipAddress);
-			IPAddress addr = str.toAddress();
-			return addr.toNormalizedString();
+			str.validate(); //throws AddressStringException if invalid ipv4 or ipv6 address
+			if(ipAddress.contains(":")) { //normalize ipv6
+				IPAddress addr = str.toAddress();
+				return addr.toNormalizedString();
+			}
 		}
 		return ipAddress;
 	}
