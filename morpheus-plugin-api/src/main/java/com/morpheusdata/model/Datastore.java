@@ -55,6 +55,7 @@ public class Datastore extends DatastoreIdentityProjection {
 	protected StorageVolume storageVolume;
 	protected StorageServer storageServer;
 //	StorageHostGroup hostGroup
+	protected Boolean heartbeatTarget = false;
 	protected Boolean defaultStore = false;
 	protected Boolean isExported = false; //for auto adding datastores to clouds
 	protected Boolean isAssigned = false;
@@ -280,6 +281,14 @@ public class Datastore extends DatastoreIdentityProjection {
 
 	public void setStorageVolume(StorageVolume storageVolume) {
 		this.storageVolume = storageVolume;
+	}
+
+	public Boolean getHeartbeatTarget() {
+		return heartbeatTarget;
+	}
+
+	public void setHeartbeatTarget(Boolean heartbeatTarget) {
+		this.heartbeatTarget = heartbeatTarget && (datastoreType == null || datastoreType.heartbeatTargetCapable);
 	}
 
 	public Boolean getDefaultStore() {
