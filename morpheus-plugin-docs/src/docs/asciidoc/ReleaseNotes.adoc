@@ -1,6 +1,12 @@
 === Release Notes
 
-**Note:** Morpheus Plugin API is now 1.0! This means calls that are used will be supported for a longer period of time and given appropriate deprecation warnings when necessary. Morpheus Plugin API 1.1 requires a minimum Morpheus Version of `7.0.x`. Morpheus `6.2.x` still runs on Core version `0.15.x`
+**Note:** Morpheus Plugin API is now 1.0! This means calls that are used will be supported for a longer period of time and given appropriate deprecation warnings when necessary. Morpheus Plugin API 1.2 requires a minimum Morpheus Version of `8.0.x`. Morpheus `7.0.x` still runs on Core version `1.1.x`
+
+* **1.2.0**
+** OS Type Image support added to the various models to enable seeding and packaging of Os type based image associations.
+
+* **1.1.9, 1.2.0**
+** Added DatastoreTypeProvider plugin support for MVM. This allows custom datastore plugins to interact with hosts and LUNs throughout the provisioning vm process.
 
 * **1.1.6**
 ** Finalized GenericIntegrationProvider and created generator
