@@ -28,12 +28,12 @@ import com.morpheusdata.model.serializers.ModelCollectionIdUuidCodeNameSerialize
 public class InstanceTypeLayout extends MorpheusModel implements IModelUuidCodeName {
 
 	//ownership
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Account account;
 	//related models
-	@JsonSerialize(using=ModelIdCodeNameSerializer.class)
+	@JsonSerialize(using= ModelIdCodeNameSerializer.class)
 	protected InstanceType instanceType;
-	@JsonSerialize(using=ModelIdCodeNameSerializer.class)
+	@JsonSerialize(using= ModelIdCodeNameSerializer.class)
 	protected ProvisionType provisionType;
 
 	//fields
@@ -78,7 +78,7 @@ public class InstanceTypeLayout extends MorpheusModel implements IModelUuidCodeN
 	protected List<OptionType> optionTypes;
 	@JsonSerialize(using = ModelCollectionIdUuidCodeNameSerializer.class)
 	protected List<ResourceSpecTemplate> specTemplates;
-	@JsonSerialize(using=ModelCollectionAsIdsOnlySerializer.class)
+	@JsonSerialize(using= ModelCollectionAsIdsOnlySerializer.class)
 	protected List<WorkloadTypeSet> workloads;
 	@JsonSerialize(using = ModelCollectionIdCodeNameSerializer.class)
 	protected List<TaskSet> taskSets;

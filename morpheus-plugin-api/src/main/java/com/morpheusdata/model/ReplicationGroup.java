@@ -22,21 +22,21 @@ import com.morpheusdata.model.serializers.ModelAsIdOnlySerializer;
 
 public class ReplicationGroup extends MorpheusModel {
 
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Account account;
 	protected String name;
 	protected String code;
 	protected String category;
 	protected Boolean enabled = true;
 	protected String platform = "all"; //linux,windows,etc
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected BackupProvider backupProvider;
 	protected String internalId;
 	protected String externalId;
 	protected String refType;
 	protected Long refId;
 	protected String replicationServerId;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected ReplicationSite replicationSite;
 	//execution
 	protected Date lastReplication;

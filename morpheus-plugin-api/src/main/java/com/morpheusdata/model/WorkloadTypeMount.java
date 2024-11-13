@@ -41,7 +41,7 @@ public class WorkloadTypeMount extends MorpheusModel implements IModelCodeName {
 	protected Boolean subMount;
 	protected Boolean deployable;
 	protected Boolean fileMount;
-	@JsonSerialize(using=ModelIdCodeNameSerializer.class)
+	@JsonSerialize(using= ModelIdCodeNameSerializer.class)
 	protected WorkloadTemplate template;
 	protected String fileOwner;
 	protected String fileGroup;

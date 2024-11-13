@@ -23,21 +23,21 @@ import com.morpheusdata.model.serializers.ModelAsIdOnlySerializer;
 
 public class Backup extends MorpheusModel {
 
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Account account;
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected User createdBy;
 	protected String name;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected BackupProvider backupProvider;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected BackupType backupType;
 	// TODO: create storage bucket model
 	protected StorageBucket storageProvider;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected BackupRepository backupRepository;
 
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected BackupJob backupJob;
 	protected String backupSetId;
 	protected Boolean active = true;
@@ -47,7 +47,7 @@ public class Backup extends MorpheusModel {
 	protected String cronExpression;
 	protected Date lastExecution;
 	protected String lastBackupResultId; //going away with ES out
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected BackupResult lastResult;
 	protected String lastStatus;
 	protected Date nextFire;

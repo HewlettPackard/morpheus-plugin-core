@@ -440,11 +440,11 @@ public class NetworkPool extends NetworkPoolIdentityProjection {
 	protected String cidrIPv6;
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	public NetworkPoolServer poolServer;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	public Account account;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	public Account owner;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	public NetworkPoolType type;
 	public String parentType;
 	public String parentId;

@@ -21,7 +21,7 @@ import com.morpheusdata.model.serializers.ModelAsIdOnlySerializer;
 
 public class ExecuteSchedule extends MorpheusModel {
 
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected ExecuteScheduleType type;
 	protected String scheduleTimezone;
 	protected String refType;

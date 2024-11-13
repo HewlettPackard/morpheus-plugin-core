@@ -22,9 +22,9 @@ import com.morpheusdata.model.serializers.ModelAsIdOnlySerializer;
 
 public class AccountNamespace extends MorpheusModel {
 
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Account owner;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Account account;
 	protected String visibility;
 	protected Long integrationId;

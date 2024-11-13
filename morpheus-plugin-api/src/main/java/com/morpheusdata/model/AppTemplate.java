@@ -28,7 +28,7 @@ import com.morpheusdata.model.serializers.ModelCollectionIdUuidCodeNameSerialize
 public class AppTemplate extends MorpheusModel implements IModelUuidCodeName {
 
 	//owndership
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Account account;
 	//fields
 	protected User createdBy;

@@ -23,21 +23,21 @@ import com.morpheusdata.model.serializers.ModelAsIdOnlySerializer;
 
 public class BackupJob extends MorpheusModel {
 
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Account account;
 	protected String name;
 	protected String code;
 	protected String category;
 	protected Boolean enabled = true;
 	protected String platform = "all";
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected BackupProvider backupProvider;
 	protected String internalId;
 	protected String externalId;
 	protected String refType;
 	protected Long refId;
 	protected String backupServerId;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected BackupRepository backupRepository;
 	protected String cronExpression;
 	protected Date lastExecution;
@@ -49,7 +49,7 @@ public class BackupJob extends MorpheusModel {
 	protected Date lastUpdated;
 	protected String visibility = "private";
 	protected Integer retentionCount;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected ExecuteScheduleType scheduleType;
 
 	public Account getAccount() {

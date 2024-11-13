@@ -25,11 +25,11 @@ import java.util.*;
 public class NetworkLoadBalancer extends NetworkLoadBalancerIdentityProjection {
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Account account;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Account owner;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected NetworkLoadBalancerType type;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected CloudRegion region;
 
 	protected String name;
@@ -53,14 +53,14 @@ public class NetworkLoadBalancer extends NetworkLoadBalancerIdentityProjection {
 	protected String status = "ok"; //ok, error, warning, offline
 	protected String statusMessage;
 	protected Date statusDate;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected NetworkPool pool;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected AccountCertificate sslCert;
 	protected Long networkServerId;
 	protected String uuid = java.util.UUID.randomUUID().toString();
 	protected Double hourlyPrice = 0.0d;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Cloud cloud;
 	protected String serverName;
 	protected String poolName;

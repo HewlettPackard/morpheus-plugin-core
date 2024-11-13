@@ -28,7 +28,7 @@ import com.morpheusdata.model.serializers.ModelIdCodeNameSerializer;
 public class WorkloadType extends MorpheusModel implements IModelUuidCodeName {
 
 	//owndership
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Account account;
 	//fields
 	protected String code;

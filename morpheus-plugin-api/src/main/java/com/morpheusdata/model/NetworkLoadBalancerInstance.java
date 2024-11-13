@@ -81,7 +81,7 @@ public class NetworkLoadBalancerInstance extends LoadBalancerInstanceIdentityPro
 	protected String partition;
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected NetworkLoadBalancer loadBalancer;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected NetworkPool vipPool;
 
 	// the hasMany fields

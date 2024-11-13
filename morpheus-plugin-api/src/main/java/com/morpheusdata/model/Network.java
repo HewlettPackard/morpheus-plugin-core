@@ -97,7 +97,7 @@ public class Network extends NetworkIdentityProjection {
 	protected Integer cidrMask;
 	protected NetworkIdentityProjection parentNetwork;
 
-	@JsonSerialize(using=ModelCollectionAsIdsOnlySerializer.class)
+	@JsonSerialize(using= ModelCollectionAsIdsOnlySerializer.class)
 	protected List<NetworkSubnet> subnets = new ArrayList<>();
 
 	protected List<CloudPool> assignedZonePools = new ArrayList<>();

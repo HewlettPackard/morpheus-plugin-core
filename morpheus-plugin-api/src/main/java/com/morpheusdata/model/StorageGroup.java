@@ -24,7 +24,7 @@ import com.morpheusdata.model.serializers.ModelCollectionAsIdsOnlySerializer;
 
 public class StorageGroup extends MorpheusModel {
 
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Account owner;
 	protected String name;
 	protected String code;
@@ -50,7 +50,7 @@ public class StorageGroup extends MorpheusModel {
 	@JsonSerialize(using= ModelCollectionAsIdsOnlySerializer.class)
 	protected List<Account> accounts;
 
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected StorageServer storageServer;
 
 	public Account getOwner() {

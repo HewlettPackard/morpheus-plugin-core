@@ -35,16 +35,16 @@ public class AccountCredential extends AccountCredentialIdentityProjection {
 	//ownership
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Account account;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected User user;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected AccountIntegration integration;
 	//metadata
 	protected String name;
 	protected String code;
 	protected String category;
 	protected String description;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected AccountCredentialType type;
 	protected String typeName ;//saving type for a lookup domain if needed
 

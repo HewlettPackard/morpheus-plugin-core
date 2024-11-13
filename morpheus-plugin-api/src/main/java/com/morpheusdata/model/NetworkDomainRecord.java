@@ -39,9 +39,9 @@ public class NetworkDomainRecord extends NetworkDomainRecordIdentityProjection {
     protected String statusMessage;
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected NetworkPoolIp networkPoolIp;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected NetworkDomain networkDomain;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected User createdBy;
 
     public void setNetworkPoolIpId(Long id) {

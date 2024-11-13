@@ -25,7 +25,7 @@ import java.util.Collection;
  *
  * @author David Estes
  */
-public class ComputeServerType  extends MorpheusModel {
+public class ComputeServerType  extends MorpheusModel implements IModelCodeName {
 
 	protected String name;
 	protected String code;
