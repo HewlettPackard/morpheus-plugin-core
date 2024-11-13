@@ -33,12 +33,12 @@ public class Cloud extends CloudIdentityProjection {
 
 	protected String description;
 
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Account owner;
 	protected String visibility = "private"; //['public', 'private']
 	protected String location;
 	protected String timezone;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	public CloudType cloudType;
 	protected Boolean hasNativeSecurityGroups;
 	protected Date dateCreated;
@@ -94,12 +94,12 @@ public class Cloud extends CloudIdentityProjection {
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected NetworkSecurityServer securityServer; //integrated security service
 	protected String networkSecurityMode; // internal (to manage internal firewall for VMs) (ignored if securityServer is set - not used
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected NetworkServer networkServer; //virtual or physical network provider
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected CloudType type;
 	protected String backupMode = "internal"; //if backups are off,run by morpheus or a provider
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	public BackupProvider backupProvider; //integrated backup provider
 
 	protected Boolean autoRecoverPowerState = true;

@@ -23,10 +23,10 @@ import com.morpheusdata.model.serializers.ModelAsIdOnlySerializer;
 import java.util.Date;
 
 public class InstanceThreshold extends InstanceThresholdIdentityProjection {
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Account owner;
 	protected String type = "template"; // arm, template, morpheus, awsscalegroup
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected InstanceThreshold sourceThreshold;
 	protected Boolean systemCreated = true;
 	protected String code;

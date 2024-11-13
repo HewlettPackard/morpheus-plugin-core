@@ -9,7 +9,7 @@ public class RolePermission extends MorpheusModel {
 
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Role role;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Permission permission;
 	protected String access;
 	protected Date dateCreated;

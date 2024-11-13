@@ -23,7 +23,7 @@ import com.morpheusdata.model.serializers.ModelAsIdOnlySerializer;
 
 public class ExecuteScheduleType extends MorpheusModel {
 
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Account owner;
 	protected String name;
 	protected String code;

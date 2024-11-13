@@ -44,9 +44,9 @@ public class BackupProvider extends MorpheusModel {
 	protected Boolean credentialLoaded = false;
 	protected Map credentialData;
 
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected BackupProviderType type;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Account account;
 
 	public void setAccountId(Long id) {

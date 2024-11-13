@@ -23,7 +23,7 @@ import com.morpheusdata.model.serializers.ModelAsIdOnlySerializer;
 
 public class WorkloadTypeConfig extends MorpheusModel implements IModelCodeName {
 
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Account owner;
 	protected String code;
 	protected String name;

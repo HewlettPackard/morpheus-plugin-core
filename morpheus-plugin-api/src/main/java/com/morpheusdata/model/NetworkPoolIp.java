@@ -33,7 +33,7 @@ public class NetworkPoolIp extends NetworkPoolIpIdentityProjection {
 
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected NetworkPool networkPool;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected NetworkPoolRange networkPoolRange;
 	/**
 	 * Tracks the type of reservation this ip is. You can look at {@link IPType} for a list of available
@@ -60,9 +60,9 @@ public class NetworkPoolIp extends NetworkPoolIpIdentityProjection {
 	protected String refType;
 	protected Long refId;
 	protected Long subRefId; //for multiple nics on same host
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected NetworkDomain domain;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected User createdBy;
 
 	public NetworkPoolRange getNetworkPoolRange() {

@@ -27,7 +27,7 @@ import com.morpheusdata.model.serializers.ModelCollectionAsIdsOnlySerializer;
 
 public class StorageBucket extends StorageBucketIdentityProjection {
 
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected	Account account;
 	protected	String visibility = "private";
 	protected	Boolean active = true;
@@ -67,11 +67,11 @@ public class StorageBucket extends StorageBucketIdentityProjection {
 	//related objects
 	protected	StorageBucketIdentityProjection retentionProvider;
 	protected	DatastoreIdentityProjection datastore;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected	StorageServer storageServer;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected	StorageGroup storageGroup;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected	AccountNamespace namespace;
 	//status
 	protected	String status = "ok";

@@ -5,7 +5,7 @@ import com.morpheusdata.model.serializers.ModelAsIdOnlySerializer;
 
 public class Workspace extends MorpheusModel {
 
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Account account;
 	protected String code;
 	protected String name;

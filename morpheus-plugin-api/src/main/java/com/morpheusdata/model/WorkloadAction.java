@@ -24,7 +24,7 @@ import com.morpheusdata.model.serializers.ModelCollectionIdCodeNameSerializer;
 
 public class WorkloadAction extends MorpheusModel implements IModelUuidCodeName {
 
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Account account;
 	protected String code;
 	protected String name;
@@ -47,9 +47,9 @@ public class WorkloadAction extends MorpheusModel implements IModelUuidCodeName 
 	protected String syncSource;
 	
 	
-	@JsonSerialize(using=ModelCollectionIdCodeNameSerializer.class)
+	@JsonSerialize(using= ModelCollectionIdCodeNameSerializer.class)
 	protected Collection<WorkloadAction> reverseActions;
-	@JsonSerialize(using=ModelCollectionIdCodeNameSerializer.class)
+	@JsonSerialize(using= ModelCollectionIdCodeNameSerializer.class)
 	protected Collection<WorkloadType> workloadTypes;
 	
 	public Account getAccount() {

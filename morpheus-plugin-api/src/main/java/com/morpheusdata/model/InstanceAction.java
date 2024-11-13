@@ -22,7 +22,7 @@ import com.morpheusdata.model.serializers.ModelCollectionIdCodeNameSerializer;
 
 import java.util.Collection;
 
-public class InstanceAction extends MorpheusModel {
+public class InstanceAction extends MorpheusModel implements IModelUuidCodeName {
 
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Account account;
@@ -51,7 +51,7 @@ public class InstanceAction extends MorpheusModel {
 
 	@JsonSerialize(using= ModelCollectionIdCodeNameSerializer.class)
 	protected Collection<InstanceAction> reverseActions;
-	@JsonSerialize(using=ModelCollectionIdCodeNameSerializer.class)
+	@JsonSerialize(using= ModelCollectionIdCodeNameSerializer.class)
 	protected Collection<InstanceTypeLayout> layouts;
 
 	public String getCode() {

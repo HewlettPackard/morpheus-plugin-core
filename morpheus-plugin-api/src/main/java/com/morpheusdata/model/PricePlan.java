@@ -28,7 +28,7 @@ import java.util.Date;
 public class PricePlan extends PricePlanIdentityProjection {
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Account account;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Account owner;
 	protected String description;
 	protected String visibility = "public"; //['public', 'private'];
@@ -42,7 +42,7 @@ public class PricePlan extends PricePlanIdentityProjection {
 	protected String refType;
 	protected Long refId;
 	protected Boolean deletable = true;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	PricePlanType type;
 
 	public Account getAccount() {

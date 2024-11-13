@@ -35,7 +35,7 @@ public class NetworkDomain extends NetworkDomainIdentityProjection {
 
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Account account;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Account owner;
 
 	/**

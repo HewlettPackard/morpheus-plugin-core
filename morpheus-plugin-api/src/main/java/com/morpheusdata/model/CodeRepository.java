@@ -23,9 +23,9 @@ import java.util.List;
 
 public class CodeRepository extends MorpheusModel {
 
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Account account;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected AccountIntegration integration;
 	//protected Deployment deployment;
 	protected String name;

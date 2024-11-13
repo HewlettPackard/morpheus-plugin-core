@@ -34,9 +34,9 @@ public class WikiPage extends WikiPageIdentityProjection {
 	String content;
 	String contentFormatted;
 	String format = "markdown";
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	User createdBy;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	User updatedBy;
 	Date dateCreated;
 	Date lastUpdated;

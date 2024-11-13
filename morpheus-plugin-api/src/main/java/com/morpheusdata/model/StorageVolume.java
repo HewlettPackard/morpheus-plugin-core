@@ -64,11 +64,11 @@ public class StorageVolume extends StorageVolumeIdentityProjection {
 	protected String volumeName;
 	protected StorageServer storageServer;
 	
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected StorageGroup storageGroup;
 
 
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	public Account getAccount() {
 		return account;
 	}
