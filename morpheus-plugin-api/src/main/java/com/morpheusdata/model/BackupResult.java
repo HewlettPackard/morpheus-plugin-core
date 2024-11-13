@@ -99,6 +99,8 @@ public class BackupResult extends MorpheusModel {
 	protected Date dateCreated;
 	protected Date lastUpdated;
 
+	protected String source;
+
 	Long getBackupId() {
 		return backup.id;
 	}
@@ -642,6 +644,15 @@ public class BackupResult extends MorpheusModel {
 	public void setLastUpdated(Date lastUpdated) {
 		markDirty("lastUpdated", lastUpdated, this.lastUpdated);
 		this.lastUpdated = lastUpdated;
+	}
+
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		markDirty("source", source, this.source);
+		this.source = source;
 	}
 
 	public enum Status {
