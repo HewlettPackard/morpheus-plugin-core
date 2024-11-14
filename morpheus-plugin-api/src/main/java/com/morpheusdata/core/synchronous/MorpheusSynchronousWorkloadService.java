@@ -18,8 +18,18 @@ package com.morpheusdata.core.synchronous;
 
 import com.morpheusdata.core.MorpheusSynchronousIdentityService;
 import com.morpheusdata.core.MorpheusSynchronousDataService;
+import com.morpheusdata.core.MorpheusWorkloadTypeSetService;
+import com.morpheusdata.core.providers.CloudProvider;
 import com.morpheusdata.model.Workload;
 import com.morpheusdata.model.projection.WorkloadIdentityProjection;
 
 public interface MorpheusSynchronousWorkloadService extends MorpheusSynchronousDataService<Workload, WorkloadIdentityProjection>, MorpheusSynchronousIdentityService<WorkloadIdentityProjection> {
+
+	/**
+	 * Returns the workload type set context used for syncing workloads within Morpheus.
+	 * Typically this would be called by a {@link CloudProvider}.
+	 * @return An instance of the workload type set Context to be used for calls by various providers
+	 */
+	MorpheusSynchronousWorkloadTypeSetService getTypeSet();
+
 }
