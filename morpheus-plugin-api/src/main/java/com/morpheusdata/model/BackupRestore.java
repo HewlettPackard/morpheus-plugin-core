@@ -25,7 +25,7 @@ public class BackupRestore extends MorpheusModel {
 	/**
 	 * Account scope
 	 */
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Account account;
 
 	/**

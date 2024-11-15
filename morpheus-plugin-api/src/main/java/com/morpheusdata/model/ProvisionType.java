@@ -16,7 +16,7 @@
 
 package com.morpheusdata.model;
 
-public class ProvisionType extends MorpheusModel {
+public class ProvisionType extends MorpheusModel implements IModelCodeName {
 
 	protected String code;
 	protected String name;

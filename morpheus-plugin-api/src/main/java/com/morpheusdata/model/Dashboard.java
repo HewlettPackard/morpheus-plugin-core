@@ -25,7 +25,7 @@ public class Dashboard extends MorpheusModel {
 
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Account account;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected User user;
 
 	protected String uuid;

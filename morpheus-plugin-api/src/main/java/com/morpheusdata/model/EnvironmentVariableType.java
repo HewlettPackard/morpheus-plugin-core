@@ -22,7 +22,7 @@ import com.morpheusdata.model.serializers.ModelIdUuidCodeNameSerializer;
 
 public class EnvironmentVariableType extends MorpheusModel implements IModelCodeName {
 
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Account account;
 	protected String code;
 	protected String name;
@@ -30,7 +30,7 @@ public class EnvironmentVariableType extends MorpheusModel implements IModelCode
 	protected String evarName;
 	protected String defaultValue;
 	protected Integer sortOrder;
-	@JsonSerialize(using=ModelIdUuidCodeNameSerializer.class)
+	@JsonSerialize(using= ModelIdUuidCodeNameSerializer.class)
 	protected OptionType optionType;
 	protected Boolean export;
 	protected Boolean visible;

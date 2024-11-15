@@ -48,12 +48,12 @@ public class SecurityGroupLocation extends SecurityGroupLocationIdentityProjecti
 	//association - depends on where the rule comes from
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected NetworkSecurityServer securityServer;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected CloudPool zonePool;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected NetworkServer networkServer;
 	//	protected NetworkRouter networkRouter;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Network network;
 	//linking
 	protected String internalId;

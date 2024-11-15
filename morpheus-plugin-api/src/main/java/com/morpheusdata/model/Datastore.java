@@ -27,7 +27,7 @@ public class Datastore extends DatastoreIdentityProjection {
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Account owner;
 	protected String visibility="private";
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Cloud cloud;
 	protected String code;
 	protected String type = "generic";
@@ -51,7 +51,7 @@ public class Datastore extends DatastoreIdentityProjection {
 	protected Boolean online = true;
 	protected Boolean allowProvision = true;
 	protected Boolean allowExpand = true;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected StorageVolume storageVolume;
 	protected StorageServer storageServer;
 //	StorageHostGroup hostGroup
@@ -60,16 +60,16 @@ public class Datastore extends DatastoreIdentityProjection {
 	protected Boolean isExported = false; //for auto adding datastores to clouds
 	protected Boolean isAssigned = false;
 	protected Long freeSpace;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected CloudPool zonePool;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected StorageVolumeType volumeType;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected DatastoreType datastoreType;
 	protected String status = "provisioned";
 	protected String statusMessage;
 	protected String rawData;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected User createdBy;
 
 	protected List<Datastore> datastores = new ArrayList<>();

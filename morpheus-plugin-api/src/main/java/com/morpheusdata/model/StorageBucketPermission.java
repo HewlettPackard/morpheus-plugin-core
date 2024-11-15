@@ -23,7 +23,7 @@ import com.morpheusdata.model.serializers.ModelAsIdOnlySerializer;
 
 public class StorageBucketPermission extends MorpheusModel {
 
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Account account;
 	protected String category;
 	protected String code;

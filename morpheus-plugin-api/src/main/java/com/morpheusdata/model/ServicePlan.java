@@ -32,7 +32,7 @@ public class ServicePlan extends ServicePlanIdentityProjection {
 
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	public Account account;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	public Account owner;
 	public String description;
 	public String visibility = "public"; //['public', 'private'];

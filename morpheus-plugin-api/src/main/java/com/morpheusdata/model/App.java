@@ -36,9 +36,9 @@ public class App extends AppIdentityProjection {
 	protected String status;
 	protected String uuid;
 	//associations
-	@JsonSerialize(using=ModelIdUuidCodeNameSerializer.class)
+	@JsonSerialize(using= ModelIdUuidCodeNameSerializer.class)
 	protected AppTemplate template;
-	@JsonSerialize(using=ModelIdCodeNameSerializer.class)
+	@JsonSerialize(using= ModelIdCodeNameSerializer.class)
 	protected AppTemplateType templateType;
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected ComputeSite site;

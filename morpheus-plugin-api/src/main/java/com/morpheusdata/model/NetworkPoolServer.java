@@ -58,9 +58,9 @@ public class NetworkPoolServer extends MorpheusModel {
 	protected Date dateCreated;
 	protected Date lastUpdated;
 	protected NetworkPoolServerType type;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected AccountIntegration integration;
-	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Account account;
 
 	protected Map credentialData;
