@@ -35,6 +35,7 @@ public class StorageVolume extends StorageVolumeIdentityProjection {
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Account account;
 	protected Long cloudId;
+	protected String description;
 	protected String deviceName = "/dev/sda";
 	protected String deviceDisplayName;
 	protected Long maxStorage = 0l;
@@ -42,7 +43,6 @@ public class StorageVolume extends StorageVolumeIdentityProjection {
 	protected StorageVolumeType type;
 	protected Integer displayOrder = 0;
 	protected Boolean rootVolume = false;
-	protected String internalId;
 	protected String unitNumber;
 	protected DatastoreIdentity datastore;
 	protected Integer maxIOPS;
@@ -58,7 +58,6 @@ public class StorageVolume extends StorageVolumeIdentityProjection {
 	protected Long refId;
 	protected String regionCode;
 	protected String status = "provisioned";
-	protected String uuid = java.util.UUID.randomUUID().toString();
 	protected String sourceSnapshotId;
 	protected String poolName;
 	protected String volumeName;
@@ -67,6 +66,27 @@ public class StorageVolume extends StorageVolumeIdentityProjection {
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected StorageGroup storageGroup;
 
+	protected String volumeType = "disk";
+	protected String volumePath;
+	protected String diskType;
+	protected String StatusMessage;
+	protected String sourceId;
+	protected Boolean active = true;
+	protected Boolean resizeable = true;
+	protected Boolean planResizable = true;
+	protected Boolean readOnly = false;
+	protected Boolean online = true;
+	protected Boolean isExported = false;
+	protected Boolean isAssigned = false;
+	protected String provisionType;
+	protected String copyType;
+	protected String fiberWwn;
+	protected String imageType;
+	protected String sourceImage;
+	protected String fileName;
+	protected String claimName;
+	protected String sharePath;
+	protected String diskMode;
 
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	public Account getAccount() {
@@ -148,21 +168,7 @@ public class StorageVolume extends StorageVolumeIdentityProjection {
 		this.rootVolume = rootVolume;
 	}
 
-	/**
-	 * An internal ID for this StorageVolume. Not controlled by Morpheus.
-	 * @return internalId
-	 */
-	public String getInternalId() {
-		return internalId;
-	}
 
-	/**
-	 * An internal ID for this StorageVolume. Not controlled by Morpheus.
-	 * @param internalId internalId
-	 */
-	public void setInternalId(String internalId) {
-		this.internalId = internalId;
-	}
 
 	/**
 	 * The unit number
@@ -331,15 +337,6 @@ public class StorageVolume extends StorageVolumeIdentityProjection {
 
 	public void setStatus(String status) { this.status = status; }
 
-	public String getUuid() {
-		return uuid;
-	}
-
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
-		markDirty("uuid", uuid);
-	}
-
 	public String getSourceSnapshotId() {
 		return sourceSnapshotId;
 	}
@@ -396,5 +393,203 @@ public class StorageVolume extends StorageVolumeIdentityProjection {
 	public void setVolumeName(String volumeName) {
 		this.volumeName = volumeName;
 		markDirty("volumeName", volumeName);
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+		markDirty("description", description, this.description);
+	}
+
+	public String getVolumeType() {
+		return volumeType;
+	}
+
+	public void setVolumeType(String volumeType) {
+		this.volumeType = volumeType;
+		markDirty("volumeType", volumeType, this.volumeType);
+	}
+
+	public String getVolumePath() {
+		return volumePath;
+	}
+
+	public void setVolumePath(String volumePath) {
+		this.volumePath = volumePath;
+		markDirty("volumePath", volumePath, this.volumePath);
+	}
+
+	public String getDiskType() {
+		return diskType;
+	}
+
+	public void setDiskType(String diskType) {
+		this.diskType = diskType;
+		markDirty("diskType", diskType, this.diskType);
+	}
+
+	public String getStatusMessage() {
+		return StatusMessage;
+	}
+
+	public void setStatusMessage(String statusMessage) {
+		StatusMessage = statusMessage;
+		markDirty("StatusMessage", statusMessage, this.StatusMessage);
+	}
+
+	public String getSourceId() {
+		return sourceId;
+	}
+
+	public void setSourceId(String sourceId) {
+		this.sourceId = sourceId;
+		markDirty("sourceId", sourceId, this.sourceId);
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
+		markDirty("active", active, this.active);
+	}
+
+	public Boolean getResizeable() {
+		return resizeable;
+	}
+
+	public void setResizeable(Boolean resizeable) {
+		this.resizeable = resizeable;
+		markDirty("resizeable", resizeable, this.resizeable);
+	}
+
+	public Boolean getPlanResizable() {
+		return planResizable;
+	}
+
+	public void setPlanResizable(Boolean planResizable) {
+		this.planResizable = planResizable;
+		markDirty("planResizable", planResizable, this.planResizable);
+	}
+
+	public Boolean getReadOnly() {
+		return readOnly;
+	}
+
+	public void setReadOnly(Boolean readOnly) {
+		this.readOnly = readOnly;
+		markDirty("readOnly", readOnly, this.readOnly);
+	}
+
+	public Boolean getOnline() {
+		return online;
+	}
+
+	public void setOnline(Boolean online) {
+		this.online = online;
+		markDirty("online", online, this.online);
+	}
+
+	public Boolean getExported() {
+		return isExported;
+	}
+
+	public void setExported(Boolean exported) {
+		isExported = exported;
+		markDirty("isExported", exported, this.isExported);
+	}
+
+	public Boolean getAssigned() {
+		return isAssigned;
+	}
+
+	public void setAssigned(Boolean assigned) {
+		isAssigned = assigned;
+		markDirty("isAssigned", assigned, this.isAssigned);
+	}
+
+	public String getProvisionType() {
+		return provisionType;
+	}
+
+	public void setProvisionType(String provisionType) {
+		this.provisionType = provisionType;
+		markDirty("provisionType", provisionType, this.provisionType);
+	}
+
+	public String getCopyType() {
+		return copyType;
+	}
+
+	public void setCopyType(String copyType) {
+		this.copyType = copyType;
+		markDirty("copyType", copyType, this.copyType);
+	}
+
+	public String getFiberWwn() {
+		return fiberWwn;
+	}
+
+	public void setFiberWwn(String fiberWwn) {
+		this.fiberWwn = fiberWwn;
+		markDirty("fiberWwn", fiberWwn, this.fiberWwn);
+	}
+
+	public String getImageType() {
+		return imageType;
+	}
+
+	public void setImageType(String imageType) {
+		this.imageType = imageType;
+		markDirty("imageType", imageType, this.imageType);
+	}
+
+	public String getSourceImage() {
+		return sourceImage;
+	}
+
+	public void setSourceImage(String sourceImage) {
+		this.sourceImage = sourceImage;
+		markDirty("sourceImage", sourceImage, this.sourceImage);
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+		markDirty("fileName", fileName, this.fileName);
+	}
+
+	public String getClaimName() {
+		return claimName;
+	}
+
+	public void setClaimName(String claimName) {
+		this.claimName = claimName;
+		markDirty("claimName", claimName, this.claimName);
+	}
+
+	public String getSharePath() {
+		return sharePath;
+	}
+
+	public void setSharePath(String sharePath) {
+		this.sharePath = sharePath;
+		markDirty("sharePath", sharePath, this.sharePath);
+	}
+
+	public String getDiskMode() {
+		return diskMode;
+	}
+
+	public void setDiskMode(String diskMode) {
+		this.diskMode = diskMode;
+		markDirty("diskMode", diskMode, this.diskMode);
 	}
 }
