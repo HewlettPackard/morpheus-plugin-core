@@ -55,16 +55,16 @@ public class ComputeServerInterface extends MorpheusModel {
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected NetworkSubnet subnet;
 //	public NetworkGroup networkGroup;
-protected String networkPosition;
+	protected String networkPosition;
 	protected Integer displayOrder = 0;
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected NetworkPool networkPool;
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected NetworkDomain networkDomain;
 	protected List<NetAddress> addresses = new ArrayList<>();
-
+	protected List<ComputeServerInterface> interfaces = new ArrayList<>();
 	public ComputeServerInterfaceType type;
-protected String ipMode; //dhcp/static/pool
+	protected String ipMode; //dhcp/static/pool
 	protected Boolean replaceHostRecord;
 	protected String macAddress;
 	protected String externalType;
@@ -405,5 +405,14 @@ protected String ipMode; //dhcp/static/pool
 		} else {
 			this.addresses.add(new NetAddress(NetAddress.AddressType.IPV6,ipAddress));
 		}
+	}
+
+	public List<ComputeServerInterface> getInterfaces() {
+		return interfaces;
+	}
+
+	public void setInterfaces(List<ComputeServerInterface> interfaces) {
+		this.interfaces = interfaces;
+		markDirty("interfaces", interfaces);
 	}
 }
