@@ -87,6 +87,7 @@ public class StorageVolume extends StorageVolumeIdentityProjection {
 	protected String claimName;
 	protected String sharePath;
 	protected String diskMode;
+	protected String wwn;
 
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	public Account getAccount() {
@@ -537,6 +538,15 @@ public class StorageVolume extends StorageVolumeIdentityProjection {
 	public void setFiberWwn(String fiberWwn) {
 		this.fiberWwn = fiberWwn;
 		markDirty("fiberWwn", fiberWwn, this.fiberWwn);
+	}
+
+	public String getWwn() {
+		return wwn;
+	}
+
+	public void setWwn(String wwn) {
+		this.wwn = wwn;
+		markDirty("wwn", wwn, this.wwn);
 	}
 
 	public String getImageType() {
