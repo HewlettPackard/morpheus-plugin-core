@@ -16,16 +16,16 @@
 
 package com.morpheusdata.core.providers;
 
-import com.morpheusdata.model.AccountIntegration;
-import com.morpheusdata.model.AccountIntegrationType;
-import com.morpheusdata.model.Icon;
-import com.morpheusdata.model.OptionType;
+import com.morpheusdata.model.*;
 import com.morpheusdata.model.event.Event;
 import com.morpheusdata.model.event.EventType;
 import com.morpheusdata.model.event.NetworkEvent;
+import com.morpheusdata.response.ServiceResponse;
 import com.morpheusdata.views.HTMLResponse;
 
+import java.security.Provider;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Allows for the registration of a "Generic" {@link com.morpheusdata.model.AccountIntegrationType}.
@@ -39,6 +39,21 @@ import java.util.List;
  * @since 0.15.4
  */
 public interface GenericIntegrationProvider extends PluginProvider,UIExtensionProvider {
+
+	/**
+	 * Validation Method used to validate all inputs applied to the generic integration upon save.
+	 * If an input fails validation or authentication information cannot be verified, Error messages should be returned
+	 * via a {@link ServiceResponse} object where the key on the error is the field name and the value is the error message.
+	 * If the error is a generic authentication error or unknown error, a standard message can also be sent back in the response.
+	 * @since 1.1.10
+	 *
+	 * @param accountIntegration The Integration Object contains all the saved information regarding configuration of the Provider.
+	 * @param opts any custom payload submission options may exist here
+	 * @return A response is returned depending on if the inputs are valid or not.
+	 */
+	default public ServiceResponse verifyAccountIntegration(AccountIntegration accountIntegration, Map opts) {
+		return ServiceResponse.success(accountIntegration);
+	}
 
 	/**
 	 * The category of the integration. This is used to group integrations in the UI. Available categories are defined in {@link com.morpheusdata.model.AccountIntegration.Category}.
