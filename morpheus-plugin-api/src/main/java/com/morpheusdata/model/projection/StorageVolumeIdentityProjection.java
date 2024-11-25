@@ -26,9 +26,24 @@ import com.morpheusdata.model.projection.MorpheusIdentityModel;
  * @since 0.9.0
  */
 public class StorageVolumeIdentityProjection extends MorpheusIdentityModel {
+
+	protected String uuid = java.util.UUID.randomUUID().toString();
 	protected String externalId;
+	protected String internalId;
+	protected String uniqueId;
 	protected String name;
+	protected String shortName;
 	protected String storageVolumeTypeCode;
+	protected String category;
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+		markDirty("uuid", uuid);
+	}
 
 	public String getExternalId() {
 		return externalId;
@@ -53,5 +68,49 @@ public class StorageVolumeIdentityProjection extends MorpheusIdentityModel {
 	public void setStorageVolumeTypeCode(String code) {
 		this.storageVolumeTypeCode = code;
 		markDirty("storageVolumeTypeCode", code);
+	}
+
+	/**
+	 * An internal ID for this StorageVolume. Not controlled by Morpheus.
+	 * @return internalId
+	 */
+	public String getInternalId() {
+		return internalId;
+	}
+
+	/**
+	 * An internal ID for this StorageVolume. Not controlled by Morpheus.
+	 * @param internalId internalId
+	 */
+	public void setInternalId(String internalId) {
+		this.internalId = internalId;
+	}
+
+
+	public String getShortName() {
+		return shortName;
+	}
+
+	public void setShortName(String shortName) {
+		this.shortName = shortName;
+		markDirty("shortName", shortName, this.shortName);
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+		markDirty("category", category, this.category);
+	}
+
+	public String getUniqueId() {
+		return uniqueId;
+	}
+
+	public void setUniqueId(String uniqueId) {
+		this.uniqueId = uniqueId;
+		markDirty("uniqueId", uniqueId, this.uniqueId);
 	}
 }
