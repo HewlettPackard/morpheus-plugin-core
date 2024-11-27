@@ -147,6 +147,7 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 	protected String cloudConfigMeta;
 	protected String cloudConfigNetwork;
 	protected Boolean discovered;
+	protected String iScsiInitiatorName;
 	protected Date dateCreated;
 	protected Date lastUpdated;
 
@@ -480,6 +481,14 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 
 	public void setRegion(CloudRegion region) {
 		this.region = region;
+	}
+
+	public String getiScsiInitiatorName() {
+		return iScsiInitiatorName;
+	}
+
+	public void setiScsiInitiatorName(String iScsiInitiatorName) {
+		this.iScsiInitiatorName = iScsiInitiatorName;
 	}
 
 	public enum PowerState {
