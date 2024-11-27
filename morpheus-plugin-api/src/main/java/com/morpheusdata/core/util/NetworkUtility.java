@@ -266,6 +266,17 @@ public class NetworkUtility {
 		return rtn;
 	}
 
+	// get the cidr from an IPV6 address
+	static public String addressToCidrIPv6(String address) {
+		String rtn = null;
+		if(address != null && address.indexOf('/') > -1) {
+			inet.ipaddr.IPAddress subnetIpAddress = new inet.ipaddr.IPAddressString(address).getAddress();
+			rtn = subnetIpAddress.toPrefixBlock().toString();
+		}
+
+		return rtn;
+	}
+
 	static public String addressToSubnet(String address) {
 		String rtn = null;
 		if (address != null && address.indexOf('/') > -1) {
