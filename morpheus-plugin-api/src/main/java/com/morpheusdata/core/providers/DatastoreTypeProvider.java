@@ -186,7 +186,7 @@ public interface DatastoreTypeProvider extends PluginProvider {
 		 * @param volume
 		 * @return
 		 */
-		ServiceResponse<StorageVolume> prepareHostForVolume(ComputeServerGroup cluster, ComputeServer server, StorageVolume volume);
+		ServiceResponse<StorageVolume> prepareHostForVolume(ComputeServerGroup cluster, StorageVolume volume);
 
 		/**
 		 * When creating/defining a virtual machine in libvirt, an XML specification must be generated. Within this specificaiton are device elements corresponding
@@ -206,7 +206,7 @@ public interface DatastoreTypeProvider extends PluginProvider {
 		 * @param volume
 		 * @return
 		 */
-		ServiceResponse<StorageVolume> releaseVolumeFromHost(ComputeServerGroup cluster, ComputeServer server, StorageVolume volume);
+		ServiceResponse<StorageVolume> releaseVolumeFromHost(ComputeServerGroup cluster, StorageVolume volume);
 
 		/**
 		 * This represents a disk configuration for a virtual machine for libvirt/virsh XML specification as a disk device
