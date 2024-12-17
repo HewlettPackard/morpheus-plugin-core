@@ -113,4 +113,8 @@ public interface HostProvisionProvider extends ComputeProvisionProvider {
 		ServiceResponse resizeServer(ComputeServer server, ResizeRequest resizeRequest, Map opts);
 	}
 
+	public interface  finalizeHostFacet {
+		ServiceResponse finalizeHost(ComputeServer server);
+	}
+
 }
