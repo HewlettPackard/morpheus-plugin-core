@@ -23,7 +23,7 @@ import com.morpheusdata.model.event.NetworkEvent;
 import com.morpheusdata.response.ServiceResponse;
 import com.morpheusdata.views.HTMLResponse;
 
-import java.security.Provider;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -126,6 +126,19 @@ public interface GenericIntegrationProvider extends PluginProvider,UIExtensionPr
 		 */
 		List<EventType> getSupportedEventTypes();
 
+
+		/**
+		 * Gets the list of scopes to limit the events received by the subscriber. This is useful for filtering events based on the associations of the event subject.
+		 * For example, an integration may only want to receive events when the subject has an association to a cloud. When combined with event types, a provider could
+		 * subscribe to only create network on a cloud events.
+		 * @return list of event scopes
+		 */
+		default List<EventScope> getEventScopes() {
+			List<EventScope> scopes = new ArrayList<>();
+			scopes.add(EventScope.ALL);
+			return scopes;
+		};
+
 		/**
 		 * Method triggered when an event that was subscribed to is triggered. This is useful for capturing hooks like
 		 * perhaps, an action needs to be performed after a network is created or destroyed.
@@ -135,5 +148,11 @@ public interface GenericIntegrationProvider extends PluginProvider,UIExtensionPr
 		 * @see NetworkEvent
 		 */
 		void onEvent(E event, AccountIntegration integration);
+
+		enum EventScope {
+			ALL,
+			CLOUD,
+			CLUSTER
+		}
 	}
 }
