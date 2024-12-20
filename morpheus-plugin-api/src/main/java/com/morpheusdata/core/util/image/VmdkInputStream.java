@@ -303,135 +303,135 @@ public class VmdkInputStream  extends InputStream {
 
 	}
 
-	@Override
-	public int read(byte[] b, int off, int len) throws IOException {
-		int bytesRead = 0;
-		int writePosition = 0;
-		if(grainTable == null) {
-			loadNextGrainTable();
-		}
-		//lets see where we are
-		if(currentGrainTableEntry >= grainTable.vmdkGrainEntries.size()) {
-			//we need to read the next grain table
-			currentGrainTable++;
-			currentGrainTableEntry = 0;
-			grainTable = null;
-			if(tempFileInputStream != null) {
-				tempFileInputStream.close();
-				tempFile.delete();
-				tempFile = null;
-				tempFileInputStream = null;
-				tempFileReadPosition = 0;
-				tempFileStartPosition = 0;
-				tempFileSize = 0;
-			}
-
-			if(currentGrainTable >= vmdkDirectory.vmdkDirectoryEntries.size()) {
-				System.out.println("End of Directories: " + vmdkDirectory.vmdkDirectoryEntries.size());
-				return -1;
-			}
-			return read(b,off,len);
-		}
-		long grainTableEntry = grainTable.vmdkGrainEntries.get(currentGrainTableEntry);
-		if(grainTableEntry == 0) {
-			if(grainTablePosition >= vmdkHeader.getGrainNumberSectors() * 512) {
-				//we are at the end of the grain table
-				currentGrainTableEntry++;
-				grainTablePosition = 0;
-				//System.out.println("Zero Fill: " + currentGrainTableEntry);
-				return read(b,off,len);
-			} else {
-				long remainingZeroFill = vmdkHeader.getGrainNumberSectors() * 512 - grainTablePosition;
-				if(remainingZeroFill > len) {
-					remainingZeroFill = len;
-					//create zero  byte array of size remainingZeroFill
-					for(;writePosition<remainingZeroFill;writePosition++) {
-						b[off+writePosition] = 0;
-					}
-					grainTablePosition += writePosition;
-					return writePosition;
-				} else {
-					//create zero  byte array of size remainingZeroFill
-					for(;writePosition<remainingZeroFill;writePosition++) {
-						b[off+writePosition] = 0;
-					}
-					grainTablePosition = 0;
-					currentGrainTableEntry++;
-					int subRead = read(b,off+writePosition,len-writePosition);
-					if(subRead == -1) {
-						return writePosition;
-					} else {
-						return writePosition + subRead;
-					}
-				}
-			}
-		} else {
-			long grainDataPosition = grainTableEntry * 512L;
-			if(grainDataPosition >= tempFileStartPosition && grainDataPosition < tempFileStartPosition + tempFileSize) {
-				if(grainTablePosition >= vmdkHeader.getGrainNumberSectors() * 512) {
-					currentGrainTableEntry++;
-					grainTablePosition = 0;
-					if(tempFileGzipInputStream != null) {
-						tempFileGzipInputStream.close();
-						tempFileGzipInputStream = null;
-					}
-					return read();
-				} else {
-					if(vmdkHeader.isGrainDataCompressed()) {
-						int fread;
-						if(tempFileGzipInputStream == null) {
-							long skipAmount = ((grainDataPosition+grainTablePosition) - tempFileStartPosition) - tempFileReadPosition;
-							if(skipAmount >0) {
-								tempFileInputStream.skip(skipAmount);
-								tempFileReadPosition += skipAmount;
-							}
-							tempFileInputStream.skip(8);
-							tempFileReadPosition+=8;
-							byte[] buff = new byte[4];
-							int c = tempFileInputStream.read(buff);
-							if(c < 0) {
-								return -1;
-							}
-							tempFileReadPosition += 4;
-							long compressedSize = (((long) buff[0]) & 0xFFL) + ((((long) buff[1]) & 0xFFL) << 8) + ((((long) buff[2]) & 0xFFL) << 16) + ((((long) buff[3]) & 0xFFL) << 24);
-							byte[] compressedData = new byte[(int)compressedSize];
-							int bytesRead = tempFileInputStream.read(compressedData);
-							tempFileReadPosition+=bytesRead;
-							ByteArrayInputStream bis = new ByteArrayInputStream(compressedData);
-							tempFileGzipInputStream = new InflaterInputStream(bis);
-							grainTablePosition++;
-							fread = tempFileGzipInputStream.read();
-						} else {
-							grainTablePosition++;
-							fread = tempFileGzipInputStream.read();
-							if(fread == -1) {
-								throw new IOException("Premature end of file reached while reading grain data");
-							}
-						}
-						return fread;
-
-					} else {
-						long skipAmount = ((grainDataPosition+grainTablePosition) - tempFileStartPosition) - tempFileReadPosition;
-						if(skipAmount >0) {
-							tempFileInputStream.skip(skipAmount);
-							tempFileReadPosition += skipAmount;
-						}
-						tempFileReadPosition++;
-						grainTablePosition++;
-						int fread = tempFileInputStream.read();
-						if(fread == -1) {
-							throw new IOException("Premature end of file reached while reading grain data");
-						}
-						return fread;
-					}
-				}
-
-			} else {
-				throw new IOException("Grain Data Position is not in the temp file buffer - " + grainDataPosition + " File Start: " + tempFileStartPosition + " File End: " + (tempFileStartPosition + tempFileSize));
-			}
-		}
-
-	}
+//	@Override
+//	public int read(byte[] b, int off, int len) throws IOException {
+//		int bytesRead = 0;
+//		int writePosition = 0;
+//		if(grainTable == null) {
+//			loadNextGrainTable();
+//		}
+//		//lets see where we are
+//		if(currentGrainTableEntry >= grainTable.vmdkGrainEntries.size()) {
+//			//we need to read the next grain table
+//			currentGrainTable++;
+//			currentGrainTableEntry = 0;
+//			grainTable = null;
+//			if(tempFileInputStream != null) {
+//				tempFileInputStream.close();
+//				tempFile.delete();
+//				tempFile = null;
+//				tempFileInputStream = null;
+//				tempFileReadPosition = 0;
+//				tempFileStartPosition = 0;
+//				tempFileSize = 0;
+//			}
+//
+//			if(currentGrainTable >= vmdkDirectory.vmdkDirectoryEntries.size()) {
+//				System.out.println("End of Directories: " + vmdkDirectory.vmdkDirectoryEntries.size());
+//				return -1;
+//			}
+//			return read(b,off,len);
+//		}
+//		long grainTableEntry = grainTable.vmdkGrainEntries.get(currentGrainTableEntry);
+//		if(grainTableEntry == 0) {
+//			if(grainTablePosition >= vmdkHeader.getGrainNumberSectors() * 512) {
+//				//we are at the end of the grain table
+//				currentGrainTableEntry++;
+//				grainTablePosition = 0;
+//				//System.out.println("Zero Fill: " + currentGrainTableEntry);
+//				return read(b,off,len);
+//			} else {
+//				long remainingZeroFill = vmdkHeader.getGrainNumberSectors() * 512 - grainTablePosition;
+//				if(remainingZeroFill > len) {
+//					remainingZeroFill = len;
+//					//create zero  byte array of size remainingZeroFill
+//					for(;writePosition<remainingZeroFill;writePosition++) {
+//						b[off+writePosition] = 0;
+//					}
+//					grainTablePosition += writePosition;
+//					return writePosition;
+//				} else {
+//					//create zero  byte array of size remainingZeroFill
+//					for(;writePosition<remainingZeroFill;writePosition++) {
+//						b[off+writePosition] = 0;
+//					}
+//					grainTablePosition = 0;
+//					currentGrainTableEntry++;
+//					int subRead = read(b,off+writePosition,len-writePosition);
+//					if(subRead == -1) {
+//						return writePosition;
+//					} else {
+//						return writePosition + subRead;
+//					}
+//				}
+//			}
+//		} else {
+//			long grainDataPosition = grainTableEntry * 512L;
+//			if(grainDataPosition >= tempFileStartPosition && grainDataPosition < tempFileStartPosition + tempFileSize) {
+//				if(grainTablePosition >= vmdkHeader.getGrainNumberSectors() * 512) {
+//					currentGrainTableEntry++;
+//					grainTablePosition = 0;
+//					if(tempFileGzipInputStream != null) {
+//						tempFileGzipInputStream.close();
+//						tempFileGzipInputStream = null;
+//					}
+//					return read();
+//				} else {
+//					if(vmdkHeader.isGrainDataCompressed()) {
+//						int fread;
+//						if(tempFileGzipInputStream == null) {
+//							long skipAmount = ((grainDataPosition+grainTablePosition) - tempFileStartPosition) - tempFileReadPosition;
+//							if(skipAmount >0) {
+//								tempFileInputStream.skip(skipAmount);
+//								tempFileReadPosition += skipAmount;
+//							}
+//							tempFileInputStream.skip(8);
+//							tempFileReadPosition+=8;
+//							byte[] buff = new byte[4];
+//							int c = tempFileInputStream.read(buff);
+//							if(c < 0) {
+//								return -1;
+//							}
+//							tempFileReadPosition += 4;
+//							long compressedSize = (((long) buff[0]) & 0xFFL) + ((((long) buff[1]) & 0xFFL) << 8) + ((((long) buff[2]) & 0xFFL) << 16) + ((((long) buff[3]) & 0xFFL) << 24);
+//							byte[] compressedData = new byte[(int)compressedSize];
+//							int bytesRead = tempFileInputStream.read(compressedData);
+//							tempFileReadPosition+=bytesRead;
+//							ByteArrayInputStream bis = new ByteArrayInputStream(compressedData);
+//							tempFileGzipInputStream = new InflaterInputStream(bis);
+//							grainTablePosition++;
+//							fread = tempFileGzipInputStream.read();
+//						} else {
+//							grainTablePosition++;
+//							fread = tempFileGzipInputStream.read();
+//							if(fread == -1) {
+//								throw new IOException("Premature end of file reached while reading grain data");
+//							}
+//						}
+//						return fread;
+//
+//					} else {
+//						long skipAmount = ((grainDataPosition+grainTablePosition) - tempFileStartPosition) - tempFileReadPosition;
+//						if(skipAmount >0) {
+//							tempFileInputStream.skip(skipAmount);
+//							tempFileReadPosition += skipAmount;
+//						}
+//						tempFileReadPosition++;
+//						grainTablePosition++;
+//						int fread = tempFileInputStream.read();
+//						if(fread == -1) {
+//							throw new IOException("Premature end of file reached while reading grain data");
+//						}
+//						return fread;
+//					}
+//				}
+//
+//			} else {
+//				throw new IOException("Grain Data Position is not in the temp file buffer - " + grainDataPosition + " File Start: " + tempFileStartPosition + " File End: " + (tempFileStartPosition + tempFileSize));
+//			}
+//		}
+//
+//	}
 
 	/**
 	 * One of several internal read methods that will perform reads on the sourceStream of this instance
