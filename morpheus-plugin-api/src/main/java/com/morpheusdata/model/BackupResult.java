@@ -656,6 +656,7 @@ public class BackupResult extends MorpheusModel {
 	}
 
 	public enum Status {
+		QUEUED,
 		START_REQUESTED,
 		INITIALIZING,
 		IN_PROGRESS,
