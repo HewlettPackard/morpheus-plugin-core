@@ -39,6 +39,9 @@ public class ComputeServerGroup extends MorpheusModel {
 	@JsonSerialize(using= ModelCollectionAsIdsOnlySerializer.class)
 	protected Collection<ComputeServer> servers;
 
+	@JsonSerialize(using= ModelCollectionAsIdsOnlySerializer.class)
+	protected Collection<AccountIntegration> integrations;
+
 	//ServiceEntry serviceEntry //represents the main api entrypoint to the service
 	protected String name;
 	protected String code;
@@ -444,5 +447,13 @@ public class ComputeServerGroup extends MorpheusModel {
 
 	public void setServers(Collection<ComputeServer> servers) {
 		this.servers = servers;
+	}
+
+	public Collection<AccountIntegration> getIntegrations() {
+		return integrations;
+	}
+
+	public void setIntegrations(Collection<AccountIntegration> integrations) {
+		this.integrations = integrations;
 	}
 }

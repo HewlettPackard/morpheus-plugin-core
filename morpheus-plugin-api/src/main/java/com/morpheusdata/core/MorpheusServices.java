@@ -24,6 +24,7 @@ import com.morpheusdata.core.synchronous.backup.MorpheusSynchronousBackupJobServ
 import com.morpheusdata.core.synchronous.backup.MorpheusSynchronousBackupProviderService;
 import com.morpheusdata.core.synchronous.backup.MorpheusSynchronousBackupService;
 import com.morpheusdata.core.synchronous.cloud.MorpheusSynchronousCloudService;
+import com.morpheusdata.core.synchronous.compute.MorpheusSynchronousComputeServerGroupService;
 import com.morpheusdata.core.synchronous.compute.MorpheusSynchronousComputeServerService;
 import com.morpheusdata.core.synchronous.costing.MorpheusSynchronousCostingService;
 import com.morpheusdata.core.synchronous.cypher.MorpheusSynchronousCypherService;
@@ -117,6 +118,13 @@ public interface MorpheusServices {
 	 * @return An instance of the Compute Server Context to be used for calls by various providers
 	 */
 	MorpheusSynchronousComputeServerService getComputeServer();
+
+	/**
+	 * Returns the Clusters / Compute Server Groups used for syncing clusters within morpheus (k8s or other types)
+	 * @return An instance of the Compute Server Group Context to be used for calls by various providers
+	 * @see com.morpheusdata.model.ComputeServerGroup
+	 */
+	MorpheusSynchronousComputeServerGroupService getCluster();
 
 	/**
 	 * Returns the workload context used for syncing workloads within Morpheus.

@@ -24,7 +24,6 @@ import com.morpheusdata.core.cloud.MorpheusCloudService;
 import com.morpheusdata.core.costing.MorpheusCostingService;
 import com.morpheusdata.core.cypher.MorpheusCypherService;
 import com.morpheusdata.core.dashboard.MorpheusDashboardService;
-import com.morpheusdata.core.MorpheusFileCopyService;
 import com.morpheusdata.core.guidance.MorpheusAccountDiscoveryService;
 import com.morpheusdata.core.integration.MorpheusAccountInventoryService;
 import com.morpheusdata.core.integration.MorpheusIntegrationService;
@@ -116,6 +115,13 @@ public interface MorpheusAsyncServices {
 	 * @return An instance of the Compute Server Context to be used for calls by various providers
 	 */
 	MorpheusComputeServerService getComputeServer();
+
+	/**
+	 * Returns the Clusters / Compute Server Groups used for syncing clusters within morpheus (k8s or other types)
+	 * @return An instance of the Compute Server Group Context to be used for calls by various providers
+	 * @see com.morpheusdata.model.ComputeServerGroup
+	 */
+	MorpheusComputeServerGroupService getCluster();
 
 	/**
 	 * Returns the workload context used for syncing workloads within Morpheus.
