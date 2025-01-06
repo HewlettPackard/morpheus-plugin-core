@@ -448,6 +448,7 @@ public class NetworkPool extends NetworkPoolIdentityProjection {
 	public NetworkPoolType type;
 	public String parentType;
 	public String parentId;
+	protected String description;
 
 	public List<NetworkPoolRange> ipRanges;
 
@@ -501,5 +502,13 @@ public class NetworkPool extends NetworkPoolIdentityProjection {
 	public void setSubnetAddress(String subnetAddress) {
 		this.subnetAddress = subnetAddress;
 		markDirty("subnetAddress",id);
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }
