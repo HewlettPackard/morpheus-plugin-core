@@ -81,6 +81,11 @@ public interface DatastoreTypeProvider extends PluginProvider {
 		return false;
 	}
 
+	/**
+	 * Flags if this {@link DatastoreType} implements its own refresh logic for refreshing volumes within the datastore type, or if this falls back to generic sync.
+	 * @return if the {@link DatastoreType} implements its own refresh logic
+	 */
+	default boolean getPluginManagedVolumeRefresh() { return false; }
 
 	/**
 	 * Perform any operations necessary on the target to remove a volume. This is used to remove a volume on a storage server
