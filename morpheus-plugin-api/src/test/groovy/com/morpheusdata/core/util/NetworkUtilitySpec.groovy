@@ -126,13 +126,13 @@ class NetworkUtilitySpec extends Specification {
 
 		where:
 		ip               | end                                    | cnt           | res
-		'ff80:0:0:0:0:0:0:0001' | 'ff80:ffff:ffff:ffff:ffff:ffff:ffff'   | 0             | 'ff80:0000:0000:0000:0000:0000:0000:0001'
-		'ff80:0:0:0:0:0:0:0001' | 'ff80:ffff:ffff:ffff:ffff:ffff:ffff'   | 1             | 'ff80:0000:0000:0000:0000:0000:0000:0002'
-		'ff80::0001'            | 'ff80:ffff:ffff:ffff:ffff:ffff:ffff'   | 1             | 'ff80:0000:0000:0000:0000:0000:0000:0002'
-		'ff80:0:0:0:0:0:0:0001' | 'ff80:ffff:ffff:ffff:ffff:ffff:ffff'   | 300           | 'ff80:0000:0000:0000:0000:0000:0000:012d'
-		'ff80:0:0:0:0:0:0:0001' | 'ff80:ffff:ffff:ffff:ffff:ffff:ffff'   | 65535           | 'ff80:0000:0000:0000:0000:0000:0001:0001'
+		'ff80:0:0:0:0:0:0:0001' | 'ff80:ffff:ffff:ffff:ffff:ffff:ffff'   | 0             | 'ff80:0:0:0:0:0:0:1'
+		'ff80:0:0:0:0:0:0:0001' | 'ff80:ffff:ffff:ffff:ffff:ffff:ffff'   | 1             | 'ff80:0:0:0:0:0:0:2'
+		'ff80::0001'            | 'ff80:ffff:ffff:ffff:ffff:ffff:ffff'   | 1             | 'ff80:0:0:0:0:0:0:2'
+		'ff80:0:0:0:0:0:0:0001' | 'ff80:ffff:ffff:ffff:ffff:ffff:ffff'   | 300           | 'ff80:0:0:0:0:0:0:12d'
+		'ff80:0:0:0:0:0:0:0001' | 'ff80:ffff:ffff:ffff:ffff:ffff:ffff'   | 65535           | 'ff80:0:0:0:0:0:1:1'
 		'ff80:0:0:0:0:0:0:0001' | 'ff80:0000:0000:0000:0000:0000:0000:ffff'   | 65535           | null
-		'fc00:db8:abcd:12::'    | 'fc00:db8:abcd:12:ffff:ffff:ffff:ffff' | 1 | 'fc00:0db8:abcd:0012:0000:0000:0000:0001'
+		'fc00:db8:abcd:12::'    | 'fc00:db8:abcd:12:ffff:ffff:ffff:ffff' | 1 | 'fc00:db8:abcd:12:0:0:0:1'
 	}
 }
 

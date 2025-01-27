@@ -23,7 +23,7 @@ class MorpheusModelSpec extends Specification {
 		def props = model.getProperties()
 
 		then:
-		props.size() == 38
+		props.size() == 39
 		and: "property of parent is included"
 		props['id'] == 1
 	}
