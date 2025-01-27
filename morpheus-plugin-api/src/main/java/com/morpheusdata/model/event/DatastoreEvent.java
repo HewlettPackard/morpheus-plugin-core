@@ -17,12 +17,14 @@
 package com.morpheusdata.model.event;
 
 import com.morpheusdata.model.ComputeServer;
+import com.morpheusdata.model.Datastore;
 
 import java.io.Serializable;
 
-public class ComputeServerEvent implements Event<ComputeServerEvent.ComputeServerEventType>, Serializable {
+public class DatastoreEvent implements Event<DatastoreEvent.DatastoreEventType>, Serializable {
 	protected String message;
-	protected ComputeServerEvent.ComputeServerEventType type;
+	protected DatastoreEventType type;
+	protected Datastore datastore;
 	protected ComputeServer server;
 
 	@Override
@@ -31,7 +33,7 @@ public class ComputeServerEvent implements Event<ComputeServerEvent.ComputeServe
 	}
 
 	@Override
-	public ComputeServerEvent.ComputeServerEventType getType() {
+	public DatastoreEventType getType() {
 		return type;
 	}
 
@@ -39,7 +41,7 @@ public class ComputeServerEvent implements Event<ComputeServerEvent.ComputeServe
 		this.message = message;
 	}
 
-	public void setType(ComputeServerEvent.ComputeServerEventType type) {
+	public void setType(DatastoreEventType type) {
 		this.type = type;
 	}
 
@@ -51,9 +53,17 @@ public class ComputeServerEvent implements Event<ComputeServerEvent.ComputeServe
 		this.server = server;
 	}
 
-	public enum ComputeServerEventType implements EventType {
-		MOVE,
-		SHUTDOWN,
-		STARTUP
+	public Datastore getDatastore() {
+		return datastore;
+	}
+
+	public void setDatastore(Datastore datastore) {
+		this.datastore = datastore;
+	}
+
+	public enum DatastoreEventType implements EventType {
+		SERVER_MOVE,
+		SERVER_SHUTDOWN,
+		SERVER_STARTUP
 	}
 }

@@ -18,8 +18,11 @@ package com.morpheusdata.core.providers;
 
 import com.bertramlabs.plugins.karman.CloudFileInterface;
 import com.morpheusdata.model.*;
+import com.morpheusdata.model.event.DatastoreEvent;
+import com.morpheusdata.model.event.EventType;
 import com.morpheusdata.response.ServiceResponse;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -243,6 +246,24 @@ public interface DatastoreTypeProvider extends PluginProvider {
 				IDE
 			}
 		}
+	}
+
+	/**
+	 * Provides an asynchronous event listener for subscribing to events that may pertain to a datastore integration. For example,
+	 * it may be necessary to perform certain optimization operations on a datastore when a vm is moved between hosts, or to
+	 * notify a datastore provider when a vm is inactive (powered off) to perform certain operations.
+	 * @see DatastoreEvent
+	 */
+	public interface DatastoreEventFacet extends GenericIntegrationProvider.EventSubscriberFacet<DatastoreEvent> {
+		@Override
+		default List<EventType> getSupportedEventTypes() {
+			List<EventType> types = new ArrayList<>();
+			types.add(DatastoreEvent.DatastoreEventType.SERVER_MOVE);
+			types.add(DatastoreEvent.DatastoreEventType.SERVER_SHUTDOWN);
+			types.add(DatastoreEvent.DatastoreEventType.SERVER_STARTUP);
+			return types;
+		}
+
 	}
 
 
