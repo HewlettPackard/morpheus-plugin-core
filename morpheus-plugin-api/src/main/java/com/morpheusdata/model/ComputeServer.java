@@ -150,6 +150,9 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 	protected String iScsiInitiatorName;
 	protected Date dateCreated;
 	protected Date lastUpdated;
+	protected String hardwareProductName;
+	protected String hardwareProductVendor;
+	protected String hardwareCpuModel;
 
 	public String getUuid() {
 		return uuid;
@@ -489,6 +492,30 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 
 	public void setiScsiInitiatorName(String iScsiInitiatorName) {
 		this.iScsiInitiatorName = iScsiInitiatorName;
+	}
+
+	public String getHardwareProductName() {
+		return hardwareProductName;
+	}
+
+	public void setHardwareProductName(String hardwareProductName) {
+		this.hardwareProductName = hardwareProductName;
+	}
+
+	public String getHardwareProductVendor() {
+		return hardwareProductVendor;
+	}
+
+	public void setHardwareProductVendor(String hardwareProductVendor) {
+		this.hardwareProductVendor = hardwareProductVendor;
+	}
+
+	public String getHardwareCpuModel() {
+		return hardwareCpuModel;
+	}
+
+	public void setHardwareCpuModel(String hardwareCpuModel) {
+		this.hardwareCpuModel = hardwareCpuModel;
 	}
 
 	public enum PowerState {
