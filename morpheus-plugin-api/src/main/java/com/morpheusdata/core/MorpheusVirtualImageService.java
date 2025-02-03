@@ -205,6 +205,18 @@ public interface MorpheusVirtualImageService extends MorpheusDataService<Virtual
 	Single<String> getCloudFileStreamUrl(VirtualImage virtualImage, CloudFile cloudFile, User createdBy, Cloud cloud);
 
 	/**
+	 * Get a one-off url for an image to upload to it to a cloud
+	 * @since 0.15.13
+	 * @param virtualImage the image
+	 * @param cloudFile the specific file
+	 * @param createdBy the user associated with the workload or server
+	 * @param cloud the Cloud instance
+	 * @param contentType Desired URL ContentType override from octet-stream
+	 * @return the url of the image file
+	 */
+	Single<String> getCloudFileStreamUrl(VirtualImage virtualImage, CloudFile cloudFile, User createdBy, Cloud cloud, String contentType);
+
+	/**
 	 * Get metadata for a virtual image. The metadata can include a list of disks in the virtual image.
 	 * @param virtualImageModel the virtual image to extract disk information about.
 	 * @return the disk mapping information
