@@ -53,7 +53,7 @@ public interface MorpheusFileCopyService {
 	 * @param contentLength size of the file to be copied
 	 * @param timeout max timeout to initialize the copy operation
 	 * @param autoExpand automatically expand .tar.gz compressed files during upload
-	 * @return {@link ServiceResponse} containing the success status of the copy operation
+	 * @return {@link ServiceResponse} containing the success status of the generate operation and data property containing the url
 	 */
 	Single<ServiceResponse> generateUrl(String fileName, User user, InputStream sourceStream, Long contentLength, Long timeout, Boolean autoExpand);
 
@@ -63,16 +63,24 @@ public interface MorpheusFileCopyService {
 	 * @param sourceStream source {@link InputStream} to copy to the server
 	 * @param contentLength size of the file to be copied
 	 * @param timeout max timeout to initialize the copy operation
-	 * @return {@link ServiceResponse} containing the success status of the copy operation
+	 * @return {@link ServiceResponse} containing the success status of the generate operation and data property containing the url
 	 */
 	Single<ServiceResponse> generateUrl(String fileName, User user, InputStream sourceStream, Long contentLength, Long timeout);
+
 
 	/**
 	 * Create a url to copy a file to the target server.
 	 * @param fileName name of the copied file for the file copy request URL.
 	 * @param sourceStream source {@link InputStream} to copy to the server
 	 * @param contentLength size of the file to be copied
-	 * @return {@link ServiceResponse} containing the success status of the copy operation
+	 * @return {@link ServiceResponse} containing the success status of the generate operation and data property containing the url
 	 */
 	Single<ServiceResponse> generateUrl(String fileName, User user, InputStream sourceStream, Long contentLength);
+
+	/**
+	 * Expires AND deletes the temporary file content of a file copy url
+	 * @param fileCopyUrl the original URL submitted
+	 * @return {@link ServiceResponse} containing the success status of the copy operation
+	 */
+	Single<ServiceResponse> deleteUrl(String fileCopyUrl);
 }

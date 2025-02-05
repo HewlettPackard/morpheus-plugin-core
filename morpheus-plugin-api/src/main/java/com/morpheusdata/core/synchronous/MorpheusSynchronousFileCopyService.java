@@ -75,4 +75,11 @@ public interface MorpheusSynchronousFileCopyService {
 	 * @return {@link ServiceResponse} containing the success status of the copy operation
 	 */
 	ServiceResponse generateUrl(String fileName, User user,InputStream sourceStream, Long contentLength);
+
+	/**
+	 * Expires AND deletes the temporary file content of a file copy url
+	 * @param fileCopyUrl the original URL submitted
+	 * @return {@link ServiceResponse} containing the success status of the copy operation
+	 */
+	ServiceResponse deleteUrl(String fileCopyUrl);
 }
