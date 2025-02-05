@@ -74,6 +74,7 @@ public class ComputeServerGroup extends MorpheusModel {
 	protected String internalId;
 	protected String externalId;
 	protected String datacenterId;
+	protected String uuid;
 	//status
 	protected Integer nodeCount;
 	protected String status;
@@ -351,6 +352,14 @@ public class ComputeServerGroup extends MorpheusModel {
 
 	public void setDatacenterId(String datacenterId) {
 		this.datacenterId = datacenterId;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+
+	public String getUuid() {
+		return uuid;
 	}
 
 	public Integer getNodeCount() {
