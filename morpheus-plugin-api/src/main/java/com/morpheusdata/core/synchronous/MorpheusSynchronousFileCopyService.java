@@ -1,7 +1,9 @@
 package com.morpheusdata.core.synchronous;
 
 import com.morpheusdata.model.ComputeServer;
+import com.morpheusdata.model.User;
 import com.morpheusdata.response.ServiceResponse;
+import io.reactivex.rxjava3.core.Single;
 
 import java.io.InputStream;
 
@@ -42,4 +44,35 @@ public interface MorpheusSynchronousFileCopyService {
 	 * @return {@link ServiceResponse} containing the success status of the copy operation
 	 */
 	ServiceResponse copyToServer(ComputeServer server, String fileName, String filePath, InputStream sourceStream, Long contentLength, Long timeout, Boolean autoExpand);
+
+
+	/**
+	 * Create a url to copy a file to the target server.
+	 * @param fileName name of the copied file for the file copy request URL.
+	 * @param sourceStream source {@link InputStream} to copy to the server
+	 * @param contentLength size of the file to be copied
+	 * @param timeout max timeout to initialize the copy operation
+	 * @param autoExpand automatically expand .tar.gz compressed files during upload
+	 * @return {@link ServiceResponse} containing the success status of the copy operation
+	 */
+	ServiceResponse generateUrl(String fileName, User user, InputStream sourceStream, Long contentLength, Long timeout, Boolean autoExpand);
+
+	/**
+	 * Create a url to copy a file to the target server.
+	 * @param fileName name of the copied file for the file copy request URL.
+	 * @param sourceStream source {@link InputStream} to copy to the server
+	 * @param contentLength size of the file to be copied
+	 * @param timeout max timeout to initialize the copy operation
+	 * @return {@link ServiceResponse} containing the success status of the copy operation
+	 */
+	ServiceResponse generateUrl(String fileName, User user,InputStream sourceStream, Long contentLength, Long timeout);
+
+	/**
+	 * Create a url to copy a file to the target server.
+	 * @param fileName name of the copied file for the file copy request URL.
+	 * @param sourceStream source {@link InputStream} to copy to the server
+	 * @param contentLength size of the file to be copied
+	 * @return {@link ServiceResponse} containing the success status of the copy operation
+	 */
+	ServiceResponse generateUrl(String fileName, User user,InputStream sourceStream, Long contentLength);
 }
