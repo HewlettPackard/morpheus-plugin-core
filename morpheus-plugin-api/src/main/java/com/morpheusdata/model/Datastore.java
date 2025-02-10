@@ -72,6 +72,7 @@ public class Datastore extends DatastoreIdentityProjection {
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected User createdBy;
 
+	protected List<DatastoreLocation> locations = new ArrayList<>();
 	protected List<Datastore> datastores = new ArrayList<>();
 	protected List<CloudPool> assignedZonePools = new ArrayList<>();
 
@@ -401,5 +402,13 @@ public class Datastore extends DatastoreIdentityProjection {
 
 	public void setStorageServer(StorageServer storageServer) {
 		this.storageServer = storageServer;
+	}
+
+	public List<DatastoreLocation> getLocations() {
+		return locations;
+	}
+
+	public void setLocations(List<DatastoreLocation> locations) {
+		this.locations = locations;
 	}
 }
