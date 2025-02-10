@@ -17,14 +17,7 @@
 package com.morpheusdata.core.synchronous.cloud;
 
 import com.morpheusdata.core.MorpheusSynchronousDataService;
-import com.morpheusdata.core.MorpheusSynchronousIdentityService;
-import com.morpheusdata.model.Datastore;
-import com.morpheusdata.model.projection.DatastoreIdentity;
+import com.morpheusdata.model.DatastoreLocation;
 
-public interface MorpheusSynchronousDatastoreService  extends MorpheusSynchronousDataService<Datastore,DatastoreIdentity>, MorpheusSynchronousIdentityService<DatastoreIdentity> {
-	/**
-	 * The context for dealing with DatastoreLocations
-	 * @return MorpheusSynchronousDatastoreLocationService
-	 */
-	MorpheusSynchronousDatastoreLocationService getLocation();
+public interface MorpheusSynchronousDatastoreLocationService extends MorpheusSynchronousDataService<DatastoreLocation, DatastoreLocation> {
 }

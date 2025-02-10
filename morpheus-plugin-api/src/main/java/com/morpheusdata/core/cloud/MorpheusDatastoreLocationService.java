@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-package com.morpheusdata.core.synchronous.cloud;
+package com.morpheusdata.core.cloud;
 
-import com.morpheusdata.core.MorpheusSynchronousDataService;
-import com.morpheusdata.core.MorpheusSynchronousIdentityService;
-import com.morpheusdata.model.Datastore;
-import com.morpheusdata.model.projection.DatastoreIdentity;
+import com.morpheusdata.core.MorpheusDataService;
+import com.morpheusdata.model.DatastoreLocation;
 
-public interface MorpheusSynchronousDatastoreService  extends MorpheusSynchronousDataService<Datastore,DatastoreIdentity>, MorpheusSynchronousIdentityService<DatastoreIdentity> {
-	/**
-	 * The context for dealing with DatastoreLocations
-	 * @return MorpheusSynchronousDatastoreLocationService
-	 */
-	MorpheusSynchronousDatastoreLocationService getLocation();
+/**
+ * Provides service/context methods for querying {@link com.morpheusdata.model.DatastoreLocation} objects for use with syncing datastore location status.
+ *
+ * @author Dan DeVilbiss
+ * @since 1.2.4
+ */
+public interface MorpheusDatastoreLocationService extends MorpheusDataService<DatastoreLocation,DatastoreLocation> {
 }
