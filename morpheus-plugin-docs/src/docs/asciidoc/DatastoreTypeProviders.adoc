@@ -1,0 +1,70 @@
+[#datastoretypes]
+== Datastore Type Providers
+
+A Datastore Type Provider allows the plugin developer to implement custom Datastore types for use with various provision providers. *(Currently only VME/MVM is supported)*. This could be for use with third party storage arrays or in the event some other type of Software Defined Storage (SDS) is desired to be used with the VME platform.
+
+*What is the difference between a Datastore Type Provider and a Storage Provider?*
+
+Storage Providers are typically used for managing storage outside the general provisioning workload pipeline. This allows for volume and share management within a datastore that can be tied into automation, but does not directly affect provisioning operations. Where as, a Datastore, is a storage target for a workload to run on. This provides additional methods that give context that can leverage the Storage Server (defined by the Storage Provider).
+
+=== Getting Started
+
+Before getting started, it is recommended that a `StorageProvider` also be created along with a `DatastoreTypeProvider` plugin.
+This is because they often go together. For example, an Alletra Storage Array can be registered by the user as a Storage Integration
+via the `StorageProvider` and then the `DatastoreTypeProvider` can be used to define the various types of Datastore objects that can be created
+using this storage array (i.e. iSCSI LUN per vDISK).
+
+Another common provider type that goes along with this is the `BackupProvider`. Any type of custom backup implementation
+should leverage that provider along with this.
+
+*NOTE:* Pay special attention to the `Facet` options on the interface. These provide additional functionality when they
+are implemented on the provider class.
+
+Create a new class that implements `com.morpheusdata.core.providers.DatastoreTypeProvider` and implement the required methods as well as the `StorageProvider.
+
+
+[source,groovy]
+----
+class MyCustomDatastoreTypeProvider implements DatastoreTypeProvider, DatastoreTypeProvider.MvmProvisionFacet, DatastoreTypeProvider.SnapshotFacet.SnapshotServerFacet {
+
+	@Override
+	String getStorageProviderCode() {
+		return 'my-storage-provider-code'
+	}
+// Implement required methods here for all 3 interfaces
+
+}
+
+class MyCustomStorageProvider implements StorageProvider {
+	@Override
+	String getCode() {
+		return 'my-storage-provider-code'
+	}
+}
+
+----
+
+Your favorite IDE (such as IntelliJ IDEA) should be able to auto-generate the required methods for you.
+Or, you can use the `Getting Started` plugin generator on the developer portal to create a new Datastore Type Provider.
+
+=== Facets
+
+In the above example, two additional facets were injected into the class. These control implementation of Snapshots as well
+as the ability to inject behaviors specific to VME/MVM Provisioning. For example, in some scenarios it may be necessary to
+prepare the host for a vm move or even an initial provision of a vm. These allow for injection points for this.
+
+The `MVMProvisionFacet` also contains a means to override/customize the libvirt Domain XML block device specification. This
+can be important if using a custom storage array implementation that may use raw BLOCK or iSCSI vs QCOW2 formats.
+
+=== Host Interactions
+
+When utilizing the `DatastoreTypeProvider` for VME/MVM it is often necessary to execute automation directly on the hypervisor.
+It is recommended that this be performed with the `morpheusContext.executeCommandOnServer` method. This will automatically ensure
+the command is executed through the right medium (such as through an Edge Distributed Worker and through the agent with proper ssh fallback).
+
+The host of a specific vm/workload is normally found by grabbing the `ComputeServer.getParentServer()` method off the workload server representation.
+
+=== Snapshots
+
+Snapshots are a common feature of most storage arrays and SDS solutions. The `SnapshotFacet` provides a means to implement
+as well as the `SnapshotServerFacet` which is more commonly used. The key difference is one implementation focuses strictly on per volume snapshots, and the other focuses on snapshotting all volumes within a server at once. This is useful for things like backup operations, image export, or just general state.
