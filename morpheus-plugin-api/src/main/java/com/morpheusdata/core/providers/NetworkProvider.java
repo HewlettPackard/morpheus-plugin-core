@@ -18,6 +18,7 @@ package com.morpheusdata.core.providers;
 
 import com.morpheusdata.core.util.MorpheusUtils;
 import com.morpheusdata.model.*;
+import com.morpheusdata.model.provisioning.NetworkConfiguration;
 import com.morpheusdata.response.ServiceResponse;
 import groovy.util.logging.Slf4j;
 import org.slf4j.Logger;
@@ -555,5 +556,31 @@ public interface NetworkProvider extends PluginProvider {
 		} else {
 			return ServiceResponse.success();
 		}
+	}
+
+	/**
+	 * Some ProvisionProvider implementations may need to prepare something on the network server before the interface can be usable.
+	 * For example, a BareMetal plugin may need to call these methods to enable switch port configurations via the server API so that they
+	 * can be used.
+	 *
+	 * @author David Estes
+	 * @since 1.2.4
+	 */
+	public interface ComputeServerInterfaceOperationFacet {
+		/**
+		 * Prepare the compute server interfaces for the Network Provider/Server before provisioning kicks off.
+		 * @param server the workload server being deployed
+		 * @param interfaces the interfaces on the server that are assigned to a network associated with this NetworkProvider.
+		 * @return the success state of the operation
+		 */
+		public ServiceResponse<Void> prepareComputeServerInterfacesForServer(ComputeServer server, List<ComputeServerInterface> interfaces);
+
+		/**
+		 * Release the compute server interfaces for the Network Provider/Server before teardown completes.
+		 * @param server the workload server being deployed
+		 * @param interfaces the interfaces on the server that are assigned to a network associated with this NetworkProvider.
+		 * @return the success state of the operation
+		 */
+		public ServiceResponse<Void> releaseComputeServerInterfacesFromServer(ComputeServer server, List<ComputeServerInterface> interfaces);
 	}
 }
