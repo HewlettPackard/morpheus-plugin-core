@@ -38,6 +38,8 @@ public class PrepareWorkloadResponse {
 	 */
 	public Boolean disableAutoUpdates = false;
 
+	public Boolean disableAutoComputeServerInterfacePreparations = false;
+
 
 	public Workload getWorkload() {
 		return workload;

@@ -573,7 +573,7 @@ public interface NetworkProvider extends PluginProvider {
 		 * @param interfaces the interfaces on the server that are assigned to a network associated with this NetworkProvider.
 		 * @return the success state of the operation
 		 */
-		public ServiceResponse<Void> prepareComputeServerInterfacesForServer(ComputeServer server, List<ComputeServerInterface> interfaces);
+		public ServiceResponse<Void> prepareComputeServerInterfacesForServer(NetworkServer networkServer, ComputeServer server, List<ComputeServerInterface> interfaces);
 
 		/**
 		 * Release the compute server interfaces for the Network Provider/Server before teardown completes.
@@ -581,6 +581,6 @@ public interface NetworkProvider extends PluginProvider {
 		 * @param interfaces the interfaces on the server that are assigned to a network associated with this NetworkProvider.
 		 * @return the success state of the operation
 		 */
-		public ServiceResponse<Void> releaseComputeServerInterfacesFromServer(ComputeServer server, List<ComputeServerInterface> interfaces);
+		public ServiceResponse<Void> releaseComputeServerInterfacesFromServer(NetworkServer networkServer, ComputeServer server, List<ComputeServerInterface> interfaces);
 	}
 }
