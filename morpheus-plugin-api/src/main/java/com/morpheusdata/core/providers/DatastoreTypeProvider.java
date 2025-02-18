@@ -68,6 +68,13 @@ public interface DatastoreTypeProvider extends PluginProvider {
 	List<OptionType> getOptionTypes();
 
 	/**
+	 * Provide custom list of {@link StorageVolumeType} for this datastore.
+	 */
+	default List<StorageVolumeType> getVolumeTypes() {
+		return new ArrayList<>();
+	}
+
+	/**
 	 * Flags if this datastore can be created by the user. Some datastores are system injected and cannot be created by the user
 	 * @return whether, or not this datastore can be created by the user
 	 */
@@ -187,6 +194,18 @@ public interface DatastoreTypeProvider extends PluginProvider {
 	 * @return the success state of the removal
 	 */
 	ServiceResponse removeDatastore(Datastore datastore);
+
+	/**
+	 * Refresh the provider with the associated data in the external system.
+	 * @param datastore The Datastore object contains all the saved information regarding configuration of the Datastore.
+	 * @return a {@link ServiceResponse} object. A ServiceResponse with a success value of 'false' will indicate the
+	 * refresh process has failed and will change the datastore status to 'error'
+	 */
+	default ServiceResponse<Datastore> refreshDatastore(Datastore datastore){
+		ServiceResponse<Datastore> rtn =  new ServiceResponse<>();
+		rtn.setMsg("Update not supported for this datastore type");
+		return rtn;
+	}
 
 	/**
 	 * Perform any operations necessary on the target to create a snapshot of a volume. In order to use this simply

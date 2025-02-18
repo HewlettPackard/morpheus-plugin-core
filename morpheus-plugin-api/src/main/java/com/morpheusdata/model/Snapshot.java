@@ -41,6 +41,8 @@ public class Snapshot extends SnapshotIdentityProjection {
 	protected Boolean currentlyActive;
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Snapshot parentSnapshot;
+	@JsonSerialize(using= ModelCollectionAsIdsOnlySerializer.class)
+	protected List<Snapshot> snapshots = new ArrayList<>();
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected StorageVolume volume;
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
@@ -100,6 +102,14 @@ public class Snapshot extends SnapshotIdentityProjection {
 
 	public void setParentSnapshot(Snapshot parentSnapshot) {
 		this.parentSnapshot = parentSnapshot;
+	}
+
+	public List<Snapshot> getSnapshots() {
+		return snapshots;
+	}
+
+	public void setSnapshots(List<Snapshot> snapshots) {
+		this.snapshots = snapshots;
 	}
 
 	public CloudRegion getRegion() { return region; }
