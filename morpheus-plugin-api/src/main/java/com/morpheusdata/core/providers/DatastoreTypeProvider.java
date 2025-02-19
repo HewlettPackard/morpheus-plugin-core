@@ -168,6 +168,15 @@ public interface DatastoreTypeProvider extends PluginProvider {
 	ServiceResponse<StorageVolume> resizeVolume(StorageVolume volume, ComputeServer server, Long newSize);
 
 	/**
+	 * Perform any validations necessary on the target prior to create. The default returns success.
+	 * @param datastore the current datastore being created
+	 * @return the service response containing success state or any errors upon failure
+	 */
+	default ServiceResponse validateDatastore(Datastore datastore) {
+		return ServiceResponse.success();
+	}
+
+	/**
 	 * Perform any operations necessary on the target to create and register a datastore.
 	 * Most implementations iterate over the servers on the server group (hypervisors) and register a storage pool
 	 * @param datastore the current datastore being created
