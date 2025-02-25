@@ -178,6 +178,14 @@ public interface ProvisionProvider extends PluginProvider {
 	}
 
 	/**
+	 * Indicates if the root volume size is known during provisioning
+	 * @return Boolean
+	 */
+	default public Boolean rootVolumeSizeKnown() {
+		return false;
+	}
+
+	/**
 	 * Indicates if a Datastore on a root volume on a ComputeServer is configurable
 	 * @return Boolean
 	 */
