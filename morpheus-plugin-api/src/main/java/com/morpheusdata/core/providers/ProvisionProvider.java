@@ -182,7 +182,7 @@ public interface ProvisionProvider extends PluginProvider {
 	 * @return Boolean
 	 */
 	default public Boolean rootVolumeSizeKnown() {
-		return false;
+		return true;
 	}
 
 	/**
