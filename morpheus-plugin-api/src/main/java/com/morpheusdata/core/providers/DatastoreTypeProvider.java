@@ -191,9 +191,7 @@ public interface DatastoreTypeProvider extends PluginProvider {
 	 * @return the success state and a copy of the datastore
 	 */
 	default ServiceResponse<Datastore> updateDatastore(Datastore datastore) {
-		ServiceResponse<Datastore> rtn =  new ServiceResponse<>();
-		rtn.setMsg("Update not supported for this datastore type");
-		return rtn;
+		return ServiceResponse.success(datastore);
 	}
 
 	/**
@@ -211,9 +209,7 @@ public interface DatastoreTypeProvider extends PluginProvider {
 	 * refresh process has failed and will change the datastore status to 'error'
 	 */
 	default ServiceResponse<Datastore> refreshDatastore(Datastore datastore){
-		ServiceResponse<Datastore> rtn =  new ServiceResponse<>();
-		rtn.setMsg("Update not supported for this datastore type");
-		return rtn;
+		return ServiceResponse.success(datastore);
 	}
 
 	/**
