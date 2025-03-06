@@ -39,6 +39,7 @@ public class ComputeServerGroupType extends MorpheusModel {
 	protected Boolean hasDefaultDataDisk = true;
 	protected Boolean kubeCtlLocal = false;
 	protected Boolean supportsCloudScaling = false;
+	protected Boolean hasAffinityGroups = false;
 
 	public String getName() {
 		return name;
@@ -206,5 +207,13 @@ public class ComputeServerGroupType extends MorpheusModel {
 
 	public void setSupportsCloudScaling(Boolean supportsCloudScaling) {
 		this.supportsCloudScaling = supportsCloudScaling;
+	}
+
+	public Boolean getHasAffinityGroups() {
+		return hasAffinityGroups;
+	}
+
+	public void setHasAffinityGroups(Boolean hasAffinityGroups) {
+		this.hasAffinityGroups = hasAffinityGroups;
 	}
 }

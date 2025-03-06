@@ -43,6 +43,7 @@ public class CloudType extends CloudTypeIdentityProjection {
 	protected Boolean hasDatastores = false;
 	protected Boolean hasNetworks = false;
 	protected Boolean hasResourcePools = false;
+	protected Boolean hasAffinityGroups = false;
 	protected Boolean provisionRequiresResourcePool = false;
 	protected Boolean hideScopedResourcePools = false;
 	protected Boolean hasHosts = true;
@@ -684,5 +685,13 @@ public class CloudType extends CloudTypeIdentityProjection {
 	public void setPluginCircularIconDarkHidpiPath(String pluginCircularIconDarkHidpiPath) {
 		this.pluginCircularIconDarkHidpiPath = pluginCircularIconDarkHidpiPath;
 		markDirty("pluginCircularIconDarkHidpiPath", pluginCircularIconDarkHidpiPath);
+	}
+
+	public Boolean getHasAffinityGroups() {
+		return hasAffinityGroups;
+	}
+
+	public void setHasAffinityGroups(Boolean hasAffinityGroups) {
+		this.hasAffinityGroups = hasAffinityGroups;
 	}
 }

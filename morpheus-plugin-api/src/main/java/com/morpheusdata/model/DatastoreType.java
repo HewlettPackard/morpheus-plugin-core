@@ -14,6 +14,7 @@ public class DatastoreType extends MorpheusModel implements IModelCodeName {
 	protected Boolean creatable = true;
 	protected Boolean removable = true;
 	protected Boolean editable = true;
+	protected Boolean discoverable = false;
 	protected Boolean localStorage = false;
 	protected Boolean imageTargetCapable = true;
 	protected Boolean heartbeatTargetCapable = true;
@@ -119,5 +120,13 @@ public class DatastoreType extends MorpheusModel implements IModelCodeName {
 
 	public void setStorageServerType(StorageServerType storageServerType) {
 		this.storageServerType = storageServerType;
+	}
+
+	public Boolean getDiscoverable() {
+		return discoverable;
+	}
+
+	public void setDiscoverable(Boolean discoverable) {
+		this.discoverable = discoverable;
 	}
 }

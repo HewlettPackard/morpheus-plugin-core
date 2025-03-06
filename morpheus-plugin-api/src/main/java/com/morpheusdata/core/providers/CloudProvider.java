@@ -361,5 +361,19 @@ public interface CloudProvider extends PluginProvider {
 	}
 
 
+	/**
+	 * Adds support to a {@link CloudProvider} for managing Affinity and anti-affinity groups. Some clouds, like vmware, may support
+	 * setting these rules on a set of compute servers to either ensure they run on separate hosts, or run on the same host.
+	 * @since 1.2.4
+	 * @see AffinityGroup
+	 * @see CloudProvider
+	 * @author David Estes
+	 */
+	public interface AffinityGroupFacet {
+		ServiceResponse<AffinityGroup> createAffinityGroup(Cloud cloud, AffinityGroup affinityGroup);
 
+		ServiceResponse<AffinityGroup> updateAffinityGroup(Cloud cloud, AffinityGroup affinityGroup);
+
+		ServiceResponse<AffinityGroup> removeAffinityGroup(Cloud cloud, AffinityGroup affinityGroup);
+	}
 }
