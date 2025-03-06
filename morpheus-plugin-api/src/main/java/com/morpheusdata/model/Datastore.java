@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.morpheusdata.model.serializers.ModelAsIdOnlySerializer;
+import com.morpheusdata.model.serializers.ModelCollectionAsIdsOnlySerializer;
 
 public class Datastore extends DatastoreIdentityProjection {
 
@@ -72,8 +73,11 @@ public class Datastore extends DatastoreIdentityProjection {
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected User createdBy;
 
+	@JsonSerialize(using= ModelCollectionAsIdsOnlySerializer.class)
 	protected List<DatastoreLocation> locations = new ArrayList<>();
+	@JsonSerialize(using= ModelCollectionAsIdsOnlySerializer.class)
 	protected List<Datastore> datastores = new ArrayList<>();
+	@JsonSerialize(using= ModelCollectionAsIdsOnlySerializer.class)
 	protected List<CloudPool> assignedZonePools = new ArrayList<>();
 
 	public Account getOwner() {

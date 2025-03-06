@@ -100,6 +100,7 @@ public class BackupResult extends MorpheusModel {
 	protected Date lastUpdated;
 
 	protected String source;
+	protected Boolean deletable = true;
 
 	Long getBackupId() {
 		return backup.id;
@@ -653,6 +654,15 @@ public class BackupResult extends MorpheusModel {
 	public void setSource(String source) {
 		markDirty("source", source, this.source);
 		this.source = source;
+	}
+
+	public Boolean getDeletable() {
+		return deletable;
+	}
+
+	public void setDeletable(Boolean deletable) {
+		markDirty("deletable", deletable, this.deletable);
+		this.deletable = deletable;
 	}
 
 	public enum Status {

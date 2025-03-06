@@ -68,6 +68,13 @@ public interface DatastoreTypeProvider extends PluginProvider {
 	List<OptionType> getOptionTypes();
 
 	/**
+	 * Provide custom list of {@link StorageVolumeType} for this datastore.
+	 */
+	default List<StorageVolumeType> getVolumeTypes() {
+		return new ArrayList<>();
+	}
+
+	/**
 	 * Flags if this datastore can be created by the user. Some datastores are system injected and cannot be created by the user
 	 * @return whether, or not this datastore can be created by the user
 	 */
@@ -161,6 +168,15 @@ public interface DatastoreTypeProvider extends PluginProvider {
 	ServiceResponse<StorageVolume> resizeVolume(StorageVolume volume, ComputeServer server, Long newSize);
 
 	/**
+	 * Perform any validations necessary on the target prior to create. The default returns success.
+	 * @param datastore the current datastore being created
+	 * @return the service response containing success state or any errors upon failure
+	 */
+	default ServiceResponse validateDatastore(Datastore datastore) {
+		return ServiceResponse.success();
+	}
+
+	/**
 	 * Perform any operations necessary on the target to create and register a datastore.
 	 * Most implementations iterate over the servers on the server group (hypervisors) and register a storage pool
 	 * @param datastore the current datastore being created
@@ -175,9 +191,7 @@ public interface DatastoreTypeProvider extends PluginProvider {
 	 * @return the success state and a copy of the datastore
 	 */
 	default ServiceResponse<Datastore> updateDatastore(Datastore datastore) {
-		ServiceResponse<Datastore> rtn =  new ServiceResponse<>();
-		rtn.setMsg("Update not supported for this datastore type");
-		return rtn;
+		return ServiceResponse.success(datastore);
 	}
 
 	/**
@@ -187,6 +201,16 @@ public interface DatastoreTypeProvider extends PluginProvider {
 	 * @return the success state of the removal
 	 */
 	ServiceResponse removeDatastore(Datastore datastore);
+
+	/**
+	 * Refresh the provider with the associated data in the external system.
+	 * @param datastore The Datastore object contains all the saved information regarding configuration of the Datastore.
+	 * @return a {@link ServiceResponse} object. A ServiceResponse with a success value of 'false' will indicate the
+	 * refresh process has failed and will change the datastore status to 'error'
+	 */
+	default ServiceResponse<Datastore> refreshDatastore(Datastore datastore){
+		return ServiceResponse.success(datastore);
+	}
 
 	/**
 	 * Perform any operations necessary on the target to create a snapshot of a volume. In order to use this simply
