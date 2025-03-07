@@ -54,6 +54,7 @@ public class NetworkPoolServer extends MorpheusModel {
 	protected String zoneFilter;
 	protected String tenantMatch;
 	protected Boolean enabled = true;
+	protected Boolean visible = true;
 	protected Date statusDate;
 	protected Date dateCreated;
 	protected Date lastUpdated;
@@ -145,6 +146,10 @@ public class NetworkPoolServer extends MorpheusModel {
 
 	public Boolean getEnabled() {
 		return enabled;
+	}
+
+	public Boolean getVisible() {
+		return visible;
 	}
 
 	public Date getStatusDate() {
@@ -264,6 +269,11 @@ public class NetworkPoolServer extends MorpheusModel {
 	public void setEnabled(Boolean enabled) {
 		this.enabled = enabled;
 		markDirty("enabled", enabled);
+	}
+
+	public void setVisible(Boolean visible) {
+		this.visible = visible;
+		markDirty("visible", visible);
 	}
 
 	public void setStatusDate(Date statusDate) {
