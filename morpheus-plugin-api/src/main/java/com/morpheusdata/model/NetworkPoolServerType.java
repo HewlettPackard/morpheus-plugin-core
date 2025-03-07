@@ -25,6 +25,7 @@ public class NetworkPoolServerType extends MorpheusModel {
 	protected String poolService;
 	protected String integrationCode; //matching integration type
 	protected Boolean enabled = true;
+	protected Boolean creatable = true;
 	protected Boolean isPlugin;
 
 	public String getCode() {
@@ -53,6 +54,10 @@ public class NetworkPoolServerType extends MorpheusModel {
 
 	public Boolean getEnabled() {
 		return enabled;
+	}
+
+	public Boolean getCreatable() {
+		return creatable;
 	}
 
 	public Boolean getPlugin() {
@@ -92,6 +97,11 @@ public class NetworkPoolServerType extends MorpheusModel {
 	public void setEnabled(Boolean enabled) {
 		this.enabled = enabled;
 		markDirty("enabled", enabled);
+	}
+
+	public void setCreatable(Boolean creatable) {
+		this.creatable= creatable;
+		markDirty("creatable", creatable);
 	}
 
 	public void setPlugin(Boolean plugin) {
