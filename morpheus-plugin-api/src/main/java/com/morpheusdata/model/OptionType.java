@@ -156,6 +156,7 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	 * to support multitenant check in gsp
 	 */
 	protected Boolean multiTenant = false;
+	protected Boolean systemOption = false;
 
 	public String getName() {
 		return name;
@@ -1064,6 +1065,15 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	public void setMultiTenant(Boolean multiTenant) {
 		this.multiTenant = multiTenant;
 		markDirty("multiTenant", multiTenant, this.multiTenant);
+	}
+
+	public Boolean getSystemOption() {
+		return systemOption;
+	}
+
+	public void setSystemOption(Boolean systemOption) {
+		this.systemOption = systemOption;
+		markDirty("systemOption", systemOption);
 	}
 
 	public Account getAccount() {
