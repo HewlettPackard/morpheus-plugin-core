@@ -16,11 +16,11 @@
 
 package com.morpheusdata.core.network;
 
+import com.morpheusdata.core.MorpheusContext;
 import com.morpheusdata.core.MorpheusDataService;
 import com.morpheusdata.core.MorpheusIdentityService;
 import com.morpheusdata.core.providers.DNSProvider;
 import com.morpheusdata.core.providers.IPAMProvider;
-import com.morpheusdata.core.MorpheusContext;
 import com.morpheusdata.model.*;
 import com.morpheusdata.model.projection.NetworkIdentityProjection;
 import io.reactivex.rxjava3.core.Completable;
@@ -49,6 +49,13 @@ public interface MorpheusNetworkService extends MorpheusDataService<Network, Net
 	 * @return An instance of the Network Pool Context to be used for calls by various network providers
 	 */
 	MorpheusNetworkPoolService getPool();
+
+	/**
+	 * Returns the NetworkPoolServerContext used for performing updates/queries on {@link NetworkPoolServer} related assets
+	 * within Morpheus.
+	 * @return An instance of the Network Pool ServerContext to be used for calls by various network providers
+	 */
+	MorpheusNetworkPoolServerService getPoolServer();
 
 	/**
 	 * Returns the NetworkDomainContext used for performing updates/queries on {@link NetworkDomain} related assets

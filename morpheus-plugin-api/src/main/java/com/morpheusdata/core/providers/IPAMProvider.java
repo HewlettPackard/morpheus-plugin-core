@@ -134,5 +134,14 @@ public interface IPAMProvider extends PluginProvider {
 	 * @return Icon representation of assets stored in the src/assets of the project.
 	 */
 	Icon getIcon();
-	
+
+	/**
+	 * Flags if this IPAMProvider can be created by the user. Some IPAMProviders are system injected
+	 * and cannot be created by the user
+	 * @since 1.2.4
+	 * @return true if the IPAM provider can be created; false otherwise
+	 */
+	default Boolean getCreatable() {
+		return true;
+	}
 }

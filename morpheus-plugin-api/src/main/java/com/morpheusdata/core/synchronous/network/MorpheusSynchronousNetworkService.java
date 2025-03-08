@@ -34,6 +34,12 @@ public interface MorpheusSynchronousNetworkService extends MorpheusSynchronousDa
 	MorpheusSynchronousNetworkPoolService getPool();
 
 	/**
+	 * Returns the NetworkPoolContext used for performing updates or queries on {@link NetworkPoolServer} related assets within Morpheus.
+	 * @return An instance of the Network Pool Server Context to be used for calls by various network providers
+	 */
+	MorpheusSynchronousNetworkPoolServerService getPoolServer();
+
+	/**
 	 * Returns the NetworkDomainContext used for performing updates/queries on {@link NetworkDomain} related assets
 	 * within Morpheus. Most useful when implementing DNS related services.
 	 * @return An instance of the Network Domain Context to be used for calls by various network providers
