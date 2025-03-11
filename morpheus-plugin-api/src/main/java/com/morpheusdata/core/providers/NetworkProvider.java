@@ -77,6 +77,13 @@ public interface NetworkProvider extends PluginProvider {
 
 	default Boolean isUserVisible() { return false; }
 
+	/**
+	 * A NetworkProvider should be marked as creatable if a network server
+	 * integration can be added independently of a Cloud integration
+	 * @return whether this NetworkProvider is creatable
+	 */
+	default Boolean getCreatable() { return false; }
+
 	default Collection<OptionType> getScopeOptionTypes() {
 		return new ArrayList<>();
 	}
@@ -136,6 +143,16 @@ public interface NetworkProvider extends PluginProvider {
 	default SecurityGroupProvider getSecurityGroupProvider() { return null; }
 
 	default ServiceResponse refresh() { return ServiceResponse.success(); }
+
+	/**
+	 * Validates the submitted network server information.
+	 * If a {@link ServiceResponse} is not marked as successful the validation results will be
+	 * bubbled up to the user.
+	 * @param networkServer Network server information
+	 * @param opts additional configuration options
+	 * @return ServiceResponse
+	 */
+	default ServiceResponse validateNetworkServer(NetworkServer networkServer, Map opts) { return ServiceResponse.success(); }
 
 	/**
 	 * Prepare the network information before validate, create, and update.
