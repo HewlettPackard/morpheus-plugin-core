@@ -53,13 +53,13 @@ public interface NetworkProvider extends PluginProvider {
 	 * NetworkServer of this type attached to them. Network actions will then be handled via this provider.
 	 * @return String Code of the Cloud type
 	 */
-	String getCloudProviderCode();
+	default String getCloudProviderCode() {return null;}
 
 	/**
 	 * The GenericProvider code that this NetworkProvider should be attached to. Should be used when there is no CloudProvider.
 	 * @return String Code of the Cloud type
 	 */
-	String getGenericProviderCode();
+	default String getGenericProviderCode() {return null;}
 
 
 	/**
