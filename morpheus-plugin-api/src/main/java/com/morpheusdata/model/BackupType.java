@@ -48,6 +48,8 @@ public class BackupType extends MorpheusModel implements IModelCodeName {
 	protected Boolean restrictTargets = false;
 
 	public List<OptionType> optionTypes;
+	public List<OptionType> restoreNewOptionTypes;
+	public List<OptionType> restoreExistingOptionTypes;
 	// public List<StorageServerType> storageTypes;
 
 	public String getCode() {
@@ -255,6 +257,24 @@ public class BackupType extends MorpheusModel implements IModelCodeName {
 	public void setOptionTypes(List<OptionType> optionTypes) {
 		this.optionTypes = optionTypes;
 		markDirty("optionTypes", optionTypes, this.optionTypes);
+	}
+
+	public List<OptionType> getRestoreNewOptionTypes() {
+		return restoreNewOptionTypes;
+	}
+
+	public void setRestoreNewOptionTypes(List<OptionType> restoreNewOptionTypes) {
+		this.restoreNewOptionTypes = restoreNewOptionTypes;
+		markDirty("restoreNewOptionTypes", restoreNewOptionTypes, this.restoreNewOptionTypes);
+	}
+
+	public List<OptionType> getRestoreExistingOptionTypes() {
+		return restoreExistingOptionTypes;
+	}
+
+	public void setRestoreExistingOptionTypes(List<OptionType> restoreExistingOptionTypes) {
+		this.restoreExistingOptionTypes = restoreExistingOptionTypes;
+		markDirty("restoreExistingOptionTypes", restoreExistingOptionTypes, this.restoreExistingOptionTypes);
 	}
 
 	public String getJobService() {
