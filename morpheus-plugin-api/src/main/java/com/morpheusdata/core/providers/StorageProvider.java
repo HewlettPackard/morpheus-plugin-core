@@ -89,10 +89,10 @@ public interface StorageProvider extends PluginProvider,UIExtensionProvider {
 
 	/**
 	 * Integration details provided to your rendering engine
-	 * @param storageProvider details of a storage provider
+	 * @param storageServer details of a storage server
 	 * @return result of rendering a template
 	 */
-	default HTMLResponse renderTemplate(StorageProvider storageProvider) {
+	default HTMLResponse renderTemplate(StorageServer storageServer) {
 		return null;
 	}
 

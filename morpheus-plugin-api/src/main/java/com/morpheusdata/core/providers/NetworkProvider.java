@@ -20,6 +20,7 @@ import com.morpheusdata.core.util.MorpheusUtils;
 import com.morpheusdata.model.*;
 import com.morpheusdata.model.provisioning.NetworkConfiguration;
 import com.morpheusdata.response.ServiceResponse;
+import com.morpheusdata.views.HTMLResponse;
 import groovy.util.logging.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +37,7 @@ import java.util.Collection;
  * @since 0.15.1
  * @author Bob Whiton, Dustin DeYoung
  */
-public interface NetworkProvider extends PluginProvider {
+public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 
 	/**
 	 * Some older clouds have a network server type code that is the exact same as the cloud code. This allows one to set it
@@ -573,6 +574,15 @@ public interface NetworkProvider extends PluginProvider {
 		} else {
 			return ServiceResponse.success();
 		}
+	}
+
+	/**
+	 * Integration details provided to your rendering engine
+	 * @param networkServer details of a network server
+	 * @return result of rendering a template
+	 */
+	default HTMLResponse renderTemplate(NetworkServer networkServer) {
+		return null;
 	}
 
 	/**
