@@ -208,31 +208,46 @@ public interface MorpheusServices {
 
 	/**
 	 * Returns the StorageVolume Service
-	 *
+	 * This has been moved to the {@link MorpheusStorageService} as of 1.2.5 and can be accessed via the {@link MorpheusServices#getStorage()}
 	 * @return An instance of the StorageVolume Service
+	 * @deprecated
 	 */
+	@Deprecated(since="1.2.5")
 	MorpheusSynchronousStorageVolumeService getStorageVolume();
 
 	/**
 	 * Returns the StorageController Service
-	 *
+	 * This has been moved to the {@link MorpheusStorageService} as of 1.2.5 and can be accessed via the {@link MorpheusServices#getStorage()}
 	 * @return An instance of the StorageController Service
+	 * @deprecated
 	 */
+	@Deprecated(since="1.2.5")
 	MorpheusSynchronousStorageControllerService getStorageController();
 
 	/**
 	 * Returns the StorageServer Service
-	 *
+	 * This has been moved to the {@link MorpheusStorageService} as of 1.2.5 and can be accessed via the {@link MorpheusServices#getStorage()}
 	 * @return An instance of the StorageServer Service
+	 * @deprecated
 	 */
+	@Deprecated(since="1.2.5")
 	MorpheusSynchronousStorageServerService getStorageServer();
 
 	/**
 	 * Returns the StorageBucket Service
-	 *
+	 * This has been moved to the {@link MorpheusStorageService} as of 1.2.5 and can be accessed via the {@link MorpheusServices#getStorage()}
 	 * @return An instance of the StorageBucket Service
+	 * @deprecated
 	 */
+	@Deprecated(since="1.2.5")
 	MorpheusSynchronousStorageBucketService getStorageBucket();
+
+	/**
+	 * Returns the Storage Service Context for accessing storage related services
+	 * @since 1.2.5
+	 * @return An instance of the Storage Service
+	 */
+	MorpheusSynchronousStorageService getStorage();
 
 	/**
 	 * Returns the Instance Service
