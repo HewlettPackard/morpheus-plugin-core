@@ -74,14 +74,19 @@ public interface DatastoreTypeProvider extends PluginProvider {
 		return new ArrayList<>();
 	}
 
-	default String getExternalType() {
-		return null;
-	}
+	/**
+	 * Returns the external type of the provider.
+	 * @return the external type
+	 */
+	default String getExternalType() { return null; }
 
+	/**
+	 * Returns the external subtype of the provider, which serves to differentiate it from other providers sharing the
+	 * same external type.
+	 * @return the external subtype
+	 */
+	default String getExternalSubType() { return null; }
 
-	default String getExternalSubType() {
-		return null;
-	}
 
 	/**
 	 * Flags if this datastore can be created by the user. Some datastores are system injected and cannot be created by the user

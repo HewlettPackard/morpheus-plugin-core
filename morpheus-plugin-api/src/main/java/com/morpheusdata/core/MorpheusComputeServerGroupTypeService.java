@@ -16,14 +16,10 @@
 
 package com.morpheusdata.core;
 
+import com.morpheusdata.model.ComputeServerGroupType;
 
-import com.morpheusdata.model.ComputeServerGroup;
-
-public interface MorpheusComputeServerGroupService extends MorpheusDataService<ComputeServerGroup, ComputeServerGroup>, MorpheusIdentityService<ComputeServerGroup> {
-	/**
-	 * Returns the Compute Server Group Type Service
-	 *
-	 * @return An instance of the Compute Server Group Type Service
-	 */
-	MorpheusComputeServerGroupTypeService getType();
+/**
+ * Context methods for syncing {@link ComputeServerGroupType} in Morpheus
+ */
+public interface MorpheusComputeServerGroupTypeService extends MorpheusDataService<ComputeServerGroupType, ComputeServerGroupType> {
 }

@@ -22,4 +22,10 @@ import com.morpheusdata.core.MorpheusSynchronousIdentityService;
 import com.morpheusdata.model.ComputeServerGroup;
 
 public interface MorpheusSynchronousComputeServerGroupService extends MorpheusSynchronousDataService<ComputeServerGroup, ComputeServerGroup>, MorpheusSynchronousIdentityService<ComputeServerGroup> {
+	/**
+	 * Returns the Compute Server Group Type Service
+	 *
+	 * @return An instance of the Compute Server Group Type Service
+	 */
+	MorpheusSynchronousComputeServerGroupTypeService getType();
 }

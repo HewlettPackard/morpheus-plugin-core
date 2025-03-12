@@ -49,6 +49,7 @@ public class NetworkType extends MorpheusModel {
 	protected Boolean ipv6Editable = true;
 	private List<NetworkSubnetType> subnetTypes = new ArrayList<>();
 	private List<OptionType> optionTypes = new ArrayList<>();
+	private List<ComputeServerGroupType> serverGroupTypes = new ArrayList<>();
 
 	public String getName() {
 		return name;
@@ -244,5 +245,14 @@ public class NetworkType extends MorpheusModel {
 	public void setSubnetTypes(List<NetworkSubnetType> subnetTypes) {
 		this.subnetTypes = subnetTypes;
 		markDirty("subnetTypes", subnetTypes);
+	}
+
+	public List<ComputeServerGroupType> getServerGroupTypes() {
+		return serverGroupTypes;
+	}
+
+	public void setServerGroupTypes(List<ComputeServerGroupType> serverGroupTypes) {
+		this.serverGroupTypes = serverGroupTypes;
+		markDirty("serverGroupTypes", serverGroupTypes);
 	}
 }

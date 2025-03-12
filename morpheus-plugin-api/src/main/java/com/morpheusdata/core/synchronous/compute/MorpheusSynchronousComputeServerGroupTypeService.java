@@ -14,16 +14,10 @@
  * limitations under the License.
  */
 
-package com.morpheusdata.core;
+package com.morpheusdata.core.synchronous.compute;
 
+import com.morpheusdata.core.MorpheusSynchronousDataService;
+import com.morpheusdata.model.ComputeServerGroupType;
 
-import com.morpheusdata.model.ComputeServerGroup;
-
-public interface MorpheusComputeServerGroupService extends MorpheusDataService<ComputeServerGroup, ComputeServerGroup>, MorpheusIdentityService<ComputeServerGroup> {
-	/**
-	 * Returns the Compute Server Group Type Service
-	 *
-	 * @return An instance of the Compute Server Group Type Service
-	 */
-	MorpheusComputeServerGroupTypeService getType();
+public interface MorpheusSynchronousComputeServerGroupTypeService extends MorpheusSynchronousDataService<ComputeServerGroupType, ComputeServerGroupType> {
 }
