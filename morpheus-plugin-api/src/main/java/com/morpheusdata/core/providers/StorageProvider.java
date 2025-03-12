@@ -18,6 +18,7 @@ package com.morpheusdata.core.providers;
 
 import com.morpheusdata.model.*;
 import com.morpheusdata.response.ServiceResponse;
+import com.morpheusdata.views.HTMLResponse;
 
 import java.util.Collection;
 import java.util.List;
@@ -33,7 +34,7 @@ import java.util.Map;
  * @see StorageProviderVolumes
  * @see StorageProviderBuckets
  */
-public interface StorageProvider extends PluginProvider {
+public interface StorageProvider extends PluginProvider,UIExtensionProvider {
 
 	/**
 	 * Returns the description of the provider type
@@ -85,5 +86,14 @@ public interface StorageProvider extends PluginProvider {
 	 */
 	ServiceResponse refreshStorageServer(StorageServer storageServer, Map opts);
 
+
+	/**
+	 * Integration details provided to your rendering engine
+	 * @param integration details of an Instance
+	 * @return result of rendering a template
+	 */
+	default HTMLResponse renderTemplate(AccountIntegration integration) {
+		return null;
+	}
 
 }

@@ -28,28 +28,28 @@ public interface MorpheusSynchronousStorageService {
 	 *
 	 * @return An instance of the StorageVolume Service
 	 */
-	MorpheusSynchronousStorageVolumeService getStorageVolume();
+	MorpheusSynchronousStorageVolumeService getVolume();
 
 	/**
 	 * Returns the StorageController Service
 	 *
 	 * @return An instance of the StorageController Service
 	 */
-	MorpheusSynchronousStorageControllerService getStorageController();
+	MorpheusSynchronousStorageControllerService getController();
 
 	/**
 	 * Returns the StorageServer Service
 	 *
 	 * @return An instance of the StorageServer Service
 	 */
-	MorpheusSynchronousStorageServerService getStorageServer();
+	MorpheusSynchronousStorageServerService getServer();
 
 	/**
 	 * Returns the StorageBucket Service
 	 *
 	 * @return An instance of the StorageBucket Service
 	 */
-	MorpheusSynchronousStorageBucketService getStorageBucket();
+	MorpheusSynchronousStorageBucketService getBucket();
 
 	MorpheusVmeQcow2DatastoreService getVmeQcow2DatastoreService();
 }
