@@ -56,6 +56,13 @@ public interface NetworkProvider extends PluginProvider {
 	String getCloudProviderCode();
 
 	/**
+	 * The GenericProvider code that this NetworkProvider should be attached to. Should be used when there is no CloudProvider.
+	 * @return String Code of the Cloud type
+	 */
+	String getGenericProviderCode();
+
+
+	/**
 	 * Grabs the description for the NetworkProvider
 	 * @return String
 	 */
