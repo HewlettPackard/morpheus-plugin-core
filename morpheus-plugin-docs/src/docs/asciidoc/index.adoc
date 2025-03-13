@@ -62,6 +62,8 @@ include::DatastoreTypeProviders.adoc[]
 
 include::GenericIntegrationPlugin.adoc[]
 
+include::NetworkProviderPlugin.adoc[]
+
 include::IPAMPlugins.adoc[]
 
 include::ReportsPlugin.adoc[]
