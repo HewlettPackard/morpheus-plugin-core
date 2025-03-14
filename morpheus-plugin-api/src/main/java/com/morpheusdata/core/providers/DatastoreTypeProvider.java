@@ -81,12 +81,24 @@ public interface DatastoreTypeProvider extends PluginProvider {
 	default String getExternalType() { return null; }
 
 	/**
-	 * Returns the external subtype of the provider, which serves to differentiate it from other providers sharing the
+	 * Returns the external subtype of the provider that serves to differentiate it from other providers sharing the
 	 * same external type.
 	 * @return the external subtype
 	 */
 	default String getExternalSubType() { return null; }
 
+	/**
+	 * Flags if this datastore is heartbeat target capable in support of automatic failover of running workloads in
+	 * the event of the loss of a host. If true, the option to designate as a heartbeat target will be available.
+	 * @return whether, or not this datastore is heartbeat target capable
+	 */
+	default boolean getHeartbeatTargetCapable() { return false; }
+
+	/**
+	 * Flags if this datastore is image target capable. If true, the option to designate as an image target will be available.
+	 * @return whether, or not this datastore is image target capable
+	 */
+	default boolean getImageTargetCapable() { return false; }
 
 	/**
 	 * Flags if this datastore can be created by the user. Some datastores are system injected and cannot be created by the user
