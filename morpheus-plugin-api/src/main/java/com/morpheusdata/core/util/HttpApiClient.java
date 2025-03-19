@@ -141,11 +141,11 @@ public class HttpApiClient {
 	static protected Logger log = LoggerFactory.getLogger(HttpApiClient.class);
 
 
-	HttpApiClient() {
+	public HttpApiClient() {
 
 	}
 
-	HttpApiClient(boolean usePoolingConnections) {
+	public HttpApiClient(boolean usePoolingConnections) {
 		this.usePoolingConnections = true;
 	}
 
