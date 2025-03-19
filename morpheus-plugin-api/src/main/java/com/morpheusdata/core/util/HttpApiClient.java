@@ -54,10 +54,7 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
-import org.apache.http.impl.conn.DefaultHttpResponseParser;
-import org.apache.http.impl.conn.DefaultHttpResponseParserFactory;
-import org.apache.http.impl.conn.ManagedHttpClientConnectionFactory;
+import org.apache.http.impl.conn.*;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.cookie.BasicClientCookie;
@@ -129,6 +126,11 @@ public class HttpApiClient {
 	public NetworkProxy networkProxy;
 
 	/**
+	 * Determine if we should use a basic or pooling conneciton manager
+	 */
+	private boolean usePoolingConnections=false;
+
+	/**
 	 * The last time a call was made to the API. Used for throttling.
 	 */
 	private Date lastCallTime;
@@ -137,6 +139,15 @@ public class HttpApiClient {
 	 * The logger for this class.
 	 */
 	static protected Logger log = LoggerFactory.getLogger(HttpApiClient.class);
+
+
+	HttpApiClient() {
+
+	}
+
+	HttpApiClient(boolean usePoolingConnections) {
+		this.usePoolingConnections = true;
+	}
 
 	/**
 	 * The default connection timeout for the HTTP client.
@@ -1094,8 +1105,17 @@ public class HttpApiClient {
 
 			HttpConnectionFactory<HttpRoute, ManagedHttpClientConnection> connFactory = new ManagedHttpClientConnectionFactory(
 				requestWriterFactory, responseParserFactory);
-			BasicHttpClientConnectionManager connectionManager = new BasicHttpClientConnectionManager(registry, connFactory);
-			clientBuilder.setConnectionManager(connectionManager);
+			HttpClientConnectionManager connectionManager = null;
+			if(usePoolingConnections) {
+				connectionManager = new PoolingHttpClientConnectionManager(registry, connFactory);
+				((PoolingHttpClientConnectionManager)connectionManager).setMaxTotal(200);
+				((PoolingHttpClientConnectionManager)connectionManager).setDefaultMaxPerRoute(20);
+				clientBuilder.setConnectionManager(connectionManager);
+			} else {
+				connectionManager = new BasicHttpClientConnectionManager(registry, connFactory);
+				clientBuilder.setConnectionManager(connectionManager);
+			}
+
 			boolean noProxy = networkProxy != null && networkProxy.getNoProxy() != null && Arrays.stream(networkProxy.getNoProxy().split("[,|\\s]+")).anyMatch(it -> it.equalsIgnoreCase(opts.targetUri.getHost()));
 			if (networkProxy != null && !noProxy) {
 				String proxyHost = networkProxy.getProxyHost();
