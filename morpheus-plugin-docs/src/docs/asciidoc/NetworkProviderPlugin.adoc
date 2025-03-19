@@ -1,0 +1,4 @@
+[#network-provider]
+=== Network Provider Plugins
+
+The Network Provider Plugin interface requires either an associated `GenericIntegrationProvider` or `CloudProvider` provider in the plugin to provide the account integration or cloud backing for the network server as well as sharing icons and other resources. Make sure to set the appropriate code in the `NetworkProvider` implementation.

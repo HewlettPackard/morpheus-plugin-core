@@ -23,6 +23,7 @@ import com.morpheusdata.core.backup.util.BackupStatusUtility;
 import com.morpheusdata.model.*;
 import com.morpheusdata.response.ServiceResponse;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
@@ -113,6 +114,23 @@ public interface BackupTypeProvider extends PluginProvider {
 	 * @return a list of option types
 	 */
 	Collection<OptionType> getOptionTypes();
+
+	/**
+	 * A list of {@link OptionType OptionTypes} for use in the backup restore to new forms.
+	 * Only used when getRestoreNewMode is set to VM_RESTORE
+	 * @return a list of option types
+	 */
+	default Collection<OptionType> getRestoreNewOptionTypes() {
+		return new ArrayList<>();
+	};
+
+	/**
+	 * A list of {@link OptionType OptionTypes} for use in the backup restore to existing forms.
+	 * @return a list of option types
+	 */
+	default Collection<OptionType> getRestoreExistingOptionTypes() {
+		return new ArrayList<>();
+	};
 
 	// TODO future
 	// Collection<StorageServerType> getStorageServerTypes();
