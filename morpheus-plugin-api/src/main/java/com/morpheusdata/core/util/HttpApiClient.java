@@ -139,8 +139,15 @@ public class HttpApiClient {
 	 * The logger for this class.
 	 */
 	static protected Logger log = LoggerFactory.getLogger(HttpApiClient.class);
+	
+	/**
+	 * The default connection timeout for the HTTP client.
+	 */
+	static final Integer WEB_CONNECTION_TIMEOUT = 120 * 1000;
 
-
+	/**
+	 * The default constructor is public
+	 */
 	public HttpApiClient() {
 
 	}
@@ -148,11 +155,6 @@ public class HttpApiClient {
 	public HttpApiClient(boolean usePoolingConnections) {
 		this.usePoolingConnections = true;
 	}
-
-	/**
-	 * The default connection timeout for the HTTP client.
-	 */
-	static final Integer WEB_CONNECTION_TIMEOUT = 120 * 1000;
 
 	/**
 	 * Make a POST request to an API with the specified URL, path, and credentials. This method is intended for simple POST requests.
