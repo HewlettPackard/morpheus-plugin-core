@@ -49,6 +49,7 @@ public class ComputeServerType  extends MorpheusModel implements IModelCodeName 
 	protected Boolean supportsConsoleKeymap = false;
 	protected Integer displayOrder;
 	protected String managedServerType;
+	protected Boolean hasMaintenanceMode;
 
 	protected AgentType agentType = AgentType.guest;
 	protected String computeTypeCode; //dynamic option set there are some common ones though
@@ -297,6 +298,16 @@ public class ComputeServerType  extends MorpheusModel implements IModelCodeName 
 		this.creatable = creatable;
 		markDirty("creatable", creatable);
 	}
+
+	public Boolean getHasMaintenanceMode() {
+		return hasMaintenanceMode;
+	}
+
+	public void setHasMaintenanceMode(Boolean hasMaintenanceMode) {
+		this.hasMaintenanceMode = hasMaintenanceMode;
+		markDirty("hasMaintenanceMode", hasMaintenanceMode);
+	}
+
 
 	public enum AgentType {
 		guest, //vm-node for guest OS agents for vms or workloads
