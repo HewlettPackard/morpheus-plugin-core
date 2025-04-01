@@ -95,6 +95,7 @@ public class Network extends NetworkIdentityProjection {
 	protected String code;
 	protected String regionCode;
 	protected Integer cidrMask;
+	protected String networkSource;
 	protected NetworkIdentityProjection parentNetwork;
 
 	@JsonSerialize(using= ModelCollectionAsIdsOnlySerializer.class)
@@ -567,6 +568,15 @@ public class Network extends NetworkIdentityProjection {
 
 	public void setCidrMask(Integer cidrMask) {
 		this.cidrMask = cidrMask;
+	}
+
+	public String getNetworkSource() {
+		return networkSource;
+	}
+
+	public void setNetworkSource(String networkSource) {
+		this.networkSource = networkSource;
+		markDirty("networkSource", networkSource);
 	}
 
 	public List<NetworkSubnet> getSubnets() {

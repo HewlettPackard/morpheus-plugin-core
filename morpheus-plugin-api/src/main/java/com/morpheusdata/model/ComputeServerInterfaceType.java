@@ -16,6 +16,8 @@
 
 package com.morpheusdata.model;
 
+import java.util.List;
+
 public class ComputeServerInterfaceType extends MorpheusModel {
 
 	protected String name;
@@ -24,6 +26,10 @@ public class ComputeServerInterfaceType extends MorpheusModel {
 	protected Integer displayOrder;
 	protected Boolean defaultType;
 	protected Boolean enabled;
+	protected Boolean bonded;
+	protected Boolean vlan;
+	protected Boolean hasChildInterfaces;
+	protected List<ComputeServerInterfaceType> childTypes;
 
 	public String getName() {
 		return name;
@@ -79,4 +85,39 @@ public class ComputeServerInterfaceType extends MorpheusModel {
 		markDirty("enabled", enabled);
 	}
 
+	public Boolean getBonded() {
+		return bonded;
+	}
+
+	public void setBonded(Boolean bonded) {
+		this.bonded = bonded;
+		markDirty("bonded", bonded);
+	}
+
+	public Boolean getVlan() {
+		return vlan;
+	}
+
+	public void setVlan(Boolean vlan) {
+		this.vlan = vlan;
+		markDirty("vlan", vlan);
+	}
+
+	public Boolean getHasChildInterfaces() {
+		return hasChildInterfaces;
+	}
+
+	public void setHasChildInterfaces(Boolean hasChildInterfaces) {
+		this.hasChildInterfaces = hasChildInterfaces;
+		markDirty("hasChildInterfaces", hasChildInterfaces);
+	}
+
+	public List<ComputeServerInterfaceType> getChildTypes() {
+		return childTypes;
+	}
+
+	public void setChildTypes(List<ComputeServerInterfaceType> childTypes) {
+		this.childTypes = childTypes;
+		markDirty("childTypes", childTypes);
+	}
 }
