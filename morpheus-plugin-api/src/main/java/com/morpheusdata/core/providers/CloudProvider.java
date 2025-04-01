@@ -22,6 +22,7 @@ import com.morpheusdata.model.*;
 import com.morpheusdata.request.ValidateCloudRequest;
 import com.morpheusdata.response.ServiceResponse;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -128,6 +129,8 @@ public interface CloudProvider extends PluginProvider {
 	 * @return Collection of NetworkType
 	 */
 	Collection<NetworkType> getNetworkTypes();
+
+	default Collection<NetworkServerType> getNetworkServerTypes() { return new ArrayList<>(); }
 
 	/**
 	 * Provides a Collection of {@link NetworkSubnetType} related to this CloudProvider
