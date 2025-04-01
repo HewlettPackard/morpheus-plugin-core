@@ -130,7 +130,11 @@ public interface CloudProvider extends PluginProvider {
 	 */
 	Collection<NetworkType> getNetworkTypes();
 
-	default Collection<NetworkServerType> getNetworkServerTypes() { return new ArrayList<>(); }
+	/**
+	 * A list of supported NetworkProviders that can be used for networking services on this cloud
+	 * @return a list of codes for network providers from either this plugin or other plugins.
+	 */
+	default Collection<String> getSupportedNetworkProviderCodes() { return new ArrayList<>(); }
 
 	/**
 	 * Provides a Collection of {@link NetworkSubnetType} related to this CloudProvider
