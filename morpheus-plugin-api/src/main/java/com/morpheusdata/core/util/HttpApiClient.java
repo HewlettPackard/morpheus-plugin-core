@@ -139,7 +139,7 @@ public class HttpApiClient {
 	 * The logger for this class.
 	 */
 	static protected Logger log = LoggerFactory.getLogger(HttpApiClient.class);
-	
+
 	/**
 	 * The default connection timeout for the HTTP client.
 	 */
