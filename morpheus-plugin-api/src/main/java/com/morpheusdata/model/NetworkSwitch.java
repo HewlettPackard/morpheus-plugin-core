@@ -1,12 +1,19 @@
 package com.morpheusdata.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.morpheusdata.core.providers.NetworkProvider;
 import com.morpheusdata.model.projection.NetworkSwitchIdentityProjection;
 import com.morpheusdata.model.serializers.ModelAsIdOnlySerializer;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents a NetworkSwitch that is typically provided via a {@link NetworkProvider}. These are used to sync in
+ * add/update/delete switch models on a network integration
+ *
+ * @see NetworkSwitchType
+ */
 public class NetworkSwitch extends NetworkSwitchIdentityProjection {
 	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
 	protected Account owner;
