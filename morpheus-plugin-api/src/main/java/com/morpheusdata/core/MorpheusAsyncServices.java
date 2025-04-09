@@ -518,4 +518,10 @@ public interface MorpheusAsyncServices {
 	 * @return an instance of {@link MorpheusHypervisorService}
 	 */
 	MorpheusHypervisorService getHypervisorService();
+
+	/**
+	 * Returns the {@link MorpheusNetworkResourceGroupService} which allows access to network resource group services
+	 * @return an instance of {@link MorpheusNetworkResourceGroupService}
+	 */
+	MorpheusNetworkResourceGroupService getNetworkResourceGroup();
 }
