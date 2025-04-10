@@ -157,6 +157,15 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 
 	default SecurityGroupProvider getSecurityGroupProvider() { return null; }
 
+	default Collection<NetworkSwitchType> getNetworkSwitchTypes() { return new ArrayList<>(); }
+
+	/**
+	 * Returns whether or not this network implementation supports {@link NetworkSwitch}.  If true,
+	 * this will enabled the Network Switch management panel in the user interface
+	 * @return
+	 */
+	default Boolean hasSwitches() { return false; }
+
 	@Deprecated
 	default ServiceResponse refresh() { return ServiceResponse.success(); }
 
