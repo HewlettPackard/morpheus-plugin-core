@@ -385,7 +385,7 @@ public interface BackupProviderInterface extends PluginProvider, UIExtensionProv
 	 * @param backupProvider details of a backup provider
 	 * @return result of rendering a template
 	 */
-	default HTMLResponse renderTemplate(BackupProvider backupProvider) {
+	default HTMLResponse renderTemplate(com.morpheusdata.model.BackupProvider backupProvider) {
 		return null;
 	}
 }
