@@ -19,6 +19,8 @@ package com.morpheusdata.core.backup;
 import com.morpheusdata.core.*;
 import com.morpheusdata.model.BackupIntegration;
 import com.morpheusdata.response.ServiceResponse;
+import com.morpheusdata.views.HandlebarsRenderer;
+import com.morpheusdata.views.Renderer;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,6 +34,8 @@ import java.util.Map;
  * @author Dustin DeYoung
  */
 public abstract class AbstractBackupProvider extends BackupProvider {
+
+	private HandlebarsRenderer renderer;
 
 	public AbstractBackupProvider(Plugin plugin, MorpheusContext context) {
 		super(plugin, context);
@@ -225,6 +229,17 @@ public abstract class AbstractBackupProvider extends BackupProvider {
 	@Override
 	public ServiceResponse executeBackupJob(com.morpheusdata.model.BackupJob backupJobModel, Map opts) {
 		return getBackupJobProvider().executeBackupJob(backupJobModel, opts);
+	}
+
+	@Override
+	public Renderer<?> getRenderer() {
+		if(renderer == null) {
+			renderer = new HandlebarsRenderer("renderer", getPlugin().getClassLoader());
+			renderer.registerAssetHelper(getPlugin().getName());
+			renderer.registerNonceHelper(getMorpheus().getWebRequest());
+			renderer.registerI18nHelper(getPlugin(),getMorpheus());
+		}
+		return renderer;
 	}
 
 }
