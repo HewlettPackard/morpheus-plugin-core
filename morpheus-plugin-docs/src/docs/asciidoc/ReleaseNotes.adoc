@@ -2,6 +2,18 @@
 
 **Note:** Morpheus Plugin API is now 1.0! This means calls that are used will be supported for a longer period of time and given appropriate deprecation warnings when necessary. Morpheus Plugin API 1.2 requires a minimum Morpheus Version of `8.0.x`. Morpheus `7.0.x` still runs on Core version `1.1.x`
 
+* **1.2.6**
+** Added support for overriding views for Backup Providers.
+** Added tab UI support for Backup Providers.
+** Added ability for Backup Providers to add custom options to the restore backup prompt.
+** Added context service support for StorageProviderType, NetworkSwitch, NetworkResourceGroup, NetworkResourceGroupMember
+
+* **1.2.5**
+** Added support for NetworkProvider plugins creating an integration without a cloud integration
+** Storage providers were moved to the storage context:  morpheus.services.storageVolume => morpheus.services.storage.volume
+** Added ability for Network Providers to add UI tabs to the network integration detail page.
+** Added connection pooling to HTTP API Client
+
 * **1.2.4**
 ** Improvements to NetworkProvider types
 ** Improvements to DatastoreTypeProviders
