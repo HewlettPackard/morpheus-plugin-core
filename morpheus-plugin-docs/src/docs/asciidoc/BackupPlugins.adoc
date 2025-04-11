@@ -126,7 +126,9 @@ Like most other integrations, a periodic refresh method is called to sync in any
 ----
 @Slf4j
 class MyPluginBackupProvider extends AbstractBackupProvider {
-...
+
+	/... .../
+
 	@Override
 	ServiceResponse refresh(BackupProvider backupProvider) {
 		ServiceResponse rtn = ServiceResponse.prepare()
@@ -137,7 +139,69 @@ class MyPluginBackupProvider extends AbstractBackupProvider {
 		}
 		return rtn
 	}
-...
+
+	/... .../
+
+}
+----
+
+==== Custom Views
+
+A backup provider can supply custom UI tabs or override the entire backup integration detail view. Override the `renderTemplate()` method to override the integration view. When using the default integration view additional tabs can be added by extending the `AbstractBackupIntegrationTabProvider` class.
+
+The example below shows how to add a custom tab to the default backup provider detail view.
+
+[source, groovy]
+----
+class MyBackupTabProvider extends AbstractBackupIntegrationTabProvider {
+
+	/... .../
+
+	@Override
+	HTMLResponse renderTemplate(BackupProvider backupProvider) {
+		ViewModel<BackupProvider> model = new ViewModel<>()
+		model.object = backupProvider
+
+		return getRenderer().renderTemplate("hbs/myTabView", model)
+	}
+
+	@Override
+	Boolean show(BackupProvider backupProvider, User user, Account account) {
+		// only show this tab for providers that match this plugin's backup provider
+		return backupProvider.type.code == MyBackupProvider.PROVIDER_CODE
+	}
+
+}
+----
+
+Override the enter view by implementing the renter template method in your backup provider class:
+
+[source, groovy]
+----
+class MyBackupProvider extends AbstractBackupProvider {
+
+	private HandlebarsRenderer renderer
+
+	/... .../
+
+	@Override
+	HTMLResponse renderTemplate(com.morpheusdata.model.BackupProvider backupProvider) {
+		ViewModel<com.morpheusdata.model.BackupProvider> model = new ViewModel<>()
+		model.object = backupProvider
+
+		return getRenderer().renderTemplate("hbs/myBackupProviderView", model)
+	}
+
+	// we need to implement a renderer to use handlebars
+	Renderer<?> getRenderer() {
+		if(renderer == null) {
+			renderer = new HandlebarsRenderer("renderer", getPlugin().getClassLoader())
+			renderer.registerAssetHelper(getPlugin().getName())
+			renderer.registerNonceHelper(getMorpheus().getWebRequest())
+			renderer.registerI18nHelper(getPlugin(),getMorpheus())
+		}
+		return renderer
+	}
 }
 ----
 
