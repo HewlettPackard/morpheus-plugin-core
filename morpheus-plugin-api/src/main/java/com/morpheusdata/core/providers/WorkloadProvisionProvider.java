@@ -95,6 +95,14 @@ public interface WorkloadProvisionProvider extends ComputeProvisionProvider {
 
 
 	/**
+	 * Issues the remote calls necessary to suspend a workload element.
+	 * @param workload the Workload we want to suspend.
+	 * @return Response from API
+	 */
+	default ServiceResponse suspendWorkload(Workload workload) { return ServiceResponse.error(); };
+
+
+	/**
 	 * Issues the remote calls to restart a workload element. In some cases this is just a simple alias call to do a stop/start,
 	 * however, in some cases cloud providers provide a direct restart call which may be preferred for speed.
 	 * @param workload the Workload we want to restart.
