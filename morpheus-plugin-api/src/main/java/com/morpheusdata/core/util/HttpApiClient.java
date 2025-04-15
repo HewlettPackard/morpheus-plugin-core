@@ -126,6 +126,11 @@ public class HttpApiClient {
 	public NetworkProxy networkProxy;
 
 	/**
+	 * Flag to indicate whether to use cookies in the HTTP client.
+	 */
+	public Boolean useCookies = true;
+
+	/**
 	 * Determine if we should use a basic or pooling conneciton manager
 	 */
 	private boolean usePoolingConnections=false;
@@ -388,17 +393,9 @@ public class HttpApiClient {
 							rtn.addHeader(header.getName(), header.getValue());
 						}
 
-
-						for (Header header : response.getHeaders("Set-Cookie")) {
-							Map<String, String> cookies = extractCookie(header.getValue());
-							for (String cookieKey : cookies.keySet()) {
-								BasicClientCookie cookie = new BasicClientCookie(cookieKey, cookies.get(cookieKey));
-								cookie.setPath("/");
-								cookie.setDomain(request.getURI().getHost());
-								cookieStore.addCookie(cookie);
-							}
+						if (useCookies) {
+							addCookiesFromResponse(response, request.getURI().getHost(), cookieStore);
 						}
-
 
 						HttpEntity entity = response.getEntity();
 
@@ -707,17 +704,9 @@ public class HttpApiClient {
 							rtn.addHeader(header.getName(), header.getValue());
 						}
 
-
-						for (Header header : response.getHeaders("Set-Cookie")) {
-							Map<String, String> cookies = extractCookie(header.getValue());
-							for (String cookieKey : cookies.keySet()) {
-								BasicClientCookie cookie = new BasicClientCookie(cookieKey, cookies.get(cookieKey));
-								cookie.setPath("/");
-								cookie.setDomain(request.getURI().getHost());
-								cookieStore.addCookie(cookie);
-							}
+						if (useCookies) {
+							addCookiesFromResponse(response, request.getURI().getHost(), cookieStore);
 						}
-
 
 						HttpEntity entity = response.getEntity();
 
@@ -769,6 +758,22 @@ public class HttpApiClient {
 		return rtn;
 	}
 
+	/**
+	 * Extracts cookies from a Set-Cookie header string and returns them as a map.
+	 * @param cookieHeader The Set-Cookie header string.
+	 * @return A map containing cookie names and their corresponding values.
+	 */
+	private void addCookiesFromResponse(CloseableHttpResponse response, String host, BasicCookieStore cookieStore) {
+		for (Header header : response.getHeaders("Set-Cookie")) {
+			Map<String, String> cookies = extractCookie(header.getValue());
+			for (String cookieKey : cookies.keySet()) {
+				BasicClientCookie cookie = new BasicClientCookie(cookieKey, cookies.get(cookieKey));
+				cookie.setPath("/");
+				cookie.setDomain(host);
+				cookieStore.addCookie(cookie);
+			}
+		}
+	}
 
 	/**
 	 * Make a POST request to a JSON API with the specified URL and path.
