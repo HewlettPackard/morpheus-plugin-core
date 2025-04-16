@@ -21,4 +21,11 @@ import com.morpheusdata.core.MorpheusSynchronousDataService;
 import com.morpheusdata.model.ComputeServerInterface;
 
 public interface MorpheusSynchronousComputeServerInterfaceService extends MorpheusSynchronousDataService<ComputeServerInterface, ComputeServerInterface> {
+
+	/**
+	 * Returns the ComputeServerInterfaceType context used for performing sync operations on {@link com.morpheusdata.model.ComputeServerInterfaceType} related assets within Morpheus.
+	 * @since 1.2.6
+	 * @return An instance of the ComputeServerInterfaceType context
+	 */
+	MorpheusSynchronousComputeServerInterfaceTypeService getType();
 }
