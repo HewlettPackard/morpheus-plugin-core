@@ -14,18 +14,11 @@
  * limitations under the License.
  */
 
-package com.morpheusdata.core.synchronous.compute;
+package com.morpheusdata.core.synchronous;
 
-import com.morpheusdata.core.MorpheusSynchronousIdentityService;
 import com.morpheusdata.core.MorpheusSynchronousDataService;
-import com.morpheusdata.model.ComputeServerInterface;
+import com.morpheusdata.model.NetworkResourceGroupMember;
+import com.morpheusdata.model.projection.NetworkResourceGroupMemberIdentityProjection;
 
-public interface MorpheusSynchronousComputeServerInterfaceService extends MorpheusSynchronousDataService<ComputeServerInterface, ComputeServerInterface> {
-
-	/**
-	 * Returns the ComputeServerInterfaceType context used for performing sync operations on {@link com.morpheusdata.model.ComputeServerInterfaceType} related assets within Morpheus.
-	 * @since 1.2.6
-	 * @return An instance of the ComputeServerInterfaceType context
-	 */
-	MorpheusSynchronousComputeServerInterfaceTypeService getType();
+public interface MorpheusSynchronousNetworkResourceGroupMemberService extends MorpheusSynchronousDataService<NetworkResourceGroupMember, NetworkResourceGroupMemberIdentityProjection> {
 }

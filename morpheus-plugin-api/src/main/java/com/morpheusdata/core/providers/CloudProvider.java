@@ -19,6 +19,7 @@ package com.morpheusdata.core.providers;
 import com.morpheusdata.core.NetworkProvider;
 import com.morpheusdata.core.Plugin;
 import com.morpheusdata.model.*;
+import com.morpheusdata.request.FilterServicePlansCriteria;
 import com.morpheusdata.request.ValidateCloudRequest;
 import com.morpheusdata.response.ServiceResponse;
 
@@ -367,6 +368,17 @@ public interface CloudProvider extends PluginProvider {
 		return datastores;
 	}
 
+	/**
+	 * Support for additional service plan filtering during provisioning
+	 * @since 1.2.6
+	 * @param cloud The cloud that we're provisioning an instance on
+	 * @param servicePlans The set of available service plans
+	 * @param criteria The criteria for filtering the service plans
+	 * @return the filtered service plans
+	 */
+	default Collection<ServicePlan> filterServicePlans(Cloud cloud, Collection<ServicePlan> servicePlans, FilterServicePlansCriteria criteria) {
+		return servicePlans;
+	}
 
 	/**
 	 * Adds support to a {@link CloudProvider} for managing Affinity and anti-affinity groups. Some clouds, like vmware, may support

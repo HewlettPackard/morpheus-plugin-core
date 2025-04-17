@@ -10,6 +10,7 @@ import com.morpheusdata.model.OptionType
 import com.morpheusdata.model.ServicePlan
 import com.morpheusdata.model.StorageVolumeType
 import com.morpheusdata.model.Workload
+import com.morpheusdata.model.provisioning.RemoveWorkloadRequest
 import com.morpheusdata.model.provisioning.WorkloadRequest
 import com.morpheusdata.response.PrepareWorkloadResponse
 import com.morpheusdata.response.ProvisionResponse
@@ -208,11 +209,12 @@ class {{pluginNameCamel}}ProvisionProvider extends AbstractProvisionProvider imp
 	 * This is the key method called to destroy / remove a workload. This should make the remote calls necessary to remove any assets
 	 * associated with the workload.
 	 * @param workload to remove
-	 * @param opts map of options
+	 * @param removeWorkloadRequest the RemoveWorkloadRequest object containing the various configurations that may be needed
+	 * 	                            in removing the Workload
 	 * @return Response from API
 	 */
 	@Override
-	ServiceResponse removeWorkload(Workload workload, Map opts) {
+	ServiceResponse removeWorkload(Workload workload, RemoveWorkloadRequest removeWorkloadRequest) {
 		return ServiceResponse.success()
 	}
 

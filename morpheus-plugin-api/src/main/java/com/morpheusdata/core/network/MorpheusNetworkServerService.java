@@ -30,6 +30,7 @@ import io.reactivex.rxjava3.core.Observable;
  */
 public interface MorpheusNetworkServerService extends MorpheusDataService<NetworkServer, NetworkServerIdentityProjection>, MorpheusIdentityService<NetworkServer> {
 
+	MorpheusNetworkSwitchService getSwitch();
 
 	//Network Server ORM Object Methods
 	/**

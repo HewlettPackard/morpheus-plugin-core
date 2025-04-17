@@ -513,4 +513,10 @@ public interface MorpheusServices {
 	 * @return an instance of {@link MorpheusSynchronousHypervisorService}
 	 */
 	MorpheusSynchronousHypervisorService getHypervisorService();
+
+	/**
+	 * Returns the {@link MorpheusSynchronousNetworkResourceGroupService} which allows access to network resource group services
+	 * @return an instance of {@link MorpheusSynchronousNetworkResourceGroupService}
+	 */
+	MorpheusSynchronousNetworkResourceGroupService getNetworkResourceGroup();
 }

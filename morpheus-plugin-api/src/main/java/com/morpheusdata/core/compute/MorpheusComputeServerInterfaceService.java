@@ -19,6 +19,7 @@ package com.morpheusdata.core.compute;
 import com.morpheusdata.core.MorpheusDataService;
 import com.morpheusdata.model.ComputeServer;
 import com.morpheusdata.model.ComputeServerInterface;
+import com.morpheusdata.model.ComputeServerInterfaceType;
 import io.reactivex.rxjava3.core.Single;
 import java.util.List;
 
@@ -33,6 +34,13 @@ import java.util.List;
  * @author Bob Whiton
  */
 public interface MorpheusComputeServerInterfaceService extends MorpheusDataService<ComputeServerInterface, ComputeServerInterface> {
+
+	/**
+	 * Returns the service used for performing updates or queries on {@link ComputeServerInterfaceType} related assets within Morpheus.
+	 * @since 1.2.6
+	 * @return An instance of the ComputeServerInterfaceType Context
+	 */
+	MorpheusComputeServerInterfaceTypeService getType();
 
 	/**
 	 * Save updates to existing ComputeServerInterfaces

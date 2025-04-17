@@ -91,6 +91,11 @@ providers:
           template: backup/BackupExecutionProvider.groovy.hbs
         - name: "{{basePackagePath}}/{{pluginNameCamel}}BackupRestoreProvider.groovy"
           template: backup/BackupRestoreProvider.groovy.hbs
+    backupTab:
+        -   name: "{{basePackagePath}}/{{pluginNameCamel}}BackupIntegrationTabProvider.groovy"
+            template: backupTab/BackupIntegrationTabProvider.groovy.hbs
+        -   name: "src/main/resources/renderer/hbs/backupTab.hbs"
+            template: backupTab/backupTab.hbs.hbs
     generic:
         - name: "{{basePackagePath}}/{{pluginNameCamel}}GenericProvider.groovy"
           template: generic/GenericProvider.groovy.hbs

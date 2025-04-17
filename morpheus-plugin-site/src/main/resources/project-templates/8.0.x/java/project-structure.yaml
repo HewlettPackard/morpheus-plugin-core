@@ -91,6 +91,11 @@ providers:
           template: backup/BackupExecutionProvider.java.hbs
         - name: "{{basePackagePath}}/{{pluginNameCamel}}BackupRestoreProvider.java"
           template: backup/BackupRestoreProvider.java.hbs
+    backupTab:
+        -   name: "{{basePackagePath}}/{{pluginNameCamel}}BackupIntegrationTabProvider.java"
+            template: backupTab/BackupIntegrationTabProvider.java.hbs
+        -   name: "src/main/resources/renderer/hbs/backupTab.hbs"
+            template: backupTab/backupTab.hbs.hbs
     generic:
         - name: "{{basePackagePath}}/{{pluginNameCamel}}GenericProvider.java"
           template: generic/GenericProvider.java.hbs

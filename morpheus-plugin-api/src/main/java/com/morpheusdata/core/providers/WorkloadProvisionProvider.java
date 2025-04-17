@@ -17,11 +17,13 @@
 package com.morpheusdata.core.providers;
 
 import com.morpheusdata.model.*;
+import com.morpheusdata.model.provisioning.RemoveWorkloadRequest;
 import com.morpheusdata.model.provisioning.WorkloadRequest;
 import com.morpheusdata.request.ImportWorkloadRequest;
 import com.morpheusdata.request.ResizeRequest;
 import com.morpheusdata.response.*;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -95,6 +97,14 @@ public interface WorkloadProvisionProvider extends ComputeProvisionProvider {
 
 
 	/**
+	 * Issues the remote calls necessary to suspend a workload element.
+	 * @param workload the Workload we want to suspend.
+	 * @return Response from API
+	 */
+	default ServiceResponse suspendWorkload(Workload workload) { return ServiceResponse.error(); };
+
+
+	/**
 	 * Issues the remote calls to restart a workload element. In some cases this is just a simple alias call to do a stop/start,
 	 * however, in some cases cloud providers provide a direct restart call which may be preferred for speed.
 	 * @param workload the Workload we want to restart.
@@ -105,11 +115,29 @@ public interface WorkloadProvisionProvider extends ComputeProvisionProvider {
 	/**
 	 * This is the key method called to destroy / remove a workload. This should make the remote calls necessary to remove any assets
 	 * associated with the workload.
+	 * @deprecated Use {@link #removeWorkload(Workload, RemoveWorkloadRequest)} instead. Morpheus now calls the typed
+	 *             variant {@link #removeWorkload(Workload, RemoveWorkloadRequest)}, and this method will only be
+	 *             invoked if called explicitly by the typed variant. Otherwise, it is ignored.
 	 * @param workload to remove
 	 * @param opts map of options
 	 * @return Response from API
 	 */
-	ServiceResponse removeWorkload(Workload workload, Map opts);
+	@Deprecated(since = "1.2.6")
+	default ServiceResponse removeWorkload(Workload workload, Map opts) {
+		return ServiceResponse.success();
+	}
+
+	/**
+	 * This is the key method called to destroy / remove a workload. This should make the remote calls necessary to remove any assets
+	 * associated with the workload.
+	 * @param workload to remove
+	 * @param removeWorkloadRequest the RemoveWorkloadRequest object containing the various configurations that may be needed
+	 * 	                            in removing the Workload
+	 * @return Response from API
+	 */
+	default ServiceResponse removeWorkload(Workload workload, RemoveWorkloadRequest removeWorkloadRequest) {
+		return removeWorkload(workload, new LinkedHashMap<>());
+	}
 
 	/**
 	 * Method called after a successful call to runWorkload to obtain the details of the ComputeServer. Implementations

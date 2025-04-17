@@ -92,6 +92,13 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 	 */
 	default Boolean getCreatable() { return false; }
 
+	/**
+	 * Returns the Network Integration logo for display when a user needs to view or add this integration
+	 * @since 1.2.6
+	 * @return Icon representation of assets stored in the src/assets of the project.
+	 */
+	default Icon getIcon() { return null; };
+
 	default Collection<OptionType> getScopeOptionTypes() {
 		return new ArrayList<>();
 	}
@@ -150,7 +157,24 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 
 	default SecurityGroupProvider getSecurityGroupProvider() { return null; }
 
+	default Collection<NetworkSwitchType> getNetworkSwitchTypes() { return new ArrayList<>(); }
+
+	/**
+	 * Returns whether or not this network implementation supports {@link NetworkSwitch}.  If true,
+	 * this will enabled the Network Switch management panel in the user interface
+	 * @return
+	 */
+	default Boolean hasSwitches() { return false; }
+
+	@Deprecated
 	default ServiceResponse refresh() { return ServiceResponse.success(); }
+
+	/**
+	 * This method is triggered on a schedule to update entity information from the network integration itself.
+	 * @param networkServer
+	 * @return
+	 */
+	default ServiceResponse refresh(NetworkServer networkServer) { return ServiceResponse.success(networkServer); }
 
 	/**
 	 * Validates the submitted network server information.

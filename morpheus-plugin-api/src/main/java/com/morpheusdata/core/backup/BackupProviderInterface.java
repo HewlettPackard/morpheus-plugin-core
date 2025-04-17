@@ -17,8 +17,10 @@
 package com.morpheusdata.core.backup;
 
 import com.morpheusdata.core.providers.PluginProvider;
+import com.morpheusdata.core.providers.UIExtensionProvider;
 import com.morpheusdata.model.*;
 import com.morpheusdata.response.ServiceResponse;
+import com.morpheusdata.views.HTMLResponse;
 
 import java.util.*;
 
@@ -31,7 +33,7 @@ import java.util.*;
  * @since 0.12.2
  * @author Dustin DeYoung
  */
-public interface BackupProviderInterface extends PluginProvider {
+public interface BackupProviderInterface extends PluginProvider, UIExtensionProvider {
 
 	/**
 	 * Returns the integration logo for display when a user needs to view or add this integration
@@ -376,5 +378,14 @@ public interface BackupProviderInterface extends PluginProvider {
 	 */
 	default Collection<BackupJob> filterBackupJobs(Collection<BackupJob> backupJobs, Map opts){
 		return backupJobs;
+	}
+
+	/**
+	 * Integration details provided to the rendering engine. Overrides the entire backup integration details page in the Appliance UI.
+	 * @param backupProvider details of a backup provider
+	 * @return result of rendering a template
+	 */
+	default HTMLResponse renderTemplate(com.morpheusdata.model.BackupProvider backupProvider) {
+		return null;
 	}
 }

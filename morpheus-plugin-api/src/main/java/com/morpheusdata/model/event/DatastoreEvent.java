@@ -26,6 +26,9 @@ public class DatastoreEvent implements Event<DatastoreEvent.DatastoreEventType>,
 	protected DatastoreEventType type;
 	protected Datastore datastore;
 	protected ComputeServer server;
+	protected ComputeServer sourceServer;
+	protected Datastore sourceDatastore;
+	protected ComputeServer sourceHost;
 
 	@Override
 	public String getMessage() {
@@ -59,6 +62,30 @@ public class DatastoreEvent implements Event<DatastoreEvent.DatastoreEventType>,
 
 	public void setDatastore(Datastore datastore) {
 		this.datastore = datastore;
+	}
+
+	public ComputeServer getSourceServer() {
+		return sourceServer;
+	}
+
+	public void setSourceServer(ComputeServer sourceServer) {
+		this.sourceServer = sourceServer;
+	}
+
+	public Datastore getSourceDatastore() {
+		return sourceDatastore;
+	}
+
+	public void setSourceDatastore(Datastore sourceDatastore) {
+		this.sourceDatastore = sourceDatastore;
+	}
+
+	public ComputeServer getSourceHost() {
+		return sourceHost;
+	}
+
+	public void setSourceHost(ComputeServer sourceHost) {
+		this.sourceHost = sourceHost;
 	}
 
 	public enum DatastoreEventType implements EventType {
