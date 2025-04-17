@@ -57,6 +57,7 @@ public class CloudType extends CloudTypeIdentityProjection {
 	protected Boolean hasSecurityGroups = false; //this is kinda useless - its true everywhere and used for on box acls
 	protected Boolean hasCloudInit = false;
 	protected Boolean hasFolders = false;
+	@Deprecated
 	protected Boolean hasFloatingIps = false;
 	protected Boolean hasMarketplace = false;
 	protected Boolean hasNetworkAvailabilityZones = false;
@@ -345,10 +346,12 @@ public class CloudType extends CloudTypeIdentityProjection {
 		markDirty("hasFolders", hasFolders);
 	}
 
+	@Deprecated
 	public Boolean getHasFloatingIps() {
 		return hasFloatingIps;
 	}
 
+	@Deprecated
 	public void setHasFloatingIps(Boolean hasFloatingIps) {
 		this.hasFloatingIps = hasFloatingIps;
 		markDirty("hasFloatingIps", hasFloatingIps);

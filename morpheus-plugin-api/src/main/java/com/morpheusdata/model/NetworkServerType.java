@@ -60,6 +60,7 @@ public class NetworkServerType extends MorpheusModel {
 	public Boolean supportsEditScopes = false;
 	public String titleEdgeClusters;
 	public Boolean hasEdgeClusters = false;
+	protected Boolean hasFloatingIps = false;
 
 	public String getCode() {
 		return code;
@@ -437,5 +438,14 @@ public class NetworkServerType extends MorpheusModel {
 	public void setHasEdgeClusters(Boolean hasEdgeClusters) {
 		this.hasEdgeClusters = hasEdgeClusters;
 		markDirty("hasEdgeClusters", hasEdgeClusters);
+	}
+
+	public Boolean getHasFloatingIps() {
+		return hasFloatingIps;
+	}
+
+	public void setHasFloatingIps(Boolean hasFloatingIps) {
+		this.hasFloatingIps = hasFloatingIps;
+		markDirty("hasFloatingIps", hasFloatingIps);
 	}
 }
