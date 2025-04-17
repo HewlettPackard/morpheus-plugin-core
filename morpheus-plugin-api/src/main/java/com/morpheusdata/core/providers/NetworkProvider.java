@@ -166,6 +166,12 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 	 */
 	default Boolean hasSwitches() { return false; }
 
+	/**
+	 * Gets the floating ip provider
+	 * @return FloatingIpProvider
+	 */
+	default FloatingIpProvider getFloatingIpProvider() { return null; }
+
 	@Deprecated
 	default ServiceResponse refresh() { return ServiceResponse.success(); }
 
