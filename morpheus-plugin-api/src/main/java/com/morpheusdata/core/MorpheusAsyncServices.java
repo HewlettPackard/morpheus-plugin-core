@@ -524,4 +524,10 @@ public interface MorpheusAsyncServices {
 	 * @return an instance of {@link MorpheusNetworkResourceGroupService}
 	 */
 	MorpheusNetworkResourceGroupService getNetworkResourceGroup();
+
+	/**
+	 * Returns the {@link MorpheusComputeTypePackageService} which allows access to compute type package services
+	 * @return an instance of {@link MorpheusComputeTypePackageService}
+	 */
+	MorpheusComputeTypePackageService getComputeTypePackage();
 }

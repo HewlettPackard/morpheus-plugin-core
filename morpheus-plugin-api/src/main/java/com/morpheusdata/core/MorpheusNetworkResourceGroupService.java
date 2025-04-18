@@ -8,7 +8,7 @@ import com.morpheusdata.model.projection.NetworkResourceGroupIdentityProjection;
  * @author aclement
  * @since 1.2.5
  */
-public interface MorpheusNetworkResourceGroupService extends MorpheusDataService<NetworkResourceGroupIdentityProjection, NetworkResourceGroup> {
+public interface MorpheusNetworkResourceGroupService extends MorpheusDataService<NetworkResourceGroup, NetworkResourceGroupIdentityProjection> {
 
 	MorpheusNetworkResourceGroupMemberService getMember();
 

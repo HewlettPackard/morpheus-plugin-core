@@ -17,6 +17,7 @@
 package com.morpheusdata.core.synchronous;
 
 import com.morpheusdata.core.MorpheusSynchronousDataService;
+import com.morpheusdata.core.MorpheusSynchronousIdentityService;
 import com.morpheusdata.model.NetworkResourceGroup;
 import com.morpheusdata.model.projection.NetworkResourceGroupIdentityProjection;
 
