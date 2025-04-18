@@ -21,9 +21,19 @@ import java.util.Date;
 public class ComputeServerGroupPackage extends MorpheusModel {
 
     public enum Status {
-		OK,
-		ERROR,
-        PENDING
+		OK("ok"),
+		ERROR("error"),
+        PENDING("pending");
+
+		private final String value;
+
+		Status(String value) {
+			this.value = value;
+		}
+
+		public String toString() {
+			return this.value;
+		}
     }
 
 	protected ComputeTypePackage packageType;

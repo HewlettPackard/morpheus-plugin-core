@@ -7,6 +7,6 @@ import com.morpheusdata.model.ComputeServerGroupPackage;
  * @author aclement
  * @since 1.2.6
  */
-public interface MorpheusComputeServerGroupPackageService extends MorpheusDataService<ComputeServerGroupPackage, ComputeServerGroupPackage> {
+public interface MorpheusSynchronousClusterPackageService extends MorpheusSynchronousDataService<ComputeServerGroupPackage, ComputeServerGroupPackage> {
 
 }

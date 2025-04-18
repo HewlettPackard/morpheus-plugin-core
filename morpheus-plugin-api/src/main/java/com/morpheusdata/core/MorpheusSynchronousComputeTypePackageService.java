@@ -9,6 +9,6 @@ import com.morpheusdata.model.ComputeTypePackage;
  */
 public interface MorpheusSynchronousComputeTypePackageService extends MorpheusSynchronousDataService<ComputeTypePackage, ComputeTypePackage> {
 
-	MorpheusSynchronousComputeServerGroupPackageService getComputeServerGroupPackage();
+	MorpheusSynchronousClusterPackageService getClusterPackage();
 
 }
