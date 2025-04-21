@@ -61,6 +61,11 @@ public interface DatastoreTypeProvider extends PluginProvider {
 	 */
 	String getStorageProviderCode();
 
+	/**
+	 * Provide custom configuration options when creating a new {@link AccountIntegration}
+	 * @return a List of OptionType
+	 */
+	List<OptionType> getOptionTypes();
 
 	/**
 	 * Provide custom list of {@link StorageVolumeType} for this datastore.
