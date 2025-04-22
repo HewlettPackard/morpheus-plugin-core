@@ -60,6 +60,17 @@ public interface MorpheusProcessService extends MorpheusDataService<Process, Pro
     Single<Boolean> startProcessStep(Process process, ProcessEvent nextEvent, String processStatus);
 
 	/**
+	 * Start a new ProcessEvent associated to the Process while ending a specific previous step.
+	 * This will end the ProcessEvent with the specified lastStepType and then start a new ProcessEvent.
+	 * @param process The Process on which to create a new ProcessEvent to start
+	 * @param lastStepType The type of the last step to end before starting the new event
+	 * @param nextEvent The new ProcessEvent to start
+	 * @param processStatus The status (i.e. 'complete', 'failed')
+	 * @return Boolean indicating success
+	 */
+	Single<Boolean> startProcessStepAt(Process process, ProcessEvent.ProcessType lastStepType, ProcessEvent nextEvent, String processStatus);
+
+	/**
 	 * Stops the last ProcessEvent associated with the Process
 	 * @param process The Process from which to fetch the last ProcessEvent to stop
 	 * @param processStatus The status (i.e. 'complete', 'failed')
