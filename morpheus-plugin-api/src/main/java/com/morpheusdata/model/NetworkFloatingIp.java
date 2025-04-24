@@ -12,8 +12,8 @@ public class NetworkFloatingIp extends NetworkFloatingIpIdentityProjection {
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected NetworkFloatingIpPoolRange floatingIpPoolRange;
 
-	protected String ipType = "assigned";
-	protected String ipStatus = "free";
+	protected String ipType = IPType.ASSIGNED.toString();
+	protected String ipStatus = IpStatus.FREE.toString();
 	protected String gatewayAddress;
 	protected String subnetMask;
 	protected String dnsServer;
@@ -28,6 +28,7 @@ public class NetworkFloatingIp extends NetworkFloatingIpIdentityProjection {
 	protected String ptrId;
 	protected Date startDate;
 	protected Date endDate;
+	protected String refType;
 	protected Long refId;
 	protected Long subRefId;
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
@@ -36,7 +37,6 @@ public class NetworkFloatingIp extends NetworkFloatingIpIdentityProjection {
 	protected User createdBy;
 	protected Date dateCreated;
 	protected Date lastUpdated;
-	protected String config;
 	protected String category;
 
 	public NetworkFloatingIpPool getFloatingPool() {
@@ -201,6 +201,15 @@ public class NetworkFloatingIp extends NetworkFloatingIpIdentityProjection {
 		markDirty("endDate", endDate);
 	}
 
+	public String getRefType() {
+		return refType;
+	}
+
+	public void setRefType(String refType) {
+		this.refType = refType;
+		markDirty("refType", refType);
+	}
+
 	public Long getRefId() {
 		return refId;
 	}
@@ -255,15 +264,6 @@ public class NetworkFloatingIp extends NetworkFloatingIpIdentityProjection {
 		markDirty("lastUpdated", lastUpdated);
 	}
 
-	public String getConfig() {
-		return config;
-	}
-
-	public void setConfig(String config) {
-		this.config = config;
-		markDirty("config", config);
-	}
-
 	public String getCategory() {
 		return category;
 	}
@@ -271,5 +271,36 @@ public class NetworkFloatingIp extends NetworkFloatingIpIdentityProjection {
 	public void setCategory(String category) {
 		this.category = category;
 		markDirty("category", category);
+	}
+
+	public enum IPType {
+		ASSIGNED("assigned"),
+		RESERVED("reserved");
+
+		private final String value;
+
+		IPType(String value) {
+			this.value = value;
+		}
+
+		public String toString() {
+			return this.value;
+		}
+	}
+
+	public enum IpStatus {
+		FREE("free"),
+		ASSIGNED("assigned"),
+		PENDING("pending");
+
+		private final String value;
+
+		IpStatus(String value) {
+			this.value = value;
+		}
+
+		public String toString() {
+			return this.value;
+		}
 	}
 }

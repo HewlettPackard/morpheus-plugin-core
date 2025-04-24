@@ -37,10 +37,23 @@ public interface FloatingIpProvider extends PluginProvider{
 	ServiceResponse releaseFloatingIp(NetworkFloatingIp floatingIp);
 
 	/**
-	 * Allocates a floating ip
+	 * Allocates a floating ip in external system, the result floating ip should contain the external system object id
+	 *
+	 * <p><strong>Example NetworkFloatingIp To include in ServiceResponse:</strong></p>
+	 * <pre>{@code
+	 * def networkFloatingIp = new NetworkFloatingIp(
+	 * 	floatingPool:pool, externalId:externalObject.id, internalId:externalObject.port_id, refType:'ComputeZone',
+	 * 	refId:cloud.id, active:(externalObject.status == 'ACTIVE' || externalObject.status == 'DOWN'), staticIp:true,
+	 * 	ipAddress:externalObject.floating_ip_address, ipStatus:(externalObject.port_id || externalObject.fixed_ip_address ? 'assigned' : 'free'),
+	 * 	ptrId:item.fixed_ip_address, category: objCategory)
+	 *
+	 * 	networkFloatingIp.setConfigMap(externalObject)
+	 *
+	 * 	return ServiceResponse<NetworkFloatingIp>.success(networkFloatingIp)
+	 * }</pre>
 	 * @param networkServer the network server to allocate the floating ip from
 	 * @param pool the floating ip pool to allocate the floating ip from
-	 * @return ServiceResponse
+	 * @return ServiceResponse containing the resulting {@link NetworkFloatingIp }
 	 */
-	ServiceResponse allocateFloatingIp(NetworkServer networkServer, NetworkFloatingIpPool pool);
+	ServiceResponse<NetworkFloatingIp> allocateFloatingIp(NetworkServer networkServer, NetworkFloatingIpPool pool);
 }
