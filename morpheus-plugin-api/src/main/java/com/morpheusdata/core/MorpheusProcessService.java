@@ -80,6 +80,16 @@ public interface MorpheusProcessService extends MorpheusDataService<Process, Pro
 	Single<Boolean> endProcessStep(Process process, String processStatus, String output);
 
 	/**
+	 * Stops a specific ProcessEvent associated with the Process based on the provided step type
+	 * @param process The Process from which to stop the specified ProcessEvent
+	 * @param stepType The specific type of ProcessEvent to stop
+	 * @param processStatus The status to set (i.e. 'complete', 'failed')
+	 * @param output The output to associate with the ProcessEvent
+	 * @return Boolean indicating success
+	 */
+	Single<Boolean> endProcessStepAt(Process process, ProcessEvent.ProcessType stepType, String processStatus, String output);
+
+	/**
 	 * End the process with the status specified
 	 * @param process The Process to end
 	 * @param processStatus The status (i.e. 'complete', 'failed')
