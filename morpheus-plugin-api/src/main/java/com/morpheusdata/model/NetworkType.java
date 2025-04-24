@@ -43,10 +43,15 @@ public class NetworkType extends MorpheusModel {
 	private Boolean vlanIdEditable = false;
 	private Boolean canAssignPool = false;
 	private Boolean deletable = false;
+	/**
+	 * Check for usage on delete and prevent deletion if there are any resources using networks of this type
+	 */
+	protected Boolean validateUsageOnDelete = false;
 	private Boolean hasCidr = true;
 	protected Boolean hasNetworkServer = false;
 	protected Boolean cidrRequired = false;
 	protected Boolean ipv6Editable = true;
+
 	private List<NetworkSubnetType> subnetTypes = new ArrayList<>();
 	private List<OptionType> optionTypes = new ArrayList<>();
 	private List<ComputeServerGroupType> serverGroupTypes = new ArrayList<>();
@@ -184,6 +189,15 @@ public class NetworkType extends MorpheusModel {
 	public void setDeletable(Boolean deletable) {
 		this.deletable = deletable;
 		markDirty("deletable", deletable);
+	}
+
+	public Boolean getValidateUsageOnDelete() {
+		return validateUsageOnDelete;
+	}
+
+	public void setValidateUsageOnDelete(Boolean validateUsageOnDelete) {
+		this.validateUsageOnDelete = validateUsageOnDelete;
+		markDirty("validateUsageOnDelete", validateUsageOnDelete, this.validateUsageOnDelete);
 	}
 
 	public Boolean getHasCidr() {
