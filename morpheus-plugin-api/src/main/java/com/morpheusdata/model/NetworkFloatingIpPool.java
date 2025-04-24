@@ -28,7 +28,6 @@ public class NetworkFloatingIpPool extends NetworkFloatingIpPoolIdentityProjecti
 	protected String internalId;
 	protected String refType;
 	protected String refId;
-	protected String config;
 	protected Boolean enabled;
 	protected Date dateCreated;
 	protected Date lastUpdated;
@@ -203,15 +202,6 @@ public class NetworkFloatingIpPool extends NetworkFloatingIpPoolIdentityProjecti
 	public void setRefId(String refId) {
 		this.refId = refId;
 		markDirty("refId", refId);
-	}
-
-	public String getConfig() {
-		return config;
-	}
-
-	public void setConfig(String config) {
-		this.config = config;
-		markDirty("config", config);
 	}
 
 	public Boolean getEnabled() {

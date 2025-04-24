@@ -1,0 +1,10 @@
+package com.morpheusdata.core.synchronous.network;
+
+
+import com.morpheusdata.core.MorpheusSynchronousDataService;
+import com.morpheusdata.core.MorpheusSynchronousIdentityService;
+import com.morpheusdata.model.NetworkFloatingIpPool;
+import com.morpheusdata.model.projection.NetworkFloatingIpPoolIdentityProjection;
+
+public interface MorpheusSynchronousNetworkFloatingIpPoolService extends MorpheusSynchronousDataService<NetworkFloatingIpPool, NetworkFloatingIpPoolIdentityProjection>, MorpheusSynchronousIdentityService<NetworkFloatingIpPoolIdentityProjection> {
+}

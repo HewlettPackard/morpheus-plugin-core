@@ -51,6 +51,12 @@ public interface MorpheusNetworkService extends MorpheusDataService<Network, Net
 	MorpheusNetworkPoolService getPool();
 
 	/**
+	 * Returns the NetworkFloatingIpContext used for performing updates or queries on {@link NetworkFloatingIp} related assets within Morpheus.
+	 * @return An instance of the Network Floating IP Context to be used for calls by various floating ip providers
+	 */
+	MorpheusNetworkFloatingIpService getFloatingIp();
+
+	/**
 	 * Returns the NetworkPoolServerContext used for performing updates/queries on {@link NetworkPoolServer} related assets
 	 * within Morpheus.
 	 * @return An instance of the Network Pool ServerContext to be used for calls by various network providers

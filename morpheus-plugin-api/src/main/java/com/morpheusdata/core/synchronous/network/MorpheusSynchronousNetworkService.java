@@ -34,6 +34,12 @@ public interface MorpheusSynchronousNetworkService extends MorpheusSynchronousDa
 	MorpheusSynchronousNetworkPoolService getPool();
 
 	/**
+	 * Returns the NetworkFloatingIpContext used for performing updates on queries on {@link NetworkFloatingIp} related assets within Morpheus.
+	 * @return An instance of the Network Floating IP Context to be used for calls by various floating ip providers
+	 */
+	MorpheusSynchronousNetworkFloatingIpService getFloatingIp();
+
+	/**
 	 * Returns the NetworkPoolContext used for performing updates or queries on {@link NetworkPoolServer} related assets within Morpheus.
 	 * @return An instance of the Network Pool Server Context to be used for calls by various network providers
 	 */
