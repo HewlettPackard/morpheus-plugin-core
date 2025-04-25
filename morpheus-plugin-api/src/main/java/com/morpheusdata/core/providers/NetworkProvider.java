@@ -18,6 +18,7 @@ package com.morpheusdata.core.providers;
 
 import com.morpheusdata.core.util.MorpheusUtils;
 import com.morpheusdata.model.*;
+import com.morpheusdata.model.event.Event;
 import com.morpheusdata.model.provisioning.NetworkConfiguration;
 import com.morpheusdata.response.ServiceResponse;
 import com.morpheusdata.views.HTMLResponse;
@@ -647,4 +648,10 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 		 */
 		public ServiceResponse<Void> releaseComputeServerInterfacesFromServer(NetworkServer networkServer, ComputeServer server, List<ComputeServerInterface> interfaces);
 	}
+
+	/**
+	 * Adding this interface for organizational purposes.  Performs the same duty as {@link GenericIntegrationProvider.EventSubscriberFacet}
+	 * @param <E>
+	 */
+	public interface EventSubscriberFacet<E extends Event> extends GenericIntegrationProvider.EventSubscriberFacet<E> {}
 }
