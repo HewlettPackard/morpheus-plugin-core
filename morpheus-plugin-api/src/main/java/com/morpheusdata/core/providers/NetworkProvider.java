@@ -648,10 +648,4 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 		 */
 		public ServiceResponse<Void> releaseComputeServerInterfacesFromServer(NetworkServer networkServer, ComputeServer server, List<ComputeServerInterface> interfaces);
 	}
-
-	/**
-	 * Adding this interface for organizational purposes.  Performs the same duty as {@link GenericIntegrationProvider.EventSubscriberFacet}
-	 * @param <E>
-	 */
-	public interface EventSubscriberFacet<E extends Event> extends GenericIntegrationProvider.EventSubscriberFacet<E> {}
 }
