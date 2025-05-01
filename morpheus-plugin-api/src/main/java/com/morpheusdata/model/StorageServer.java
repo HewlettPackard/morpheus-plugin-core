@@ -71,7 +71,7 @@ public class StorageServer extends StorageServerIdentityProjection {
 	protected Map credentialData;
 
 	//@JsonSerialize(using= ModelCollectionAsIdsOnlySerializer.class)
-	//public Collection<StorageGroup> groups;
+	public Collection<StorageGroup> groups;
 	//@JsonSerialize(using= ModelCollectionAsIdsOnlySerializer.class)
 	//public Collection<StorageHostGroup> hostGroups;
 	//@JsonSerialize(using= ModelCollectionAsIdsOnlySerializer.class)
