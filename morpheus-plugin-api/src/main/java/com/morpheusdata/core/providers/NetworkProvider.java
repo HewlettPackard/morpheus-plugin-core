@@ -18,6 +18,7 @@ package com.morpheusdata.core.providers;
 
 import com.morpheusdata.core.util.MorpheusUtils;
 import com.morpheusdata.model.*;
+import com.morpheusdata.model.event.Event;
 import com.morpheusdata.model.provisioning.NetworkConfiguration;
 import com.morpheusdata.response.ServiceResponse;
 import com.morpheusdata.views.HTMLResponse;

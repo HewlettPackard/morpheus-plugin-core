@@ -18,6 +18,11 @@ package com.morpheusdata.core.providers;
 
 import com.morpheusdata.core.MorpheusContext;
 import com.morpheusdata.core.Plugin;
+import com.morpheusdata.model.AccountIntegration;
+import com.morpheusdata.model.event.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * All Providers implement the Plugin Extension. Different Plugins for Morpheus provide different integration endpoints.
@@ -62,4 +67,39 @@ public interface PluginProvider {
 	 * @return provider is plugin
 	 */
 	default boolean isPlugin() { return true; }
+
+	/**
+	 *	Applying this Facet to an integration will allow it to subscribe to events and perform operations based on the event
+	 * @since 1.2.6
+	 * @author David Estes
+	 */
+	public interface EventSubscriberFacet<E extends Event> {
+		/**
+		 * Gets a list of supported event types that this integration can subscribe to
+		 * @return list of supported event types
+		 */
+		List<EventType> getSupportedEventTypes();
+
+		/**
+		 * Gets the list of scopes to limit the events received by the subscriber. This is useful for filtering events based on the associations of the event subject.
+		 * For example, an integration may only want to receive events when the subject has an association to a cloud. When combined with event types, a provider could
+		 * subscribe to only create network on a cloud events.
+		 * @return list of event scopes
+		 */
+		default List<IEventScope> getEventScopes() {
+			List<IEventScope> scopes = new ArrayList<>();
+			scopes.add(com.morpheusdata.model.event.EventScope.ALL);
+			return scopes;
+		}
+
+		/**
+		 * Method triggered when an event that was subscribed to is triggered. This is useful for capturing hooks like
+		 * perhaps, an action needs to be performed after a network is created or destroyed.
+		 *
+		 * @param event the event object that was triggered
+		 * @see Event
+		 * @see NetworkEvent
+		 */
+		void onEvent(E event, AccountIntegration integration);
+	}
 }
