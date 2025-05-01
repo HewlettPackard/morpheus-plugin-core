@@ -165,4 +165,14 @@ public interface MorpheusBackupService extends MorpheusDataService<Backup, Backu
 	 * @return the Single Observable containing the {@link StorageProvider} object for subscription
 	 */
 	Single<StorageProvider> getBackupStorageProvider(Long storageBucketId, String basePath);
+
+
+	/**
+	 * Returns the working path for a backup result. This is typically used to store temporary files or
+	 * directories for the backup process.
+	 * @param backupId the id of the {@link Backup} object
+	 * @param backupResultId the id of the {@link BackupResult} object
+	 * @return the Single Observable containing the working path for the backup result
+	 */
+	Single<String> getBackupWorkingPath(Long backupId, Long backupResultId);
 }
