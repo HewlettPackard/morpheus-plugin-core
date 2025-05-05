@@ -102,6 +102,11 @@ public class BackupResult extends MorpheusModel {
 	protected String source;
 	protected Boolean deletable = true;
 
+	/**
+	 * ID of the {@link Process} that is tracking the progress of the backup execution.
+	 */
+	protected Long internalProcessId;
+
 	Long getBackupId() {
 		return backup.id;
 	}
@@ -663,6 +668,25 @@ public class BackupResult extends MorpheusModel {
 	public void setDeletable(Boolean deletable) {
 		markDirty("deletable", deletable, this.deletable);
 		this.deletable = deletable;
+	}
+
+	/**
+	 * Returns the internal process ID for the backup result. This is typically used to track the progress of the backup's
+	 * internal {@link Process}.
+	 * @return the internal process ID for the backup result
+	 */
+	public Long getInternalProcessId() {
+		return internalProcessId;
+	}
+
+	/**
+	 * Sets the internal process ID for the backup result. This is typically used to track the progress of the backup's
+	 * internal {@link Process}.
+	 * @param internalProcessId the internal process ID for the backup result
+	 */
+	public void setInternalProcessId(Long internalProcessId) {
+		this.internalProcessId = internalProcessId;
+		markDirty("internalProcessId", internalProcessId, this.internalProcessId);
 	}
 
 	public enum Status {
