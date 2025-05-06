@@ -17,6 +17,7 @@
 package com.morpheusdata.core.providers;
 
 import com.morpheusdata.model.StorageGroup;
+import com.morpheusdata.model.StorageServer;
 import com.morpheusdata.model.StorageVolume;
 import com.morpheusdata.model.StorageVolumeType;
 import com.morpheusdata.response.ServiceResponse;
@@ -36,6 +37,17 @@ public interface StorageProviderVolumes {
 	ServiceResponse<StorageVolume> createVolume(StorageGroup storageGroup, StorageVolume storageVolume, Map opts);
 	ServiceResponse<StorageVolume> resizeVolume(StorageGroup storageGroup, StorageVolume storageVolume, Map opts);
 	ServiceResponse<StorageVolume> deleteVolume(StorageGroup storageGroup, StorageVolume storageVolume, Map opts);
+
+	default ServiceResponse createVolume(StorageServer storageServer, StorageVolume storageVolume, Map opts){
+		return ServiceResponse.success();
+	};
+	default ServiceResponse<StorageVolume> resizeVolume(StorageServer storageServer, StorageVolume storageVolume, Map opts){
+		return ServiceResponse.success();
+	};
+	default ServiceResponse<StorageVolume> deleteVolume(StorageServer storageServer, StorageVolume storageVolume, Map opts){
+		return ServiceResponse.success();
+	};
+
 
 	Collection<StorageVolumeType> getStorageVolumeTypes();
 }
