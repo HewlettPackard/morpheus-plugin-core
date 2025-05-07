@@ -2,7 +2,7 @@
 
 **Note:** Morpheus Plugin API is now 1.0! This means calls that are used will be supported for a longer period of time and given appropriate deprecation warnings when necessary. Morpheus Plugin API 1.2 requires a minimum Morpheus Version of `8.0.x`. Morpheus `7.0.x` still runs on Core version `1.1.x`
 
-* **1.2.6**
+* **1.2.7**
 ** *New Process Service API*
 *** Introduced a new Process Service API for improved process management
 *** Added support for internal process ID tracking during marshalling/unmarshalling operations
