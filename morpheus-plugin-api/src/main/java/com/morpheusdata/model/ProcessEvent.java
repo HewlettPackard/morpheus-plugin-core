@@ -140,7 +140,29 @@ public class ProcessEvent {
 		snapshot,
 		startup,
 		teardown,
-		terraformCommand
+		terraformCommand;
+
+		final String code;
+		final String displayName;
+		final String description;
+
+		ProcessType() {
+			code= this.name();
+			displayName = this.name();
+			description="";
+		}
+
+		ProcessType(String code, String displayName) {
+			this.code = code;
+			this.displayName = displayName;
+			this.description = "";
+		}
+
+		ProcessType(String code, String displayName, String description) {
+			this.code = code;
+			this.displayName = displayName;
+			this.description = description;
+		}
 	}
 
 	public ProcessType type;
