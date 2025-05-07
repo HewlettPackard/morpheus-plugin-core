@@ -308,6 +308,16 @@ public interface CloudProvider extends PluginProvider {
 	}
 
 	/**
+	 * Specifies whether the current cloud allows the user to create new datastores
+	 * @since 1.2.6
+	 * @return Boolean
+	 */
+	default Boolean canCreateDatastores() {
+		return false;
+	}
+
+
+	/**
 	 * Returns the default provision code for fetching a {@link ProvisionProvider} for this cloud.
 	 * This is only really necessary if the provision type code is the exact same as the cloud code.
 	 * @return the provision provider code
