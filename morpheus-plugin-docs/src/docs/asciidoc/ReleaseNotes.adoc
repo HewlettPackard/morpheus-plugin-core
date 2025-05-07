@@ -2,10 +2,42 @@
 
 **Note:** Morpheus Plugin API is now 1.0! This means calls that are used will be supported for a longer period of time and given appropriate deprecation warnings when necessary. Morpheus Plugin API 1.2 requires a minimum Morpheus Version of `8.0.x`. Morpheus `7.0.x` still runs on Core version `1.1.x`
 
-** Added support for overriding views for Backup Providers.
-** Added tab UI support for Backup Providers.
-** Added ability for Backup Providers to add custom options to the restore backup prompt.
-** Added context service support for StorageProviderType, NetworkSwitch, NetworkResourceGroup, NetworkResourceGroupMember
+* **1.2.6**
+** *New Process Service API*
+*** Introduced a new Process Service API for improved process management
+*** Added support for internal process ID tracking during marshalling/unmarshalling operations
+*** Enhanced process tracking capabilities between processing steps
+** *Backup Integration Enhancements*
+*** Added support for backup plugin result exporting
+*** Introduced custom backup integration detail views
+*** Added ability to create custom backup provider tabs
+*** Enhanced backup provider interface with view rendering capabilities
+** *Network Infrastructure Improvements*
+*** Added complete Floating IP and Floating IP Pool services
+*** Introduced NetworkResourceGroup and NetworkResourceGroupMember services
+*** Added NetworkSwitch support with comprehensive service layer and models
+*** Implemented ComputeServerInterfaceType services
+** *Cluster Package Support*
+*** Added support for compute type packages
+*** Implemented server group package functionality
+*** Enhanced cluster management capabilities with package features
+** *API Improvements*
+*** Added validateUsageOnDelete for NetworkTypes
+*** Enhanced NetworkProvider with event subscription capabilities
+*** Added support for filterServicePlans to CloudProvider
+*** Enhanced StorageProviderVolumes interface with additional methods
+*** Added new typed removeWorkload method and deprecated original implementation
+*** Introduced suspendWorkload functionality to WorkloadProvisionProvider
+*** Added ability to disable cookie usage in HTTP API Client
+** *Bug Fixes*
+*** Fixed process ID tracking during marshalling/unmarshalling operations
+*** Corrected fields handling in DatastoreEvent model
+*** Resolved option types implementation issues in various providers
+*** Fixed network provider synchronization issues
+** *Breaking Changes*
+*** Deprecated existing interfaces in GenericIntegrationProvider
+*** Introduced new event subscription models and interfaces (with backward compatibility)
+*** Deprecated original removeWorkload implementation in favor of new typed method
 
 * **1.2.5**
 ** Added support for NetworkProvider plugins creating an integration without a cloud integration
