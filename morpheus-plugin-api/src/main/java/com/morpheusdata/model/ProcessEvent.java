@@ -115,7 +115,6 @@ public class ProcessEvent {
 		provisionStateRefresh,
 		provisionUpdates,
 		provisionVolumes,
-		provisionBootVolume,
 		reconfigure,
 		resize,
 		resizeMemory,
