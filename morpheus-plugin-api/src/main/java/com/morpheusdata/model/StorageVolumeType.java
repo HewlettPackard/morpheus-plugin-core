@@ -31,6 +31,7 @@ public class StorageVolumeType extends MorpheusModel {
 	protected Boolean enabled = true;
 	protected String description;
 	protected String displayName;
+	protected String volumeOptionSource;
 	protected String volumeType = "disk";
 	protected Integer displayOrder = 1;
 	protected Boolean customLabel = true;
@@ -103,6 +104,14 @@ public class StorageVolumeType extends MorpheusModel {
 
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
+	}
+
+	public String getVolumeOptionSource() {
+		return volumeOptionSource;
+	}
+
+	public void setVolumeOptionSource(String volumeOptionSource) {
+		this.volumeOptionSource = volumeOptionSource;
 	}
 
 	public String getVolumeType() {
