@@ -18,14 +18,37 @@ package com.morpheusdata.model;
 
 public class Process extends MorpheusModel {
 
+	public ProcessStepType stepType;
+
+	/**
+	 * @deprecated Use {@link #stepType} instead
+	 */
+	@Deprecated(since = "1.2.8")
 	public ProcessEvent.ProcessType type;
+
 	public String username;
 
+	/**
+	 * @deprecated Use {@link #getStepType() } instead.
+	 */
+	@Deprecated(since = "1.2.8")
 	public ProcessEvent.ProcessType getType() {
 		return type;
 	}
 
+	/**
+	 * @deprecated Use {@link #setStepType(ProcessStepType) } instead.
+	 */
+	@Deprecated(since = "1.2.8")
 	public void setType(ProcessEvent.ProcessType type) {
 		this.type = type;
+	}
+
+	public ProcessStepType getStepType() {
+		return stepType;
+	}
+
+	public void setStepType(ProcessStepType stepType) {
+		this.stepType = stepType;
 	}
 }

@@ -18,14 +18,53 @@ package com.morpheusdata.model;
 
 import java.util.Map;
 
+/**
+ * Represents an event (or step) within a {@link Process}
+ */
 public class ProcessEvent {
 
+	/**
+	 * @deprecated Use {@link #stepType} instead.
+	 */
+	public ProcessType type;
+	public ProcessStepType stepType;
+	public String jobName;
+	public Map jobConfig;
+
+	/**
+	 * @deprecated Use {@link #getStepType()} instead.
+	 */
+	@Deprecated(since = "1.2.8")
 	public ProcessType getType() {
 		return type;
 	}
 
+	/**
+	 * @deprecated Use {@link #setStepType(ProcessStepType)} instead.
+	 */
+	@Deprecated(since = "1.2.8")
 	public void setType(ProcessType type) {
 		this.type = type;
+	}
+
+	/**
+	 * The type of step this event represents.
+	 * <p>
+	 *  See {@link ProcessStepType} for some examples from core.
+	 * @return step type
+	 */
+	public ProcessStepType getStepType() {
+		return stepType;
+	}
+
+	/**
+	 * Sets the type of step for this event
+	 * <p>
+	 * See {@link ProcessStepType} for some examples from core.
+	 * @param stepType step type
+	 */
+	public void setStepType(ProcessStepType stepType) {
+		this.stepType = stepType;
 	}
 
 	public String getJobName() {
@@ -44,6 +83,10 @@ public class ProcessEvent {
 		this.jobConfig = jobConfig;
 	}
 
+	/**
+	 * @deprecated Use {@link ProcessStepType} instead.
+	 */
+	@Deprecated(since = "1.2.8")
 	public enum ProcessType {
 		ansibleCommand,
 		ansibleInstall,
@@ -144,8 +187,4 @@ public class ProcessEvent {
 		terraformCommand,
 		upgradePackage,
 	}
-
-	public ProcessType type;
-	public String jobName;
-	public Map jobConfig;
 }
