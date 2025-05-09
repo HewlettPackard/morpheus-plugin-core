@@ -396,7 +396,7 @@ public interface CloudProvider extends PluginProvider {
 	 * @return cloud classification
 	 */
 	default CloudClassification getCloudClassification() {
-		return CloudClassification.publicCloud;
+		return CloudClassification.PUBLIC;
 	}
 
 	/**
