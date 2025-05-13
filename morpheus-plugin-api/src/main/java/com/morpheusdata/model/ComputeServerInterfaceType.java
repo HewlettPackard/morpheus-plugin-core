@@ -28,6 +28,7 @@ public class ComputeServerInterfaceType extends MorpheusModel {
 	protected Boolean enabled;
 	protected Boolean bonded;
 	protected Boolean vlan;
+	protected Boolean deleteOnWorkloadRemoval;
 	protected Boolean hasChildInterfaces;
 	protected List<ComputeServerInterfaceType> childTypes;
 
@@ -101,6 +102,24 @@ public class ComputeServerInterfaceType extends MorpheusModel {
 	public void setVlan(Boolean vlan) {
 		this.vlan = vlan;
 		markDirty("vlan", vlan);
+	}
+
+	/**
+	 * @return true to delete a ComputeServerInterface of this type after workload removal
+	 */
+	public Boolean getDeleteOnWorkloadRemoval() {
+		return deleteOnWorkloadRemoval;
+	}
+
+	/**
+	 * Flags whether a ComputeServerInterface of this type should be deleted after workload removal
+	 * <p>
+	 * Core will carry out the deletion after a successful and/or forced removal of the workload is complete.
+	 * @param deleteOnWorkloadRemoval true to delete a ComputeServerInterface of this type after workload removal
+	 */
+	public void setDeleteOnWorkloadRemoval(Boolean deleteOnWorkloadRemoval) {
+		this.deleteOnWorkloadRemoval = deleteOnWorkloadRemoval;
+		markDirty("deleteOnWorkloadRemoval", deleteOnWorkloadRemoval);
 	}
 
 	public Boolean getHasChildInterfaces() {
