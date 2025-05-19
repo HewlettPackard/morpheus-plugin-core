@@ -44,6 +44,8 @@ public class NetworkPoolType extends MorpheusModel{
 	 */
 	protected String description;
 
+	protected String poolService;
+
 	/**
 	 * Defines whether or not a Pool can be created from the UI (Currently not supported by the {@link IPAMProvider} implementation).
 	 */
@@ -54,6 +56,8 @@ public class NetworkPoolType extends MorpheusModel{
 	protected Boolean hostRecordEditable = true;
 
 	protected Boolean ipv6Pool = false;
+
+	protected Boolean loadBalancerCompatible = false;
 
 
 	/**
@@ -166,4 +170,23 @@ public class NetworkPoolType extends MorpheusModel{
 	public void setIpv6Pool(Boolean ipv6Pool) {
 		this.ipv6Pool = ipv6Pool;
 	}
+
+	public Boolean getLoadBalancerCompatible() {
+		return loadBalancerCompatible;
+	}
+
+	public void setLoadBalancerCompatible(Boolean loadBalancerCompatible) {
+		this.loadBalancerCompatible = loadBalancerCompatible;
+	}
+
+
+	public String getPoolService() {
+		return poolService;
+	}
+
+	public void setPoolService(String poolService) {
+		this.poolService = poolService;
+		markDirty("poolService", poolService);
+	}
+
 }
