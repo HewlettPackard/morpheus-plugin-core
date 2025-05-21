@@ -133,7 +133,7 @@ public interface WorkloadProvisionProvider extends ComputeProvisionProvider {
 	 * @param workload to remove
 	 * @param removeWorkloadRequest the RemoveWorkloadRequest object containing the various configurations that may be needed
 	 * 	                            in removing the Workload
-	 * @return Response from API
+	 * @return A {@link RemoveWorkloadResponse}
 	 */
 	default ServiceResponse<RemoveWorkloadResponse> removeWorkload(Workload workload, RemoveWorkloadRequest removeWorkloadRequest) {
 		return removeWorkload(workload, new LinkedHashMap<>());
