@@ -17,10 +17,12 @@
 package com.morpheusdata.core.providers;
 
 import com.morpheusdata.model.*;
+import com.morpheusdata.request.PackageDeleteRequest;
+import com.morpheusdata.request.PackageInstallRequest;
+import com.morpheusdata.request.PackageUpgradeRequest;
 import com.morpheusdata.response.ServiceResponse;
 
 
-import java.util.Collection;
 import java.util.List;
 
 /*
@@ -60,8 +62,38 @@ public interface ComputeTypePackageProvider extends PluginProvider {
 	 * @param computeServerGroupPackage instance of the package that is being installed.
 	 * @param serverGroup serverGroup/cluster that package will be applied to.
 	 * @return ServiceResponse
+	 * @deprecated Use {@link #installPackage(ComputeServerGroup, ComputeServerGroupPackage, PackageInstallRequest)} instead.
+	 * 				Morpheus now calls the new variant {@link #installPackage(ComputeServerGroup, ComputeServerGroupPackage, PackageInstallRequest)}, and
+	 * 				this method will only be invoked if called explicitly by the new method. Otherwise, it is ignored.
 	 */
-	ServiceResponse<ComputeServerGroupPackage> installPackage(ComputeServerGroup serverGroup, ComputeServerGroupPackage computeServerGroupPackage);
+	@Deprecated(since = "1.2.8")
+	default ServiceResponse<ComputeServerGroupPackage> installPackage(ComputeServerGroup serverGroup, ComputeServerGroupPackage computeServerGroupPackage) {
+		return ServiceResponse.error("not implemented");
+	}
+
+	/**
+	 * Called when a package needs to be installed
+	 * @param computeServerGroupPackage instance of the package that is being installed.
+	 * @param serverGroup serverGroup/cluster that package will be applied to.
+	 * @return ServiceResponse
+	 */
+	default ServiceResponse<ComputeServerGroupPackage> installPackage(ComputeServerGroup serverGroup, ComputeServerGroupPackage computeServerGroupPackage, PackageInstallRequest packageInstallRequest) {
+		return installPackage(serverGroup, computeServerGroupPackage);
+	}
+
+	/**
+	 * Called when a package needs to be upgraded
+	 * @param computeServerGroupPackage instance of the package that is being upgraded.
+	 * @param serverGroup serverGroup/cluster that package will be applied to.
+	 * @return ServiceResponse
+	 * @deprecated Use {@link #upgradePackage(ComputeServerGroup, ComputeServerGroupPackage, PackageUpgradeRequest)} instead.
+	 * 				Morpheus now calls the new {@link #upgradePackage(ComputeServerGroup, ComputeServerGroupPackage, PackageUpgradeRequest)}, and
+	 * 				this method will only be invoked if called explicitly by the new method. Otherwise, it is ignored.
+	 */
+	@Deprecated(since = "1.2.8")
+	default ServiceResponse<ComputeServerGroupPackage> upgradePackage(ComputeServerGroup serverGroup, ComputeServerGroupPackage computeServerGroupPackage, String newVersion) {
+		return ServiceResponse.error("not implemented");
+	}
 
 	/**
 	 * Called when a package needs to be upgraded
@@ -69,7 +101,24 @@ public interface ComputeTypePackageProvider extends PluginProvider {
 	 * @param serverGroup serverGroup/cluster that package will be applied to.
 	 * @return ServiceResponse
 	 */
-	ServiceResponse<ComputeServerGroupPackage> upgradePackage(ComputeServerGroup serverGroup, ComputeServerGroupPackage computeServerGroupPackage, String newVersion);
+	default ServiceResponse<ComputeServerGroupPackage> upgradePackage(ComputeServerGroup serverGroup, ComputeServerGroupPackage computeServerGroupPackage, PackageUpgradeRequest packageUpgradeRequest) {
+		return upgradePackage(serverGroup, computeServerGroupPackage, packageUpgradeRequest.newVersion);
+	}
+
+	/**
+	 * Called when deleting a package
+	 * @param computeServerGroupPackage instance of addonPackage that is being removed
+	 * @param serverGroup serverGroup/cluster that package will be removed from
+	 * @return ServiceResponse
+	 * @deprecated Use {@link #deletePackage(ComputeServerGroup, ComputeServerGroupPackage, PackageDeleteRequest)} instead.
+	 * 				Morpheus now calls the new {@link #deletePackage(ComputeServerGroup, ComputeServerGroupPackage, PackageDeleteRequest)}, and
+	 * 				this method will only be invoked if called explicitly by the new method. Otherwise, it is ignored.
+	 */
+	@Deprecated(since = "1.2.8")
+	default ServiceResponse deletePackage(ComputeServerGroup serverGroup, ComputeServerGroupPackage computeServerGroupPackage) {
+		return ServiceResponse.error("not implemented");
+	}
+
 
 	/**
 	 * Called when deleting a package
@@ -77,6 +126,7 @@ public interface ComputeTypePackageProvider extends PluginProvider {
 	 * @param serverGroup serverGroup/cluster that package will be removed from
 	 * @return ServiceResponse
 	 */
-	ServiceResponse deletePackage(ComputeServerGroup serverGroup, ComputeServerGroupPackage computeServerGroupPackage);
-
+	default ServiceResponse deletePackage(ComputeServerGroup serverGroup, ComputeServerGroupPackage computeServerGroupPackage, PackageDeleteRequest packageDeleteRequest) {
+		return deletePackage(serverGroup, computeServerGroupPackage);
+	}
 }
