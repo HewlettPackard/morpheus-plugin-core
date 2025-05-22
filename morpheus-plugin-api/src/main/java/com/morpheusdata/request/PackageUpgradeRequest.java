@@ -1,5 +1,7 @@
 package com.morpheusdata.request;
 
+import com.morpheusdata.model.Process;
+
 /**
  * Class to carry parameters associated with a Package Upgrade
  */
