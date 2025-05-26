@@ -43,7 +43,8 @@ public interface MorpheusProcessService extends MorpheusDataService<Process, Pro
 	 * @param workload the Workload to associate the Process to
 	 * @param processType the ProcessType to start
 	 * @param user the User that starts the process (optional)
-	 * @param timerCategory a category to associate with this Process
+	 * @param timerCategory a category to associate with this Process. The category is used to provide estimated
+	 *                      durations for a Process based on previous run of processes with this same category.
 	 * @return Boolean indicating success
 	 * @deprecated use {@link #startProcess(Workload, ProcessStepType, User, String)} instead
 	 */
@@ -54,7 +55,8 @@ public interface MorpheusProcessService extends MorpheusDataService<Process, Pro
 	 * @param workload the Workload to associate the Process to
 	 * @param stepType the ProcessStepType to start
 	 * @param user the User that starts the process (optional)
-	 * @param timerCategory a category to associate with this Process
+	 * @param timerCategory a category to associate with this Process. The category is used to provide estimated
+	 *                      durations for a Process based on previous run of processes with this same category.
 	 * @return Boolean indicating success
 	 */
 	Single<Process> startProcess(Workload workload, ProcessStepType stepType, User user, String timerCategory);
@@ -64,7 +66,8 @@ public interface MorpheusProcessService extends MorpheusDataService<Process, Pro
 	 * @param workload the Workload to associate the Process to
 	 * @param processType the ProcessType to start
 	 * @param user the User that starts the process (optional)
-	 * @param timerCategory a category to associate with this Process
+	 * @param timerCategory a category to associate with this Process. The category is used to provide estimated
+	 *                      durations for a Process based on previous run of processes with this same category.
 	 * @param eventTitle an event title to associate with this Process
 	 * @return Boolean indicating success
 	 * @deprecated use {@link #startProcess(Workload, ProcessStepType, User, String, String)} instead
@@ -78,7 +81,8 @@ public interface MorpheusProcessService extends MorpheusDataService<Process, Pro
 	 * @param workload the Workload to associate the Process to
 	 * @param stepType the ProcessStepType to start
 	 * @param user the User that starts the process (optional)
-	 * @param timerCategory a category to associate with this Process
+	 * @param timerCategory a category to associate with this Process. The category is used to provide estimated
+	 *                      durations for a Process based on previous run of processes with this same category.
 	 * @param eventTitle an event title to associate with this Process
 	 * @return Boolean indicating success
 	 */

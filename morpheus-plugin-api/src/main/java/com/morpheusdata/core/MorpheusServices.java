@@ -526,5 +526,9 @@ public interface MorpheusServices {
 	 */
 	MorpheusSynchronousComputeTypePackageService getComputeTypePackage();
 
-
+	/**
+	 * Returns the {@link MorpheusSynchronousProcessService} which allows access to process services
+	 * @return an instance of {@link MorpheusSynchronousProcessService}
+	 */
+	MorpheusSynchronousProcessService getProcess();
 }
