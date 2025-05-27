@@ -48,6 +48,9 @@ include::Testing.adoc[]
 
 include::Seeding.adoc[]
 
+include::ProcessService.adoc[]
+
+
 == Examples
 
 include::ApprovalsPlugin.adoc[]
