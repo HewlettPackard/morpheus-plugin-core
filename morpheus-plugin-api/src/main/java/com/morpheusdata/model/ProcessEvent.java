@@ -70,6 +70,7 @@ public class ProcessEvent {
 		containerTask,
 		containerTemplate,
 		containerWorkflow,
+		deletePackage,
 		deletesnapshot,
 		deploy,
 		deployFiles,
@@ -140,7 +141,8 @@ public class ProcessEvent {
 		snapshot,
 		startup,
 		teardown,
-		terraformCommand
+		terraformCommand,
+		updatePackage,
 	}
 
 	public ProcessType type;
