@@ -1,0 +1,91 @@
+[#process-service]
+== Process Service
+
+Morpheus plugins support recording processes and their steps (AKA ProcessEvents or events). Processes represent a history of actions taken in relation to different models within Morpheus (e.g., `Workload`, `Cluster`, `Server`). Each `Process` and `ProcessEvent` has a `ProcessStepType` associated with it that describes the process or an individual event within the Process.
+
+NOTE: At this time in plugins, Processes can only be created in relation to a `Workload`.
+
+TIP: The link:https://github.com/gomorpheus/morpheus-omega-test-plugin[morpheus-omega-plugin] provides various examples of interacting with the process service.
+
+=== Working with Existing Processes
+
+For some APIs, Morpheus Core creates and associates a `Process`. The plugin can add events to the existing process to show steps taken in the given context. For example, the `WorkloadProvisionProvider` APIs have a request object that provides a process during the different stages of provisioning (e.g., `prepareWorkload`, `runWorkload`, etc.). With this process available, the plugin can add steps showing an action it has taken during the provisioning flow:
+
+[source,groovy]
+----
+ServiceResponse<ProvisionResponse> runWorkload(Workload workload, WorkloadRequest workloadRequest, Map opts) {
+	context.services.process.startProcessStep(workloadRequest.process, new ProcessEvent(stepType: ProcessStepType.EXECUTE_ACTION), "running")
+	// do some action
+	context.services.process.endProcessStep(workloadRequest.process, MorpheusProcessService.STATUS_COMPLETE, "action output", true)
+
+	return ServiceResponse.success(new ProvisionResponse(workload))
+}
+----
+
+=== Creating a New Process
+
+Since plugins have quite a bit of freedom in how they interact with Morpheus, there are scenario when you're outside
+a particular core flow in Morpheus, such as a custom HTTP endpoint. In this circumstance, you first need to create
+a new `Process` associated with a model (e.g., Workload) and then add steps if needed:
+
+[source,groovy]
+----
+class ExampleController implements PluginController {
+
+	// Note: Everything else in the class omitted for brevity
+
+	def json(ViewModel<Map> model) {
+		Process process = morpheusContext.services.process.startProcess(workload,  ProcessStepType.EXECUTE_ACTION, null, 'timerCategory', 'eventCategory')
+		morpheusContext.services.process.startProcessStep(workloadRequest.process, new ProcessEvent(stepType: ProcessStepType.EXECUTE_ACTION), "running")
+		// do some action
+		morpheusContext.services.process.endProcessStep(workloadRequest.process, MorpheusProcessService.STATUS_COMPLETE, "action output", true)
+		morpheusContext.services.process.endProcess(process, MorpheusProcessService.STATUS_COMPLETE, 'output')
+		return JsonResponse.of(model.object)
+	}
+}
+----
+
+=== Updating Steps of a Process
+
+When steps within a process are long-running, it can be helpful to provide feedback to the user. Plugins can update a step's
+output and status to reflect the current state of a step:
+
+[source,groovy]
+----
+context.services.process.startProcessStep(workloadRequest.process, new ProcessEvent(stepType: CUSTOM_STEP_TYPE), "")
+def totalTime = 60000
+def increment = 10000
+for (int i = 0; i < totalTime; i += increment) {
+	def update = new ProcessStepUpdate(
+			status: "running (${i}ms)",
+			output: "output@${i}ms\n",
+	)
+	context.services.process.updateProcessStep(workloadRequest.process, CUSTOM_STEP_TYPE, update, true)
+
+	sleep(increment)
+}
+context.services.process.endProcessStep(workloadRequest.process, MorpheusProcessService.STATUS_COMPLETE, "final", true)
+----
+
+=== Defining Custom ProcessStepTypes
+
+Plugins can seed in their own custom `ProcessStepTypes` via scribe files. Here's an example:
+
+[source,hcl]
+----
+resource "process-step-type" "example-step" {
+  code = "example.custom-step"
+  name = "Example Step"
+  description = "Your description goes here"
+}
+----
+
+The `name` will be used in the History representation of the associated Process or ProcessEvent.
+
+In the plugin, this seeded ProcessStepType can be referenced by `code` like so:
+
+[source,groovy]
+----
+ProcessStepType EXAMPLE_STEP_TYPE = ProcessStepType.forCode("example.custom-step")
+----
+
