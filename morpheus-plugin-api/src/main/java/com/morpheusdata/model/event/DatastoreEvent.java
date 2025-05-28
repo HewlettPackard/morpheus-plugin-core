@@ -18,6 +18,7 @@ package com.morpheusdata.model.event;
 
 import com.morpheusdata.model.ComputeServer;
 import com.morpheusdata.model.Datastore;
+import com.morpheusdata.model.StorageVolume;
 
 import java.io.Serializable;
 
@@ -26,6 +27,7 @@ public class DatastoreEvent implements Event<DatastoreEvent.DatastoreEventType>,
 	protected DatastoreEventType type;
 	protected Datastore datastore;
 	protected ComputeServer server;
+	protected StorageVolume volume;
 	protected ComputeServer sourceHost;
 	protected ComputeServer targetHost;
 
@@ -55,6 +57,14 @@ public class DatastoreEvent implements Event<DatastoreEvent.DatastoreEventType>,
 		this.server = server;
 	}
 
+	public StorageVolume getVolume() {
+		return volume;
+	}
+
+	public void setVolume(StorageVolume volume) {
+		this.volume = volume;
+	}
+
 	public Datastore getDatastore() {
 		return datastore;
 	}
@@ -82,6 +92,8 @@ public class DatastoreEvent implements Event<DatastoreEvent.DatastoreEventType>,
 	public enum DatastoreEventType implements EventType {
 		SERVER_MOVE,
 		SERVER_SHUTDOWN,
-		SERVER_STARTUP
+		SERVER_STARTUP,
+		VOLUME_ATTACH,
+		VOLUME_DETACH
 	}
 }
