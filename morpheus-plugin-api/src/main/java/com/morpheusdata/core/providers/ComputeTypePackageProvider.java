@@ -21,6 +21,7 @@ import com.morpheusdata.request.PackageDeleteRequest;
 import com.morpheusdata.request.PackageInstallRequest;
 import com.morpheusdata.request.PackageUpgradeRequest;
 import com.morpheusdata.response.ServiceResponse;
+import com.morpheusdata.views.HTMLResponse;
 
 
 import java.util.List;
@@ -128,5 +129,14 @@ public interface ComputeTypePackageProvider extends PluginProvider {
 	 */
 	default ServiceResponse deletePackage(ComputeServerGroup serverGroup, ComputeServerGroupPackage computeServerGroupPackage, PackageDeleteRequest packageDeleteRequest) {
 		return deletePackage(serverGroup, computeServerGroupPackage);
+	}
+
+	/**
+	 * Customized form provided to the rendering engine. Overrides the package form in the Appliance UI.
+	 * @param computeServerGroupPackage details of the ComputeServerGroupPackage being rendered
+	 * @return result of rendering a template
+	 */
+	default HTMLResponse renderFormTemplate(ComputeServerGroupPackage computeServerGroupPackage) {
+		return null;
 	}
 }
