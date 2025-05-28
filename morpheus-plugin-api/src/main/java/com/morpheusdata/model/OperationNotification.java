@@ -32,6 +32,8 @@ public class OperationNotification extends OperationNotificationIdentityProjecti
 
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Account account;
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
+	protected Cloud cloud;
 	protected String category;
 	protected String eventKey;
 	protected Boolean acknowledged;
@@ -287,5 +289,13 @@ public class OperationNotification extends OperationNotificationIdentityProjecti
 	 */
 	public void setActive(Boolean active) {
 		this.active = active;
+	}
+
+	public Cloud getCloud() {
+		return cloud;
+	}
+
+	public void setCloud(Cloud cloud) {
+		this.cloud = cloud;
 	}
 }
