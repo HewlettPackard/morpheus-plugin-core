@@ -35,6 +35,7 @@ public class ProcessStepType {
 	public static final ProcessStepType CONTAINER_TASK = forCode("containerTask");
 	public static final ProcessStepType CONTAINER_TEMPLATE = forCode("containerTemplate");
 	public static final ProcessStepType CONTAINER_WORKFLOW = forCode("containerWorkflow");
+	public static final ProcessStepType DELETE_PACKAGE = forCode("deletePackage");
 	public static final ProcessStepType DELETESNAPSHOT = forCode("deletesnapshot");
 	public static final ProcessStepType DEPLOY = forCode("deploy");
 	public static final ProcessStepType DEPLOY_FILES = forCode("deployFiles");
@@ -106,6 +107,7 @@ public class ProcessStepType {
 	public static final ProcessStepType STARTUP = forCode("startup");
 	public static final ProcessStepType TEARDOWN = forCode("teardown");
 	public static final ProcessStepType TERRAFORM_COMMAND = forCode("terraformCommand");
+	public static final ProcessStepType UPGRADE_PACKAGE = forCode("upgradePackage");
 
 	public String name;
 	public String description;
