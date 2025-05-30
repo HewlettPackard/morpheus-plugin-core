@@ -107,6 +107,16 @@ public interface ComputeTypePackageProvider extends PluginProvider {
 	}
 
 	/**
+	 * Called when updating a package configuration
+	 * @param computeServerGroupPackage instance of addonPackage that is being updated
+	 * @param serverGroup serverGroup/cluster that package will be updated in
+	 * @return ServiceResponse
+	 */
+	default ServiceResponse<ComputeServerGroupPackage> updatePackageConfig(ComputeServerGroup serverGroup, ComputeServerGroupPackage computeServerGroupPackage) {
+		return ServiceResponse.error("not implemented");
+	}
+
+	/**
 	 * Called when deleting a package
 	 * @param computeServerGroupPackage instance of addonPackage that is being removed
 	 * @param serverGroup serverGroup/cluster that package will be removed from
