@@ -272,10 +272,6 @@ public class StorageVolumeType extends MorpheusModel {
 		return optionTypes;
 	}
 
-	public Collection<OptionType> getResizeOptionTypes() {
-		return optionTypes.stream().filter( p -> Boolean.TRUE.equals(p.getConfigMap().get("resizable"))).collect(Collectors.toList());
-	}
-
 	public void setOptionTypes(Collection<OptionType> optionTypes) {
 		markDirty("optionTypes", this.optionTypes);
 		this.optionTypes = optionTypes;
