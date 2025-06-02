@@ -19,6 +19,7 @@ package com.morpheusdata.core.providers;
 import com.morpheusdata.model.*;
 import com.morpheusdata.request.PackageDeleteRequest;
 import com.morpheusdata.request.PackageInstallRequest;
+import com.morpheusdata.request.PackageUpdateRequest;
 import com.morpheusdata.request.PackageUpgradeRequest;
 import com.morpheusdata.response.ServiceResponse;
 import com.morpheusdata.views.HTMLResponse;
@@ -76,6 +77,7 @@ public interface ComputeTypePackageProvider extends PluginProvider {
 	 * Called when a package needs to be installed
 	 * @param computeServerGroupPackage instance of the package that is being installed.
 	 * @param serverGroup serverGroup/cluster that package will be applied to.
+	 * @param packageInstallRequest request parameters for the install request
 	 * @return ServiceResponse
 	 */
 	default ServiceResponse<ComputeServerGroupPackage> installPackage(ComputeServerGroup serverGroup, ComputeServerGroupPackage computeServerGroupPackage, PackageInstallRequest packageInstallRequest) {
@@ -100,6 +102,7 @@ public interface ComputeTypePackageProvider extends PluginProvider {
 	 * Called when a package needs to be upgraded
 	 * @param computeServerGroupPackage instance of the package that is being upgraded.
 	 * @param serverGroup serverGroup/cluster that package will be applied to.
+	 * @param packageUpgradeRequest request parameters for the upgrade request
 	 * @return ServiceResponse
 	 */
 	default ServiceResponse<ComputeServerGroupPackage> upgradePackage(ComputeServerGroup serverGroup, ComputeServerGroupPackage computeServerGroupPackage, PackageUpgradeRequest packageUpgradeRequest) {
@@ -110,9 +113,10 @@ public interface ComputeTypePackageProvider extends PluginProvider {
 	 * Called when updating a package configuration
 	 * @param computeServerGroupPackage instance of addonPackage that is being updated
 	 * @param serverGroup serverGroup/cluster that package will be updated in
+	 * @param packageUpdateRequest request parameters for the update request
 	 * @return ServiceResponse
 	 */
-	default ServiceResponse<ComputeServerGroupPackage> updatePackageConfig(ComputeServerGroup serverGroup, ComputeServerGroupPackage computeServerGroupPackage) {
+	default ServiceResponse<ComputeServerGroupPackage> updatePackageConfig(ComputeServerGroup serverGroup, ComputeServerGroupPackage computeServerGroupPackage, PackageUpdateRequest packageUpdateRequest) {
 		return ServiceResponse.error("not implemented");
 	}
 
@@ -135,6 +139,7 @@ public interface ComputeTypePackageProvider extends PluginProvider {
 	 * Called when deleting a package
 	 * @param computeServerGroupPackage instance of addonPackage that is being removed
 	 * @param serverGroup serverGroup/cluster that package will be removed from
+	 * @param packageDeleteRequest request parameters for the delete request
 	 * @return ServiceResponse
 	 */
 	default ServiceResponse deletePackage(ComputeServerGroup serverGroup, ComputeServerGroupPackage computeServerGroupPackage, PackageDeleteRequest packageDeleteRequest) {
