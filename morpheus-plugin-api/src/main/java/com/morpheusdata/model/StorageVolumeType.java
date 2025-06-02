@@ -17,6 +17,8 @@
 package com.morpheusdata.model;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * There are several different types of volume types across various cloud providers.
@@ -268,6 +270,10 @@ public class StorageVolumeType extends MorpheusModel {
 
 	public Collection<OptionType> getOptionTypes() {
 		return optionTypes;
+	}
+
+	public Collection<OptionType> getResizeOptionTypes() {
+		return optionTypes.stream().filter( p -> Boolean.TRUE.equals(p.getConfigMap().get("resizable"))).collect(Collectors.toList());
 	}
 
 	public void setOptionTypes(Collection<OptionType> optionTypes) {
