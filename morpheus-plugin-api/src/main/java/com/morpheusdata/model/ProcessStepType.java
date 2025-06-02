@@ -107,6 +107,7 @@ public class ProcessStepType {
 	public static final ProcessStepType STARTUP = forCode("startup");
 	public static final ProcessStepType TEARDOWN = forCode("teardown");
 	public static final ProcessStepType TERRAFORM_COMMAND = forCode("terraformCommand");
+	public static final ProcessStepType UPDATE_PACKAGE = forCode("updatePackage");
 	public static final ProcessStepType UPGRADE_PACKAGE = forCode("upgradePackage");
 
 	public String name;

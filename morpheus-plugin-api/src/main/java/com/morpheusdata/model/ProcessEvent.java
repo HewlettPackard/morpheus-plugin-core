@@ -185,6 +185,7 @@ public class ProcessEvent {
 		startup,
 		teardown,
 		terraformCommand,
+		updatePackage,
 		upgradePackage,
 	}
 }
