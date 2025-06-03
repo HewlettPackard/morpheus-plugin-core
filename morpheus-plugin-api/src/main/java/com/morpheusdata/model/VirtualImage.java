@@ -56,6 +56,7 @@ public class VirtualImage extends VirtualImageIdentityProjection {
 	protected String virtualizationType;
 	protected String internalId;
 	protected String remotePath;
+	protected String folderName;
 	protected String status;
 	protected String statusReason;
 	protected Double statusPercent;
@@ -354,6 +355,14 @@ public class VirtualImage extends VirtualImageIdentityProjection {
 
 	public void setRemotePath(String remotePath) {
 		this.remotePath = remotePath;
+	}
+
+	public String getFolderName() {
+		return folderName;
+	}
+
+	public void setFolderName(String folderName) {
+		this.folderName = folderName;
 	}
 
 	public String getStatus() {
