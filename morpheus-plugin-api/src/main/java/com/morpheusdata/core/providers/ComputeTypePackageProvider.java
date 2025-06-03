@@ -60,6 +60,15 @@ public interface ComputeTypePackageProvider extends PluginProvider {
 	String getPackageVersion();
 
 	/**
+	 * Validates the submitted package configuration
+	 * @param serverGroup the ComputeServerGroup that the package will be applied to
+	 * @param serverGroupPackage the ComputeServerGroupPackage that is being validated
+	 */
+	default ServiceResponse validatePackageConfig(ComputeServerGroup serverGroup, ComputeServerGroupPackage serverGroupPackage) {
+		return ServiceResponse.success();
+	}
+
+	/**
 	 * Called when a package needs to be installed
 	 * @param computeServerGroupPackage instance of the package that is being installed.
 	 * @param serverGroup serverGroup/cluster that package will be applied to.
