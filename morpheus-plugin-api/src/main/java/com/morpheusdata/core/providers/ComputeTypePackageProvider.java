@@ -157,10 +157,11 @@ public interface ComputeTypePackageProvider extends PluginProvider {
 
 	/**
 	 * Customized form provided to the rendering engine. Overrides the package form in the Appliance UI.
+	 * @param serverGroup serverGroup/cluster that package will be installed on
 	 * @param computeServerGroupPackage details of the ComputeServerGroupPackage being rendered
 	 * @return result of rendering a template
 	 */
-	default HTMLResponse renderFormTemplate(ComputeServerGroupPackage computeServerGroupPackage) {
+	default HTMLResponse renderFormTemplate(ComputeServerGroup serverGroup, ComputeServerGroupPackage computeServerGroupPackage) {
 		return null;
 	}
 }
