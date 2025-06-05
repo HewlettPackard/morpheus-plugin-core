@@ -39,6 +39,7 @@ public class VirtualImageLocation extends VirtualImageLocationIdentityProjection
 	protected String imageRegion;
 
 	protected String externalDiskId; //used for snapshot ids on amazon primarily
+	protected String remotePath;
 	protected String imageFolder;
 	protected String uuid;
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
@@ -73,6 +74,14 @@ public class VirtualImageLocation extends VirtualImageLocationIdentityProjection
 
 	public void setImageRegion(String imageRegion) {
 		this.imageRegion = imageRegion;
+	}
+
+	public String getRemotePath() {
+		return remotePath;
+	}
+
+	public void setRemotePath(String remotePath) {
+		this.remotePath = remotePath;
 	}
 
 	public String getImageFolder() {
