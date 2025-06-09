@@ -2,6 +2,36 @@
 
 **Note:** Morpheus Plugin API is now 1.0! This means calls that are used will be supported for a longer period of time and given appropriate deprecation warnings when necessary. Morpheus Plugin API 1.2 requires a minimum Morpheus Version of `8.0.x`. Morpheus `7.0.x` still runs on Core version `1.1.x`
 
+* **1.2.8**
+** *Enhanced Cluster Package Support*
+*** [PCCP-1258] Added ComputeServerGroup for improved cluster management
+*** [PCCP-1258] Added custom form support for cluster packages
+*** [PCCP-1175] Added ability to edit addon package configuration
+*** Added package validation and update capabilities
+*** Added request object to addon package config
+** *Process Service Improvements*
+*** [PCCP-574] Reworked process service APIs for better usability
+*** [PCCP-574] Added sync process service implementation
+*** [PCCP-574] Added process step types for cluster package management
+*** [PCCP-574] Added plugin documentation on process service functionality
+*** [PCCP-1259] Added process to ComputeTypePackageProvider methods
+*** [PCCP-1274] Added missing ProcessTypes to enum
+*** Added updatePackage to ProcessEvent/Step definitions
+** *Volume Management Enhancements*
+*** Added attach/detach volume to datastore events
+*** Added support for volume option sources
+*** [PCCP-995] Added flag to CSI types to delete CSI on workload removal
+*** Added preserveVolumes option to RemoveWorkloadResponse
+** *Network Improvements*
+*** Added loadbalancer compatibility for plugin network pools
+*** Enhanced resize type support
+** *Cloud Provider Enhancements*
+*** [PCCP-1026] Added cloud classification to cloud provider
+*** Added RemoveWorkloadResponse for removeWorkload operations
+*** Normalized removeServer implementation
+** *Dependency Updates*
+*** Bumped Karman core
+
 * **1.2.7**
 ** *New Process Service API*
 *** Introduced a new Process Service API for improved process management
