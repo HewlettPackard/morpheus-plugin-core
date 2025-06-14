@@ -25,7 +25,8 @@ import java.io.Serializable;
 public class DatastoreEvent implements Event<DatastoreEvent.DatastoreEventType>, Serializable {
 	protected String message;
 	protected DatastoreEventType type;
-	protected Datastore datastore;
+	protected Datastore sourceDatastore;
+	protected Datastore targetDatastore;
 	protected ComputeServer server;
 	protected StorageVolume volume;
 	protected ComputeServer sourceHost;
@@ -65,12 +66,40 @@ public class DatastoreEvent implements Event<DatastoreEvent.DatastoreEventType>,
 		this.volume = volume;
 	}
 
+	// This is a wrapper method to get the datastore. Useful when there is no target datastore and sourceDatastore has less meaning.
 	public Datastore getDatastore() {
-		return datastore;
+		return sourceDatastore;
 	}
 
+	// This is a wrapper method to set the datastore. Useful when there is no target datastore and sourceDatastore has less meaning.
 	public void setDatastore(Datastore datastore) {
-		this.datastore = datastore;
+		this.sourceDatastore = datastore;
+	}
+
+	public Datastore getSourceDatastore() {
+		return sourceDatastore;
+	}
+
+	public void setSourceDatastore(Datastore datastore) {
+		this.sourceDatastore = datastore;
+	}
+
+	public Datastore getTargetDatastore() {
+		return targetDatastore;
+	}
+
+	public void setTargetDatastore(Datastore datastore) {
+		this.targetDatastore = datastore;
+	}
+
+	// This a wrapper method to get the source host. Useful when there is no target host and source host has less meaning.
+	public ComputeServer getHost() {
+		return sourceHost;
+	}
+
+	// This a wrapper method to set the source host. Useful when there is no target host and source host has less meaning.
+	public void setHost(ComputeServer sourceHost) {
+		this.sourceHost = sourceHost;
 	}
 
 	public ComputeServer getSourceHost() {
@@ -94,6 +123,9 @@ public class DatastoreEvent implements Event<DatastoreEvent.DatastoreEventType>,
 		SERVER_SHUTDOWN,
 		SERVER_STARTUP,
 		VOLUME_ATTACH,
-		VOLUME_DETACH
+		VOLUME_DETACH,
+		VOLUME_MOVE_INITIATED,
+		VOLUME_MOVE_COMPLETED,
+		VOLUME_MOVE_FAILED
 	}
 }
