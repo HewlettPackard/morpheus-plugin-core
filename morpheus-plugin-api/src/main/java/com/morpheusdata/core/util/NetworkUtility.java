@@ -623,6 +623,15 @@ public class NetworkUtility {
 		return rtn;
 	}
 
+	static public Boolean checkIpv6Ip(String ipAddress) {
+		Boolean rtn = false;
+		if (ipAddress != null) {
+			if (ipAddress.indexOf(':') > 0 && !ipAddress.startsWith("fe80:") && !ipAddress.startsWith("::1") && ip6AddressPattern.matcher(ipAddress).matches())
+				rtn = true;
+		}
+		return rtn;
+	}
+
 	static public Boolean checkIpv6InCidrRange(String ipAddress, String cidr) {
 		Boolean rtn = false;
 		try {
