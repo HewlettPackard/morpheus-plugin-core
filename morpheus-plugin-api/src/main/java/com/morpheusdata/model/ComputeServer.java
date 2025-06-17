@@ -153,7 +153,7 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 	protected String hardwareProductName;
 	protected String hardwareProductVendor;
 	protected String hardwareCpuModel;
-	protected Boolean system=false;
+	protected Boolean systemServer=false;
 
 	public String getUuid() {
 		return uuid;
@@ -519,12 +519,12 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 		this.hardwareCpuModel = hardwareCpuModel;
 	}
 
-	public Boolean getSystem() {
-		return system;
+	public Boolean getSystemServer() {
+		return systemServer;
 	}
 
-	public void setSystem(Boolean system) {
-		this.system = system;
+	public void setSystemServer(Boolean systemServer) {
+		this.systemServer = systemServer;
 	}
 
 	public enum PowerState {
