@@ -242,6 +242,28 @@ public class StreamingQcow2Writer {
 		}
 	}
 
+	long position = 0;
+	public void copyData(InputStream inputStream, OutputStream writer) throws IOException {
+		long written = firstDataCluster * CLUSTER_SIZE;
+		byte[] buffer = new byte[(int) CLUSTER_SIZE];
+		for (Long cluster : dataClusters) {
+			long desiredPosition = cluster * CLUSTER_SIZE;
+			long skipBytes = desiredPosition - position;
+			inputStream.skip(skipBytes);
+			position += skipBytes;
+
+			int bytesRead = inputStream.read(buffer);
+			writer.write(buffer, 0, bytesRead);
+			if(bytesRead > 0) {
+				position += bytesRead;
+			}
+			if ((written + CLUSTER_SIZE) / REPORT_INTERVAL_BYTES != written / REPORT_INTERVAL_BYTES) {
+				System.err.printf("%d/%d bytes written%n", written + CLUSTER_SIZE, fileSize());
+			}
+			written += CLUSTER_SIZE;
+		}
+	}
+
 //	public void copyData(InputStream reader, OutputStream writer) throws IOException {
 //		long written = firstDataCluster * CLUSTER_SIZE;
 //		byte[] buffer = new byte[(int) CLUSTER_SIZE];
