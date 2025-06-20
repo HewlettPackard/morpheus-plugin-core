@@ -265,9 +265,9 @@ public class StreamingQcow2Writer {
 
 
 			int bytesRead = inputStream.read(buffer);
-			bos.write(buffer,0,bytesRead);
 
 			if(bytesRead > 0) {
+				bos.write(buffer,0,bytesRead);
 				position += bytesRead;
 			}
 			if ((written + CLUSTER_SIZE) / REPORT_INTERVAL_BYTES != written / REPORT_INTERVAL_BYTES) {
