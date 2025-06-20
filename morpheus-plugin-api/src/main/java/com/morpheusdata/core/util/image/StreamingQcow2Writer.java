@@ -35,15 +35,20 @@ public class StreamingQcow2Writer {
 	private long l1Offset;
 	private int refcountTableClusters;
 	private long firstDataCluster;
-	private List<Long> dataClusters;
+	public List<Long> dataClusters;
+	Long dataClusterSize = 0L;
+	public DataClusterIterable dataClusterIterable;
 
-	public StreamingQcow2Writer(long inputSize, Iterator<Range<Long>> ranges) {
+	public StreamingQcow2Writer(long inputSize, Iterable<Range<Long>> ranges) {
 		this.inputSize = inputSize;
+
+		dataClusterIterable = new DataClusterIterable(ranges);
 		this.dataClusters = new ArrayList<>();
 
 		Long lastCluster = null;
-		while (ranges.hasNext()) {
-			Range<Long> range = ranges.next();
+		Iterator<Range<Long>> rangeIterator = ranges.iterator();
+		while (rangeIterator.hasNext()) {
+			Range<Long> range = rangeIterator.next();
 
 			long fromCluster = range.getStart() / CLUSTER_SIZE;
 			long toCluster = divideAndRoundUp(range.getEnd(), CLUSTER_SIZE);
@@ -58,7 +63,8 @@ public class StreamingQcow2Writer {
 			lastCluster = toCluster - 1;
 
 			for (long cluster = fromCluster; cluster < toCluster; cluster++) {
-				dataClusters.add(cluster);
+//				dataClusters.add(cluster);
+				dataClusterSize++;
 			}
 		}
 
@@ -71,7 +77,7 @@ public class StreamingQcow2Writer {
 		this.refcountTableClusters = 1;
 
 		while (true) {
-			long totalClusters = 1 + refcountTableClusters + refcountBlocks + l1Clusters + l2Tables + dataClusters.size();
+			long totalClusters = 1 + refcountTableClusters + refcountBlocks + l1Clusters + l2Tables + dataClusterSize;
 			long newRefcountBlocks = divideAndRoundUp(totalClusters * 2, CLUSTER_SIZE);
 			if (newRefcountBlocks == refcountBlocks) {
 				break;
@@ -93,7 +99,7 @@ public class StreamingQcow2Writer {
 	}
 
 	private long totalClusters() {
-		return firstDataCluster + dataClusters.size();
+		return firstDataCluster + dataClusterSize;
 	}
 
 	public long totalGuestClusters() {
@@ -187,8 +193,10 @@ public class StreamingQcow2Writer {
 
 	private void writeMappingTable(OutputStream outputStream) throws IOException {
 		Map<Long, Long> mapping = new HashMap<>();
-		for (int i = 0; i < dataClusters.size(); i++) {
-			mapping.put(dataClusters.get(i), (long) i + firstDataCluster);
+		long x=0;
+		for (Long cluster : dataClusterIterable) {
+			mapping.put(cluster, x + firstDataCluster);
+			x++;
 		}
 
 		// L1 table
@@ -230,7 +238,7 @@ public class StreamingQcow2Writer {
 	public void copyData(RandomAccessFile reader, OutputStream writer) throws IOException {
 		long written = firstDataCluster * CLUSTER_SIZE;
 		byte[] buffer = new byte[(int) CLUSTER_SIZE];
-		for (Long cluster : dataClusters) {
+		for (Long cluster : dataClusterIterable) {
 			reader.seek(cluster * CLUSTER_SIZE);
 			int bytesRead = reader.read(buffer);
 			writer.write(buffer, 0, bytesRead);
@@ -244,16 +252,21 @@ public class StreamingQcow2Writer {
 
 	long position = 0;
 	public void copyData(InputStream inputStream, OutputStream writer) throws IOException {
+		BufferedOutputStream bos = new BufferedOutputStream(writer, (int)(CLUSTER_SIZE * 2));
 		long written = firstDataCluster * CLUSTER_SIZE;
 		byte[] buffer = new byte[(int) CLUSTER_SIZE];
-		for (Long cluster : dataClusters) {
+		for (Long cluster : dataClusterIterable) {
 			long desiredPosition = cluster * CLUSTER_SIZE;
 			long skipBytes = desiredPosition - position;
-			inputStream.skip(skipBytes);
-			position += skipBytes;
+			if(skipBytes > 0) {
+				inputStream.skip(skipBytes);
+				position += skipBytes;
+			}
+
 
 			int bytesRead = inputStream.read(buffer);
-			writer.write(buffer, 0, bytesRead);
+			bos.write(buffer,0,bytesRead);
+
 			if(bytesRead > 0) {
 				position += bytesRead;
 			}
@@ -262,6 +275,7 @@ public class StreamingQcow2Writer {
 			}
 			written += CLUSTER_SIZE;
 		}
+		bos.flush();
 	}
 
 //	public void copyData(InputStream reader, OutputStream writer) throws IOException {
@@ -312,6 +326,92 @@ public class StreamingQcow2Writer {
 
 		public T getEnd() {
 			return end;
+		}
+	}
+
+	public static class DataClusterIterable implements Iterable<Long> {
+		private final Iterable<Range<Long>> ranges;
+		private Range<Long> currentRange = null;
+		public DataClusterIterable(Iterable<Range<Long>> ranges) {
+			this.ranges = ranges;
+		}
+
+		@Override
+		public Iterator<Long> iterator() {
+
+			return new Iterator<Long>() {
+				private Long nextCluster = null;
+				public Iterator<Range<Long>> rangeIterator = ranges.iterator();
+				private Range<Long> currentRange = null;
+				private Long lastCluster = null;
+				@Override
+				public boolean hasNext() {
+					if(nextCluster == null) {
+						if(!loadNext()) {
+							return false;
+						} else {
+							return true;
+						}
+					} else {
+						return true;
+					}
+				}
+
+				public boolean loadNext() {
+
+					if(currentRange == null) {
+						if (!rangeIterator.hasNext()) {
+							return false;
+						}
+						currentRange = rangeIterator.next();
+					}
+					while(true) {
+						long fromCluster = currentRange.getStart() / CLUSTER_SIZE;
+						long toCluster = divideAndRoundUp(currentRange.getEnd(), CLUSTER_SIZE);
+						if(nextCluster == null) {
+							nextCluster = fromCluster;
+							if(lastCluster != null && nextCluster <= lastCluster) {
+								nextCluster++;
+								if(nextCluster >= toCluster) {
+									if (!rangeIterator.hasNext()) {
+										return false;
+									}
+									currentRange = rangeIterator.next();
+									nextCluster = null;
+									continue;
+								}
+							}
+							return true;
+						}
+						if(nextCluster < toCluster-1) {
+							nextCluster++;
+							return true;
+						} else {
+							if (!rangeIterator.hasNext()) {
+								nextCluster = null;
+								currentRange = null;
+								return false;
+
+							}
+							currentRange = rangeIterator.next();
+							lastCluster = nextCluster;
+							nextCluster = null;
+						}
+					}
+				}
+
+				@Override
+				public Long next() {
+
+					if (!hasNext()) {
+						throw new NoSuchElementException();
+					}
+					Long current = nextCluster;
+					loadNext();
+					return current;
+				}
+			};
+
 		}
 	}
 }
