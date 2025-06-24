@@ -153,6 +153,7 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 	protected String hardwareProductName;
 	protected String hardwareProductVendor;
 	protected String hardwareCpuModel;
+	protected Double hardwareCpuFrequency;
 
 	public String getUuid() {
 		return uuid;
@@ -516,6 +517,14 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 
 	public void setHardwareCpuModel(String hardwareCpuModel) {
 		this.hardwareCpuModel = hardwareCpuModel;
+	}
+
+	public Double getHardwareCpuFrequency() {
+		return hardwareCpuFrequency;
+	}
+
+	public void setHardwareCpuFrequency(Double hardwareCpuFrequency) {
+		this.hardwareCpuFrequency = hardwareCpuFrequency;
 	}
 
 	public enum PowerState {
