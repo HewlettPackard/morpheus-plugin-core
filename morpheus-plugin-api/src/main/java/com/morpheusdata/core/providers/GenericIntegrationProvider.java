@@ -89,6 +89,14 @@ public interface GenericIntegrationProvider extends PluginProvider,UIExtensionPr
 	HTMLResponse renderTemplate(AccountIntegration integration);
 
 	/**
+	 * Flags if the user can create this integration type
+	 * @return a boolean indicating if the user can create this integration type
+	 */
+	default Boolean getCreatable(){
+		return true;
+	}
+
+	/**
 	 * Specify if this type of integration can be selectively associated with a cloud on the clouds advanced options
 	 * @since 1.1.8
 	 * @return the association type none,one, or many
