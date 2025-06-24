@@ -90,6 +90,7 @@ public interface GenericIntegrationProvider extends PluginProvider,UIExtensionPr
 
 	/**
 	 * Flags if the user can create this integration type
+	 * @since 1.2.10
 	 * @return a boolean indicating if the user can create this integration type
 	 */
 	default Boolean getCreatable(){
