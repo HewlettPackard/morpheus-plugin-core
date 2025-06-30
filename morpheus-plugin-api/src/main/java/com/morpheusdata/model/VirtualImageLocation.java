@@ -17,6 +17,7 @@
 package com.morpheusdata.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.morpheusdata.core.providers.CloudProvider;
 import com.morpheusdata.model.projection.StorageControllerIdentityProjection;
 import com.morpheusdata.model.projection.StorageVolumeIdentityProjection;
@@ -49,6 +50,7 @@ public class VirtualImageLocation extends VirtualImageLocationIdentityProjection
 	@JsonIgnore
 	protected List<StorageControllerIdentityProjection> controllers = new ArrayList<>();
 	protected String owner;
+	@JsonProperty(value="isPublic")
 	protected Boolean isPublic;
 	protected Boolean systemImage = false;
 

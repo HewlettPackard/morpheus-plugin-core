@@ -17,6 +17,7 @@
 package com.morpheusdata.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.morpheusdata.core.providers.CloudProvider;
 import com.morpheusdata.model.projection.StorageControllerIdentityProjection;
 import com.morpheusdata.model.projection.StorageVolumeIdentityProjection;
@@ -44,6 +45,7 @@ public class VirtualImage extends VirtualImageIdentityProjection {
 	protected String hypervisor;
 	protected String category;
 	protected String externalType;
+	@JsonProperty(value="isPublic")
 	protected Boolean isPublic;
 	protected String platform;
 	protected String bucketId;
@@ -66,16 +68,19 @@ public class VirtualImage extends VirtualImageIdentityProjection {
 	protected String refId;
 	protected String refType;
 	protected String imageRegion;
+	@JsonProperty(value="isForceCustomization")
 	protected Boolean isForceCustomization;
 	protected Boolean uefi=false;
 	protected Boolean tpm=false;
 	protected Boolean secureBoot=false;
 	protected Boolean credentialGuard=false;
+	@JsonProperty(value="isCloudInit")
 	protected Boolean isCloudInit = true;
 	protected Boolean virtioSupported = true;
 	protected Boolean deleted = false;
 	protected Boolean userUploaded = false;
 	protected Boolean userDefined = false;
+	@JsonProperty(value="isSysprep")
 	protected Boolean isSysprep = false;
 	protected Boolean vmToolsInstalled = true;
 	protected Boolean installAgent = true;
