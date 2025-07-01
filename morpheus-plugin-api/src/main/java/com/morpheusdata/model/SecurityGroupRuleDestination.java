@@ -16,17 +16,17 @@
 
 package com.morpheusdata.model;
 
+import com.morpheusdata.model.projection.SecurityGroupRuleDestinationIdentityProjection;
 import com.morpheusdata.model.projection.SecurityGroupRuleIdentityProjection;
 
 /**
  * SecurityGroupRuleDestinations are used to model the firewall rule Destinations. For example,
  * the destination groups in NSX-T firewalls are modeled using SecurityGroupRuleDestination.
  */
-public class SecurityGroupRuleDestination extends MorpheusModel {
+public class SecurityGroupRuleDestination extends SecurityGroupRuleDestinationIdentityProjection {
 
 	protected SecurityGroupRuleIdentityProjection securityGroupRule;
 
-	protected String name;
 	protected String destination;
 	protected String destinationType = "instance"; //cidr, group, tier, instance
 	protected String destinationRefType; //external type and id
@@ -34,7 +34,6 @@ public class SecurityGroupRuleDestination extends MorpheusModel {
 	protected Boolean enabled = true;
 	//linking
 	protected String internalId;
-	protected String externalId;
 	protected String uniqueId;
 	protected String providerId;
 	protected String externalType;
@@ -47,14 +46,6 @@ public class SecurityGroupRuleDestination extends MorpheusModel {
 
 	public void setSecurityGroupRule(SecurityGroupRuleIdentityProjection securityGroupRule) {
 		this.securityGroupRule = securityGroupRule;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public String getDestination() {
@@ -103,14 +94,6 @@ public class SecurityGroupRuleDestination extends MorpheusModel {
 
 	public void setInternalId(String internalId) {
 		this.internalId = internalId;
-	}
-
-	public String getExternalId() {
-		return externalId;
-	}
-
-	public void setExternalId(String externalId) {
-		this.externalId = externalId;
 	}
 
 	public String getUniqueId() {

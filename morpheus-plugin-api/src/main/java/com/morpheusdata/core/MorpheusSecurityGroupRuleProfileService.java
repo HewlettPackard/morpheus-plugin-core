@@ -17,6 +17,7 @@
 package com.morpheusdata.core;
 
 import com.morpheusdata.model.SecurityGroupRuleProfile;
+import com.morpheusdata.model.projection.SecurityGroupRuleProfileIdentityProjection;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
 
@@ -25,7 +26,7 @@ import java.util.List;
 /**
  * Context methods for syncing SecurityGroupRuleApplications in Morpheus
  */
-public interface MorpheusSecurityGroupRuleProfileService extends MorpheusDataService<SecurityGroupRuleProfile, SecurityGroupRuleProfile> {
+public interface MorpheusSecurityGroupRuleProfileService extends MorpheusDataService<SecurityGroupRuleProfile, SecurityGroupRuleProfileIdentityProjection>, MorpheusIdentityService<SecurityGroupRuleProfileIdentityProjection> {
 
 	/**
 	 * Fetch the SecurityGroupRuleProfiles given a list of ids
@@ -43,13 +44,4 @@ public interface MorpheusSecurityGroupRuleProfileService extends MorpheusDataSer
 	 */
 	@Deprecated(since="0.15.4")
 	Single<Boolean> save(List<SecurityGroupRuleProfile> securityGroupRuleProfiles);
-
-	/**
-	 * Remove SecurityGroupRuleProfiles from Morpheus
-	 * @param securityGroupRuleProfiles SecurityGroupRuleProfiles to remove
-	 * @return whether the removal was successful
-	 * @deprecated use {@link #bulkRemove } instead
-	 */
-	@Deprecated(since="0.15.4")
-	Single<Boolean> remove(List<SecurityGroupRuleProfile> securityGroupRuleProfiles);
 }

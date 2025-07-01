@@ -17,16 +17,15 @@
 package com.morpheusdata.model;
 
 import com.morpheusdata.model.projection.SecurityGroupRuleIdentityProjection;
+import com.morpheusdata.model.projection.SecurityGroupRuleProfileIdentityProjection;
 
 /**
  * SecurityGroupRuleProfiles are used to model the firewall rule Profiles. For example,
  * the profiles in NSX-T firewalls are modeled using SecurityGroupRuleProfile.
  */
-public class SecurityGroupRuleProfile extends MorpheusModel {
+public class SecurityGroupRuleProfile extends SecurityGroupRuleProfileIdentityProjection {
 
 	protected SecurityGroupRuleIdentityProjection securityGroupRule;
-	protected String name;
-	protected String externalId;
 	protected String rawData;
 	protected String providerId;
 
@@ -36,22 +35,6 @@ public class SecurityGroupRuleProfile extends MorpheusModel {
 
 	public void setSecurityGroupRule(SecurityGroupRuleIdentityProjection securityGroupRule) {
 		this.securityGroupRule = securityGroupRule;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getExternalId() {
-		return externalId;
-	}
-
-	public void setExternalId(String externalId) {
-		this.externalId = externalId;
 	}
 
 	public String getRawData() {
