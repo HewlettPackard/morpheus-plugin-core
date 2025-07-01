@@ -28,6 +28,7 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -247,9 +248,12 @@ public class PluginManager {
 		InputStream is = null;
 		try {
 
-			is = i18nManifest.openStream();
-			String manifestConents = new String(is.readAllBytes(), StandardCharsets.UTF_8);
-			fileList = manifestConents.split("\n");
+			URLConnection resConn = i18nManifest.openConnection();
+			resConn.setUseCaches(false);
+			is = resConn.getInputStream();
+
+			String manifestContents = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+			fileList = manifestContents.split("\n");
 
 		} catch(IOException ignore) {
 			/*ignore*/
@@ -406,7 +410,9 @@ public class PluginManager {
 			InputStream is = null;
 			try {
 				if(fileObject != null) {
-					is = fileObject.openStream();
+					URLConnection resConn = fileObject.openConnection();
+					resConn.setUseCaches(false);
+					is = resConn.getInputStream();
 					properties.load(new InputStreamReader(is, StandardCharsets.UTF_8));
 				}
 			} finally {
