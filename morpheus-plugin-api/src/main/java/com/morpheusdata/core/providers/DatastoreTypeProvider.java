@@ -329,7 +329,7 @@ public interface DatastoreTypeProvider extends PluginProvider {
 		 * @return the success state and a copy of the volume
 		 * @since 1.2.10
 		 */
-		ServiceResponse<StorageVolume> prepareHostForVolume(ComputeServer server, StorageVolume volume);
+		ServiceResponse<StorageVolume> prepareServerForVolume(ComputeServer server, StorageVolume volume);
 
 		/**
 		 * This is a hook call to allow the plugin to release the volume from the host.
@@ -339,7 +339,7 @@ public interface DatastoreTypeProvider extends PluginProvider {
 		 * @return the success state and a copy of the volume
 		 * @since 1.2.10
 		 */
-		ServiceResponse<StorageVolume> releaseVolumeFromHost(ComputeServer server, StorageVolume volume);
+		ServiceResponse<StorageVolume> releaseVolumeFromServer(ComputeServer server, StorageVolume volume);
 	}
 
 	/**
