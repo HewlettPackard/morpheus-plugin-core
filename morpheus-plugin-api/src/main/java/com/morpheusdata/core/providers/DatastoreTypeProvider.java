@@ -316,6 +316,33 @@ public interface DatastoreTypeProvider extends PluginProvider {
 	}
 
 	/**
+	 * This facet is used to provide additional hooks for compute provisioning tasks.
+	 * @since 1.2.10
+	 * @author Mike Carlin
+	 */
+	interface ComputeProvisionFacet {
+		/**
+		 * This is a hook call to allow the plugin to prepare the host for the volume. This could be something like forcing a rescan
+		 * or refresh if necessary on the host itself
+		 * @param server The server to prepare the volume for
+		 * @param volume The volume that will be available to the host
+		 * @return the success state and a copy of the volume
+		 * @since 1.2.10
+		 */
+		ServiceResponse<StorageVolume> prepareHostForVolume(ComputeServer server, StorageVolume volume);
+
+		/**
+		 * This is a hook call to allow the plugin to release the volume from the host.
+		 * This could be something like forcing a rescan or unexporting the volume from the array.
+		 * @param server The server to release the volume from
+		 * @param volume The volume that will be released
+		 * @return the success state and a copy of the volume
+		 * @since 1.2.10
+		 */
+		ServiceResponse<StorageVolume> releaseVolumeFromHost(ComputeServer server, StorageVolume volume);
+	}
+
+	/**
 	 * This facet is used to provide additional hooks for MVM/VME specific provisioning tasks for VME/HPE Hypervisor Clusters.
 	 * In the future, this may change to be  more generic and allowed for other cloud provision providers to use (i.e. Baremetal)
 	 * In order to use this, add it to your implementation of your {@link DatastoreTypeProvider}
