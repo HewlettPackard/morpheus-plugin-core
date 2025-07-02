@@ -19,6 +19,7 @@ package com.morpheusdata.core.synchronous;
 import com.morpheusdata.core.MorpheusSynchronousIdentityService;
 import com.morpheusdata.core.MorpheusSynchronousDataService;
 import com.morpheusdata.model.SecurityGroupRuleProfile;
+import com.morpheusdata.model.projection.SecurityGroupRuleProfileIdentityProjection;
 
-public interface MorpheusSynchronousSecurityGroupRuleProfileService extends MorpheusSynchronousDataService<SecurityGroupRuleProfile, SecurityGroupRuleProfile> {
+public interface MorpheusSynchronousSecurityGroupRuleProfileService extends MorpheusSynchronousDataService<SecurityGroupRuleProfile, SecurityGroupRuleProfileIdentityProjection>, MorpheusSynchronousIdentityService<SecurityGroupRuleProfileIdentityProjection> {
 }
