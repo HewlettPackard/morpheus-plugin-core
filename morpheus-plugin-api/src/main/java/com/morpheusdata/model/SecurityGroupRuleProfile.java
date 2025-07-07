@@ -28,6 +28,7 @@ public class SecurityGroupRuleProfile extends SecurityGroupRuleProfileIdentityPr
 	protected SecurityGroupRuleIdentityProjection securityGroupRule;
 	protected String rawData;
 	protected String providerId;
+	protected String sourceType;
 
 	public SecurityGroupRuleIdentityProjection getSecurityGroupRule() {
 		return securityGroupRule;
@@ -51,5 +52,13 @@ public class SecurityGroupRuleProfile extends SecurityGroupRuleProfileIdentityPr
 
 	public void setProviderId(String providerId) {
 		this.providerId = providerId;
+	}
+
+	public String getSourceType() {
+		return sourceType;
+	}
+
+	public void setSourceType(String sourceType) {
+		this.sourceType = sourceType;
 	}
 }

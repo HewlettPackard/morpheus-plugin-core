@@ -29,6 +29,7 @@ public class DatastoreIdentity extends MorpheusIdentityModel {
 	protected String internalId;
 	protected String name;
 	protected String externalId;
+	protected String code;
 	protected Long cloudId;
 
 	public DatastoreIdentity() {
@@ -74,6 +75,15 @@ public class DatastoreIdentity extends MorpheusIdentityModel {
 	public void setExternalId(String externalId) {
 		this.externalId = externalId;
 		markDirty("externalId", externalId);
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+		markDirty("code", code);
 	}
 
 	public Long getCloudId() {
