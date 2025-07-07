@@ -129,6 +129,7 @@ public class NetworkRouter extends NetworkRouterIdentityProjection {
 	protected String createdByName;
 	protected String visibility = "private";
 	protected List<NetworkRoute> routes;
+	protected List<NetworkRouterNAT> nats;
 
 	public Account getOwner() {
 		return owner;
@@ -749,5 +750,14 @@ public class NetworkRouter extends NetworkRouterIdentityProjection {
 	public void setRoutes(List<NetworkRoute> routes) {
 		this.routes = routes;
 		markDirty("routes", routes);
+	}
+
+	public List<NetworkRouterNAT> getNats() {
+		return nats;
+	}
+
+	public void setNats(List<NetworkRouterNAT> nats) {
+		this.nats = nats;
+		markDirty("nats", nats);
 	}
 }
