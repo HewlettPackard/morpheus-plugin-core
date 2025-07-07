@@ -24,6 +24,7 @@ import com.morpheusdata.model.serializers.ModelAsIdOnlySerializer;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Provides a Model representation of a Network Pool typically provided or synced from an IPAM Provider. Some Providers
@@ -415,7 +416,16 @@ public class NetworkPool extends NetworkPoolIdentityProjection {
 		markDirty("cidrIPv6", cidr);
 	}
 
-	
+	public Set<NetworkPoolIp> getIpAddresses() {
+		return ipAddresses;
+	}
+
+	public void setIpAddresses(Set<NetworkPoolIp> ipAddresses) {
+		this.ipAddresses = ipAddresses;
+		markDirty("ipAddresses", ipAddresses);
+
+	}
+
 	protected String name;
 	protected String displayName;
 	protected String internalId;
@@ -438,6 +448,7 @@ public class NetworkPool extends NetworkPoolIdentityProjection {
 	protected String configuration;
 	protected String cidr;
 	protected String cidrIPv6;
+	protected Set<NetworkPoolIp> ipAddresses;
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	public NetworkPoolServer poolServer;
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)

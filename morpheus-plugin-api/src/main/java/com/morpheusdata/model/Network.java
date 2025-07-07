@@ -80,6 +80,8 @@ public class Network extends NetworkIdentityProjection {
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected NetworkPool pool;
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
+	protected NetworkPool poolIPv6;
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected NetworkProxy networkProxy;
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected NetworkDomain networkDomain;
@@ -442,6 +444,15 @@ public class Network extends NetworkIdentityProjection {
 	public void setPool(NetworkPool pool) {
 		this.pool = pool;
 		markDirty("pool", pool);
+	}
+
+	public NetworkPool getPoolIPv6() {
+		return poolIPv6;
+	}
+
+	public void setPoolIPv6(NetworkPool poolIPv6) {
+		this.poolIPv6 = poolIPv6;
+		markDirty("poolIPv6", pool);
 	}
 
 	public NetworkProxy getNetworkProxy() {

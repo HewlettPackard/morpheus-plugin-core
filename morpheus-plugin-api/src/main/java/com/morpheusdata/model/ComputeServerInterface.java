@@ -54,7 +54,8 @@ public class ComputeServerInterface extends MorpheusModel {
 	protected Network network;
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected NetworkSubnet subnet;
-//	public NetworkGroup networkGroup;
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
+	public NetworkGroup networkGroup;
 	protected String networkPosition;
 	protected Integer displayOrder = 0;
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
@@ -139,6 +140,15 @@ public class ComputeServerInterface extends MorpheusModel {
 
 	public NetworkSubnet getSubnet() {
 		return subnet;
+	}
+
+	public NetworkGroup getNetworkGroup() {
+		return networkGroup;
+	}
+
+	public void setNetworkGroup(NetworkGroup networkGroup) {
+		this.networkGroup = networkGroup;
+		markDirty("networkGroup", networkGroup);
 	}
 
 	public String getNetworkPosition() {

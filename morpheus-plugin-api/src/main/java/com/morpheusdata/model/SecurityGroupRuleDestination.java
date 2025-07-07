@@ -28,6 +28,7 @@ public class SecurityGroupRuleDestination extends SecurityGroupRuleDestinationId
 	protected SecurityGroupRuleIdentityProjection securityGroupRule;
 
 	protected String destination;
+	protected String sourceType;
 	protected String destinationType = "instance"; //cidr, group, tier, instance
 	protected String destinationRefType; //external type and id
 	protected String destinationRefId;
@@ -46,6 +47,14 @@ public class SecurityGroupRuleDestination extends SecurityGroupRuleDestinationId
 
 	public void setSecurityGroupRule(SecurityGroupRuleIdentityProjection securityGroupRule) {
 		this.securityGroupRule = securityGroupRule;
+	}
+
+	public String getSourceType() {
+		return sourceType;
+	}
+
+	public void setSourceType(String sourceType) {
+		this.sourceType = sourceType;
 	}
 
 	public String getDestination() {
