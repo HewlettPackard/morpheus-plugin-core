@@ -2,10 +2,7 @@ package com.morpheusdata.core.synchronous;
 
 import com.morpheusdata.core.MorpheusSynchronousDataService;
 import com.morpheusdata.core.process.ProcessStartRequest;
-import com.morpheusdata.core.process.ProcessSubject;
-import com.morpheusdata.model.ComputeServer;
-import com.morpheusdata.model.ComputeServerGroup;
-import com.morpheusdata.model.Instance;
+import com.morpheusdata.core.process.ProcessReference;
 import com.morpheusdata.model.Process;
 import com.morpheusdata.model.ProcessEvent;
 import com.morpheusdata.model.ProcessStepType;
@@ -17,11 +14,11 @@ public interface MorpheusSynchronousProcessService extends MorpheusSynchronousDa
 
 	/**
 	 * Start a new Process for the given subject (e.g., instance, workload, etc.)
-	 * @param subject The subject the process should be associated with
+	 * @param reference The reference to the entity the process should be associated with
 	 * @param request The details of the process start request
 	 * @return The started process
 	 */
-	Process startProcess(ProcessSubject subject, ProcessStartRequest request);
+	Process startProcess(ProcessReference reference, ProcessStartRequest request);
 
 	/**
 	 * Start a new Process for the Workload
@@ -31,7 +28,7 @@ public interface MorpheusSynchronousProcessService extends MorpheusSynchronousDa
 	 * @param timerCategory a category to associate with this Process. The category is used to provide estimated
 	 *                      durations for a Process based on previous run of processes with this same category.
 	 * @return Boolean indicating success
-	 * @deprecated Use {@link #startProcess(ProcessSubject, ProcessStartRequest)} instead
+	 * @deprecated Use {@link #startProcess(ProcessReference, ProcessStartRequest)} instead
 	 */
 	Process startProcess(Workload workload, ProcessStepType stepType, User user, String timerCategory);
 
@@ -44,7 +41,7 @@ public interface MorpheusSynchronousProcessService extends MorpheusSynchronousDa
 	 *                      durations for a Process based on previous run of processes with this same category.
 	 * @param eventTitle an event title to associate with this Process
 	 * @return The started process
-	 * @deprecated Use {@link #startProcess(ProcessSubject, ProcessStartRequest)} instead
+	 * @deprecated Use {@link #startProcess(ProcessReference, ProcessStartRequest)} instead
 	 */
 	Process startProcess(Workload workload, ProcessStepType stepType, User user, String timerCategory, String eventTitle);
 

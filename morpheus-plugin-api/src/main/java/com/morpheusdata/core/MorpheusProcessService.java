@@ -16,7 +16,7 @@
 
 package com.morpheusdata.core;
 
-import com.morpheusdata.core.process.ProcessSubject;
+import com.morpheusdata.core.process.ProcessReference;
 import com.morpheusdata.core.process.ProcessStartRequest;
 import com.morpheusdata.model.*;
 import com.morpheusdata.model.Process;
@@ -48,7 +48,7 @@ public interface MorpheusProcessService extends MorpheusDataService<Process, Pro
 	 * @param timerCategory a category to associate with this Process. The category is used to provide estimated
 	 *                      durations for a Process based on previous run of processes with this same category.
 	 * @return The started process
-	 * @deprecated use {@link #startProcess(ProcessSubject, ProcessStartRequest)} instead
+	 * @deprecated use {@link #startProcess(ProcessReference, ProcessStartRequest)} instead
 	 */
 	Single<Process> startProcess(Workload workload, ProcessEvent.ProcessType processType, User user, String timerCategory);
 
@@ -58,7 +58,7 @@ public interface MorpheusProcessService extends MorpheusDataService<Process, Pro
 	 * @param request The details of the process start request
 	 * @return The started process
 	 */
-	Single<Process> startProcess(ProcessSubject subject, ProcessStartRequest request);
+	Single<Process> startProcess(ProcessReference subject, ProcessStartRequest request);
 
 	/**
 	 * Start a new Process for the Workload
@@ -68,7 +68,7 @@ public interface MorpheusProcessService extends MorpheusDataService<Process, Pro
 	 * @param timerCategory a category to associate with this Process. The category is used to provide estimated
 	 *                      durations for a Process based on previous run of processes with this same category.
 	 * @return The started process
-	 * @deprecated Use {@link #startProcess(ProcessSubject, ProcessStartRequest)} instead
+	 * @deprecated Use {@link #startProcess(ProcessReference, ProcessStartRequest)} instead
 	 */
 	@Deprecated(since = "1.2.10")
 	Single<Process> startProcess(Workload workload, ProcessStepType stepType, User user, String timerCategory);
@@ -82,7 +82,7 @@ public interface MorpheusProcessService extends MorpheusDataService<Process, Pro
 	 *                      durations for a Process based on previous run of processes with this same category.
 	 * @param eventTitle an event title to associate with this Process
 	 * @return The started process
-	 * @deprecated use {@link #startProcess(ProcessSubject, ProcessStartRequest)} instead
+	 * @deprecated use {@link #startProcess(ProcessReference, ProcessStartRequest)} instead
 	 */
 	@Deprecated(since = "1.2.8")
 	Single<Process> startProcess(Workload workload, ProcessEvent.ProcessType processType, User user, String timerCategory, String eventTitle);
@@ -97,7 +97,7 @@ public interface MorpheusProcessService extends MorpheusDataService<Process, Pro
 	 *                      durations for a Process based on previous run of processes with this same category.
 	 * @param eventTitle an event title to associate with this Process
 	 * @return Boolean indicating success
-	 * @deprecated Use {@link #startProcess(ProcessSubject, ProcessStartRequest)} instead
+	 * @deprecated Use {@link #startProcess(ProcessReference, ProcessStartRequest)} instead
 	 */
 	@Deprecated(since = "1.2.10")
 	Single<Process> startProcess(Workload workload, ProcessStepType stepType, User user, String timerCategory, String eventTitle);
