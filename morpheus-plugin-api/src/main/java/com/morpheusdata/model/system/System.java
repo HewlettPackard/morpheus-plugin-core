@@ -15,6 +15,7 @@ public class System extends MorpheusModel {
 	protected String name;
 	protected String description;
 	protected String status = "ok";
+	protected Boolean enabled = true;
 	protected String statusMessage;
 	protected Date statusMessageDate;
 	protected SystemType type;
@@ -51,6 +52,15 @@ public class System extends MorpheusModel {
 	public void setStatus(String status) {
 		markDirty("status", status);
 		this.status = status;
+	}
+
+	public Boolean getEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(Boolean enabled) {
+		markDirty("enabled", enabled);
+		this.enabled = enabled;
 	}
 
 	public String getStatusMessage() {
