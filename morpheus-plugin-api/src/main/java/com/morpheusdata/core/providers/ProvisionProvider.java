@@ -610,7 +610,6 @@ public interface ProvisionProvider extends PluginProvider {
 			return null;
 		}
 
-
 		/**
 		 * Builds the URL and authentication required to connect to the target server using noVNC
 		 * @since 0.13.8
