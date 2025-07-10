@@ -4,7 +4,11 @@ import com.morpheusdata.model.NetworkFloatingIpPool;
 import com.morpheusdata.model.NetworkServer;
 import com.morpheusdata.model.ComputeServer;
 import com.morpheusdata.model.NetworkFloatingIp;
+import com.morpheusdata.model.OptionType;
 import com.morpheusdata.response.ServiceResponse;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Provides a standard set of methods for interacting with floating ips.
@@ -56,4 +60,12 @@ public interface FloatingIpProvider extends PluginProvider{
 	 * @return ServiceResponse containing the resulting {@link NetworkFloatingIp }
 	 */
 	ServiceResponse<NetworkFloatingIp> allocateFloatingIp(NetworkServer networkServer, NetworkFloatingIpPool pool);
+
+	/**
+	 * Get the list of floating ip option types. The option types are used when adding Floating IPs to a provisioned server
+	 * @return a collection of {@link OptionType} objects representing the supported floating ip option types
+	 */
+	default Collection<OptionType> getFloatingIpTypes() {
+		return new ArrayList<>();
+	}
 }
