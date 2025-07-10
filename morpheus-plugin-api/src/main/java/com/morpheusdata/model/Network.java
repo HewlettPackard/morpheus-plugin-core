@@ -94,6 +94,7 @@ public class Network extends NetworkIdentityProjection {
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Account owner;
 	protected String category;
+	protected Boolean allowStaticOverride = false;
 	protected String code;
 	protected String regionCode;
 	protected Integer cidrMask;
@@ -555,6 +556,14 @@ public class Network extends NetworkIdentityProjection {
 
 	public void setCategory(String category) {
 		this.category = category;
+	}
+
+	public Boolean getAllowStaticOverride() {
+		return allowStaticOverride;
+	}
+
+	public void setAllowStaticOverride(Boolean allowStaticOverride) {
+		this.allowStaticOverride = allowStaticOverride;
 	}
 
 	public String getCode() {

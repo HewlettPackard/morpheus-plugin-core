@@ -30,7 +30,6 @@ public class Datastore extends DatastoreIdentityProjection {
 	protected String visibility="private";
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Cloud cloud;
-	protected String code;
 	protected String type = "generic";
 	protected String name;
 	protected String displayName;
@@ -102,14 +101,6 @@ public class Datastore extends DatastoreIdentityProjection {
 
 	public void setCloud(Cloud cloud) {
 		this.cloud = cloud;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
 	}
 
 	public String getType() {

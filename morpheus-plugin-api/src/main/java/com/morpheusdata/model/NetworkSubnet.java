@@ -78,6 +78,7 @@ public class NetworkSubnet extends NetworkSubnetIdentityProjection {
 	protected Boolean active = true;
 	protected Boolean defaultNetwork = false;
 	protected Boolean assignPublicIp = false;
+	protected String visibility = "private";
 	protected NetworkSubnet.Status status = NetworkSubnet.Status.AVAILABLE;
 	protected Long networkId;
 	protected Boolean hasFloatingIps = false;
@@ -456,6 +457,15 @@ public class NetworkSubnet extends NetworkSubnetIdentityProjection {
 	public void setAssignPublicIp(Boolean assignPublicIp) {
 		this.assignPublicIp = assignPublicIp;
 		markDirty("assignPublicIp", assignPublicIp);
+	}
+
+	public String getVisibility() {
+		return visibility;
+	}
+
+	public void setVisibility(String visibility) {
+		this.visibility = visibility;
+		markDirty("visibility", visibility);
 	}
 
 	public Status getStatus() {

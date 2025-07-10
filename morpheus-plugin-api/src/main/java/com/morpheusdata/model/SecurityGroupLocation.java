@@ -52,7 +52,8 @@ public class SecurityGroupLocation extends SecurityGroupLocationIdentityProjecti
 	protected CloudPool zonePool;
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected NetworkServer networkServer;
-	//	protected NetworkRouter networkRouter;
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
+	protected NetworkRouter networkRouter;
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Network network;
 	//linking
@@ -174,6 +175,14 @@ public class SecurityGroupLocation extends SecurityGroupLocationIdentityProjecti
 
 	public void setNetworkServer(NetworkServer networkServer) {
 		this.networkServer = networkServer;
+	}
+
+	public NetworkRouter getNetworkRouter() {
+		return networkRouter;
+	}
+
+	public void setNetworkRouter(NetworkRouter networkRouter) {
+		this.networkRouter = networkRouter;
 	}
 
 	public Network getNetwork() {
