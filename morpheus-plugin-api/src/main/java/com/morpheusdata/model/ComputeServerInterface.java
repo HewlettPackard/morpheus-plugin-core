@@ -61,6 +61,8 @@ public class ComputeServerInterface extends MorpheusModel {
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected NetworkPool networkPool;
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
+	protected NetworkPool networkPoolIPv6;
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected NetworkDomain networkDomain;
 	protected List<NetAddress> addresses = new ArrayList<>();
 	protected List<ComputeServerInterface> interfaces = new ArrayList<>();
@@ -161,6 +163,10 @@ public class ComputeServerInterface extends MorpheusModel {
 
 	public NetworkPool getNetworkPool() {
 		return networkPool;
+	}
+
+	public NetworkPool getNetworkPoolIPv6() {
+		return networkPoolIPv6;
 	}
 
 	public NetworkDomain getNetworkDomain() {
@@ -299,6 +305,11 @@ public class ComputeServerInterface extends MorpheusModel {
 	public void setNetworkPool(NetworkPool networkPool) {
 		this.networkPool = networkPool;
 		markDirty("networkPool", networkPool);
+	}
+
+	public void setNetworkPoolIPv6(NetworkPool networkPoolIPv6) {
+		this.networkPoolIPv6 = networkPoolIPv6;
+		markDirty("networkPoolIPv6", networkPoolIPv6);
 	}
 
 	public void setNetworkDomain(NetworkDomain networkDomain) {
