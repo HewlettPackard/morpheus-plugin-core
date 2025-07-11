@@ -41,6 +41,13 @@ public interface MorpheusNetworkRouterService extends MorpheusDataService<Networ
 	 */
 	MorpheusNetworkRouteService getRoute();
 
+	/**
+	 * Returns the {@link MorpheusNetworkRouterNATService} used for performing updates/queries on {@link NetworkRouterNAT} related assets
+	 * within Morpheus
+	 * @return An instance of the {@link MorpheusNetworkRouterNATService}
+	 */
+	MorpheusNetworkRouterNATService getNat();
+
 	//Network Router ORM Object Methods
 	/**
 	 * Lists all network projection objects for a specified integration id.
@@ -121,6 +128,7 @@ public interface MorpheusNetworkRouterService extends MorpheusDataService<Networ
 	 * Saves a list of {@link NetworkRouter} objects. Be mindful this is an RxJava implementation and must be subscribed
 	 * to for any action to actually take place.
 	 * Any NetworkRoutes will not be added/removed. They must be added/removed via MorpheusNetworkRouteService
+	 * Any NetworkRouterNATs will not be added/removed. They must be added/removed via MorpheusNetworkRouterNATService
 	 * @param routersToSave a List of Router objects that need to be updated in the database.
 	 * @return the Single Observable stating the success state of the save attempt
 	 * @deprecated use {@link #bulkSave } instead
