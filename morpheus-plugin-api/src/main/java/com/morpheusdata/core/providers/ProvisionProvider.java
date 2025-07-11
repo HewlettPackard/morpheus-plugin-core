@@ -643,7 +643,7 @@ public interface ProvisionProvider extends PluginProvider {
 	}
 
 	class IloConsoleConnectionInfo {
-		public String url;
+		public String hostname;
 		public String sessionToken;
 	}
 
