@@ -16,6 +16,7 @@ class ComputeUtilitySpec extends Specification {
 		"api.maas'foo"   | PlatformType.linux   || 'api-maas-foo'
 		"api.maas'foo"   | PlatformType.linux   || 'api-maas-foo'
 		"api.maas'foo--" | PlatformType.windows || 'api-maas-foo'
+		"@Fi-)~!mnaeif@.com" | PlatformType.linux   || 'fi-mnaeif-com'
 	}
 
 	void "formatProvisionHostname"() {

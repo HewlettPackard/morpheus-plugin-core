@@ -50,6 +50,9 @@ public class ComputeUtility {
 		String rtn = name;
 		if(rtn != null) {
 			rtn = rtn.replaceAll("\\W+","-");
+			// After all of the above, we should not begin or end with a hyphen as
+			// that is not valid for either linux or windows hostname
+			rtn = rtn.replaceAll("^-|-$", "");
 			rtn = rtn.toLowerCase();
 			if(platform == PlatformType.windows) {
 				rtn = rtn.substring(0, Math.min(rtn.length(), 15));
@@ -68,6 +71,9 @@ public class ComputeUtility {
 			rtn = rtn.replaceAll("\\W+", "-");
 			rtn = rtn.replaceAll("\'", "");
 			rtn = rtn.replaceAll(",", "");
+			// After all of the above, we should not begin or end with a hyphen as
+			// that is not valid for either linux or windows hostname
+			rtn = rtn.replaceAll("^-|-$", "");
 			rtn = rtn.toLowerCase();
 		}
 
