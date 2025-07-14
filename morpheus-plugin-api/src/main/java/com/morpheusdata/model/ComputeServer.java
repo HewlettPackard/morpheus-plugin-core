@@ -77,6 +77,7 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 	protected Long maxMemory;
 	protected Long maxCpu;
 	protected Long maxCores;
+	protected Long maxGpus;
 	protected Long usedMemory;
 	protected Long usedStorage;
 	protected Float usedCpu;
@@ -153,6 +154,7 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 	protected String hardwareProductName;
 	protected String hardwareProductVendor;
 	protected String hardwareCpuModel;
+	protected String hardwareGpuModel;
 	protected Double hardwareCpuFrequency;
 	protected Boolean systemServer=false;
 	protected String managedBy;
@@ -351,6 +353,15 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 		return maxCores;
 	}
 
+	public Long getMaxGpus() {
+		return maxGpus;
+	}
+
+	public void setMaxGpus(Long maxGpus) {
+		this.maxGpus = maxGpus;
+		markDirty("maxGpus", maxGpus);
+	}
+
 	public Long getCoresPerSocket() { return coresPerSocket; }
 
 	public Boolean getManaged() {
@@ -515,6 +526,15 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 
 	public String getHardwareCpuModel() {
 		return hardwareCpuModel;
+	}
+
+	public String getHardwareGpuModel() {
+		return hardwareGpuModel;
+	}
+
+	public void setHardwareGpuModel(String hardwareGpuModel) {
+		this.hardwareGpuModel = hardwareGpuModel;
+		markDirty("hardwareGpuModel", hardwareGpuModel);
 	}
 
 	public void setHardwareCpuModel(String hardwareCpuModel) {
