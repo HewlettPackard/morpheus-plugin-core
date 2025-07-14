@@ -50,6 +50,11 @@ public class ComputeUtility {
 		String rtn = name;
 		if(rtn != null) {
 			rtn = rtn.replaceAll("\\W+","-");
+			// Underscores are not valid in hostnames, so replace with hyphen
+			rtn = rtn.replaceAll("_", "-");
+			// After all of the above, we should not begin or end with a hyphen as
+			// that is not valid for either linux or windows hostname
+			rtn = rtn.replaceAll("^-|-$", "");
 			rtn = rtn.toLowerCase();
 			if(platform == PlatformType.windows) {
 				rtn = rtn.substring(0, Math.min(rtn.length(), 15));
@@ -68,6 +73,11 @@ public class ComputeUtility {
 			rtn = rtn.replaceAll("\\W+", "-");
 			rtn = rtn.replaceAll("\'", "");
 			rtn = rtn.replaceAll(",", "");
+			// Underscores are not valid in hostnames, so replace with hyphen
+			rtn = rtn.replaceAll("_", "-");
+			// After all of the above, we should not begin or end with a hyphen as
+			// that is not valid for either linux or windows hostname
+			rtn = rtn.replaceAll("^-|-$", "");
 			rtn = rtn.toLowerCase();
 		}
 

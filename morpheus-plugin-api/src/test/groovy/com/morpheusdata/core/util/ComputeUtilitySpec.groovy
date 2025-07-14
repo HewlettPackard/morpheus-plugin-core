@@ -9,13 +9,15 @@ class ComputeUtilitySpec extends Specification {
 		expected == ComputeUtility.formatHostname(host, platform)
 
 		where:
-		host             | platform             || expected
-		'MAAS'           | PlatformType.linux   || 'maas'
-		'api.maas'       | PlatformType.linux   || 'api-maas'
-		'api.maas,foo'   | PlatformType.linux   || 'api-maas-foo'
-		"api.maas'foo"   | PlatformType.linux   || 'api-maas-foo'
-		"api.maas'foo"   | PlatformType.linux   || 'api-maas-foo'
-		"api.maas'foo--" | PlatformType.windows || 'api-maas-foo'
+		host                 | platform             || expected
+		'MAAS'               | PlatformType.linux   || 'maas'
+		'api.maas'           | PlatformType.linux   || 'api-maas'
+		'api.maas,foo'       | PlatformType.linux   || 'api-maas-foo'
+		"api.maas'foo"       | PlatformType.linux   || 'api-maas-foo'
+		"api.maas'foo"       | PlatformType.linux   || 'api-maas-foo'
+		"api.maas'foo--"     | PlatformType.windows || 'api-maas-foo'
+		"@Fi-)~!mnaeif@.com" | PlatformType.linux   || 'fi-mnaeif-com'
+		"9_7_25_4"           | PlatformType.linux   || '9-7-25-4'
 	}
 
 	void "formatProvisionHostname"() {
