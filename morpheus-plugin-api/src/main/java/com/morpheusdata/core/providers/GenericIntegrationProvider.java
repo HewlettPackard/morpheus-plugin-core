@@ -75,6 +75,12 @@ public interface GenericIntegrationProvider extends PluginProvider,UIExtensionPr
 	void refresh(AccountIntegration accountIntegration);
 
 	/**
+	 * Refresh the integration with the latest data from the provider.  Executes once per day.
+	 * @param accountIntegration the integration to refresh
+	 */
+	default void refreshDaily(AccountIntegration accountIntegration) {};
+
+	/**
 	 * Returns the Integration logo for display when a user needs to view or add this integration
 	 * @since 0.12.3
 	 * @return Icon representation of assets stored in the src/assets of the project.

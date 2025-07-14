@@ -85,6 +85,13 @@ public interface SystemProvider extends PluginProvider {
 	default ServiceResponse refreshSystem(System system) { return ServiceResponse.success(); }
 
 	/**
+	 * Executed once a day, perform any desireable action on a daily interval
+	 * @param system
+	 * @return
+	 */
+	default ServiceResponse refreshSystemDaily(System system) { return ServiceResponse.success(); }
+
+	/**
 	 * This method is called when adding an additional component to an existing system (adding a new host, storage array
 	 * etc)
 	 * @param system

@@ -74,10 +74,28 @@ public interface LoadBalancerProvider extends PluginProvider {
 		return ServiceResponse.success();
 	}
 
+	/**
+	 * This method is triggered on a schedule to update entity information from the load balancer integration itself
+	 * @param loadBalancer
+	 * @return
+	 */
 	default ServiceResponse refresh(NetworkLoadBalancer loadBalancer) {
 		// default implementation for this is to just return success as not all load balancer syncing is done from the
 		// load balancer provider.  In the case of amazon, the load balancer sync is down in the cloud provider.
-		return ServiceResponse.success();
+		return ServiceResponse.success(loadBalancer);
+	}
+
+	/**
+	 * This method is triggered on a schedule (once a day) to allow the load balancer integration to perform operations
+	 * critical to the health/stability of the integration.
+	 * @since 1.2.11
+	 * @param loadBalancer
+	 * @return
+	 */
+	default ServiceResponse refreshDaily(NetworkLoadBalancer loadBalancer) {
+		// default implementation for this is to just return success as not all load balancer syncing is done from the
+		// load balancer provider.  In the case of amazon, the load balancer sync is down in the cloud provider.
+		return ServiceResponse.success(loadBalancer);
 	}
 
 	// service methods for interacting with load balancer apis

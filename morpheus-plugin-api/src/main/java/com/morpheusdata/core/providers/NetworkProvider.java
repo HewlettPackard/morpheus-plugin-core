@@ -184,6 +184,15 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 	default ServiceResponse refresh(NetworkServer networkServer) { return ServiceResponse.success(networkServer); }
 
 	/**
+	 * This method is triggered on a schedule (once a day) to allow the network integration to perform operations
+	 * critical to the health/stability of the integration.
+	 * @since 1.2.11
+	 * @param networkServer
+	 * @return
+	 */
+	default ServiceResponse refreshDaily(NetworkServer networkServer) { return ServiceResponse.success(networkServer); }
+
+	/**
 	 * Validates the submitted network server information.
 	 * If a {@link ServiceResponse} is not marked as successful the validation results will be
 	 * bubbled up to the user.

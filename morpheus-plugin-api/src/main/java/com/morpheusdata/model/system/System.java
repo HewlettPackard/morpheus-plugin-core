@@ -11,6 +11,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * This model is a conceptual representation of n number of hardware and/or software
+ * (hosts, storage arrays, network devices, etc) units that make up a managed system.
+ */
 public class System extends MorpheusModel {
 	protected String name;
 	protected String description;
