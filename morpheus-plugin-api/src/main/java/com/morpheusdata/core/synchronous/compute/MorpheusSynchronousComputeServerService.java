@@ -16,11 +16,9 @@
 
 package com.morpheusdata.core.synchronous.compute;
 
-import com.morpheusdata.core.synchronous.compute.MorpheusSynchronousComputePortService;
 import com.morpheusdata.core.MorpheusSynchronousIdentityService;
 import com.morpheusdata.core.MorpheusSynchronousDataService;
-import com.morpheusdata.core.synchronous.compute.MorpheusSynchronousComputeServerAccessService;
-import com.morpheusdata.core.synchronous.compute.MorpheusSynchronousComputeServerInterfaceService;
+import com.morpheusdata.model.ComputeDevice;
 import com.morpheusdata.model.ComputePort;
 import com.morpheusdata.model.ComputeServer;
 import com.morpheusdata.model.ComputeServerAccess;
@@ -34,6 +32,12 @@ public interface MorpheusSynchronousComputeServerService extends MorpheusSynchro
 	 * @return An instance of the ComputeServerInterface Context
 	 */
 	MorpheusSynchronousComputeServerInterfaceService getComputeServerInterface();
+
+	/**
+	 * Returns the ComputeDevice context used for performing sync operations on {@link ComputeDevice} related assets within Morpheus.
+	 * @return An instance of the ComputeDevice context
+	 */
+	MorpheusSynchronousComputeDeviceService getComputeDevice();
 
 	/**
 	 * Returns the ComputePort context used for performing sync operations on {@link ComputePort} related assets within Morpheus.

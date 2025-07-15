@@ -16,6 +16,7 @@
 
 package com.morpheusdata.core;
 
+import com.morpheusdata.core.compute.MorpheusComputeDeviceService;
 import com.morpheusdata.core.compute.MorpheusComputeServerAccessService;
 import com.morpheusdata.model.*;
 import com.morpheusdata.model.projection.ComputeServerIdentityProjection;
@@ -92,6 +93,12 @@ public interface MorpheusComputeServerService extends MorpheusDataService<Comput
 	 * @return An instance of the ComputeServerAccess context
 	 */
 	MorpheusComputeServerAccessService getAccess();
+
+	/**
+	 * Returns the ComputeDevice context used for performing sync operations on {@link ComputeDevice} related assets within Morpheus.
+	 * @return An instance of the ComputeDevice context
+	 */
+	MorpheusComputeDeviceService getComputeDevice();
 
 	/**
 	 * Remove persisted ComputeServers from Morpheus and remove them the {@link com.morpheusdata.model.InstanceScale} they are associated with

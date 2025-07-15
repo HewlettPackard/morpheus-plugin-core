@@ -82,6 +82,13 @@ public interface CloudProvider extends PluginProvider {
 	Collection<ComputeServerType> getComputeServerTypes();
 
 	/**
+	 * Grabs all {@link ComputeDeviceType} objects that this CloudProvider can represent during a sync or during a provision.
+	 * @since 1.2.11
+	 * @return collection of ComputeDeviceType
+	 */
+	default Collection<ComputeDeviceType> getComputeDeviceTypes() { return new ArrayList<>(); }
+
+	/**
 	 * Grabs available provisioning providers related to the target Cloud Plugin. Some clouds have multiple provisioning
 	 * providers or some clouds allow for service based providers on top like (Docker or Kubernetes).
 	 * @return Collection of ProvisionProvider

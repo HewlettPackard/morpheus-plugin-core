@@ -108,6 +108,14 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 
 	@JsonSerialize(using= ModelCollectionAsIdsOnlySerializer.class)
 	protected List<ComputeServerAccess> accesses = new ArrayList<>();
+
+	/**
+	 * The set of devices on this compute server.
+	 * @since 1.2.11
+	 */
+	@JsonSerialize(using= ModelCollectionAsIdsOnlySerializer.class)
+	protected List<ComputeDevice> devices = new ArrayList<>();
+
 	protected String osDevice = "/dev/sda";
 	protected String dataDevice = "/dev/sdb";
 	protected Boolean lvmEnabled = true;
@@ -1088,6 +1096,15 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 	public void setCapacityInfo(ComputeCapacityInfo capacityInfo) {
 		this.capacityInfo = capacityInfo;
 		markDirty("capacityInfo", capacityInfo);
+	}
+
+	public List<ComputeDevice> getDevices() {
+		return devices;
+	}
+
+	public void setDevices(List<ComputeDevice> devices) {
+		this.devices = devices;
+		markDirty("devices", devices);
 	}
 
 	public enum GuestConsoleType {

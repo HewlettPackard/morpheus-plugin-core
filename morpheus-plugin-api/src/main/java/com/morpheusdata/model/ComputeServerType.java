@@ -46,6 +46,21 @@ public class ComputeServerType  extends MorpheusModel implements IModelCodeName 
 	protected Boolean reconfigureSupported=true;
 	protected Boolean externalDelete = true;
 	protected Boolean hasAutomation = true;
+	/**
+	 * Flags whether this ComputeServerType can have {@link ComputeDevice}'s associated with it.
+	 * <p>
+	 * If <code>true</code>, a 'Devices' tab is added to the ComputeServer page in the Morpheus UI.
+	 * @since 1.2.11
+	 */
+	protected Boolean hasDevices = false;
+	/**
+	 * Flags whether this ComputeServerType supports attaching/detaching devices and should allow
+	 * those actions to be executed.
+	 * <p>
+	 * If <code>true</code>, actions will be added where relevant in the UI and will be permissible via the API.
+	 * @since 1.2.11
+	 */
+	protected Boolean supportsDeviceAttachment = false;
 	protected Boolean supportsConsoleKeymap = false;
 	protected Integer displayOrder;
 	protected String managedServerType;
@@ -308,6 +323,23 @@ public class ComputeServerType  extends MorpheusModel implements IModelCodeName 
 		markDirty("hasMaintenanceMode", hasMaintenanceMode);
 	}
 
+	public Boolean getHasDevices() {
+		return hasDevices;
+	}
+
+	public void setHasDevices(Boolean hasDevices) {
+		this.hasDevices = hasDevices;
+		markDirty("hasDevices", hasDevices);
+	}
+
+	public Boolean getSupportsDeviceAttachment() {
+		return supportsDeviceAttachment;
+	}
+
+	public void setSupportsDeviceAttachment(Boolean supportsDeviceAttachment) {
+		this.supportsDeviceAttachment = supportsDeviceAttachment;
+		markDirty("supportsDeviceAttachment", hasDevices);
+	}
 
 	public enum AgentType {
 		guest, //vm-node for guest OS agents for vms or workloads
