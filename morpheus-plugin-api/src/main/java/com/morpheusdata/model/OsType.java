@@ -42,6 +42,7 @@ public class OsType extends MorpheusModel {
 	protected Boolean installAgent = false;
 	protected Account owner;
 	protected String visibility;
+	protected Integer windowsInstallIndex = 2; // The image index for a Windows install.wim to use for AutoUnattend.xml generation
 
 
 	public String getCode() {
@@ -168,5 +169,12 @@ public class OsType extends MorpheusModel {
 	public void setVisibility(String visibility){
 		this.visibility = visibility;
 		markDirty("visibility", visibility);
+	}
+
+	public Integer getWindowsInstallIndex() { return windowsInstallIndex; }
+
+	public void setWindowsInstallIndex(Integer windowsInstallIndex) {
+		this.windowsInstallIndex = windowsInstallIndex;
+		markDirty("windowsInstallIndex", windowsInstallIndex);
 	}
 }
