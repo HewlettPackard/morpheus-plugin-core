@@ -128,6 +128,9 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 	protected String agentVersion;
 	protected Boolean hotResize = false;
 	protected Boolean cpuHotResize = false;
+	protected Boolean uefi = false;
+	protected Boolean secureBoot = false;
+	protected Boolean tpm = false;
 	protected String consoleType;
 	protected Integer consolePort;
 	protected String consolePassword;
@@ -543,6 +546,30 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 
 	public void setHardwareCpuFrequency(Double hardwareCpuFrequency) {
 		this.hardwareCpuFrequency = hardwareCpuFrequency;
+	}
+
+	public Boolean getUefi() {
+		return uefi;
+	}
+
+	public void setUefi(Boolean uefi) {
+		this.uefi = uefi;
+	}
+
+	public Boolean getSecureBoot() {
+		return secureBoot;
+	}
+
+	public void setSecureBoot(Boolean secureBoot) {
+		this.secureBoot = secureBoot;
+	}
+
+	public Boolean getTpm() {
+		return tpm;
+	}
+
+	public void setTpm(Boolean tpm) {
+		this.tpm = tpm;
 	}
 
 	public enum PowerState {
