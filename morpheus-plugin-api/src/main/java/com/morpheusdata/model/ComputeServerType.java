@@ -65,6 +65,12 @@ public class ComputeServerType  extends MorpheusModel implements IModelCodeName 
 	protected Integer displayOrder;
 	protected String managedServerType;
 	protected Boolean hasMaintenanceMode;
+	/**
+	 * Flags whether this ComputeServerType should clean up resources when deleted.
+	 * <p>
+	 * If <code>true</code>, resources will be cleaned up during deletion, regardless of the 'Remove Infrastructure' option setting.
+	 * @since 1.2.11
+	 */
 	protected Boolean forceResourceCleanupOnDelete = false;
 
 	protected AgentType agentType = AgentType.guest;
@@ -348,6 +354,7 @@ public class ComputeServerType  extends MorpheusModel implements IModelCodeName 
 
 	public void setForceResourceCleanupOnDelete(Boolean forceResourceCleanupOnDelete) {
 		this.forceResourceCleanupOnDelete = forceResourceCleanupOnDelete;
+		markDirty("forceResourceCleanupOnDelete", forceResourceCleanupOnDelete);
 	}
 
 	public enum AgentType {
