@@ -65,6 +65,7 @@ public class ComputeServerType  extends MorpheusModel implements IModelCodeName 
 	protected Integer displayOrder;
 	protected String managedServerType;
 	protected Boolean hasMaintenanceMode;
+	protected Boolean forceResourceCleanupOnDelete = false;
 
 	protected AgentType agentType = AgentType.guest;
 	protected String computeTypeCode; //dynamic option set there are some common ones though
@@ -339,6 +340,14 @@ public class ComputeServerType  extends MorpheusModel implements IModelCodeName 
 	public void setSupportsDeviceAttachment(Boolean supportsDeviceAttachment) {
 		this.supportsDeviceAttachment = supportsDeviceAttachment;
 		markDirty("supportsDeviceAttachment", hasDevices);
+	}
+
+	public Boolean getForceResourceCleanupOnDelete() {
+		return forceResourceCleanupOnDelete;
+	}
+
+	public void setForceResourceCleanupOnDelete(Boolean forceResourceCleanupOnDelete) {
+		this.forceResourceCleanupOnDelete = forceResourceCleanupOnDelete;
 	}
 
 	public enum AgentType {
