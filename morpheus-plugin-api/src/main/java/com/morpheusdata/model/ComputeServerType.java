@@ -34,6 +34,7 @@ public class ComputeServerType  extends MorpheusModel implements IModelCodeName 
 	protected String computeService;
 	protected Boolean vmHypervisor = false; //runs vms, ex: esxi hypervisor
 	protected Boolean containerHypervisor = false; //runs docker
+	protected Boolean morpheusHypervisor = false; //nested hypervisors
 	protected Boolean bareMetalHost = false; //bare metal
 	protected Boolean guestVm = false; //is a vm
 	protected Boolean managed = true;
@@ -141,6 +142,14 @@ public class ComputeServerType  extends MorpheusModel implements IModelCodeName 
 
 	public void setContainerHypervisor(Boolean containerHypervisor) {
 		this.containerHypervisor = containerHypervisor;
+	}
+
+	public Boolean getMorpheusHypervisor() {
+		return morpheusHypervisor;
+	}
+
+	public void setMorpheusHypervisor(Boolean morpheusHypervisor) {
+		this.morpheusHypervisor = morpheusHypervisor;
 	}
 
 	public Boolean getBareMetalHost() {
