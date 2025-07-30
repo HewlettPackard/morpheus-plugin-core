@@ -377,6 +377,15 @@ public interface CloudProvider extends PluginProvider {
 	}
 
 	/**
+	 * Support for additional subnet filtering during provisioning
+	 * @since 1.2.11
+	 * @return Collection of {@link NetworkSubnet}.
+	 */
+	default Collection<NetworkSubnet> filterSubnets(Cloud cloud, Collection<NetworkSubnet> subnets, CloudPool cloudPool) {
+		return subnets;
+	}
+
+	/**
 	 * Support for additional datastore filtering during provisioning
 	 * @since 0.15.13
 	 * @return Collection of {@link Datastore}.
