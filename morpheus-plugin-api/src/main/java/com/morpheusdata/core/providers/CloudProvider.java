@@ -368,6 +368,7 @@ public interface CloudProvider extends PluginProvider {
 	default IacResourceMappingProvider getIacResourceMappingProvider() { return null; }
 
 	/**
+	 * @deprecated Use {@link #filterSubnets(Cloud, Collection, CloudPool)} instead.
 	 * Support for additional network filtering during provisioning
 	 * @since 0.15.13
 	 * @return Collection of {@link Network}
