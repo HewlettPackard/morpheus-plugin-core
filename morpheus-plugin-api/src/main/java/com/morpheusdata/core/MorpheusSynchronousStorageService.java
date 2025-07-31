@@ -17,10 +17,7 @@
 package com.morpheusdata.core;
 
 import com.morpheusdata.core.storage.MorpheusVmeQcow2DatastoreService;
-import com.morpheusdata.core.synchronous.MorpheusSynchronousStorageBucketService;
-import com.morpheusdata.core.synchronous.MorpheusSynchronousStorageControllerService;
-import com.morpheusdata.core.synchronous.MorpheusSynchronousStorageServerService;
-import com.morpheusdata.core.synchronous.MorpheusSynchronousStorageVolumeService;
+import com.morpheusdata.core.synchronous.*;
 
 public interface MorpheusSynchronousStorageService {
 	/**
@@ -52,4 +49,11 @@ public interface MorpheusSynchronousStorageService {
 	MorpheusSynchronousStorageBucketService getBucket();
 
 	MorpheusVmeQcow2DatastoreService getVmeQcow2DatastoreService();
+
+	/**
+	 * Returns the StorageGroup Service
+	 *
+	 * @return An instance of the StorageGroup Service
+	 */
+	MorpheusSynchronousStorageGroupService getGroup();
 }
