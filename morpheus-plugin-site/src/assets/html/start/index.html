@@ -1,169 +1,418 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<link rel="shortcut icon" sizes="64x64" href="/morpheus_fav_64.png" type="image/png">
-	<link rel="shortcut icon" sizes="32x32" href="/morpheus_fav_32.png" type="image/png">
-	<link rel="shortcut icon" sizes="24x24" href="/morpheus_fav_24.png" type="image/png">
-	<link rel="shortcut icon" sizes="16x16" href="/morpheus_fav_16.png" type="image/png">
-	<title>Morpheus Developer Zone</title>
-	<link rel="stylesheet" href="/fonts/fonts.css">
-	<link rel="stylesheet" href="/application.css">
-</head>
-<body>
-<header>
-	<nav class="content">
-		<a href="http://www.morpheusdata.com" target="_blank" rel="noopener"><img class="logo" src="/morpheus-logo-v2.svg"></a>
-		<ul>
-			<li><a href="https://github.com/gomorpheus/" target="_blank" rel="noopener">Github</a></li>
-			<li><a href="/docs">Plugin Docs</a></li>
-			<li><a href="/api/index.html?overview-summary.html" target="_blank" rel="noopener">Plugin API</a></li>
-			<li><a href="https://share.morpheusdata.com" target="_blank" rel="noopener" title="Browse Official Morpheus Plugins">Exchange</a></li>
-		</ul>
-	</nav>
-</header>
-<main>
-	<section class="hero small">
-		<div class="content">
-			<h1>Generate Plugin</h1>
-			<img src="/cloudprovisioning.svg">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<link
+			rel="shortcut icon"
+			sizes="64x64"
+			href="/morpheus_fav_64.png"
+			type="image/png"
+		/>
+		<link
+			rel="shortcut icon"
+			sizes="32x32"
+			href="/morpheus_fav_32.png"
+			type="image/png"
+		/>
+		<link
+			rel="shortcut icon"
+			sizes="24x24"
+			href="/morpheus_fav_24.png"
+			type="image/png"
+		/>
+		<link
+			rel="shortcut icon"
+			sizes="16x16"
+			href="/morpheus_fav_16.png"
+			type="image/png"
+		/>
+		<script src="https://h50007.www5.hpe.com/hfws-static/js/framework/jquery/v-3-6-0/jquery.js"></script>
+		<script src="https://h50007.www5.hpe.com/hfws/us/en/hpe/latest.r/root?contentType=js"></script>
+		<title>Morpheus Developer Zone</title>
+		<link rel="stylesheet" href="/fonts/fonts.css" />
+		<link rel="stylesheet" href="/application.css" />
+	</head>
+	<body>
+		<div id="header" class="header">
+			<!-- HFWS will insert its header here -->
 		</div>
-	</section>
-	<section class="plugin-grid">
-		<div class="content">
-			<form action="/generate" method="GET">
-				<div>
-					<label for="pluginName">Name</label>
-					<div>
-						<input type="text" name="pluginName" id="pluginName"></input>
-					</div>
+		<header>
+			<nav class="content">
+				<a href="http://www.morpheusdata.com" target="_blank" rel="noopener"
+					><img class="logo" src="/morpheus-logo-v2.svg"
+				/></a>
+				<ul>
+					<li>
+						<a
+							href="https://github.com/gomorpheus/"
+							target="_blank"
+							rel="noopener"
+							>Github</a
+						>
+					</li>
+					<li><a href="/docs">Plugin Docs</a></li>
+					<li>
+						<a
+							href="/api/index.html?overview-summary.html"
+							target="_blank"
+							rel="noopener"
+							>Plugin API</a
+						>
+					</li>
+					<li>
+						<a
+							href="https://share.morpheusdata.com"
+							target="_blank"
+							rel="noopener"
+							title="Browse Official Morpheus Plugins"
+							>Exchange</a
+						>
+					</li>
+				</ul>
+			</nav>
+		</header>
+		<main>
+			<section class="hero small">
+				<div class="content">
+					<h1>Generate Plugin</h1>
+					<img src="/cloudprovisioning.svg" />
 				</div>
-				<div>
-					<label for="pluginCode">Code</label>
-					<div>
-						<input type="text" name="pluginCode" id="pluginCode"></input>
-						<div class="help-block">The Code is used to uniquely identify a plugin for publication</div>
-					</div>
+			</section>
+			<section class="plugin-grid">
+				<div class="content">
+					<form action="/generate" method="GET">
+						<div>
+							<label for="pluginName">Name</label>
+							<div>
+								<input type="text" name="pluginName" id="pluginName" />
+							</div>
+						</div>
+						<div>
+							<label for="pluginCode">Code</label>
+							<div>
+								<input type="text" name="pluginCode" id="pluginCode" />
+								<div class="help-block">
+									The Code is used to uniquely identify a plugin for publication
+								</div>
+							</div>
+						</div>
+						<div>
+							<label for="morpheusVersion">Morpheus Version</label>
+							<div>
+								<select name="morpheusVersion" id="morpheusVersion">
+									<option value="8.0.x">8.0.x</option>
+									<option value="7.0.x">7.0.x</option>
+									<option value="6.3.x">6.3.x</option>
+								</select>
+							</div>
+						</div>
+						<div>
+							<label for="language">Language</label>
+							<div>
+								<select name="language" id="language">
+									<option value="groovy">Groovy</option>
+									<option value="java">Java</option>
+								</select>
+							</div>
+						</div>
+						<div>
+							<label for="basePackage">Base Package</label>
+							<div>
+								<input
+									type="text"
+									name="basePackage"
+									id="basePackage"
+									value="com.example"
+								/>
+							</div>
+						</div>
+						<div>
+							<label>Providers</label>
+							<div>
+								<ul class="provider-list">
+									<li>
+										<label for="providers-analytics"
+											><input
+												type="checkbox"
+												name="providers"
+												id="providers-analytics"
+												value="analytics"
+											/>
+											<span>Analytics</span></label
+										>
+									</li>
+									<li>
+										<label for="providers-backup"
+											><input
+												type="checkbox"
+												name="providers"
+												id="providers-backup"
+												value="backup"
+											/>
+											<span>Backup</span></label
+										>
+									</li>
+									<li>
+										<label for="providers-cloud"
+											><input
+												type="checkbox"
+												name="providers"
+												id="providers-cloud"
+												value="cloud"
+											/>
+											<span>Cloud</span></label
+										>
+									</li>
+									<li>
+										<label for="providers-credential"
+											><input
+												type="checkbox"
+												name="providers"
+												id="providers-credential"
+												value="credential"
+											/>
+											<span>Credential</span></label
+										>
+									</li>
+									<li>
+										<label for="providers-cypher"
+											><input
+												type="checkbox"
+												name="providers"
+												id="providers-cypher"
+												value="cypher"
+											/>
+											<span>Cypher</span></label
+										>
+									</li>
+									<li>
+										<label for="providers-datastore-type"
+											><input
+												type="checkbox"
+												name="providers"
+												id="providers-datastore-type"
+												value="datastoreType"
+											/>
+											<span>Datastore Type</span></label
+										>
+									</li>
+									<li>
+										<label for="providers-dns"
+											><input
+												type="checkbox"
+												name="providers"
+												id="providers-dns"
+												value="dns"
+											/>
+											<span>DNS</span></label
+										>
+									</li>
+									<li>
+										<label for="providers-generic"
+											><input
+												type="checkbox"
+												name="providers"
+												id="providers-generic"
+												value="generic"
+											/>
+											<span>Generic Integration</span></label
+										>
+									</li>
+									<li>
+										<label for="providers-generic"
+											><input
+												type="checkbox"
+												name="providers"
+												id="providers-guidance"
+												value="guidance"
+											/>
+											<span>Guidance</span></label
+										>
+									</li>
+									<li>
+										<label for="providers-ipam"
+											><input
+												type="checkbox"
+												name="providers"
+												id="providers-ipam"
+												value="ipam"
+											/>
+											<span>IPAM</span></label
+										>
+									</li>
+									<li>
+										<label for="providers-loadbalancer"
+											><input
+												type="checkbox"
+												name="providers"
+												id="providers-loadbalancer"
+												value="loadBalancer"
+											/>
+											<span>Load Balancer</span></label
+										>
+									</li>
+									<li>
+										<label for="providers-storage-bucket"
+											><input
+												type="checkbox"
+												name="providers"
+												id="providers-storage-bucket"
+												value="storageBucket"
+											/>
+											<span>Storage Bucket</span></label
+										>
+									</li>
+									<li>
+										<label for="providers-report"
+											><input
+												type="checkbox"
+												name="providers"
+												id="providers-report"
+												value="report"
+											/>
+											<span>Report</span></label
+										>
+									</li>
+									<li>
+										<label for="providers-task"
+											><input
+												type="checkbox"
+												name="providers"
+												id="providers-task"
+												value="task"
+											/>
+											<span>Task</span></label
+										>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div>
+							<label>Tab Providers</label>
+							<div>
+								<ul class="provider-list">
+									<li>
+										<label for="providers-app-tab"
+											><input
+												type="checkbox"
+												name="providers"
+												id="providers-app-tab"
+												value="appTab"
+											/>
+											<span>Application</span></label
+										>
+									</li>
+									<li>
+										<label for="providers-backup-tab"
+											><input
+												type="checkbox"
+												name="providers"
+												id="providers-backup-tab"
+												value="backupTab"
+											/>
+											<span>Backup</span></label
+										>
+									</li>
+									<li>
+										<label for="providers-cluster-tab"
+											><input
+												type="checkbox"
+												name="providers"
+												id="providers-cluster-tab"
+												value="clusterTab"
+											/>
+											<span>Cluster</span></label
+										>
+									</li>
+									<li>
+										<label for="providers-instance-tab"
+											><input
+												type="checkbox"
+												name="providers"
+												id="providers-instance-tab"
+												value="instanceTab"
+											/>
+											<span>Instance</span></label
+										>
+									</li>
+									<li>
+										<label for="providers-network-tab"
+											><input
+												type="checkbox"
+												name="providers"
+												id="providers-network-tab"
+												value="networkTab"
+											/>
+											<span>Network</span></label
+										>
+									</li>
+									<li>
+										<label for="providers-server-tab"
+											><input
+												type="checkbox"
+												name="providers"
+												id="providers-server-tab"
+												value="serverTab"
+											/>
+											<span>Server</span></label
+										>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div class="actions">
+							<input type="submit" value="Generate" class="button" />
+						</div>
+					</form>
 				</div>
-				<div>
-					<label for="morpheusVersion">Morpheus Version</label>
-					<div>
-						<select name="morpheusVersion" id="morpheusVersion">
-							<option value="8.0.x">8.0.x</option>
-							<option value="7.0.x">7.0.x</option>
-							<option value="6.3.x">6.3.x</option>
-						</select>
-					</div>
+			</section>
+		</main>
+		<footer>
+			<div class="content">
+				<div class="resources">
+					<h4>Other Resources</h4>
+					<ul>
+						<li>
+							<a
+								href="https://docs.morpheusdata.com/"
+								target="_blank"
+								rel="noopener"
+								>Morpheus Docs</a
+							>
+						</li>
+						<li>
+							<a
+								href="https://support.morpheusdata.com/"
+								target="_blank"
+								rel="noopener"
+								>Morpheus Support</a
+							>
+						</li>
+						<li>
+							<a
+								href="https://apidocs.morpheusdata.com/"
+								target="_blank"
+								rel="noopener"
+								>API Docs</a
+							>
+						</li>
+						<li>
+							<a
+								href="https://morpheus-morpheus-cli-docs.readthedocs-hosted.com/"
+								target="_blank"
+								rel="noopener"
+								>CLI Docs</a
+							>
+						</li>
+					</ul>
 				</div>
-				<div>
-					<label for="language">Language</label>
-					<div>
-						<select name="language" id="language">
-							<option value="groovy">Groovy</option>
-							<option value="java">Java</option>
-						</select>
-					</div>
+				<div class="copyright">
+					&#169; 2025 MORPHEUS DATA, LLC. ALL RIGHTS RESERVED
 				</div>
-				<div>
-					<label for="basePackage">Base Package</label>
-					<div>
-						<input type="text" name="basePackage" id="basePackage" value="com.example"></input>
-					</div>
-				</div>
-				<div>
-					<label>Providers</label>
-					<div>
-						<ul class="provider-list">
-							<li>
-								<label for="providers-analytics"><input type="checkbox" name="providers" id="providers-analytics" value="analytics" /> <span>Analytics</span></label>
-							</li>
-							<li>
-								<label for="providers-backup"><input type="checkbox" name="providers" id="providers-backup" value="backup" /> <span>Backup</span></label>
-							</li>
-							<li>
-								<label for="providers-cloud"><input type="checkbox" name="providers" id="providers-cloud" value="cloud" /> <span>Cloud</span></label>
-							</li>
-							<li>
-								<label for="providers-credential"><input type="checkbox" name="providers" id="providers-credential" value="credential"/> <span>Credential</span></label>
-							</li>
-							<li>
-								<label for="providers-cypher"><input type="checkbox" name="providers" id="providers-cypher" value="cypher"/> <span>Cypher</span></label>
-							</li>
-							<li>
-								<label for="providers-datastore-type"><input type="checkbox" name="providers" id="providers-datastore-type" value="datastoreType" /> <span>Datastore Type</span></label>
-							</li>
-							<li>
-								<label for="providers-dns"><input type="checkbox" name="providers" id="providers-dns" value="dns" /> <span>DNS</span></label>
-							</li>
-							<li>
-								<label for="providers-generic"><input type="checkbox" name="providers" id="providers-generic" value="generic" /> <span>Generic Integration</span></label>
-							</li>
-							<li>
-								<label for="providers-generic"><input type="checkbox" name="providers" id="providers-guidance" value="guidance" /> <span>Guidance</span></label>
-							</li>
-							<li>
-								<label for="providers-ipam"><input type="checkbox" name="providers" id="providers-ipam" value="ipam" /> <span>IPAM</span></label>
-							</li>
-							<li>
-								<label for="providers-loadbalancer"><input type="checkbox" name="providers" id="providers-loadbalancer" value="loadBalancer" /> <span>Load Balancer</span></label>
-							</li>
-							<li>
-								<label for="providers-storage-bucket"><input type="checkbox" name="providers" id="providers-storage-bucket" value="storageBucket"/> <span>Storage Bucket</span></label>
-							</li>
-							<li>
-								<label for="providers-report"><input type="checkbox" name="providers" id="providers-report" value="report" /> <span>Report</span></label>
-							</li>
-							<li>
-								<label for="providers-task"><input type="checkbox" name="providers" id="providers-task" value="task" /> <span>Task</span></label>
-							</li>
-						</ul>
-					</div>
-				</div>
-				<div>
-					<label>Tab Providers</label>
-					<div>
-						<ul class="provider-list">
-							<li>
-								<label for="providers-app-tab"><input type="checkbox" name="providers" id="providers-app-tab" value="appTab" /> <span>Application</span></label>
-							</li>
-							<li>
-								<label for="providers-backup-tab"><input type="checkbox" name="providers" id="providers-backup-tab" value="backupTab" /> <span>Backup</span></label>
-							</li>
-							<li>
-								<label for="providers-cluster-tab"><input type="checkbox" name="providers" id="providers-cluster-tab" value="clusterTab" /> <span>Cluster</span></label>
-							</li>
-							<li>
-								<label for="providers-instance-tab"><input type="checkbox" name="providers" id="providers-instance-tab" value="instanceTab" /> <span>Instance</span></label>
-							</li>
-							<li>
-								<label for="providers-network-tab"><input type="checkbox" name="providers" id="providers-network-tab" value="networkTab" /> <span>Network</span></label>
-							</li>
-							<li>
-								<label for="providers-server-tab"><input type="checkbox" name="providers" id="providers-server-tab" value="serverTab" /> <span>Server</span></label>
-							</li>
-
-						</ul>
-					</div>
-				</div>
-				<div class="actions">
-					<input type="submit" value="Generate" class="button" />
-				</div>
-			</form>
+			</div>
+		</footer>
+		<div id="footer" class="footer">
+			<!-- HFWS will insert its footer here -->
 		</div>
-	</section>
-</main>
-<footer>
-	<div class="content">
-		<div class="resources">
-			<h4>Other Resources</h4>
-			<ul>
-				<li><a href="https://docs.morpheusdata.com/" target="_blank" rel="noopener">Morpheus Docs</a></li>
-				<li><a href="https://support.morpheusdata.com/" target="_blank" rel="noopener">Morpheus Support</a></li>
-				<li><a href="https://apidocs.morpheusdata.com/" target="_blank" rel="noopener">API Docs</a></li>
-				<li><a href="https://morpheus-morpheus-cli-docs.readthedocs-hosted.com/" target="_blank" rel="noopener">CLI Docs</a></li>
-			</ul>
-		</div>
-		<div class="copyright">&#169; 2025 MORPHEUS DATA, LLC. ALL RIGHTS RESERVED</div>
-	</div>
-</footer>
-</body>
+	</body>
 </html>

@@ -1,5 +1,6 @@
 = Morpheus Plugin Documentation
 :favicon: /morpheus_fav_16.png
+
 :toc:
 
 == Introduction
@@ -74,14 +75,3 @@ include::ReportsPlugin.adoc[]
 include::TaskPlugin.adoc[]
 
 include::TabsPlugin.adoc[]
-
-
-
-
-
-
-
-
-
-
-

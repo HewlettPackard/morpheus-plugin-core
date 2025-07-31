@@ -22,14 +22,16 @@ dependencies {
 
 asciidoctor {
 	baseDirFollowsSourceFile()
-    options = [
+	baseDirFollowsSourceDir()
+	options = [
         doctype: 'book'
     ]
     attributes = [
+        	docinfo				: 'shared',
             'source-highlighter': 'coderay',
             toc                 : 'left',
             'toc-title': 'Table of Contents',
-            idprefix            : '',
+            idprefix            : '_',
             idseparator         : '-'
     ]
 }
