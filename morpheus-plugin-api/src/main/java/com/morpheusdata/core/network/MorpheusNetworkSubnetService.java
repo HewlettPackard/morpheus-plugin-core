@@ -82,9 +82,7 @@ public interface MorpheusNetworkSubnetService extends MorpheusDataService<Networ
 	 * @param addList List of new {@link NetworkSubnet} objects to be inserted into the database
 	 * @param network Network to add the NetworkSubnet to
 	 * @return notification of completion if someone really cares about it
-	 * @deprecated use {@link #bulkCreate } instead
 	 */
-	@Deprecated(since="0.15.4")
 	Single<Boolean> create(List<NetworkSubnet> addList, Network network);
 
 	/**
