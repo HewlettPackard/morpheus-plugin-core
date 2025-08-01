@@ -50,5 +50,10 @@ public interface MorpheusStorageService {
 	 */
 	MorpheusStorageBucketService getBucket();
 
-
+	/**
+	 * Returns the StorageGroup Service
+	 *
+	 * @return An instance of the StorageGroup Service
+	 */
+	MorpheusStorageGroupService getGroup();
 }
