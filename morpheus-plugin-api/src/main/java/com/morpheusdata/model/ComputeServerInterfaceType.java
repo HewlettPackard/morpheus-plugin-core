@@ -29,6 +29,11 @@ public class ComputeServerInterfaceType extends MorpheusModel {
 	protected Boolean bonded;
 	protected Boolean vlan;
 	protected Boolean deleteOnWorkloadRemoval;
+	/**
+	 * Flags whether data in a ComputeServerInterface of this type should be cleaned after workload removal
+	 * @since 1.2.11
+	 */
+	protected Boolean cleanupOnWorkloadRemoval = false;
 	protected Boolean hasChildInterfaces;
 	protected List<ComputeServerInterfaceType> childTypes;
 
@@ -120,6 +125,24 @@ public class ComputeServerInterfaceType extends MorpheusModel {
 	public void setDeleteOnWorkloadRemoval(Boolean deleteOnWorkloadRemoval) {
 		this.deleteOnWorkloadRemoval = deleteOnWorkloadRemoval;
 		markDirty("deleteOnWorkloadRemoval", deleteOnWorkloadRemoval);
+	}
+
+	/**
+	 * @return true to clean up data in a ComputeServerInterface of this type after workload removal
+	 */
+	public Boolean getCleanupOnWorkloadRemoval() {
+		return cleanupOnWorkloadRemoval;
+	}
+
+	/**
+	 * Flags whether data in a ComputeServerInterface of this type should be cleaned after workload removal
+	 * <p>
+	 * Core will carry out the cleanup after a successful and/or forced removal of the workload is complete.
+	 * @param cleanupOnWorkloadRemoval true to clean up data in a ComputeServerInterface of this type after workload removal
+	 */
+	public void setCleanupOnWorkloadRemoval(Boolean cleanupOnWorkloadRemoval) {
+		this.cleanupOnWorkloadRemoval = cleanupOnWorkloadRemoval;
+		markDirty("cleanupOnWorkloadRemoval", cleanupOnWorkloadRemoval);
 	}
 
 	public Boolean getHasChildInterfaces() {
