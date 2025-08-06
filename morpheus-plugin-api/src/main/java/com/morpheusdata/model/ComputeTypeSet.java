@@ -23,7 +23,7 @@ public class ComputeTypeSet extends MorpheusModel {
 
 	@Deprecated(since = "0.15.4")
 	protected ContainerType containerType;
-	protected  WorkloadType workloadType;
+	protected WorkloadType workloadType;
 	protected ComputeServerType computeServerType;
 	protected String category;
 	protected Integer priorityOrder;

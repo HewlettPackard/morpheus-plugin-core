@@ -132,7 +132,7 @@ public class ComputeServerType  extends MorpheusModel implements IModelCodeName 
 		return vmHypervisor;
 	}
 
-	public void setVmHypervisor(Boolean vmHypervisor) {
+	public void setVmHypervisor(Boolean vmHypervisor)  {
 		this.vmHypervisor = vmHypervisor;
 	}
 

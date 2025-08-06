@@ -80,7 +80,7 @@ public class ComputeServerGroup extends MorpheusModel {
 	protected String uuid;
 	//status
 	protected Integer nodeCount;
-	protected String status;
+	protected Status status;
 	protected Date statusDate;
 	protected String statusMessage;
 	//sync
@@ -373,11 +373,11 @@ public class ComputeServerGroup extends MorpheusModel {
 		this.nodeCount = nodeCount;
 	}
 
-	public String getStatus() {
+	public Status getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(Status status) {
 		this.status = status;
 	}
 
@@ -476,5 +476,14 @@ public class ComputeServerGroup extends MorpheusModel {
 	public void setPackages(Collection<ComputeServerGroupPackage> packages) {
 		this.packages = packages;
 		markDirty("packages", packages);
+	}
+
+	public enum Status {
+		ok,
+		syncing,
+		initializing,
+		warning,
+		error,
+		offline
 	}
 }
