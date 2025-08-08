@@ -100,4 +100,8 @@ public interface MorpheusOperationNotificationService extends MorpheusDataServic
 	Single<ServiceResponse> createBackupProviderAlarm(BackupProvider backupProvider, String message);
 
 	Single<ServiceResponse> clearBackupProviderAlarm(BackupProvider backupProvider);
+
+	Single<ServiceResponse> createBaremetalAlarm(ComputeServerIdentityProjection node, String statusMessage);
+
+	Single<ServiceResponse> clearBaremetalAlarm(ComputeServerIdentityProjection node);
 }

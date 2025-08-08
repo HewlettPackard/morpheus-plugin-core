@@ -26,6 +26,7 @@ import com.morpheusdata.model.projection.CloudIdentityProjection;
 import com.morpheusdata.model.projection.ComputeServerIdentityProjection;
 import com.morpheusdata.model.projection.OperationNotificationIdentityProjection;
 import com.morpheusdata.response.ServiceResponse;
+import io.reactivex.rxjava3.core.Single;
 
 public interface MorpheusSynchronousOperationNotificationService extends MorpheusSynchronousDataService<OperationNotification, OperationNotificationIdentityProjection>, MorpheusSynchronousIdentityService<OperationNotificationIdentityProjection> {
 
@@ -47,4 +48,7 @@ public interface MorpheusSynchronousOperationNotificationService extends Morpheu
 
 	ServiceResponse clearBackupProviderAlarm(BackupProvider backupProvider);
 
+	ServiceResponse createBaremetalAlarm(ComputeServerIdentityProjection node, String statusMessage);
+
+	ServiceResponse clearBaremetalAlarm(ComputeServerIdentityProjection node);
 }
