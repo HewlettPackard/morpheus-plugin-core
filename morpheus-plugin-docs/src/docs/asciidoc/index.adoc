@@ -1,5 +1,6 @@
 = Morpheus Plugin Documentation
 :favicon: /morpheus_fav_16.png
+:stylesheet: styles.css
 
 :toc:
 

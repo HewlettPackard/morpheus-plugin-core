@@ -1,0 +1,6 @@
+/* Custom styles for HPE header/footer integration */
+
+/* Fix flex-box for header/footer compatibility */
+.flex-box {
+	position: static;
+}
