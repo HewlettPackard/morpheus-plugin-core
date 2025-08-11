@@ -144,6 +144,7 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 	protected String consolePassword;
 	protected Boolean guestConsolePreferred = false;
 	protected GuestConsoleType guestConsoleType;
+	protected String consoleKeymap;
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected ComputeServerIdentityProjection parentServer;
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
@@ -972,6 +973,15 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 	public void setGuestConsoleType(GuestConsoleType guestConsoleType) {
 		this.guestConsoleType = guestConsoleType;
 		markDirty("guestConsoleType", guestConsoleType);
+	}
+
+	public String getConsoleKeymap() {
+		return consoleKeymap;
+	}
+
+	public void setConsoleKeymap(String consoleKeymap) {
+		this.consoleKeymap = consoleKeymap;
+		markDirty("consoleKeymap", consoleKeymap);
 	}
 
 	public ComputeServerIdentityProjection getParentServer() {
