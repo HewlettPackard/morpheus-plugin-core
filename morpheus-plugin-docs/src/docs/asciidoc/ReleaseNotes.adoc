@@ -2,6 +2,84 @@
 
 **Note:** Morpheus Plugin API is now 1.0! This means calls that are used will be supported for a longer period of time and given appropriate deprecation warnings when necessary. Morpheus Plugin API 1.2 requires a minimum Morpheus Version of `8.0.x`. Morpheus `7.0.x` still runs on Core version `1.1.x`
 
+* **1.2.11**
+** *Storage and Compute Enhancements*
+*** Exposed StorageGroups for plugins with comprehensive service support
+*** Added support for Compute Devices and enhanced compute server management
+*** Added morpheusHypervisor property to ComputeServerType for better virtualization support
+*** Enhanced physical interface cleanup capabilities for workload removal
+** *Networking Improvements*
+*** Added NetworkRouterNAT service for improved network routing capabilities
+*** Implemented FilterSubnet stub for enhanced network filtering
+*** Un-deprecated networksubnets create with parent network parameter
+*** Deprecated legacy filterNetworks in favor of more robust filtering methods
+** *OS and Platform Support*
+*** Enhanced OS-specific hostname formatting capabilities
+*** Added windowsInstallIndex to OsType model for Windows deployment support
+*** Added TPM, UEFI, and SecureBoot fields to ComputeServer for enhanced security
+** *Provider Infrastructure*
+*** Added daily refresh hooks for various provider types
+*** Implemented flag to force resource cleanup on server delete operations
+*** Enhanced VCD plugin support with additional required properties
+*** Added floating IP types support for network management
+** *Documentation and Development*
+*** Added comprehensive header and footer to ASCII docs and dev site
+*** Improved plugin development experience with better error handling
+
+* **1.2.10**
+** *Security Group and Network Enhancements*
+*** Added NetworkRouterNAT model for advanced network routing configurations
+*** Added SecurityGroupRuleProfile and SecurityGroupRuleDestination identity projections
+*** Enhanced network provider capabilities with additional VCD plugin properties
+** *Data Management and Processing*
+*** Added ComputeProvisionFacet for DatastoreTypeProvider integration
+*** Enhanced identity projection support in synchronous services
+*** Improved model serialization with @JsonProperty annotations for "is" prefixed fields
+** *System and Provider Improvements*
+*** Added system models and system provider support
+*** Enhanced generic integration provider with creatable flag
+*** Fixed cached i18n files handling and resolved typos
+*** Added hardware CPU frequency tracking capabilities
+** *Streaming and Storage*
+*** Improved streaming QCOW2 writer functionality
+*** Added input stream support for StreamingQcow2Writer
+*** Enhanced QCOW2 processing with streaming refactoring
+
+* **1.2.9**
+** *Volume and Storage Management*
+*** Added additional datastore event types to support datastore changes on volumes
+*** Enhanced volume lifecycle management with comprehensive event tracking
+*** Improved storage provider integration capabilities
+** *System Management*
+*** Added managed by property for better resource tracking
+*** Introduced system flag for enhanced system resource identification
+*** Fixed field name consistency across storage models
+
+* **1.2.8**
+** *Process and Package Management*
+*** Enhanced process service APIs with comprehensive rework and synchronization support
+*** Added process step types for cluster package management
+*** Introduced ability to edit addon package configurations
+*** Added custom form support for cluster packages with validation
+*** Added ComputeServerGroup support for enhanced server grouping
+** *Volume and Storage Operations*
+*** Added attach/detach volume support to datastore events
+*** Enhanced volume option source capabilities
+*** Improved CSI type management with delete flags for workload removal
+** *Load Balancer and Network Integration*
+*** Enabled load balancer compatibility for plugin network pools
+*** Enhanced network provider capabilities
+** *Process Type Enhancements*
+*** Added missing ProcessTypes to enum with proper naming conventions
+*** Enhanced process tracking with updatePackage support in ProcessEvent/Step definitions
+*** Added request object support to addon package configuration
+** *Cloud Provider Improvements*
+*** Added cloud classification to cloud provider for better categorization
+*** Enhanced workload response handling with RemoveWorkloadResponse
+*** Added preserveVolumes flag for better volume management during workload operations
+** *Core Dependencies*
+*** Bumped Karman core version for improved functionality
+
 * **1.2.7**
 ** *New Process Service API*
 *** Introduced a new Process Service API for improved process management
