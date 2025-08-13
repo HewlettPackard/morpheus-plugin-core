@@ -1095,7 +1095,8 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 		TYPEAHEAD("typeahead"),
 		MULTI_TYPEAHEAD("multiTypeahead"),
 		CODE_EDITOR("code-editor"),
-		HIDDEN("hidden");
+		HIDDEN("hidden"),
+		BYTESIZE("byteSize");
 
 		private final String value;
 
