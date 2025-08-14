@@ -141,6 +141,7 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 	protected Boolean tpm = false;
 	protected String consoleType;
 	protected Integer consolePort;
+	protected String consoleUsername;
 	protected String consolePassword;
 	protected Boolean guestConsolePreferred = false;
 	protected GuestConsoleType guestConsoleType;
@@ -955,6 +956,15 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 	public void setConsolePassword(String consolePassword) {
 		this.consolePassword = consolePassword;
 		markDirty("consolePassword",consolePassword);
+	}
+
+	public String getConsoleUsername() {
+		return consoleUsername;
+	}
+
+	public void setConsoleUsername(String consoleUsername) {
+		this.consoleUsername = consoleUsername;
+		markDirty("consoleUsername",consoleUsername);
 	}
 
 	public Boolean getGuestConsolePreferred() {
