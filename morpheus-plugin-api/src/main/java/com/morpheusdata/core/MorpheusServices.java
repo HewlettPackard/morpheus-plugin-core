@@ -186,6 +186,14 @@ public interface MorpheusServices {
 	MorpheusSynchronousOperationNotificationService getOperationNotification();
 
 	/**
+	 * Returns the Operation Event Service
+	 *
+	 * @return An instance of the Operation Event Service
+	 */
+	MorpheusSynchronousOperationEventService getOperationEvent();
+
+
+	/**
 	 * Returns the Tag Service
 	 *
 	 * @return An instance of the Tag Service

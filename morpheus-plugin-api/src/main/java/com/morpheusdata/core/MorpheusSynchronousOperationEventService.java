@@ -1,0 +1,7 @@
+package com.morpheusdata.core;
+
+import com.morpheusdata.model.OperationEvent;
+import com.morpheusdata.model.OperationEventIdentityProjection;
+
+public interface MorpheusSynchronousOperationEventService extends MorpheusSynchronousDataService<OperationEvent, OperationEventIdentityProjection>, MorpheusSynchronousIdentityService<OperationEventIdentityProjection> {
+}
