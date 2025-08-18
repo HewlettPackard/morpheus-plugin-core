@@ -192,12 +192,7 @@ public class StreamingQcow2Writer {
 	}
 
 	private void writeMappingTable(OutputStream outputStream) throws IOException {
-		Map<Long, Long> mapping = new HashMap<>();
-		long x=0;
-		for (Long cluster : dataClusterIterable) {
-			mapping.put(cluster, x + firstDataCluster);
-			x++;
-		}
+
 
 		// L1 table
 		long l1EntriesPerCluster = CLUSTER_SIZE / 8;
@@ -216,8 +211,27 @@ public class StreamingQcow2Writer {
 		}
 
 		// L2 table
+
+		Iterator<Long> iterator = dataClusterIterable.iterator();
+		Long nextCluster = null;
+		if(iterator.hasNext()) {
+			nextCluster = iterator.next();
+		}
+		long clusterCounter=0;
 		for (long guestCluster = 0; guestCluster < totalGuestClusters(); guestCluster++) {
-			long l2Entry = mapping.getOrDefault(guestCluster, 0L);
+			long l2Entry = 0L;
+			if(nextCluster == guestCluster) {
+				l2Entry = clusterCounter + firstDataCluster;
+				if(iterator.hasNext()) {
+					nextCluster = iterator.next();
+					clusterCounter++;
+				} else {
+					nextCluster = null;
+				}
+			} else {
+				l2Entry = 0L;
+			}
+
 			long offset = l2Entry*CLUSTER_SIZE;
 			if (offset != 0) {
 				offset |= (0L << 62) | (1L << 63);
