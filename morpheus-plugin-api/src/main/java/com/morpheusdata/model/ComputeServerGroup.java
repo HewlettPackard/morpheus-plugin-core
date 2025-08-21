@@ -34,6 +34,9 @@ public class ComputeServerGroup extends MorpheusModel {
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected ComputeSite site;
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
+	protected Cloud cloud;
+	@Deprecated(since = "1.2.12") // use cloud instead
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Cloud zone;
 
 	@JsonSerialize(using= ModelCollectionAsIdsOnlySerializer.class)
@@ -125,12 +128,20 @@ public class ComputeServerGroup extends MorpheusModel {
 		this.site = site;
 	}
 
-	public Cloud getZone() {
-		return zone;
+	public Cloud getCloud() {
+		return cloud;
 	}
 
-	public void setZone(Cloud zone) {
-		this.zone = zone;
+	public void setCloud(Cloud cloud) {
+		this.cloud = cloud;
+	}
+
+	@Deprecated(since = "1.2.12") // use cloud instead
+	public Cloud getZone() { return cloud; }
+
+	@Deprecated(since = "1.2.12") // use cloud instead
+	public void setZone(Cloud cloud) {
+		this.cloud = cloud;
 	}
 
 	public String getName() {

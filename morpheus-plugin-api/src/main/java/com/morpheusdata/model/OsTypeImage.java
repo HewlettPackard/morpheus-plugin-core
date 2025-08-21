@@ -31,7 +31,11 @@ public class OsTypeImage extends MorpheusModel {
 	protected OsType osType;
 	protected Account account;
 	protected ProvisionType provisionType;
+	protected CloudType cloudType;
+	@Deprecated(since = "1.2.12") // use cloudType instead
 	protected CloudType computeZoneType;
+	protected Cloud cloud;
+	@Deprecated(since = "1.2.12") // use cloud instead
 	protected Cloud zone;
 	protected ComputeSite site;
 
@@ -72,22 +76,44 @@ public class OsTypeImage extends MorpheusModel {
 		markDirty("provisionType", provisionType);
 	}
 
+	public CloudType getCloudType() {
+		return cloudType;
+	}
+
+	public void setCloudType(CloudType cloudType) {
+		this.cloudType = cloudType;
+		markDirty("cloudType", cloudType);
+	}
+
+	@Deprecated(since = "1.2.12") // use cloudType instead
 	public CloudType getComputeZoneType() {
-		return computeZoneType;
+		return cloudType;
 	}
 
-	public void setComputeZoneType(CloudType computeZoneType) {
-		this.computeZoneType = computeZoneType;
-		markDirty("computeZoneType", computeZoneType);
+	@Deprecated(since = "1.2.12") // use cloudType instead
+	public void setComputeZoneType(CloudType cloudType) {
+		this.cloudType = cloudType;
+		markDirty("cloudType", cloudType);
 	}
 
+	public Cloud getCloud() {
+		return cloud;
+	}
+
+	public void setCloud(Cloud cloud) {
+		this.cloud = cloud;
+		markDirty("cloud", cloud);
+	}
+
+	@Deprecated(since = "1.2.12") // use cloud instead
 	public Cloud getZone() {
-		return zone;
+		return cloud;
 	}
 
-	public void setZone(Cloud zone) {
-		this.zone = zone;
-		markDirty("zone", zone);
+	@Deprecated(since = "1.2.12") // use cloud instead
+	public void setZone(Cloud cloud) {
+		this.cloud = cloud;
+		markDirty("cloud", cloud);
 	}
 
 
