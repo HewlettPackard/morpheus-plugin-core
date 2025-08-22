@@ -88,6 +88,7 @@ public class StorageVolume extends StorageVolumeIdentityProjection {
 	protected String sharePath;
 	protected String diskMode;
 	protected String wwn;
+	protected Boolean createForMultiAttach = false;
 
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	public Account getAccount() {
@@ -601,5 +602,14 @@ public class StorageVolume extends StorageVolumeIdentityProjection {
 	public void setDiskMode(String diskMode) {
 		this.diskMode = diskMode;
 		markDirty("diskMode", diskMode, this.diskMode);
+	}
+
+	public Boolean getCreateForMultiAttach() {
+		return createForMultiAttach;
+	}
+
+	public void setCreateForMultiAttach(Boolean createForMultiAttach) {
+		this.createForMultiAttach = createForMultiAttach;
+		markDirty("createForMultiAttach", createForMultiAttach, this.createForMultiAttach);
 	}
 }

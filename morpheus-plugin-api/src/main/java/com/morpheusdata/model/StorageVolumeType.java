@@ -53,6 +53,7 @@ public class StorageVolumeType extends MorpheusModel {
 	protected Boolean configurableIOPS = false;
 	protected Long minIOPS = null;
 	protected Long maxIOPS = null;
+	protected Boolean multiAttachSupported = false;
 
 	// associations
 	Collection<OptionType> optionTypes;
@@ -275,5 +276,13 @@ public class StorageVolumeType extends MorpheusModel {
 	public void setOptionTypes(Collection<OptionType> optionTypes) {
 		markDirty("optionTypes", this.optionTypes);
 		this.optionTypes = optionTypes;
+	}
+
+	public Boolean getMultiAttachSupported() {
+		return multiAttachSupported;
+	}
+
+	public void setMultiAttachSupported(Boolean multiAttachSupported) {
+		this.multiAttachSupported = multiAttachSupported;
 	}
 }

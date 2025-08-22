@@ -2,6 +2,7 @@ package com.morpheusdata.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.morpheusdata.model.serializers.ModelAsIdOnlySerializer;
+import com.morpheusdata.model.serializers.ModelCollectionIdCodeNameSerializer;
 
 import java.util.List;
 
@@ -21,6 +22,8 @@ public class DatastoreType extends MorpheusModel implements IModelCodeName {
 	protected List<OptionType> options;
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected StorageServerType storageServerType;
+	@JsonSerialize(using = ModelCollectionIdCodeNameSerializer.class)
+	protected List<StorageVolumeType> storageVolumeTypes;
 
 	@Override
 	public String getName() {
@@ -128,5 +131,13 @@ public class DatastoreType extends MorpheusModel implements IModelCodeName {
 
 	public void setDiscoverable(Boolean discoverable) {
 		this.discoverable = discoverable;
+	}
+
+	public List<StorageVolumeType> getStorageVolumeTypes() {
+		return storageVolumeTypes;
+	}
+
+	public void setOptionTypes(List<StorageVolumeType> storageVolumeTypes) {
+		this.storageVolumeTypes = storageVolumeTypes;
 	}
 }
