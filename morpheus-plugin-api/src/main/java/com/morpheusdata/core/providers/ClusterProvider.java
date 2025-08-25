@@ -280,4 +280,17 @@ public interface ClusterProvider extends PluginProvider {
 	 */
 	ServiceResponse convertClusterToManaged(ComputeServerGroup cluster);
 
+	/**
+	 * Hook for finalizing any configuration on a linux compute server before it is saved, defaults to no-op
+	 * @since 1.2.12
+	 * @param cluster the ComputeServerGroup the server belongs to
+	 * @param server the ComputeServer to finalize
+	 * @param opts additional options
+	 * @return ServiceResponse indicating success or failure
+	 */
+	default ServiceResponse finalizeLinuxComputeServer(ComputeServerGroup cluster, ComputeServer server,  Map opts) {
+		return ServiceResponse.success();
+	}
+
+
 }
