@@ -72,10 +72,10 @@ public class StorageServer extends StorageServerIdentityProjection {
 
 	//@JsonSerialize(using= ModelCollectionAsIdsOnlySerializer.class)
 	public Collection<StorageGroup> groups;
-	//@JsonSerialize(using= ModelCollectionAsIdsOnlySerializer.class)
-	//public Collection<StorageHostGroup> hostGroups;
-	//@JsonSerialize(using= ModelCollectionAsIdsOnlySerializer.class)
-	//public Collection<StorageHost> hosts;
+	@JsonSerialize(using= ModelCollectionAsIdsOnlySerializer.class)
+	public Collection<StorageHostGroup> hostGroups;
+	@JsonSerialize(using= ModelCollectionAsIdsOnlySerializer.class)
+	public Collection<StorageHost> hosts;
 	@JsonSerialize(using = ModelCollectionAsIdsOnlySerializer.class)
 	public Collection<Account> accounts;
 	
@@ -397,6 +397,29 @@ public class StorageServer extends StorageServerIdentityProjection {
 
 	public void setAccounts(Collection<Account> accounts) {
 		this.accounts = accounts;
-	}	
+	}
 
+	public Collection<StorageGroup> getGroups() {
+		return groups;
+	}
+
+	public void setGroups(Collection<StorageGroup> groups) {
+		this.groups = groups;
+	}
+
+	public Collection<StorageHostGroup> getHostGroups() {
+		return hostGroups;
+	}
+
+	public void setHostGroups(Collection<StorageHostGroup> hostGroups) {
+		this.hostGroups = hostGroups;
+	}
+
+	public Collection<StorageHost> getHosts() {
+		return hosts;
+	}
+
+	public void setHosts(Collection<StorageHost> hosts) {
+		this.hosts = hosts;
+	}
 }
