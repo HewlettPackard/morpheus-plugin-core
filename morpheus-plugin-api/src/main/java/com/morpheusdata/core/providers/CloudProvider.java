@@ -229,6 +229,12 @@ public interface CloudProvider extends PluginProvider {
 		return false;
 	}
 
+
+	/**
+	 * Returns whether the cloud can create new resource pools
+	 */
+	default Boolean canCreateResourcePools() { return false; }
+
 	/**
 	 * Returns whether a cloud supports {@link Network}
 	 * @return Boolean
