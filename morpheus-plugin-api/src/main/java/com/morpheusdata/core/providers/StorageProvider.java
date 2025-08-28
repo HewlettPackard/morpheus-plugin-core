@@ -96,4 +96,24 @@ public interface StorageProvider extends PluginProvider,UIExtensionProvider {
 		return null;
 	}
 
+
+	/**
+	 * This is a WIP interface for future functionality to allow for remote update operations of Storage Servers such as Storage Arrays
+	 */
+	public interface UpdateFacet {
+
+		ServiceResponse validateUpdate(StorageServer storageServer, UpdateVersion update);
+
+		ServiceResponse<UpdateOperation> executeUpdate(StorageServer storageServer, UpdateVersion update);
+
+		void refreshUpdate(StorageServer storageServer, UpdateOperation updateOperation);
+
+		ServiceResponse postUpdate(StorageServer storageServer, UpdateOperation updateOperation);
+
+
+	}
+
+	public interface StorageUpdateFacet extends UpdateFacet {
+
+	}
 }
