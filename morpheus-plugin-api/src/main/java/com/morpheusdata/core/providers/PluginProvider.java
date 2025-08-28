@@ -19,7 +19,11 @@ package com.morpheusdata.core.providers;
 import com.morpheusdata.core.MorpheusContext;
 import com.morpheusdata.core.Plugin;
 import com.morpheusdata.model.AccountIntegration;
+import com.morpheusdata.model.StorageServer;
+import com.morpheusdata.model.UpdateOperation;
+import com.morpheusdata.model.UpdateVersion;
 import com.morpheusdata.model.event.*;
+import com.morpheusdata.response.ServiceResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,5 +105,60 @@ public interface PluginProvider {
 		 * @see NetworkEvent
 		 */
 		void onEvent(E event, AccountIntegration integration);
+	}
+
+	public interface UpdateFacet<Target> {
+
+		/**
+		 * Perform a validation of the update against the target devices.  This is useful for checking
+		 * prerequisites, compatibility, or other checks to ensure the update can be applied successfully.
+		 *
+		 * @param target the target to check for updates
+		 */
+		default ServiceResponse validateUpdate(Target target, UpdateVersion update) {
+			return ServiceResponse.success();
+		}
+
+		/**
+//		 * Execute the update on the target devices.  This is where the actual update logic should be implemented.
+		 *
+		 * @param target the target device to update
+		 * @param update the update version to apply
+		 * @return a ServiceResponse indicating the success or failure of the update operation
+		 */
+		default ServiceResponse executeUpdate(Target target, UpdateVersion update) {
+			return ServiceResponse.success();
+		}
+
+		/**
+		 * Post update operations can be performed here.  This is useful for cleanup, verification, or other
+		 * @param target the target device to update
+		 * @param updateOperation the update operation details
+		 * @return a ServiceResponse indicating the success or failure of the update operation
+		 */
+		default ServiceResponse postUpdate(Target target, UpdateOperation updateOperation) {
+			return ServiceResponse.success();
+		}
+
+		/**
+		 * Rollback the update on the target devices.  This is where the actual rollback logic should be implemented.
+		 *
+		 * @param target the target device to rollback
+		 * @param updateOperation the update operation details
+		 * @return a ServiceResponse indicating the success or failure of the rollback operation
+		 */
+		default ServiceResponse rollbackUpdate(Target target, UpdateOperation updateOperation){
+			return ServiceResponse.success();
+		}
+
+		/**
+		 * Refresh the update status on the target devices.  This is useful for checking the status of the update
+		 * operation and updating the Morpheus database accordingly.
+		 *
+		 * @param target the target device to refresh
+		 */
+		default void refreshUpdate(Target target) {}
+
+
 	}
 }

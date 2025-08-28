@@ -81,7 +81,7 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 	 * @return Collection of NetworkRouterType
 	 */
 	Collection<NetworkRouterType> getRouterTypes();
-	
+
 	Collection<OptionType> getOptionTypes();
 
 	default Boolean isUserVisible() { return false; }
@@ -656,5 +656,37 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 		 * @return the success state of the operation
 		 */
 		public ServiceResponse<Void> releaseComputeServerInterfacesFromServer(NetworkServer networkServer, ComputeServer server, List<ComputeServerInterface> interfaces);
+	}
+
+	public interface NetworkUpdateFacet extends UpdateFacet<NetworkServer> {
+
+		/**
+		 * Perform a validation of the update against the target switches.
+		 * @param networkServer
+		 * @param update
+		 */
+		ServiceResponse validateUpdate(NetworkServer networkServer, UpdateVersion update);
+
+		/**
+		 * Execute the update against the target switches.
+		 * @param networkServer
+		 * @param update
+		 */
+		ServiceResponse<UpdateOperation> executeUpdate(NetworkServer networkServer, UpdateVersion update);
+
+		/**
+		 * Refresh the update operation status against the target switches.
+		 * @param networkServer
+		 * @param updateOperation
+		 */
+		void refreshUpdate(NetworkServer networkServer, UpdateOperation updateOperation);
+
+		/**
+		 * Finalize the update operation status against the target switches.
+		 * @param networkServer
+		 * @param updateOperation
+		 */
+		ServiceResponse postUpdate(NetworkServer networkServer, UpdateOperation updateOperation);
+
 	}
 }

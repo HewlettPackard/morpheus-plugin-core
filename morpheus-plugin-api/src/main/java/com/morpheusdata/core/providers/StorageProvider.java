@@ -20,8 +20,6 @@ import com.morpheusdata.model.*;
 import com.morpheusdata.response.ServiceResponse;
 import com.morpheusdata.views.HTMLResponse;
 
-import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -95,25 +93,16 @@ public interface StorageProvider extends PluginProvider,UIExtensionProvider {
 	default HTMLResponse renderTemplate(StorageServer storageServer) {
 		return null;
 	}
-
-
 	/**
 	 * This is a WIP interface for future functionality to allow for remote update operations of Storage Servers such as Storage Arrays
 	 */
-	public interface UpdateFacet {
-
+	public interface StorageUpdateFacet extends UpdateFacet<StorageServer> {
 		ServiceResponse validateUpdate(StorageServer storageServer, UpdateVersion update);
-
 		ServiceResponse<UpdateOperation> executeUpdate(StorageServer storageServer, UpdateVersion update);
 
 		void refreshUpdate(StorageServer storageServer, UpdateOperation updateOperation);
 
 		ServiceResponse postUpdate(StorageServer storageServer, UpdateOperation updateOperation);
-
-
-	}
-
-	public interface StorageUpdateFacet extends UpdateFacet {
 
 	}
 }
