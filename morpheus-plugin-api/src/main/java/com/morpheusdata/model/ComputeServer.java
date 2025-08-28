@@ -170,6 +170,8 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 	protected Boolean systemServer=false;
 	protected String managedBy;
 
+	public GuestAgentStatus guestAgentStatus = GuestAgentStatus.error;
+
 	public String getUuid() {
 		return uuid;
 	}
@@ -1127,6 +1129,15 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 		markDirty("devices", devices);
 	}
 
+	public GuestAgentStatus getGuestAgentStatus() {
+		return guestAgentStatus;
+	}
+
+	public void setGuestAgentStatus(GuestAgentStatus guestAgentStatus) {
+		this.guestAgentStatus = guestAgentStatus;
+	}
+
+
 	public enum GuestConsoleType {
 		disabled,
 		vnc,
@@ -1143,5 +1154,12 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 	public enum CommType {
 		ssh,
 		winrm
+	}
+
+	public enum GuestAgentStatus {
+		connected,
+		disconnected,
+		unconfigured,
+		error
 	}
 }
