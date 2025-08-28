@@ -107,7 +107,7 @@ public interface PluginProvider {
 		void onEvent(E event, AccountIntegration integration);
 	}
 
-	public interface UpdateFacet<Target> {
+	public interface UpdateFacet<T> {
 
 		/**
 		 * Perform a validation of the update against the target devices.  This is useful for checking
@@ -115,7 +115,7 @@ public interface PluginProvider {
 		 *
 		 * @param target the target to check for updates
 		 */
-		default ServiceResponse validateUpdate(Target target, UpdateVersion update) {
+		default ServiceResponse validateUpdate(T target, UpdateVersion update) {
 			return ServiceResponse.success();
 		}
 
@@ -126,7 +126,7 @@ public interface PluginProvider {
 		 * @param update the update version to apply
 		 * @return a ServiceResponse indicating the success or failure of the update operation
 		 */
-		default ServiceResponse executeUpdate(Target target, UpdateVersion update) {
+		default ServiceResponse executeUpdate(T target, UpdateVersion update) {
 			return ServiceResponse.success();
 		}
 
@@ -136,7 +136,7 @@ public interface PluginProvider {
 		 * @param updateOperation the update operation details
 		 * @return a ServiceResponse indicating the success or failure of the update operation
 		 */
-		default ServiceResponse postUpdate(Target target, UpdateOperation updateOperation) {
+		default ServiceResponse postUpdate(T target, UpdateOperation updateOperation) {
 			return ServiceResponse.success();
 		}
 
@@ -147,7 +147,7 @@ public interface PluginProvider {
 		 * @param updateOperation the update operation details
 		 * @return a ServiceResponse indicating the success or failure of the rollback operation
 		 */
-		default ServiceResponse rollbackUpdate(Target target, UpdateOperation updateOperation){
+		default ServiceResponse rollbackUpdate(T target, UpdateOperation updateOperation){
 			return ServiceResponse.success();
 		}
 
@@ -157,7 +157,7 @@ public interface PluginProvider {
 		 *
 		 * @param target the target device to refresh
 		 */
-		default void refreshUpdate(Target target) {}
+		default void refreshUpdate(T target) {}
 
 
 	}
