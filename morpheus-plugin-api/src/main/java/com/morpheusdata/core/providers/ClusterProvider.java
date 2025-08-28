@@ -71,11 +71,11 @@ public interface ClusterProvider extends PluginProvider {
 	/**
 	 * Validates the server group configuration for a given cluster type.
 	 * @since 1.2.12
-	 * @param type the ComputeServerGroupType
-	 * @param serverGroupConfig the configuration map for the server group
+	 * @param clusterType the ComputeServerGroupType
+	 * @param config the configuration map for the server group
 	 * @return ServiceResponse containing validation results
 	 */
-	ServiceResponse validateServerGroupConfig(ComputeServerGroupType type, Map serverGroupConfig);
+	ServiceResponse validateServerGroupConfig(ComputeServerGroupType clusterType, Map config);
 
 	/**
 	 * Validates the server group for a given cluster.
