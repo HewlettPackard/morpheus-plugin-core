@@ -119,10 +119,9 @@ public interface StorageProvider extends PluginProvider,UIExtensionProvider {
 		/**
 		 * Refresh the update status on the target devices.  This is useful for checking the status of the update
 		 * @param storageServer
-		 * @param updateOperation
 		 * @return
 		 */
-		ServiceResponse<UpdateOperation> refreshUpdate(StorageServer storageServer, UpdateOperation updateOperation);
+		ServiceResponse<UpdateOperation> refreshUpdate(StorageServer storageServer);
 
 		/**
 		 * Post update operations can be performed here.  This is useful for cleanup, verification, or other

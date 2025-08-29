@@ -672,9 +672,8 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 		/**
 		 * Refresh the update operation status against the target switches.
 		 * @param networkServer
-		 * @param updateOperation
 		 */
-		ServiceResponse<UpdateOperation> refreshUpdate(NetworkServer networkServer, UpdateOperation updateOperation);
+		ServiceResponse<UpdateOperation> refreshUpdate(NetworkServer networkServer);
 
 		/**
 		 * Finalize the update operation status against the target switches.
