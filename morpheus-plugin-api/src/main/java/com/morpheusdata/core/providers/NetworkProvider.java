@@ -16,16 +16,11 @@
 
 package com.morpheusdata.core.providers;
 
-import com.morpheusdata.core.util.MorpheusUtils;
 import com.morpheusdata.model.*;
-import com.morpheusdata.model.event.Event;
-import com.morpheusdata.model.provisioning.NetworkConfiguration;
 import com.morpheusdata.response.ServiceResponse;
 import com.morpheusdata.views.HTMLResponse;
-import groovy.util.logging.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import java.security.Provider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -665,21 +660,21 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 		 * @param networkServer
 		 * @param update
 		 */
-		ServiceResponse validateUpdate(NetworkServer networkServer, UpdateVersion update);
+		ServiceResponse validateUpdate(NetworkServer networkServer, UpdateDefinition update);
 
 		/**
 		 * Execute the update against the target switches.
 		 * @param networkServer
 		 * @param update
 		 */
-		ServiceResponse<UpdateOperation> executeUpdate(NetworkServer networkServer, UpdateVersion update);
+		ServiceResponse<UpdateOperation> executeUpdate(NetworkServer networkServer, UpdateDefinition update);
 
 		/**
 		 * Refresh the update operation status against the target switches.
 		 * @param networkServer
 		 * @param updateOperation
 		 */
-		void refreshUpdate(NetworkServer networkServer, UpdateOperation updateOperation);
+		ServiceResponse<UpdateOperation> refreshUpdate(NetworkServer networkServer, UpdateOperation updateOperation);
 
 		/**
 		 * Finalize the update operation status against the target switches.

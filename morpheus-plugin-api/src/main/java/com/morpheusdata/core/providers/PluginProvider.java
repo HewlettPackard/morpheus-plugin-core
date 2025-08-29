@@ -19,9 +19,8 @@ package com.morpheusdata.core.providers;
 import com.morpheusdata.core.MorpheusContext;
 import com.morpheusdata.core.Plugin;
 import com.morpheusdata.model.AccountIntegration;
-import com.morpheusdata.model.StorageServer;
 import com.morpheusdata.model.UpdateOperation;
-import com.morpheusdata.model.UpdateVersion;
+import com.morpheusdata.model.UpdateDefinition;
 import com.morpheusdata.model.event.*;
 import com.morpheusdata.response.ServiceResponse;
 
@@ -115,7 +114,7 @@ public interface PluginProvider {
 		 *
 		 * @param target the target to check for updates
 		 */
-		default ServiceResponse validateUpdate(T target, UpdateVersion update) {
+		default ServiceResponse validateUpdate(T target, UpdateDefinition update) {
 			return ServiceResponse.success();
 		}
 
@@ -126,7 +125,7 @@ public interface PluginProvider {
 		 * @param update the update version to apply
 		 * @return a ServiceResponse indicating the success or failure of the update operation
 		 */
-		default ServiceResponse executeUpdate(T target, UpdateVersion update) {
+		default ServiceResponse executeUpdate(T target, UpdateDefinition update) {
 			return ServiceResponse.success();
 		}
 
@@ -157,8 +156,8 @@ public interface PluginProvider {
 		 *
 		 * @param target the target device to refresh
 		 */
-		default void refreshUpdate(T target) {}
-
-
+		default ServiceResponse refreshUpdate(T target) {
+			return ServiceResponse.success();
+		}
 	}
 }

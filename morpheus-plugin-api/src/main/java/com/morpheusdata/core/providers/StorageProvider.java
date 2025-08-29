@@ -97,11 +97,39 @@ public interface StorageProvider extends PluginProvider,UIExtensionProvider {
 	 * This is a WIP interface for future functionality to allow for remote update operations of Storage Servers such as Storage Arrays
 	 */
 	public interface StorageUpdateFacet extends UpdateFacet<StorageServer> {
-		ServiceResponse validateUpdate(StorageServer storageServer, UpdateVersion update);
-		ServiceResponse<UpdateOperation> executeUpdate(StorageServer storageServer, UpdateVersion update);
+		/**
+		 * Perform a validation of the update against the target devices.  This is useful for checking
+		 * prerequisites, compatibility, or other checks to ensure the update can be applied successfully.
+		 *
+		 * @param storageServer the target device to be updated
+		 * @param update the update definition containing the details of the update to be applied
+		 * @return a ServiceResponse with any errors if validation failed or a success response if validation passed
+		 */
+		ServiceResponse validateUpdate(StorageServer storageServer, UpdateDefinition update);
 
-		void refreshUpdate(StorageServer storageServer, UpdateOperation updateOperation);
+		/**
+		 * Execute the update on the target devices.  This is where the actual update logic should be implemented.
+		 *
+		 * @param storageServer the target device to be updated
+		 * @param update the update definition containing the details of the update to be applied
+		 * @return a ServiceResponse indicating the success or failure of the update operation
+		 */
+		ServiceResponse<UpdateOperation> executeUpdate(StorageServer storageServer, UpdateDefinition update);
 
+		/**
+		 * Refresh the update status on the target devices.  This is useful for checking the status of the update
+		 * @param storageServer
+		 * @param updateOperation
+		 * @return
+		 */
+		ServiceResponse<UpdateOperation> refreshUpdate(StorageServer storageServer, UpdateOperation updateOperation);
+
+		/**
+		 * Post update operations can be performed here.  This is useful for cleanup, verification, or other
+		 * @param storageServer the target device to be updated
+		 * @param updateOperation the update operation details
+		 * @return a ServiceResponse indicating the success or failure of the post update operation
+		 */
 		ServiceResponse postUpdate(StorageServer storageServer, UpdateOperation updateOperation);
 
 	}
