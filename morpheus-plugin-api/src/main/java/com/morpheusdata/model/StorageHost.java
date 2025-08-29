@@ -4,10 +4,13 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.morpheusdata.model.projection.StorageHostIdentityProjection;
 import com.morpheusdata.model.serializers.ModelAsIdOnlySerializer;
 
+import java.util.Collection;
+
 public class StorageHost extends StorageHostIdentityProjection {
 
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	private Account owner;
+	private StorageServer storageServer;
 	private String name;
 	private String code;
 	private String category;
@@ -29,6 +32,8 @@ public class StorageHost extends StorageHostIdentityProjection {
 	private Boolean targetChap = false;
 	private String hostType;
 	private String hostPersona;
+	private Collection<Account> accounts;
+	private Collection<ComputeServer> hosts;
 
 
 	public Account getOwner() {
@@ -205,5 +210,29 @@ public class StorageHost extends StorageHostIdentityProjection {
 
 	public void setHostPersona(String hostPersona) {
 		this.hostPersona = hostPersona;
+	}
+
+	public StorageServer getStorageServer() {
+		return storageServer;
+	}
+
+	public void setStorageServer(StorageServer storageServer) {
+		this.storageServer = storageServer;
+	}
+
+	public Collection<Account> getAccounts() {
+		return accounts;
+	}
+
+	public void setAccounts(Collection<Account> accounts) {
+		this.accounts = accounts;
+	}
+
+	public Collection<ComputeServer> getHosts() {
+		return hosts;
+	}
+
+	public void setHosts(Collection<ComputeServer> hosts) {
+		this.hosts = hosts;
 	}
 }
