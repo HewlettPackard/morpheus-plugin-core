@@ -16,7 +16,7 @@
 
 package com.morpheusdata.core.providers;
 
-import com.morpheusdata.core.DriftState;
+import com.morpheusdata.model.DriftState;
 import com.morpheusdata.core.MorpheusContext;
 import com.morpheusdata.core.Plugin;
 import com.morpheusdata.model.AccountIntegration;

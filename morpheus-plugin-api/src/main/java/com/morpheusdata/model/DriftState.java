@@ -1,4 +1,4 @@
-package com.morpheusdata.core;
+package com.morpheusdata.model;
 
 import java.util.List;
 

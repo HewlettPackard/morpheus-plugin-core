@@ -16,7 +16,7 @@
 
 package com.morpheusdata.core.providers;
 
-import com.morpheusdata.core.DriftState;
+import com.morpheusdata.model.DriftState;
 import com.morpheusdata.model.*;
 import com.morpheusdata.response.ServiceResponse;
 import com.morpheusdata.views.HTMLResponse;
