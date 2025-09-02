@@ -170,7 +170,7 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 	protected Boolean systemServer=false;
 	protected String managedBy;
 
-	public GuestAgentStatus guestAgentStatus = GuestAgentStatus.error;
+	public GuestAgentStatus guestAgentStatus = GuestAgentStatus.unknown;
 
 	public String getUuid() {
 		return uuid;
@@ -1159,7 +1159,8 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 	public enum GuestAgentStatus {
 		connected,
 		disconnected,
+		configured,
 		unconfigured,
-		error
+		unknown
 	}
 }
