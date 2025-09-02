@@ -19,6 +19,8 @@ package com.morpheusdata.core.providers;
 import com.morpheusdata.core.MorpheusContext;
 import com.morpheusdata.core.Plugin;
 import com.morpheusdata.model.AccountIntegration;
+import com.morpheusdata.model.CheckDrift;
+import com.morpheusdata.model.CheckLevel;
 import com.morpheusdata.model.UpdateOperation;
 import com.morpheusdata.model.UpdateDefinition;
 import com.morpheusdata.model.event.*;
@@ -157,6 +159,20 @@ public interface PluginProvider {
 		 * @param target the target device to refresh
 		 */
 		default ServiceResponse refreshUpdate(T target) {
+			return ServiceResponse.success();
+		}
+	}
+
+	public interface ConfigurationDriftCheckFacet<T>{
+		/**
+		 * Perform a configuration drift check on the target device.  This is useful for ensuring that the
+		 * configuration of the device matches the expected configuration.
+		 *
+		 * @param target the target device to check
+		 * @param level the scope of the run
+		 * @return a ServiceResponse indicating the success or failure of the drift check operation
+		 */
+		default ServiceResponse<DriftState> runConfigurationDriftCheck(T target, CheckLevel level) {
 			return ServiceResponse.success();
 		}
 	}

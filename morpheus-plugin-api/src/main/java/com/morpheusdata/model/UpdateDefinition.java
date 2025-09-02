@@ -35,5 +35,4 @@ public class UpdateDefinition extends UpdateIdentityProjection {
 	protected Boolean isPlugin=false; //is this update code located in a plugin
 
 	protected Object hasMany;
-
 }
