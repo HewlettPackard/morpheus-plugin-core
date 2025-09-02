@@ -16,6 +16,7 @@
 
 package com.morpheusdata.core.providers;
 
+import com.morpheusdata.core.DriftState;
 import com.morpheusdata.model.*;
 import com.morpheusdata.response.ServiceResponse;
 import com.morpheusdata.views.HTMLResponse;
@@ -682,5 +683,18 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 		 */
 		ServiceResponse postUpdate(NetworkServer networkServer, UpdateOperation updateOperation);
 
+	}
+
+	public interface NetworkDriftCheckFacet extends ConfigurationDriftCheckFacet<NetworkServer> {
+
+		/**
+		 * Perform a configuration drift check on the target device.  This is useful for ensuring that the
+		 * configuration within Morpheus matches the actual configuration on the target device.
+		 *
+		 * @param networkServer the target device to check for configuration drift
+		 * @param checkLevel the level of the drift check to perform (e.g., all, update)
+		 * @return a ServiceResponse with any errors if drift is detected or a success response if no drift is detected
+		 */
+		ServiceResponse<DriftState> runConfigurationDriftCheck(NetworkServer networkServer, CheckLevel checkLevel);
 	}
 }

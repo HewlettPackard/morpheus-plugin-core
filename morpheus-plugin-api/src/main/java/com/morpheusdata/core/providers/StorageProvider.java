@@ -16,6 +16,7 @@
 
 package com.morpheusdata.core.providers;
 
+import com.morpheusdata.core.DriftState;
 import com.morpheusdata.model.*;
 import com.morpheusdata.response.ServiceResponse;
 import com.morpheusdata.views.HTMLResponse;
@@ -131,5 +132,17 @@ public interface StorageProvider extends PluginProvider,UIExtensionProvider {
 		 */
 		ServiceResponse postUpdate(StorageServer storageServer, UpdateOperation updateOperation);
 
+	}
+
+	public interface StorageConfigurationDriftCheckFacet extends ConfigurationDriftCheckFacet<StorageServer> {
+		/**
+		 * Perform a configuration drift check on the target device.  This is useful for ensuring that the
+		 * configuration of the device matches the expected configuration stored in Morpheus.
+		 *
+		 * @param storageServer the target device to check for configuration drift
+		 * @param checkLevel the level of the drift check to perform (e.g., all, update)
+		 * @return a ServiceResponse indicating the success or failure of the configuration drift check
+		 */
+		ServiceResponse<DriftState> runConfigurationDriftCheck(StorageServer storageServer, CheckLevel checkLevel);
 	}
 }
