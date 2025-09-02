@@ -16,10 +16,10 @@
 
 package com.morpheusdata.core.providers;
 
+import com.morpheusdata.core.DriftState;
 import com.morpheusdata.core.MorpheusContext;
 import com.morpheusdata.core.Plugin;
 import com.morpheusdata.model.AccountIntegration;
-import com.morpheusdata.model.CheckDrift;
 import com.morpheusdata.model.CheckLevel;
 import com.morpheusdata.model.UpdateOperation;
 import com.morpheusdata.model.UpdateDefinition;
