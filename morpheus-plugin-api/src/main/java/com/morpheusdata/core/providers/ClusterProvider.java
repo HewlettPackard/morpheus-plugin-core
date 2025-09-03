@@ -59,6 +59,12 @@ public interface ClusterProvider extends PluginProvider {
 	 */
 	ServiceResponse refresh(ComputeServerGroup cluster);
 
+	/**
+	 * Called when a cluster is being deleted. This is a chance to clean up any external resources associated with the cluster
+	 * @since 1.2.12
+	 * @param cluster the cluster details
+	 */
+	ServiceResponse deleteCluster(ComputeServerGroup cluster);
 
 	/**
 	 * Clusters are refreshed periodically by the Morpheus Environment. This includes things like caching of brownfield

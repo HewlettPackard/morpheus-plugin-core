@@ -495,6 +495,7 @@ public class ComputeServerGroup extends MorpheusModel {
 		initializing,
 		warning,
 		error,
-		offline
+		offline,
+		deprovisioning
 	}
 }
