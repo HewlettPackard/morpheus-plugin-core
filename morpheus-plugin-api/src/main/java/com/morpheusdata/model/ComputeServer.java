@@ -146,6 +146,7 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 	protected Boolean guestConsolePreferred = false;
 	protected GuestConsoleType guestConsoleType;
 	protected String consoleKeymap;
+	protected ServerGroupMemberStatus serverGroupMemberStatus;
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected ComputeServerIdentityProjection parentServer;
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
@@ -1127,6 +1128,15 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 		markDirty("devices", devices);
 	}
 
+	public ServerGroupMemberStatus getServerGroupMemberStatus() {
+		return serverGroupMemberStatus;
+	}
+
+	public void setServerGroupMemberStatus(ServerGroupMemberStatus serverGroupMemberStatus) {
+		this.serverGroupMemberStatus = serverGroupMemberStatus;
+		markDirty("serverGroupMemberStatus", serverGroupMemberStatus);
+	}
+
 	public enum GuestConsoleType {
 		disabled,
 		vnc,
@@ -1143,5 +1153,15 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 	public enum CommType {
 		ssh,
 		winrm
+	}
+
+	public enum ServerGroupMemberStatus {
+		online,
+		offline,
+		pending,
+		standby,
+		maintenance,
+		unclean,
+		fenced
 	}
 }
