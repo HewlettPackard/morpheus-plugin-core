@@ -137,6 +137,12 @@ public interface MorpheusAsyncServices {
 	MorpheusComputeTypeSetService getComputeTypeSet();
 
 	/**
+	 * Returns the ComputeTypeLayout context for managing compute type layouts asynchronously.
+	 * @return An instance of the ComputeTypeLayout service
+	 */
+	MorpheusComputeTypeLayoutService getComputeTypeLayout();
+
+	/**
 	 * Returns the ContainerType context
 	 * @return
 	 */

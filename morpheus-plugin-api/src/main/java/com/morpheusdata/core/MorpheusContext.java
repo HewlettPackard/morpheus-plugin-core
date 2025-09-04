@@ -186,6 +186,14 @@ public interface MorpheusContext {
 	MorpheusComputeTypeSetService getComputeTypeSet();
 
 	/**
+	 * Returns the ComputeTypeLayout context for managing compute type layouts.
+	 * @return An instance of the ComputeTypeLayout service
+	 * @deprecated
+	 */
+	@Deprecated
+	MorpheusComputeTypeLayoutService getComputeTypeLayout();
+
+	/**
 	 * Returns the ContainerType context
 	 * @return
 	 * @deprecated
