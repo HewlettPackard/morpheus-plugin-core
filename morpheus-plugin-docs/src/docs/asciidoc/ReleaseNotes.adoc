@@ -2,6 +2,39 @@
 
 **Note:** Morpheus Plugin API is now 1.0! This means calls that are used will be supported for a longer period of time and given appropriate deprecation warnings when necessary. Morpheus Plugin API 1.2 requires a minimum Morpheus Version of `8.0.x`. Morpheus `7.0.x` still runs on Core version `1.1.x`
 
+* **1.2.12**
+** *Cluster Provider Enhancements*
+*** Enhanced ClusterProvider with comprehensive capabilities including compute server group management
+*** Added finalizeLinuxComputeServer method to cluster providers for Linux server finalization
+*** Improved cluster provisioning workflow with additional provider methods and field updates
+** *Workload Management*
+*** Added support for validating resize workload operations with ValidateResizeWorkloadResponse
+*** Enhanced workload provisioning capabilities with improved validation support
+** *Storage and Volume Improvements*
+*** Enhanced shared storage volumes model with additional DatastoreType capabilities
+*** Added support for shared storage configurations across storage volumes and types
+*** Memory improvements to streaming QCOW2 writer for better performance with large image files
+** *Compute Server Features*
+*** Added consoleUsername property to ComputeServer for enhanced console access management
+*** Added consoleKeymap property to ComputeServer for keyboard mapping configuration
+*** Enhanced ComputeServerGroup model with additional field support and improved naming
+** *Operation Event System*
+*** Introduced comprehensive Operation Event Service and related models
+*** Added MorpheusOperationEventService for both async and synchronous operations
+*** Enhanced operation tracking capabilities with OperationEvent and OperationEventIdentityProjection models
+** *Cloud Provider Updates*
+*** Added support for plugin cloud providers to enable resource pool creation
+*** Enhanced cloud provider capabilities with improved resource management
+** *Option Type Enhancements*
+*** Added BYTESIZE input type to OptionType enum for better byte size handling in forms
+** *Model and Field Improvements*
+*** Fixed field naming consistency on ComputeServerGroup and OsTypeImage models
+*** Enhanced OsTypeImage with improved field mappings and better model structure
+*** Updated editor configuration with coding standards for better development consistency
+** *Core Infrastructure*
+*** Various performance optimizations and memory improvements
+*** Enhanced model serialization and field handling across multiple components
+
 * **1.2.11**
 ** *Storage and Compute Enhancements*
 *** Exposed StorageGroups for plugins with comprehensive service support
