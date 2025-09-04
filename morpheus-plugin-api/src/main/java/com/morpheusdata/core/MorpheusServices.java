@@ -33,6 +33,7 @@ import com.morpheusdata.core.synchronous.integration.MorpheusSynchronousAccountI
 import com.morpheusdata.core.synchronous.integration.MorpheusSynchronousIntegrationService;
 import com.morpheusdata.core.synchronous.library.MorpheusSynchronousLibraryService;
 import com.morpheusdata.core.synchronous.MorpheusSynchronousComputeTypeSetService;
+import com.morpheusdata.core.synchronous.MorpheusSynchronousComputeTypeLayoutService;
 import com.morpheusdata.core.synchronous.library.MorpheusSynchronousWorkloadTypeService;
 import com.morpheusdata.core.synchronous.network.MorpheusSynchronousNetworkService;
 import com.morpheusdata.core.synchronous.network.MorpheusSynchronousNetworkSubnetService;
@@ -138,6 +139,12 @@ public interface MorpheusServices {
 	 * @return
 	 */
 	MorpheusSynchronousComputeTypeSetService getComputeTypeSet();
+
+	/**
+	 * Returns the ComputeTypeLayout context for managing compute type layouts.
+	 * @return An instance of the ComputeTypeLayout service
+	 */
+	MorpheusSynchronousComputeTypeLayoutService getComputeTypeLayout();
 
 	/**
 	 * Returns the ContainerType context
