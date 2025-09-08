@@ -1161,6 +1161,7 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 		disconnected,
 		configured,
 		unconfigured,
-		unknown
+		unknown,
+		error
 	}
 }
