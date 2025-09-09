@@ -127,10 +127,10 @@ public interface StorageProvider extends PluginProvider,UIExtensionProvider {
 		/**
 		 * Post update operations can be performed here.  This is useful for cleanup, verification, or other
 		 * @param storageServer the target device to be updated
-		 * @param updateOperation the update operation details
+		 * @param update the update operation details
 		 * @return a ServiceResponse indicating the success or failure of the post update operation
 		 */
-		ServiceResponse postUpdate(StorageServer storageServer, UpdateOperation updateOperation);
+		ServiceResponse<UpdateOperation> postUpdate(StorageServer storageServer, UpdateDefinition update);
 
 	}
 

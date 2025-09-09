@@ -678,7 +678,7 @@ public interface ProvisionProvider extends PluginProvider {
 		 * @param update the update definition containing the details of the update to be applied
 		 * @return a ServiceResponse with any errors if validation failed or a success response if validation passed
 		 */
-		ServiceResponse validateUpdate(ComputeServer computeServer, UpdateDefinition update);
+		ServiceResponse<UpdateOperation> validateUpdate(ComputeServer computeServer, UpdateDefinition update);
 
 		/**
 		 * Execute the update on the target devices.  This is where the actual update logic should be implemented.
@@ -699,10 +699,10 @@ public interface ProvisionProvider extends PluginProvider {
 		/**
 		 * Post update operations can be performed here.  This is useful for cleanup, verification, or other
 		 * @param computeServer the target device to update
-		 * @param updateOperation the update operation details
+		 * @param update the update operation details
 		 * @return a ServiceResponse indicating the success or failure of the update operation
 		 */
-		ServiceResponse postUpdate(ComputeServer computeServer, UpdateOperation updateOperation);
+		ServiceResponse<UpdateOperation> postUpdate(ComputeServer computeServer, UpdateDefinition update);
 	}
 
 	public interface ComputeConfigurationDriftCheckFacet extends ConfigurationDriftCheckFacet<ComputeServer> {

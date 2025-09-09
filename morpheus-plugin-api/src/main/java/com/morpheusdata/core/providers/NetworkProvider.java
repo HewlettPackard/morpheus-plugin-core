@@ -660,7 +660,7 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 		 * @param networkServer
 		 * @param update
 		 */
-		ServiceResponse validateUpdate(NetworkServer networkServer, UpdateDefinition update);
+		ServiceResponse<UpdateOperation> validateUpdate(NetworkServer networkServer, UpdateDefinition update);
 
 		/**
 		 * Execute the update against the target switches.
@@ -678,9 +678,9 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 		/**
 		 * Finalize the update operation status against the target switches.
 		 * @param networkServer
-		 * @param updateOperation
+		 * @param update
 		 */
-		ServiceResponse postUpdate(NetworkServer networkServer, UpdateOperation updateOperation);
+		ServiceResponse<UpdateOperation> postUpdate(NetworkServer networkServer, UpdateDefinition update);
 
 	}
 
