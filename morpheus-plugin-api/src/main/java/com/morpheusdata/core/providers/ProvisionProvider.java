@@ -18,8 +18,6 @@ package com.morpheusdata.core.providers;
 
 import com.morpheusdata.core.MorpheusComputeTypeLayoutFactoryService;
 import com.morpheusdata.model.*;
-import com.morpheusdata.request.ImportWorkloadRequest;
-import com.morpheusdata.response.ImportWorkloadResponse;
 import com.morpheusdata.response.InitializeHypervisorResponse;
 import com.morpheusdata.response.ServiceResponse;
 
@@ -705,5 +703,17 @@ public interface ProvisionProvider extends PluginProvider {
 		 * @return a ServiceResponse indicating the success or failure of the update operation
 		 */
 		ServiceResponse postUpdate(ComputeServer computeServer, UpdateOperation updateOperation);
+	}
+
+	public interface ComputeConfigurationDriftCheckFacet extends ConfigurationDriftCheckFacet<ComputeServer> {
+		/**
+		 * Perform a configuration drift check on the target device.  This is useful for ensuring that the
+		 * configuration of the device matches the expected configuration stored in Morpheus.
+		 *
+		 * @param computeServer the target device to check for configuration drift
+		 * @param checkLevel    the level of the drift check to perform (e.g., all, update)
+		 * @return a ServiceResponse indicating the success or failure of the configuration drift check
+		 */
+		ServiceResponse<DriftState> runConfigurationDriftCheck(ComputeServer computeServer, CheckLevel checkLevel);
 	}
 }
