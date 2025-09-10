@@ -195,15 +195,6 @@ public interface DatastoreTypeProvider extends PluginProvider {
 	ServiceResponse<StorageVolume> resizeVolume(StorageVolume volume, ComputeServer server, Long newSize);
 
 	/**
-	 * Perform any operations necessary on the target to update a volume. This is used to update a volume on a storage server
-	 * @param currentVolume the current volume to edit
-	 * @param server the server the volume is being edited on (may contain information such as parentServer (hypervisor) or cluster)
-	 * @param opts additional options
-	 * @return the success state and a copy of the volume
-	 */
-	ServiceResponse<StorageVolume> updateVolume(StorageVolume currentVolume, ComputeServer server, Map opts);
-
-	/**
 	 * Perform any validations necessary on the target prior to create. The default returns success.
 	 * @param datastore the current datastore being created
 	 * @return the service response containing success state or any errors upon failure
