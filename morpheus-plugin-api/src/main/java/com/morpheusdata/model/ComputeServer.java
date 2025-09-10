@@ -170,7 +170,7 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 	protected Boolean systemServer=false;
 	protected String managedBy;
 
-	public GuestAgentStatus guestAgentStatus = GuestAgentStatus.unknown;
+	protected GuestAgentStatus guestAgentStatus = GuestAgentStatus.unknown;
 
 	public String getUuid() {
 		return uuid;
@@ -1134,7 +1134,9 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 	}
 
 	public void setGuestAgentStatus(GuestAgentStatus guestAgentStatus) {
+
 		this.guestAgentStatus = guestAgentStatus;
+		markDirty("guestAgentStatus", guestAgentStatus);
 	}
 
 
@@ -1156,6 +1158,7 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 		winrm
 	}
 
+	// GuestAgentStatus represents the QEMU Agent status from the instance 
 	public enum GuestAgentStatus {
 		connected,
 		disconnected,
