@@ -17,6 +17,7 @@
 package com.morpheusdata.model;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -99,8 +100,10 @@ public class Cloud extends CloudIdentityProjection {
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected CloudType type;
 	protected String backupMode = "internal"; //if backups are off,run by morpheus or a provider
+	@Deprecated
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	public BackupProvider backupProvider; //integrated backup provider
+	protected List<BackupProvider> backupProviders;
 
 	protected Boolean autoRecoverPowerState = true;
 	protected String consoleKeymap;
@@ -349,7 +352,12 @@ public class Cloud extends CloudIdentityProjection {
 		return backupMode;
 	}
 
+	@Deprecated
 	public BackupProvider getBackupProvider() { return backupProvider; }
+
+	public List<BackupProvider> getBackupProviders() {
+		return backupProviders;
+	}
 
 	public Boolean getAutoRecoverPowerState() {
 		return autoRecoverPowerState;
@@ -797,9 +805,15 @@ public class Cloud extends CloudIdentityProjection {
 		markDirty("backupMode", backupMode);
 	}
 
+	@Deprecated
 	public void setBackupProvider(BackupProvider backupProvider) {
 		this.backupProvider = backupProvider;
 		markDirty("backupProvider", backupProvider);
+	}
+
+	public void setBackupProviders(List<BackupProvider> backupProviders) {
+		this.backupProviders = backupProviders;
+		markDirty("backupProviders", backupProviders);
 	}
 
 	public void setAutoRecoverPowerState(Boolean autoRecoverPowerState) {
