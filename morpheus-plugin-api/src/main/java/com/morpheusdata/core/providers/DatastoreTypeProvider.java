@@ -25,7 +25,6 @@ import com.morpheusdata.response.ServiceResponse;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Represents a DatastoreType and how a {@link StorageServer} interacts with various provisioners
