@@ -1158,7 +1158,7 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 		winrm
 	}
 
-	// GuestAgentStatus represents the QEMU Agent status from the instance 
+	// GuestAgentStatus represents the guest agent status installed via their respective hypervisor
 	public enum GuestAgentStatus {
 		connected,
 		disconnected,
