@@ -19,6 +19,7 @@ public class DatastoreType extends MorpheusModel implements IModelCodeName {
 	protected Boolean localStorage = false;
 	protected Boolean imageTargetCapable = true;
 	protected Boolean heartbeatTargetCapable = true;
+	protected Boolean checkpointTargetCapable = true;
 	protected List<OptionType> options;
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected StorageServerType storageServerType;
@@ -139,5 +140,13 @@ public class DatastoreType extends MorpheusModel implements IModelCodeName {
 
 	public void setOptionTypes(List<StorageVolumeType> storageVolumeTypes) {
 		this.storageVolumeTypes = storageVolumeTypes;
+	}
+
+	public Boolean getCheckpointTargetCapable() {
+		return checkpointTargetCapable;
+	}
+
+	public void setCheckpointTargetCapable(Boolean checkpointTargetCapable) {
+		this.checkpointTargetCapable = checkpointTargetCapable;
 	}
 }
