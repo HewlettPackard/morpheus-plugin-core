@@ -682,6 +682,12 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 		 */
 		ServiceResponse<UpdateOperation> postUpdate(NetworkServer networkServer, UpdateDefinition update);
 
+		/**
+		 * Rollback the update operation status against the target switches.
+		 * @param networkServer
+		 * @param update
+		 */
+		ServiceResponse<UpdateOperation> rollbackUpdate(NetworkServer networkServer, UpdateDefinition update);
 	}
 
 	public interface NetworkDriftCheckFacet extends ConfigurationDriftCheckFacet<NetworkServer> {

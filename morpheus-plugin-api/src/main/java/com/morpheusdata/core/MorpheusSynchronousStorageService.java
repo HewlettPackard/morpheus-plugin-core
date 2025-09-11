@@ -18,6 +18,10 @@ package com.morpheusdata.core;
 
 import com.morpheusdata.core.storage.MorpheusVmeQcow2DatastoreService;
 import com.morpheusdata.core.synchronous.*;
+import com.morpheusdata.model.StorageServer;
+import com.morpheusdata.model.UpdateDefinition;
+import com.morpheusdata.response.ServiceResponse;
+import io.reactivex.rxjava3.core.Single;
 
 public interface MorpheusSynchronousStorageService {
 	/**
@@ -56,4 +60,14 @@ public interface MorpheusSynchronousStorageService {
 	 * @return An instance of the StorageGroup Service
 	 */
 	MorpheusSynchronousStorageGroupService getGroup();
+
+	ServiceResponse validateUpdate(StorageServer storageServer, UpdateDefinition updateDefinition);
+
+	ServiceResponse executeUpdate(StorageServer storageServer, UpdateDefinition updateDefinition);
+
+	ServiceResponse postUpdate(StorageServer storageServer, UpdateDefinition updateDefinition);
+
+	ServiceResponse rollbackUpdate(StorageServer storageServer, UpdateDefinition updateDefinition);
+
+	ServiceResponse refreshUpdate(StorageServer storageServer);
 }

@@ -134,10 +134,10 @@ public interface PluginProvider {
 		/**
 		 * Post update operations can be performed here.  This is useful for cleanup, verification, or other
 		 * @param target the target device to update
-		 * @param updateOperation the update operation details
+		 * @param update the update operation details
 		 * @return a ServiceResponse indicating the success or failure of the update operation
 		 */
-		default ServiceResponse postUpdate(T target, UpdateOperation updateOperation) {
+		default ServiceResponse postUpdate(T target, UpdateDefinition update) {
 			return ServiceResponse.success();
 		}
 
@@ -145,10 +145,10 @@ public interface PluginProvider {
 		 * Rollback the update on the target devices.  This is where the actual rollback logic should be implemented.
 		 *
 		 * @param target the target device to rollback
-		 * @param updateOperation the update operation details
+		 * @param update the update operation details
 		 * @return a ServiceResponse indicating the success or failure of the rollback operation
 		 */
-		default ServiceResponse rollbackUpdate(T target, UpdateOperation updateOperation){
+		default ServiceResponse rollbackUpdate(T target, UpdateDefinition update){
 			return ServiceResponse.success();
 		}
 
