@@ -171,6 +171,8 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 	protected Boolean systemServer=false;
 	protected String managedBy;
 
+	protected GuestAgentStatus guestAgentStatus = GuestAgentStatus.unknown;
+
 	public String getUuid() {
 		return uuid;
 	}
@@ -1137,6 +1139,17 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 		markDirty("serverGroupMemberStatus", serverGroupMemberStatus);
 	}
 
+	public GuestAgentStatus getGuestAgentStatus() {
+		return guestAgentStatus;
+	}
+
+	public void setGuestAgentStatus(GuestAgentStatus guestAgentStatus) {
+
+		this.guestAgentStatus = guestAgentStatus;
+		markDirty("guestAgentStatus", guestAgentStatus);
+	}
+
+
 	public enum GuestConsoleType {
 		disabled,
 		vnc,
@@ -1163,5 +1176,15 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 		maintenance,
 		unclean,
 		fenced
+	}
+
+	// GuestAgentStatus represents the guest agent status installed via their respective hypervisor
+	public enum GuestAgentStatus {
+		connected,
+		disconnected,
+		configured,
+		unconfigured,
+		unknown,
+		error
 	}
 }
