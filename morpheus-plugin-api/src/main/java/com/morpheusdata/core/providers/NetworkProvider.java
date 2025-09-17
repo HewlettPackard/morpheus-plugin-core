@@ -701,5 +701,13 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 		 * @return a ServiceResponse with any errors if drift is detected or a success response if no drift is detected
 		 */
 		ServiceResponse<DriftState> runConfigurationDriftCheck(NetworkServer networkServer, CheckLevel checkLevel);
+
+		/**
+		 * Retrieve details about the configuration that is required by a System plugin to crosscheck data against a whole system.
+		 *
+		 * @param networkServer the target device to check
+		 * @return a ServiceResponse containing details about the configuration drift
+		 */
+		ServiceResponse<DriftState> getConfigurationDriftDetails(NetworkServer networkServer);
 	}
 }

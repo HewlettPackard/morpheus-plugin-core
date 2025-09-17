@@ -1,6 +1,9 @@
 package com.morpheusdata.model;
 
+import org.apache.groovy.util.Maps;
+
 import java.util.List;
+import java.util.Objects;
 
 public class DriftState {
 	protected String refType; //associated type of object this drift check is for
@@ -16,5 +19,6 @@ public class DriftState {
 		DRIFT_DETECTED,
 		ERROR
 	}
+	protected Maps configuration; // configuration details like iSCSI MTU subnet settings etc.
 
 }

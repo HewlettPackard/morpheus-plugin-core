@@ -175,5 +175,15 @@ public interface PluginProvider {
 		default ServiceResponse<DriftState> runConfigurationDriftCheck(T target, CheckLevel level) {
 			return ServiceResponse.success();
 		}
+
+		/**
+		 * Retrieve details about the configuration that is required by a System plugin to crosscheck data against a whole system.
+		 *
+		 * @param target the target device to check
+		 * @return a ServiceResponse containing details about the configuration drift
+		 */
+		default ServiceResponse<DriftState> getConfigurationDriftDetails(T target) {
+			return ServiceResponse.success();
+		}
 	}
 }

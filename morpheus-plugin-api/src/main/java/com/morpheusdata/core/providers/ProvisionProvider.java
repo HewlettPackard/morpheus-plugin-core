@@ -715,5 +715,13 @@ public interface ProvisionProvider extends PluginProvider {
 		 * @return a ServiceResponse indicating the success or failure of the configuration drift check
 		 */
 		ServiceResponse<DriftState> runConfigurationDriftCheck(ComputeServer computeServer, CheckLevel checkLevel);
+
+		/**
+		 * Retrieve details about the configuration that is required by a System plugin to crosscheck data against a whole system.
+		 *
+		 * @param  computeServer the target device to check
+		 * @return a ServiceResponse containing details about the configuration drift
+		 */
+		ServiceResponse<DriftState> getConfigurationDriftDetails(ComputeServer computeServer);
 	}
 }

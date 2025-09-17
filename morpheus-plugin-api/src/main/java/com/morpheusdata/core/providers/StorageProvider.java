@@ -152,5 +152,14 @@ public interface StorageProvider extends PluginProvider,UIExtensionProvider {
 		 * @return a ServiceResponse indicating the success or failure of the configuration drift check
 		 */
 		ServiceResponse<DriftState> runConfigurationDriftCheck(StorageServer storageServer, CheckLevel checkLevel);
+
+
+		/**
+		 * Retrieve details about the configuration that is required by a System plugin to crosscheck data against a whole system.
+		 *
+		 * @param storageServer the target device to check
+		 * @return a ServiceResponse containing details about the configuration drift
+		 */
+		ServiceResponse<DriftState> getConfigurationDriftDetails(StorageServer storageServer);
 	}
 }
