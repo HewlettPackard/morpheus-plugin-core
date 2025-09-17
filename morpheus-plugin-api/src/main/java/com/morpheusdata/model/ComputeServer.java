@@ -99,6 +99,7 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 	protected String externalDomain;
 	protected String externalFqdn;
 	protected String apiKey;
+	protected Boolean preProvisioned;
 	@JsonIgnore
 	protected List<StorageVolume> volumes = new ArrayList<>();
 	@JsonIgnore
@@ -1137,6 +1138,15 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 	public void setServerGroupMemberStatus(ServerGroupMemberStatus serverGroupMemberStatus) {
 		this.serverGroupMemberStatus = serverGroupMemberStatus;
 		markDirty("serverGroupMemberStatus", serverGroupMemberStatus);
+	}
+
+	public Boolean getPreProvisioned() {
+		return preProvisioned;
+	}
+
+	public void setPreProvisioned(Boolean preProvisioned) {
+		this.preProvisioned = preProvisioned;
+		markDirty("preprovisioned", preProvisioned);
 	}
 
 	public GuestAgentStatus getGuestAgentStatus() {

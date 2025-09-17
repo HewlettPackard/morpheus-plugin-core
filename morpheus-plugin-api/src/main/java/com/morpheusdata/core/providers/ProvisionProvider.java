@@ -18,7 +18,9 @@ package com.morpheusdata.core.providers;
 
 import com.morpheusdata.core.MorpheusComputeTypeLayoutFactoryService;
 import com.morpheusdata.model.*;
+import com.morpheusdata.request.ConvertToManagedRequest;
 import com.morpheusdata.request.ImportWorkloadRequest;
+import com.morpheusdata.response.ConvertToManagedResponse;
 import com.morpheusdata.response.ImportWorkloadResponse;
 import com.morpheusdata.response.InitializeHypervisorResponse;
 import com.morpheusdata.response.ServiceResponse;
@@ -669,5 +671,14 @@ public interface ProvisionProvider extends PluginProvider {
 		 * used to fill in necessary attributes of the server.
 		 */
 		ServiceResponse<InitializeHypervisorResponse> initializeHypervisor(Cloud cloud, ComputeServer server);
+	}
+
+	/**
+	 * Provides methods for hooks for converting pre-provisioned ComputeServers to managed Instances
+	 * @author Mike Carlin
+	 * @since 1.2.12
+	 */
+	public interface ConvertToManagedFacet {
+		ServiceResponse<ConvertToManagedResponse> convertToManaged(ConvertToManagedRequest convertToManagedRequest);
 	}
 }
