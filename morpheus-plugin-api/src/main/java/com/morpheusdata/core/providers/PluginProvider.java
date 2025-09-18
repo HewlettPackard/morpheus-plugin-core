@@ -102,6 +102,9 @@ public interface PluginProvider {
 		 * perhaps, an action needs to be performed after a network is created or destroyed.
 		 *
 		 * @param event the event object that was triggered
+		 * @param integration The account integration subscribing to this event. This can be `null` if the EventSubscriberFacet
+		 *                    is not implemented on an AccountIntegration.
+		 *
 		 * @see Event
 		 * @see NetworkEvent
 		 */

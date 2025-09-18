@@ -189,6 +189,26 @@ public interface WorkloadProvisionProvider extends ComputeProvisionProvider {
 		 * @return Response from API
 		 */
 		ServiceResponse resizeWorkload(Instance instance, Workload workload, ResizeRequest resizeRequest, Map opts);
+
+		/**
+		 * Validates the provided resize options of an instance's workload. A return of success = false will halt the
+		 * resize and display errors.
+		 * <p>
+		 * Note: this functionality in the UI is called 'Reconfigure'.
+		 * @param instance to resize
+		 * @param workload to resize
+		 * @param resizeRequest the resize requested parameters
+		 * @param opts raw + additional options
+		 * @return Response from API. Errors should be returned in the errors Map with the key being the field name and the error
+		 * message as the value.
+		 * @since 1.2.12
+		 */
+		default ServiceResponse<ValidateResizeWorkloadResponse> validateResizeWorkload(Instance instance, Workload workload, ResizeRequest resizeRequest, Map opts) {
+			ValidateResizeWorkloadResponse response = new ValidateResizeWorkloadResponse();
+			response.allowed = true;
+			response.hotResize = false;
+			return new ServiceResponse<>(true, null, null, response);
+		}
 	}
 
 

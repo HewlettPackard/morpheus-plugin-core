@@ -36,12 +36,16 @@ import java.util.Map;
 public interface StorageProviderVolumes {
 	ServiceResponse<StorageVolume> createVolume(StorageGroup storageGroup, StorageVolume storageVolume, Map opts);
 	ServiceResponse<StorageVolume> resizeVolume(StorageGroup storageGroup, StorageVolume storageVolume, Map opts);
+	ServiceResponse<StorageVolume> updateVolume(StorageGroup storageGroup, StorageVolume storageVolume, Map opts);
 	ServiceResponse<StorageVolume> deleteVolume(StorageGroup storageGroup, StorageVolume storageVolume, Map opts);
 
 	default ServiceResponse createVolume(StorageServer storageServer, StorageVolume storageVolume, Map opts){
 		return ServiceResponse.success();
 	};
 	default ServiceResponse<StorageVolume> resizeVolume(StorageServer storageServer, StorageVolume storageVolume, Map opts){
+		return ServiceResponse.success();
+	};
+	default ServiceResponse<StorageVolume> updateVolume(StorageServer storageServer, StorageVolume storageVolume, Map opts){
 		return ServiceResponse.success();
 	};
 	default ServiceResponse<StorageVolume> deleteVolume(StorageServer storageServer, StorageVolume storageVolume, Map opts){
