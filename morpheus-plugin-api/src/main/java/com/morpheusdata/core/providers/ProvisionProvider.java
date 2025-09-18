@@ -18,8 +18,6 @@ package com.morpheusdata.core.providers;
 
 import com.morpheusdata.core.MorpheusComputeTypeLayoutFactoryService;
 import com.morpheusdata.model.*;
-import com.morpheusdata.request.ImportWorkloadRequest;
-import com.morpheusdata.response.ImportWorkloadResponse;
 import com.morpheusdata.response.InitializeHypervisorResponse;
 import com.morpheusdata.response.ServiceResponse;
 
@@ -669,5 +667,61 @@ public interface ProvisionProvider extends PluginProvider {
 		 * used to fill in necessary attributes of the server.
 		 */
 		ServiceResponse<InitializeHypervisorResponse> initializeHypervisor(Cloud cloud, ComputeServer server);
+	}
+
+	public interface ComputeUpdateFacet extends UpdateFacet<ComputeServer> {
+		/**
+		 * Perform a validation of the update against the target devices.  This is useful for checking
+		 * prerequisites, compatibility, or other checks to ensure the update can be applied successfully.
+		 *
+		 * @param computeServer the target device to be updated
+		 * @param update the update definition containing the details of the update to be applied
+		 * @return a ServiceResponse with any errors if validation failed or a success response if validation passed
+		 */
+		ServiceResponse<UpdateOperation> validateUpdate(ComputeServer computeServer, UpdateDefinition update);
+
+		/**
+		 * Execute the update on the target devices.  This is where the actual update logic should be implemented.
+		 *
+		 * @param computeServer the target device to be updated
+		 * @param update the update definition containing the details of the update to be applied
+		 * @return a ServiceResponse indicating the success or failure of the update operation
+		 */
+		ServiceResponse<UpdateOperation> executeUpdate(ComputeServer computeServer, UpdateDefinition update);
+
+		/**
+		 * Refresh the update status on the target devices.  This is useful for checking the status of the update
+		 * @param computeServer
+		 * @return
+		 */
+		ServiceResponse<UpdateOperation> refreshUpdate(ComputeServer computeServer);
+
+		/**
+		 * Post update operations can be performed here.  This is useful for cleanup, verification, or other
+		 * @param computeServer the target device to update
+		 * @param update the update operation details
+		 * @return a ServiceResponse indicating the success or failure of the update operation
+		 */
+		ServiceResponse<UpdateOperation> postUpdate(ComputeServer computeServer, UpdateDefinition update);
+	}
+
+	public interface ComputeConfigurationDriftCheckFacet extends ConfigurationDriftCheckFacet<ComputeServer> {
+		/**
+		 * Perform a configuration drift check on the target device.  This is useful for ensuring that the
+		 * configuration of the device matches the expected configuration stored in Morpheus.
+		 *
+		 * @param computeServer the target device to check for configuration drift
+		 * @param checkLevel    the level of the drift check to perform (e.g., all, update)
+		 * @return a ServiceResponse indicating the success or failure of the configuration drift check
+		 */
+		ServiceResponse<DriftState> runConfigurationDriftCheck(ComputeServer computeServer, CheckLevel checkLevel);
+
+		/**
+		 * Retrieve details about the configuration that is required by a System plugin to crosscheck data against a whole system.
+		 *
+		 * @param  computeServer the target device to check
+		 * @return a ServiceResponse containing details about the configuration drift
+		 */
+		ServiceResponse<DriftState> getConfigurationDriftDetails(ComputeServer computeServer);
 	}
 }

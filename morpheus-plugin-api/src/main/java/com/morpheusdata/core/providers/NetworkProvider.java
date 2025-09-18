@@ -16,15 +16,10 @@
 
 package com.morpheusdata.core.providers;
 
-import com.morpheusdata.core.util.MorpheusUtils;
+import com.morpheusdata.model.DriftState;
 import com.morpheusdata.model.*;
-import com.morpheusdata.model.event.Event;
-import com.morpheusdata.model.provisioning.NetworkConfiguration;
 import com.morpheusdata.response.ServiceResponse;
 import com.morpheusdata.views.HTMLResponse;
-import groovy.util.logging.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +76,7 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 	 * @return Collection of NetworkRouterType
 	 */
 	Collection<NetworkRouterType> getRouterTypes();
-	
+
 	Collection<OptionType> getOptionTypes();
 
 	default Boolean isUserVisible() { return false; }
@@ -656,5 +651,63 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 		 * @return the success state of the operation
 		 */
 		public ServiceResponse<Void> releaseComputeServerInterfacesFromServer(NetworkServer networkServer, ComputeServer server, List<ComputeServerInterface> interfaces);
+	}
+
+	public interface NetworkUpdateFacet extends UpdateFacet<NetworkServer> {
+
+		/**
+		 * Perform a validation of the update against the target switches.
+		 * @param networkServer
+		 * @param update
+		 */
+		ServiceResponse<UpdateOperation> validateUpdate(NetworkServer networkServer, UpdateDefinition update);
+
+		/**
+		 * Execute the update against the target switches.
+		 * @param networkServer
+		 * @param update
+		 */
+		ServiceResponse<UpdateOperation> executeUpdate(NetworkServer networkServer, UpdateDefinition update);
+
+		/**
+		 * Refresh the update operation status against the target switches.
+		 * @param networkServer
+		 */
+		ServiceResponse<UpdateOperation> refreshUpdate(NetworkServer networkServer);
+
+		/**
+		 * Finalize the update operation status against the target switches.
+		 * @param networkServer
+		 * @param update
+		 */
+		ServiceResponse<UpdateOperation> postUpdate(NetworkServer networkServer, UpdateDefinition update);
+
+		/**
+		 * Rollback the update operation status against the target switches.
+		 * @param networkServer
+		 * @param update
+		 */
+		ServiceResponse<UpdateOperation> rollbackUpdate(NetworkServer networkServer, UpdateDefinition update);
+	}
+
+	public interface NetworkConfigurationDriftCheckFacet extends ConfigurationDriftCheckFacet<NetworkServer> {
+
+		/**
+		 * Perform a configuration drift check on the target device.  This is useful for ensuring that the
+		 * configuration within Morpheus matches the actual configuration on the target device.
+		 *
+		 * @param networkServer the target device to check for configuration drift
+		 * @param checkLevel the level of the drift check to perform (e.g., all, update)
+		 * @return a ServiceResponse with any errors if drift is detected or a success response if no drift is detected
+		 */
+		ServiceResponse<DriftState> runConfigurationDriftCheck(NetworkServer networkServer, CheckLevel checkLevel);
+
+		/**
+		 * Retrieve details about the configuration that is required by a System plugin to crosscheck data against a whole system.
+		 *
+		 * @param networkServer the target device to check
+		 * @return a ServiceResponse containing details about the configuration drift
+		 */
+		ServiceResponse<DriftState> getConfigurationDriftDetails(NetworkServer networkServer);
 	}
 }

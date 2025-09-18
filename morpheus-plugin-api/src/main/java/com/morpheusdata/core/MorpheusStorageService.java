@@ -16,6 +16,13 @@
 
 package com.morpheusdata.core;
 
+import com.morpheusdata.model.CheckLevel;
+import com.morpheusdata.model.NetworkServer;
+import com.morpheusdata.model.StorageServer;
+import com.morpheusdata.model.UpdateDefinition;
+import com.morpheusdata.response.ServiceResponse;
+import io.reactivex.rxjava3.core.Single;
+
 /**
  * Provides a top level interface for interacting with Storage related services in Morpheus
  * @since 1.2.5
@@ -56,4 +63,18 @@ public interface MorpheusStorageService {
 	 * @return An instance of the StorageGroup Service
 	 */
 	MorpheusStorageGroupService getGroup();
+
+	Single<ServiceResponse> validateUpdate(StorageServer storageServer, UpdateDefinition updateDefinition);
+
+	Single<ServiceResponse> executeUpdate(StorageServer storageServer, UpdateDefinition updateDefinition);
+
+	Single<ServiceResponse> postUpdate(StorageServer storageServer, UpdateDefinition updateDefinition);
+
+	Single<ServiceResponse> rollbackUpdate(StorageServer storageServer, UpdateDefinition updateDefinition);
+
+	Single<ServiceResponse> refreshUpdate(StorageServer storageServer);
+
+	Single<ServiceResponse> runConfigurationDriftCheck(StorageServer storageServer, CheckLevel checkLevel);
+
+	Single<ServiceResponse> getConfigurationDriftDetails(StorageServer storageServer);
 }

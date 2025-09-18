@@ -23,10 +23,12 @@ import com.morpheusdata.core.providers.DNSProvider;
 import com.morpheusdata.core.providers.IPAMProvider;
 import com.morpheusdata.model.*;
 import com.morpheusdata.model.projection.NetworkIdentityProjection;
+import com.morpheusdata.response.ServiceResponse;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
 
+import java.security.Provider;
 import java.util.Collection;
 import java.util.List;
 
@@ -263,4 +265,17 @@ public interface MorpheusNetworkService extends MorpheusDataService<Network, Net
 	 */
 	Single<NetworkServer> getNetworkServerById(Long id);
 
+	Single<ServiceResponse> validateUpdate(NetworkServer networkServer, UpdateDefinition updateDefinition);
+
+	Single<ServiceResponse> executeUpdate(NetworkServer networkServer, UpdateDefinition updateDefinition);
+
+	Single<ServiceResponse> postUpdate(NetworkServer networkServer, UpdateDefinition updateDefinition);
+
+	Single<ServiceResponse> rollbackUpdate(NetworkServer networkServer, UpdateDefinition updateDefinition);
+
+	Single<ServiceResponse> refreshUpdate(NetworkServer networkServer);
+
+	Single<ServiceResponse> runConfigurationDriftCheck(NetworkServer networkServer, CheckLevel checkLevel);
+
+	Single<ServiceResponse> getConfigurationDriftDetails(NetworkServer networkServer);
 }

@@ -16,12 +16,11 @@
 
 package com.morpheusdata.core.providers;
 
+import com.morpheusdata.model.DriftState;
 import com.morpheusdata.model.*;
 import com.morpheusdata.response.ServiceResponse;
 import com.morpheusdata.views.HTMLResponse;
 
-import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -95,5 +94,72 @@ public interface StorageProvider extends PluginProvider,UIExtensionProvider {
 	default HTMLResponse renderTemplate(StorageServer storageServer) {
 		return null;
 	}
+	/**
+	 * This is a WIP interface for future functionality to allow for remote update operations of Storage Servers such as Storage Arrays
+	 */
+	public interface StorageUpdateFacet extends UpdateFacet<StorageServer> {
+		/**
+		 * Perform a validation of the update against the target devices.  This is useful for checking
+		 * prerequisites, compatibility, or other checks to ensure the update can be applied successfully.
+		 *
+		 * @param storageServer the target device to be updated
+		 * @param update the update definition containing the details of the update to be applied
+		 * @return a ServiceResponse with any errors if validation failed or a success response if validation passed
+		 */
+		ServiceResponse<UpdateOperation> validateUpdate(StorageServer storageServer, UpdateDefinition update);
 
+		/**
+		 * Execute the update on the target devices.  This is where the actual update logic should be implemented.
+		 *
+		 * @param storageServer the target device to be updated
+		 * @param update the update definition containing the details of the update to be applied
+		 * @return a ServiceResponse indicating the success or failure of the update operation
+		 */
+		ServiceResponse<UpdateOperation> executeUpdate(StorageServer storageServer, UpdateDefinition update);
+
+		/**
+		 * Refresh the update status on the target devices.  This is useful for checking the status of the update
+		 * @param storageServer
+		 * @return
+		 */
+		ServiceResponse<UpdateOperation> refreshUpdate(StorageServer storageServer);
+
+		/**
+		 * Post update operations can be performed here.  This is useful for cleanup, verification, or other
+		 * @param storageServer the target device to be updated
+		 * @param update the update operation details
+		 * @return a ServiceResponse indicating the success or failure of the post update operation
+		 */
+		ServiceResponse<UpdateOperation> postUpdate(StorageServer storageServer, UpdateDefinition update);
+
+		/**
+		 * Rollback the update on the target devices.  This is where the actual rollback logic should be implemented.
+		 *
+		 * @param storageServer the target device to be updated
+		 * @param update the update definition containing the details of the update to be rolled back
+		 * @return a ServiceResponse indicating the success or failure of the rollback operation
+		 */
+		ServiceResponse<UpdateOperation> rollbackUpdate(StorageServer storageServer, UpdateDefinition update);
+	}
+
+	public interface StorageConfigurationDriftCheckFacet extends ConfigurationDriftCheckFacet<StorageServer> {
+		/**
+		 * Perform a configuration drift check on the target device.  This is useful for ensuring that the
+		 * configuration of the device matches the expected configuration stored in Morpheus.
+		 *
+		 * @param storageServer the target device to check for configuration drift
+		 * @param checkLevel the level of the drift check to perform (e.g., all, update)
+		 * @return a ServiceResponse indicating the success or failure of the configuration drift check
+		 */
+		ServiceResponse<DriftState> runConfigurationDriftCheck(StorageServer storageServer, CheckLevel checkLevel);
+
+
+		/**
+		 * Retrieve details about the configuration that is required by a System plugin to crosscheck data against a whole system.
+		 *
+		 * @param storageServer the target device to check
+		 * @return a ServiceResponse containing details about the configuration drift
+		 */
+		ServiceResponse<DriftState> getConfigurationDriftDetails(StorageServer storageServer);
+	}
 }

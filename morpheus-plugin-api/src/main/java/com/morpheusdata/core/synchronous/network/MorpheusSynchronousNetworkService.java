@@ -18,11 +18,11 @@ package com.morpheusdata.core.synchronous.network;
 
 import com.morpheusdata.core.MorpheusSynchronousDataService;
 import com.morpheusdata.core.MorpheusSynchronousIdentityService;
-import com.morpheusdata.core.network.*;
 import com.morpheusdata.core.providers.DNSProvider;
 import com.morpheusdata.core.providers.IPAMProvider;
 import com.morpheusdata.model.*;
 import com.morpheusdata.model.projection.NetworkIdentityProjection;
+import com.morpheusdata.response.ServiceResponse;
 
 public interface MorpheusSynchronousNetworkService extends MorpheusSynchronousDataService<Network, NetworkIdentityProjection>, MorpheusSynchronousIdentityService<NetworkIdentityProjection> {
 
@@ -80,5 +80,18 @@ public interface MorpheusSynchronousNetworkService extends MorpheusSynchronousDa
 	 * @return An instance of the {@link MorpheusSynchronousNetworkProxyService}
 	 */
 	MorpheusSynchronousNetworkProxyService getNetworkProxy();
-	
+
+	ServiceResponse validateUpdate(NetworkServer networkServer, UpdateDefinition updateDefinition);
+
+	ServiceResponse executeUpdate(NetworkServer networkServer, UpdateDefinition updateDefinition);
+
+	ServiceResponse postUpdate(NetworkServer networkServer, UpdateDefinition updateDefinition);
+
+	ServiceResponse rollbackUpdate(NetworkServer networkServer, UpdateDefinition updateDefinition);
+
+	ServiceResponse refreshUpdate(NetworkServer networkServer);
+
+	ServiceResponse runConfigurationDriftCheck(NetworkServer networkServer, CheckLevel level);
+
+	ServiceResponse getConfigurationDriftDetails(NetworkServer networkServer);
 }
