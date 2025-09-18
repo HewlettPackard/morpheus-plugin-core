@@ -76,6 +76,7 @@ public class ProvisionType extends MorpheusModel implements IModelCodeName {
 	protected Boolean supportsConfigManagement = true;
 	protected Boolean hasSecurityGroupsOnNetworks = false;
 	protected Boolean supportsNetworkSelection = true;
+	protected Boolean canChangeServicePlanOnReconfigure = true;
 
 	public String getCode() {
 		return code;
@@ -304,6 +305,8 @@ public class ProvisionType extends MorpheusModel implements IModelCodeName {
 	public Boolean getSupportsNetworkSelection() {
 		return supportsNetworkSelection;
 	}
+
+	public Boolean getCanChangeServicePlanOnReconfigure() { return canChangeServicePlanOnReconfigure; }
 
 	public void setCode(String code) {
 		this.code = code;
@@ -590,4 +593,8 @@ public class ProvisionType extends MorpheusModel implements IModelCodeName {
 		markDirty("supportsNetworkSelection", supportsNetworkSelection);
 	}
 
+	public void setCanChangeServicePlanOnReconfigure(Boolean canChangeServicePlanOnReconfigure) {
+		this.canChangeServicePlanOnReconfigure = canChangeServicePlanOnReconfigure;
+		markDirty("canChangeServicePlanOnReconfigure", canChangeServicePlanOnReconfigure);
+	}
 }
