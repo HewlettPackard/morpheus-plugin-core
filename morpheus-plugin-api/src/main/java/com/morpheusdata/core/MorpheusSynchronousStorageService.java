@@ -18,6 +18,7 @@ package com.morpheusdata.core;
 
 import com.morpheusdata.core.storage.MorpheusVmeQcow2DatastoreService;
 import com.morpheusdata.core.synchronous.*;
+import com.morpheusdata.model.CheckLevel;
 import com.morpheusdata.model.StorageServer;
 import com.morpheusdata.model.UpdateDefinition;
 import com.morpheusdata.response.ServiceResponse;
@@ -70,4 +71,8 @@ public interface MorpheusSynchronousStorageService {
 	ServiceResponse rollbackUpdate(StorageServer storageServer, UpdateDefinition updateDefinition);
 
 	ServiceResponse refreshUpdate(StorageServer storageServer);
+
+	ServiceResponse runConfigurationDriftCheck(StorageServer storageServer, CheckLevel checkLevel);
+
+	ServiceResponse getConfigurationDriftDetails(StorageServer storageServer);
 }

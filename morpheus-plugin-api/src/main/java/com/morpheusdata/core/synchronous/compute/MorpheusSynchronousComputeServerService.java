@@ -18,12 +18,10 @@ package com.morpheusdata.core.synchronous.compute;
 
 import com.morpheusdata.core.MorpheusSynchronousIdentityService;
 import com.morpheusdata.core.MorpheusSynchronousDataService;
-import com.morpheusdata.model.ComputeDevice;
-import com.morpheusdata.model.ComputePort;
-import com.morpheusdata.model.ComputeServer;
-import com.morpheusdata.model.ComputeServerAccess;
-import com.morpheusdata.model.ComputeServerInterface;
+import com.morpheusdata.model.*;
 import com.morpheusdata.model.projection.ComputeServerIdentityProjection;
+import com.morpheusdata.response.ServiceResponse;
+import io.reactivex.rxjava3.core.Single;
 
 public interface MorpheusSynchronousComputeServerService extends MorpheusSynchronousDataService<ComputeServer, ComputeServerIdentityProjection>, MorpheusSynchronousIdentityService<ComputeServerIdentityProjection> {
 
@@ -51,4 +49,18 @@ public interface MorpheusSynchronousComputeServerService extends MorpheusSynchro
 	 * @return An instance of the ComputeServerAccess context
 	 */
 	MorpheusSynchronousComputeServerAccessService getAccess();
+
+	ServiceResponse validateUpdate(ComputeServer computeServer, UpdateDefinition updateDefinition);
+
+	ServiceResponse executeUpdate(ComputeServer computeServer, UpdateDefinition updateDefinition);
+
+	ServiceResponse postUpdate(ComputeServer computeServer, UpdateDefinition updateDefinition);
+
+	ServiceResponse rollbackUpdate(ComputeServer computeServer, UpdateDefinition updateDefinition);
+
+	ServiceResponse refreshUpdate(ComputeServer computeServer);
+
+	ServiceResponse runConfigurationDriftCheck(ComputeServer computeServer, CheckLevel checkLevel);
+
+	ServiceResponse getConfigurationDriftDetails(ComputeServer computeServer);
 }

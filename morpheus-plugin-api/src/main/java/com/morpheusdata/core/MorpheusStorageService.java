@@ -16,6 +16,7 @@
 
 package com.morpheusdata.core;
 
+import com.morpheusdata.model.CheckLevel;
 import com.morpheusdata.model.NetworkServer;
 import com.morpheusdata.model.StorageServer;
 import com.morpheusdata.model.UpdateDefinition;
@@ -72,4 +73,8 @@ public interface MorpheusStorageService {
 	Single<ServiceResponse> rollbackUpdate(StorageServer storageServer, UpdateDefinition updateDefinition);
 
 	Single<ServiceResponse> refreshUpdate(StorageServer storageServer);
+
+	Single<ServiceResponse> runConfigurationDriftCheck(StorageServer storageServer, CheckLevel checkLevel);
+
+	Single<ServiceResponse> getConfigurationDriftDetails(StorageServer storageServer);
 }

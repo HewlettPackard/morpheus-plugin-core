@@ -90,4 +90,8 @@ public interface MorpheusSynchronousNetworkService extends MorpheusSynchronousDa
 	ServiceResponse rollbackUpdate(NetworkServer networkServer, UpdateDefinition updateDefinition);
 
 	ServiceResponse refreshUpdate(NetworkServer networkServer);
+
+	ServiceResponse runConfigurationDriftCheck(NetworkServer networkServer, CheckLevel level);
+
+	ServiceResponse getConfigurationDriftDetails(NetworkServer networkServer);
 }

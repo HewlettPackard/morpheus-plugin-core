@@ -690,7 +690,7 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 		ServiceResponse<UpdateOperation> rollbackUpdate(NetworkServer networkServer, UpdateDefinition update);
 	}
 
-	public interface NetworkDriftCheckFacet extends ConfigurationDriftCheckFacet<NetworkServer> {
+	public interface NetworkConfigurationDriftCheckFacet extends ConfigurationDriftCheckFacet<NetworkServer> {
 
 		/**
 		 * Perform a configuration drift check on the target device.  This is useful for ensuring that the
