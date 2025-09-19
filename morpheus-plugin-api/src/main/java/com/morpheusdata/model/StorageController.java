@@ -37,9 +37,9 @@ public class StorageController extends StorageControllerIdentityProjection {
 	protected String internalId;
 	protected String externalId;
 	protected String uniqueId;
-	protected Boolean active;
-	protected Boolean editable;
-	protected Boolean removable;
+	protected Boolean active = true;
+	protected Boolean editable = false;
+	protected Boolean removable = false;
 
 	/**
 	 * The description
