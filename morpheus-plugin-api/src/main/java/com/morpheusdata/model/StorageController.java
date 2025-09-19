@@ -37,6 +37,9 @@ public class StorageController extends StorageControllerIdentityProjection {
 	protected String internalId;
 	protected String externalId;
 	protected String uniqueId;
+	protected Boolean active;
+	protected Boolean editable;
+	protected Boolean removable;
 
 	/**
 	 * The description
@@ -181,5 +184,32 @@ public class StorageController extends StorageControllerIdentityProjection {
 	public void setExternalId(String externalId) {
 		this.externalId = externalId;
 		markDirty("externalId", externalId);
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
+		markDirty("active", active);
+	}
+
+	public Boolean getEditable() {
+		return editable;
+	}
+
+	public void setEditable(Boolean editable) {
+		this.editable = editable;
+		markDirty("editable", editable);
+	}
+
+	public Boolean getRemovable() {
+		return removable;
+	}
+
+	public void setRemovable(Boolean removable) {
+		this.removable = removable;
+		markDirty("removable", removable);
 	}
 }
