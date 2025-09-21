@@ -378,6 +378,15 @@ public interface ProvisionProvider extends PluginProvider {
 	}
 
 	/**
+	 * Indicates if the current service plan can be changed on a reconfigure operation
+	 * @since 1.2.13
+	 * @return Boolean
+	 */
+	default public Boolean canChangeServicePlanOnReconfigure() {
+		return true;
+	}
+
+	/**
 	 * Indicates if StorageControllers are utilized
 	 * @return Boolean
 	 */
