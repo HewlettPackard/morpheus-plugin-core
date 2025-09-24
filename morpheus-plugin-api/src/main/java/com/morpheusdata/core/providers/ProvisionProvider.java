@@ -678,7 +678,7 @@ public interface ProvisionProvider extends PluginProvider {
 		 * @param update the update definition containing the details of the update to be applied
 		 * @return a ServiceResponse with any errors if validation failed or a success response if validation passed
 		 */
-		ServiceResponse<UpdateOperation> validateUpdate(ComputeServer computeServer, UpdateDefinition update);
+		ServiceResponse<UpdateOperation> validateUpdate(UpdateDefinition update, ComputeServer... computeServer);
 
 		/**
 		 * Execute the update on the target devices.  This is where the actual update logic should be implemented.
@@ -687,14 +687,14 @@ public interface ProvisionProvider extends PluginProvider {
 		 * @param update the update definition containing the details of the update to be applied
 		 * @return a ServiceResponse indicating the success or failure of the update operation
 		 */
-		ServiceResponse<UpdateOperation> executeUpdate(ComputeServer computeServer, UpdateDefinition update);
+		ServiceResponse<UpdateOperation> executeUpdate(UpdateDefinition update, ComputeServer... computeServer);
 
 		/**
 		 * Refresh the update status on the target devices.  This is useful for checking the status of the update
 		 * @param computeServer
 		 * @return
 		 */
-		ServiceResponse<UpdateOperation> refreshUpdate(ComputeServer computeServer);
+		ServiceResponse<UpdateOperation> refreshUpdate(ComputeServer... computeServer);
 
 		/**
 		 * Post update operations can be performed here.  This is useful for cleanup, verification, or other
@@ -702,7 +702,15 @@ public interface ProvisionProvider extends PluginProvider {
 		 * @param update the update operation details
 		 * @return a ServiceResponse indicating the success or failure of the update operation
 		 */
-		ServiceResponse<UpdateOperation> postUpdate(ComputeServer computeServer, UpdateDefinition update);
+		ServiceResponse<UpdateOperation> postUpdate(UpdateDefinition update, ComputeServer... computeServer);
+
+		/**
+		 * Rollback update operations can be performed here.  This is useful for cleanup, verification, or other
+		 * @param computeServer the target device to update
+		 * @param update the update operation details
+		 * @return a ServiceResponse indicating the success or failure of the update operation
+		 */
+		ServiceResponse<UpdateOperation> rollbackUpdate(UpdateDefinition update, ComputeServer... computeServer);
 	}
 
 	public interface ComputeConfigurationDriftCheckFacet extends ConfigurationDriftCheckFacet<ComputeServer> {
@@ -714,7 +722,7 @@ public interface ProvisionProvider extends PluginProvider {
 		 * @param checkLevel    the level of the drift check to perform (e.g., all, update)
 		 * @return a ServiceResponse indicating the success or failure of the configuration drift check
 		 */
-		ServiceResponse<DriftState> runConfigurationDriftCheck(ComputeServer computeServer, CheckLevel checkLevel);
+		ServiceResponse<DriftState> runConfigurationDriftCheck(CheckLevel checkLevel, ComputeServer... computeServer);
 
 		/**
 		 * Retrieve details about the configuration that is required by a System plugin to crosscheck data against a whole system.
@@ -722,6 +730,6 @@ public interface ProvisionProvider extends PluginProvider {
 		 * @param  computeServer the target device to check
 		 * @return a ServiceResponse containing details about the configuration drift
 		 */
-		ServiceResponse<DriftState> getConfigurationDriftDetails(ComputeServer computeServer);
+		ServiceResponse<DriftState> getConfigurationDriftDetails(ComputeServer... computeServer);
 	}
 }

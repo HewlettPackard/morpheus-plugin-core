@@ -50,17 +50,17 @@ public interface MorpheusSynchronousComputeServerService extends MorpheusSynchro
 	 */
 	MorpheusSynchronousComputeServerAccessService getAccess();
 
-	ServiceResponse validateUpdate(ComputeServer computeServer, UpdateDefinition updateDefinition);
+	ServiceResponse validateUpdate(UpdateDefinition updateDefinition, ComputeServer... computeServer);
 
-	ServiceResponse executeUpdate(ComputeServer computeServer, UpdateDefinition updateDefinition);
+	ServiceResponse executeUpdate(UpdateDefinition updateDefinition, ComputeServer... computeServer);
 
-	ServiceResponse postUpdate(ComputeServer computeServer, UpdateDefinition updateDefinition);
+	ServiceResponse postUpdate(UpdateDefinition updateDefinition, ComputeServer... computeServer);
 
-	ServiceResponse rollbackUpdate(ComputeServer computeServer, UpdateDefinition updateDefinition);
+	ServiceResponse rollbackUpdate(UpdateDefinition updateDefinition, ComputeServer... computeServer);
 
-	ServiceResponse refreshUpdate(ComputeServer computeServer);
+	ServiceResponse refreshUpdate(ComputeServer... computeServer);
 
-	ServiceResponse runConfigurationDriftCheck(ComputeServer computeServer, CheckLevel checkLevel);
+	ServiceResponse runConfigurationDriftCheck(CheckLevel checkLevel, ComputeServer... computeServer);
 
-	ServiceResponse getConfigurationDriftDetails(ComputeServer computeServer);
+	ServiceResponse getConfigurationDriftDetails(ComputeServer... computeServer);
 }
