@@ -171,6 +171,14 @@ public interface MorpheusAsyncServices {
 	MorpheusOsTypeService getOsType();
 
 	/**
+	 * Returns the DatastoreType Service used for accessing datastore type definitions
+	 * from the datastore_type table.
+	 *
+	 * @return an instance of the DatastoreType Service
+	 */
+	MorpheusDatastoreTypeService getDatastoreType();
+
+	/**
 	 * Returns the Cypher Service
 	 *
 	 * @return an instance of the Cypher Service
