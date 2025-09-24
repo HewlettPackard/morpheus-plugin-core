@@ -1,5 +1,5 @@
 /*
- *  Copyright 2024 Morpheus Data, LLC.
+ *  Copyright 2025 Morpheus Data, LLC.
  *
  * Licensed under the PLUGIN CORE SOURCE LICENSE (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,14 @@
 
 package com.morpheusdata.core.synchronous;
 
-import com.morpheusdata.core.MorpheusSynchronousIdentityService;
 import com.morpheusdata.core.MorpheusSynchronousDataService;
+import com.morpheusdata.core.MorpheusSynchronousIdentityService;
 import com.morpheusdata.model.Snapshot;
+import com.morpheusdata.model.SnapshotFile;
 import com.morpheusdata.model.projection.SnapshotIdentityProjection;
 
-public interface MorpheusSynchronousSnapshotService extends MorpheusSynchronousDataService<Snapshot, SnapshotIdentityProjection>, MorpheusSynchronousIdentityService<SnapshotIdentityProjection> {
-
-	/**
-	 * Returns the SnapshotFileService for interacting with {@link com.morpheusdata.model.SnapshotFile} via
-	 * the morpheus context
-	 * @return SnapshotFileService
-	 */
-	MorpheusSynchronousSnapshotFileService getFile();
+/**
+ * Context methods for syncing SnapshotFiles in Morpheus
+ */
+public interface MorpheusSynchronousSnapshotFileService extends MorpheusSynchronousDataService<SnapshotFile, SnapshotFile> {
 }
