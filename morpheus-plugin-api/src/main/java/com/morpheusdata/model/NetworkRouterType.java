@@ -87,6 +87,8 @@ public class NetworkRouterType extends MorpheusModel {
 
 	private List<OptionType> routeOptionTypes = new ArrayList<>();
 
+	private List<OptionType> bgpOptionTypes = new ArrayList<>();
+
 	public String getCode() {
 		return code;
 	}
@@ -556,4 +558,9 @@ public class NetworkRouterType extends MorpheusModel {
 
 	public void setRouteOptionTypes(List<OptionType> optionTypes) { this.routeOptionTypes = optionTypes; }
 
+	public List<OptionType> getBgpOptionTypes() {
+		return bgpOptionTypes;
+	}
+
+	public void setBgpOptionTypes(List<OptionType> optionTypes) { this.bgpOptionTypes = optionTypes; }
 }
