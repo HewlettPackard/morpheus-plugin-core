@@ -19,6 +19,7 @@ package com.morpheusdata.core.storage;
 import com.bertramlabs.plugins.karman.CloudFileInterface;
 import com.morpheusdata.model.*;
 import com.morpheusdata.response.ServiceResponse;
+import com.morpheusdata.request.CreateSnapshotRequest;
 
 /**
  * A service for interacting with associated Datastores
@@ -106,4 +107,36 @@ public interface MorpheusDatastoreTypeService {
 	 * @return the success state
 	 */
 	ServiceResponse removeSnapshot(ComputeServer server, Snapshot snapshot);
+
+	/**
+	 * Creates volume snapshots of all volumes associated with a server.
+	 * NOTE: A snapshot for a multi workload instance is structured as follows:
+	 * - Instance snapshot contains the snapshot files of each shared volume among the servers
+	 * - Instance snapshot is the parent snapshot for each of the server snapshots
+	 * - Server snapshot contains snapshot files for each of the server volumes.
+	 * @param instance the instance to create snapshots for
+	 * @param req the snapshot creation request containing
+	 * - forBackup whether this snapshot is for backup purposes
+	 * - forExport whether this snapshot is for export purposes (like an image import)
+	 * @return the success state and a copy of the snapshot
+	 */
+	ServiceResponse<Snapshot> createSnapshot(Instance instance, CreateSnapshotRequest req);
+
+	/**
+	 * Reverts an instance to a snapshot. This is used to revert an instance to a previous state. The caller should
+	 * ensure the instance is powered off during this operation and powered back on to desired user state after this
+	 * operation is complete.
+	 * @param instance the instance to revert the snapshot on
+	 * @param snapshot the snapshot to revert to
+	 * @return the success state and a copy of the snapshot
+	 */
+	ServiceResponse<Snapshot> revertSnapshot(Instance instance, Snapshot snapshot);
+
+	/**
+	 * Deletes snapshot associated with an instance.
+	 * @param instance the instance to delete snapshots for
+	 * @param snapshot the snapshot to delete
+	 * @return the success state
+	 */
+	ServiceResponse removeSnapshot(Instance instance, Snapshot snapshot);
 }
