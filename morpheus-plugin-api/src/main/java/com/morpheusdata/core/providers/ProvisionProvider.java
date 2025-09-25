@@ -459,6 +459,14 @@ public interface ProvisionProvider extends PluginProvider {
 		return new ArrayList<ComputeTypeLayout>();
 	}
 
+	/**
+	 * Indicates if adding preprovisioned servers to an existing instance is supported
+	 * @return Boolean
+	 */
+	default Boolean supportsAddPreprovisionedServer() {
+		return false;
+	}
+
 
 	/**
 	 * Provides methods for interacting with provisioned vms to manage associated snapshots
