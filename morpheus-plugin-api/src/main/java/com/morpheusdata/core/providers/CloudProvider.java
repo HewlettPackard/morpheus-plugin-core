@@ -256,7 +256,9 @@ public interface CloudProvider extends PluginProvider {
 	 * Returns whether a cloud supports {@link SecurityGroup}
 	 * @return Boolean
 	 */
-	Boolean hasSecurityGroups();
+	default Boolean hasSecurityGroups() {
+		return false;
+	}
 
 	/**
 	 * Called when a server should be started. Returning a response of success will cause corresponding updates to usage
