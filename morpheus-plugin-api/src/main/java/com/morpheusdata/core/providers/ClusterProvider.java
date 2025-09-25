@@ -67,6 +67,13 @@ public interface ClusterProvider extends PluginProvider {
 	ServiceResponse deleteCluster(ComputeServerGroup cluster);
 
 	/**
+	 * Called when a server is being deleted. This is a chance to clean up any external resources associated with the server
+	 * @since 1.2.13
+	 * @param server the server details
+	 */
+	ServiceResponse deleteServer(ComputeServer server);
+
+	/**
 	 * Clusters are refreshed periodically by the Morpheus Environment. This includes things like caching of brownfield
 	 * environments and resources such as Networks, Datastores, Resource Pools, etc. This represents the long term sync method that happens
 	 * daily instead of every 5-10 minute cycle
@@ -297,6 +304,20 @@ public interface ClusterProvider extends PluginProvider {
 	default ServiceResponse finalizeLinuxComputeServer(ComputeServerGroup cluster, ComputeServer server,  Map opts) {
 		return ServiceResponse.success();
 	}
+
+	/**
+	 * If the cloud supports IaC based provisioning, return the mapping provider here and implement the {@link com.morpheusdata.core.providers.ProvisionProvider.IacResourceFacet} in your ProvisionProvider
+	 * @since 1.2.13
+	 * @return an instance of a cloud specific IacResourceMappingProvider.
+	 */
+	default IacResourceMappingProvider getIacResourceMappingProvider() { return null; }
+
+	/**
+	 * Grabs available backup providers related to the target cluster plugin.
+	 * @since 1.2.13
+	 * @return Collection of BackupProvider
+	 */
+	default Collection<BackupProvider> getAvailableBackupProviders() {return new ArrayList<BackupProvider>();}
 
 
 }
