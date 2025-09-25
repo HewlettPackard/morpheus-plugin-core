@@ -194,6 +194,17 @@ public interface DatastoreTypeProvider extends PluginProvider {
 	ServiceResponse<StorageVolume> resizeVolume(StorageVolume volume, ComputeServer server, Long newSize);
 
 	/**
+	 * Perform any operations necessary to prepare for a volume attach to a specified server.
+	 * It is typically called as part of volume attach.
+	 * @param volume the current volume to attach
+	 * @param server the server the volume is being attached to (may contain information such as parentServer (hypervisor) or cluster)
+	 * @return the success state of the prepare
+	 */
+	default ServiceResponse<StorageVolume> prepareVolumeAttach(StorageVolume volume, ComputeServer server) {
+		return ServiceResponse.success();
+	}
+
+	/**
 	 * Perform any validations necessary on the target prior to create. The default returns success.
 	 * @param datastore the current datastore being created
 	 * @return the service response containing success state or any errors upon failure
