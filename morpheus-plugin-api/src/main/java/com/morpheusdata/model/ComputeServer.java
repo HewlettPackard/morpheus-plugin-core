@@ -99,6 +99,14 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 	protected String externalDomain;
 	protected String externalFqdn;
 	protected String apiKey;
+
+	/**
+	 * Flags whether this ComputeServer has been provisioned outside
+	 * the context of morpheus. This enables it to be added to an existing
+	 * instance.
+	 * @since 1.2.13
+	 */
+	protected Boolean preProvisioned;
 	@JsonIgnore
 	protected List<StorageVolume> volumes = new ArrayList<>();
 	@JsonIgnore
@@ -1137,6 +1145,15 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 	public void setServerGroupMemberStatus(ServerGroupMemberStatus serverGroupMemberStatus) {
 		this.serverGroupMemberStatus = serverGroupMemberStatus;
 		markDirty("serverGroupMemberStatus", serverGroupMemberStatus);
+	}
+
+	public Boolean getPreProvisioned() {
+		return preProvisioned;
+	}
+
+	public void setPreProvisioned(Boolean preProvisioned) {
+		this.preProvisioned = preProvisioned;
+		markDirty("preProvisioned", preProvisioned);
 	}
 
 	public GuestAgentStatus getGuestAgentStatus() {
