@@ -109,7 +109,7 @@ public interface MorpheusDatastoreTypeService {
 	ServiceResponse removeSnapshot(ComputeServer server, Snapshot snapshot);
 
 	/**
-	 * Creates volume snapshots of all volumes associated with a server.
+	 * Creates volume snapshots of all volumes associated with an instance.
 	 * NOTE: A snapshot for a multi workload instance is structured as follows:
 	 * - Instance snapshot contains the snapshot files of each shared volume among the servers
 	 * - Instance snapshot is the parent snapshot for each of the server snapshots
