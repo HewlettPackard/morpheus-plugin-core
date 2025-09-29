@@ -18,7 +18,6 @@ package com.morpheusdata.core.cloud;
 
 import com.morpheusdata.core.MorpheusDataService;
 import com.morpheusdata.model.DatastoreType;
-import io.reactivex.rxjava3.core.Observable;
 
 /**
  * Context methods for syncing DatastoreType in Morpheus
