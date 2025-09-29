@@ -58,6 +58,7 @@ public class ComputeServerGroup extends MorpheusModel {
 	protected Boolean enabled;
 	protected Boolean managed;
 	protected Boolean discovered;
+	protected Boolean provisionComplete;
 	protected String tags;
 	//service info
 	protected String serviceUrl;
@@ -214,6 +215,14 @@ public class ComputeServerGroup extends MorpheusModel {
 
 	public void setDiscovered(Boolean discovered) {
 		this.discovered = discovered;
+	}
+
+	public Boolean getProvisionComplete() {
+		return provisionComplete;
+	}
+
+	public void setProvisionComplete(Boolean provisionComplete) {
+		this.provisionComplete = provisionComplete;
 	}
 
 	public String getTags() {
@@ -495,6 +504,7 @@ public class ComputeServerGroup extends MorpheusModel {
 		initializing,
 		warning,
 		error,
-		offline
+		offline,
+		deprovisioning
 	}
 }

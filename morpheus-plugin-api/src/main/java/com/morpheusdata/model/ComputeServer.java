@@ -99,6 +99,14 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 	protected String externalDomain;
 	protected String externalFqdn;
 	protected String apiKey;
+
+	/**
+	 * Flags whether this ComputeServer has been provisioned outside
+	 * the context of morpheus. This enables it to be added to an existing
+	 * instance.
+	 * @since 1.2.13
+	 */
+	protected Boolean preProvisioned;
 	@JsonIgnore
 	protected List<StorageVolume> volumes = new ArrayList<>();
 	@JsonIgnore
@@ -146,6 +154,7 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 	protected Boolean guestConsolePreferred = false;
 	protected GuestConsoleType guestConsoleType;
 	protected String consoleKeymap;
+	protected ServerGroupMemberStatus serverGroupMemberStatus;
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected ComputeServerIdentityProjection parentServer;
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
@@ -169,6 +178,8 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 	protected Double hardwareCpuFrequency;
 	protected Boolean systemServer=false;
 	protected String managedBy;
+
+	protected GuestAgentStatus guestAgentStatus = GuestAgentStatus.unknown;
 
 	public String getUuid() {
 		return uuid;
@@ -1127,6 +1138,35 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 		markDirty("devices", devices);
 	}
 
+	public ServerGroupMemberStatus getServerGroupMemberStatus() {
+		return serverGroupMemberStatus;
+	}
+
+	public void setServerGroupMemberStatus(ServerGroupMemberStatus serverGroupMemberStatus) {
+		this.serverGroupMemberStatus = serverGroupMemberStatus;
+		markDirty("serverGroupMemberStatus", serverGroupMemberStatus);
+	}
+
+	public Boolean getPreProvisioned() {
+		return preProvisioned;
+	}
+
+	public void setPreProvisioned(Boolean preProvisioned) {
+		this.preProvisioned = preProvisioned;
+		markDirty("preProvisioned", preProvisioned);
+	}
+
+	public GuestAgentStatus getGuestAgentStatus() {
+		return guestAgentStatus;
+	}
+
+	public void setGuestAgentStatus(GuestAgentStatus guestAgentStatus) {
+
+		this.guestAgentStatus = guestAgentStatus;
+		markDirty("guestAgentStatus", guestAgentStatus);
+	}
+
+
 	public enum GuestConsoleType {
 		disabled,
 		vnc,
@@ -1143,5 +1183,25 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 	public enum CommType {
 		ssh,
 		winrm
+	}
+
+	public enum ServerGroupMemberStatus {
+		online,
+		offline,
+		pending,
+		standby,
+		maintenance,
+		unclean,
+		fenced
+	}
+
+	// GuestAgentStatus represents the guest agent status installed via their respective hypervisor
+	public enum GuestAgentStatus {
+		connected,
+		disconnected,
+		configured,
+		unconfigured,
+		unknown,
+		error
 	}
 }

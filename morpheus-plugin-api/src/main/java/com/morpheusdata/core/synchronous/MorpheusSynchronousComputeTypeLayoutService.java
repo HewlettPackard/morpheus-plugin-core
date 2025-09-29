@@ -16,17 +16,8 @@
 
 package com.morpheusdata.core.synchronous;
 
-import com.morpheusdata.core.MorpheusSynchronousIdentityService;
 import com.morpheusdata.core.MorpheusSynchronousDataService;
-import com.morpheusdata.model.Snapshot;
-import com.morpheusdata.model.projection.SnapshotIdentityProjection;
+import com.morpheusdata.model.ComputeTypeLayout;
 
-public interface MorpheusSynchronousSnapshotService extends MorpheusSynchronousDataService<Snapshot, SnapshotIdentityProjection>, MorpheusSynchronousIdentityService<SnapshotIdentityProjection> {
-
-	/**
-	 * Returns the SnapshotFileService for interacting with {@link com.morpheusdata.model.SnapshotFile} via
-	 * the morpheus context
-	 * @return SnapshotFileService
-	 */
-	MorpheusSynchronousSnapshotFileService getFile();
+public interface MorpheusSynchronousComputeTypeLayoutService extends MorpheusSynchronousDataService<ComputeTypeLayout, ComputeTypeLayout> {
 }

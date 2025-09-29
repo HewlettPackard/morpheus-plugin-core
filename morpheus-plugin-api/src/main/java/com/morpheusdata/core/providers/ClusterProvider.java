@@ -59,6 +59,19 @@ public interface ClusterProvider extends PluginProvider {
 	 */
 	ServiceResponse refresh(ComputeServerGroup cluster);
 
+	/**
+	 * Called when a cluster is being deleted. This is a chance to clean up any external resources associated with the cluster
+	 * @since 1.2.12
+	 * @param cluster the cluster details
+	 */
+	ServiceResponse deleteCluster(ComputeServerGroup cluster);
+
+	/**
+	 * Called when a server is being deleted. This is a chance to clean up any external resources associated with the server
+	 * @since 1.2.13
+	 * @param server the server details
+	 */
+	ServiceResponse deleteServer(ComputeServer server);
 
 	/**
 	 * Clusters are refreshed periodically by the Morpheus Environment. This includes things like caching of brownfield
@@ -71,11 +84,11 @@ public interface ClusterProvider extends PluginProvider {
 	/**
 	 * Validates the server group configuration for a given cluster type.
 	 * @since 1.2.12
-	 * @param type the ComputeServerGroupType
-	 * @param serverGroupConfig the configuration map for the server group
+	 * @param clusterType the ComputeServerGroupType
+	 * @param config the configuration map for the server group
 	 * @return ServiceResponse containing validation results
 	 */
-	ServiceResponse validateServerGroupConfig(ComputeServerGroupType type, Map serverGroupConfig);
+	ServiceResponse validateServerGroupConfig(ComputeServerGroupType clusterType, Map config);
 
 	/**
 	 * Validates the server group for a given cluster.
@@ -279,5 +292,32 @@ public interface ClusterProvider extends PluginProvider {
 	 * @return ServiceResponse indicating success or failure
 	 */
 	ServiceResponse convertClusterToManaged(ComputeServerGroup cluster);
+
+	/**
+	 * Hook for finalizing any configuration on a linux compute server before it is saved, defaults to no-op
+	 * @since 1.2.12
+	 * @param cluster the ComputeServerGroup the server belongs to
+	 * @param server the ComputeServer to finalize
+	 * @param opts additional options
+	 * @return ServiceResponse indicating success or failure
+	 */
+	default ServiceResponse finalizeLinuxComputeServer(ComputeServerGroup cluster, ComputeServer server,  Map opts) {
+		return ServiceResponse.success();
+	}
+
+	/**
+	 * If the cloud supports IaC based provisioning, return the mapping provider here and implement the {@link com.morpheusdata.core.providers.ProvisionProvider.IacResourceFacet} in your ProvisionProvider
+	 * @since 1.2.13
+	 * @return an instance of a cloud specific IacResourceMappingProvider.
+	 */
+	default IacResourceMappingProvider getIacResourceMappingProvider() { return null; }
+
+	/**
+	 * Grabs available backup providers related to the target cluster plugin.
+	 * @since 1.2.13
+	 * @return Collection of BackupProvider
+	 */
+	default Collection<BackupProvider> getAvailableBackupProviders() {return new ArrayList<BackupProvider>();}
+
 
 }

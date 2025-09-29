@@ -31,6 +31,12 @@ import java.util.List;
  */
 public interface MorpheusSnapshotService extends MorpheusDataService<Snapshot, SnapshotIdentityProjection>, MorpheusIdentityService<SnapshotIdentityProjection> {
 
+	/**
+	 * Returns the SnapshotFileService for interacting with {@link com.morpheusdata.model.SnapshotFile} via
+	 * the morpheus context
+	 * @return SnapshotFileService
+	 */
+	MorpheusSnapshotFileService getFile();
 
 	/**
 	 * Fetch the Snapshots given a list of ids
