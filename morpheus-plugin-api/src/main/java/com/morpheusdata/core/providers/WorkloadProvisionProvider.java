@@ -174,6 +174,7 @@ public interface WorkloadProvisionProvider extends ComputeProvisionProvider {
 	 * @author Alex Clement
 	 */
 	public interface ResizeFacet {
+
 		/**
 		 * Request to scale the size of the Workload. Most likely, the implementation will follow that of resizeServer
 		 * as the Workload usually references a ComputeServer. It is up to implementations to create the volumes, set the memory, etc
@@ -202,6 +203,41 @@ public interface WorkloadProvisionProvider extends ComputeProvisionProvider {
 		 * @return Response from API. Errors should be returned in the errors Map with the key being the field name and the error
 		 * message as the value.
 		 * @since 1.2.12
+		 */
+		default ServiceResponse<ValidateResizeWorkloadResponse> validateResizeWorkload(Instance instance, Workload workload, ResizeRequest resizeRequest, Map opts) {
+			ValidateResizeWorkloadResponse response = new ValidateResizeWorkloadResponse();
+			response.allowed = true;
+			response.hotResize = false;
+			return new ServiceResponse<>(true, null, null, response);
+		}
+	}
+
+	/**
+	 * Allows the workload to be resized, with hooks in core to
+	 *
+	 * @since 1.2.13
+	 * @author Mike Carlin
+	 */
+	interface ResizeV2Facet {
+
+		default ServiceResponse<PrepareResizeWorkloadResponse> prepareResizeWorkload(Instance instance, Workload workload, ResizeRequest resizeRequest, Map opts) {
+			return ServiceResponse.success(new PrepareResizeWorkloadResponse());
+		}
+
+		ServiceResponse<ResizeWorkloadResponse> resizeWorkload(Instance instance, Workload workload, ResizeRequest resizeRequest, Map opts);
+
+		/**
+		 * Validates the provided resize options of an instance's workload. A return of success = false will halt the
+		 * resize and display errors.
+		 * <p>
+		 * Note: this functionality in the UI is called 'Reconfigure'.
+		 * @param instance to resize
+		 * @param workload to resize
+		 * @param resizeRequest the resize requested parameters
+		 * @param opts raw + additional options
+		 * @return Response from API. Errors should be returned in the errors Map with the key being the field name and the error
+		 * message as the value.
+		 * @since 1.2.13
 		 */
 		default ServiceResponse<ValidateResizeWorkloadResponse> validateResizeWorkload(Instance instance, Workload workload, ResizeRequest resizeRequest, Map opts) {
 			ValidateResizeWorkloadResponse response = new ValidateResizeWorkloadResponse();
