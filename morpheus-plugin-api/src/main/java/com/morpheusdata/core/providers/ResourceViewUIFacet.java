@@ -26,7 +26,7 @@ import java.util.List;
  *
  * @param <T> The type of MorpheusModel this facet applies to
  * @author Morpheus Development Team
- * @since 0.16.0
+ * @since 1.2.13
  */
 public interface ResourceViewUIFacet<T extends MorpheusModel> extends PluginProvider {
 

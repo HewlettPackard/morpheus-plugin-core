@@ -22,7 +22,7 @@ package com.morpheusdata.model;
  * a full tab implementation.
  *
  * @author Morpheus Development Team
- * @since 0.16.0
+ * @since 1.2.13
  */
 public class DetailEntry {
 
