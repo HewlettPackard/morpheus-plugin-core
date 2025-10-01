@@ -28,7 +28,7 @@ import java.util.List;
  * @author Morpheus Development Team
  * @since 0.16.0
  */
-public interface ResourceViewUIFacet<T extends MorpheusModel> extends UIExtensionProvider {
+public interface ResourceViewUIFacet<T extends MorpheusModel> extends PluginProvider {
 
 	/**
 	 * Get custom details from the plugin to render in the relevant info section
