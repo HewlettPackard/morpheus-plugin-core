@@ -18,10 +18,10 @@ package com.morpheusdata.core.providers;
 
 import com.morpheusdata.core.MorpheusComputeTypeLayoutFactoryService;
 import com.morpheusdata.model.*;
-import com.morpheusdata.request.ConvertToManagedRequest;
-import com.morpheusdata.request.ImportWorkloadRequest;
-import com.morpheusdata.response.ConvertToManagedResponse;
-import com.morpheusdata.response.ImportWorkloadResponse;
+import com.morpheusdata.request.AfterConvertToManagedRequest;
+import com.morpheusdata.request.BeforeConvertToManagedRequest;
+import com.morpheusdata.response.AfterConvertToManagedResponse;
+import com.morpheusdata.response.BeforeConvertToManagedResponse;
 import com.morpheusdata.response.InitializeHypervisorResponse;
 import com.morpheusdata.response.ServiceResponse;
 
@@ -469,6 +469,14 @@ public interface ProvisionProvider extends PluginProvider {
 	}
 
 	/**
+	 * Indicates if adding preprovisioned servers to an existing instance is supported
+	 * @return Boolean
+	 */
+	default Boolean supportsAddPreprovisionedServer() {
+		return false;
+	}
+
+	/**
 	 * Provides methods for interacting with provisioned vms to manage associated snapshots
 	 * @author Alex Clement
 	 * @since 0.15.3
@@ -728,7 +736,8 @@ public interface ProvisionProvider extends PluginProvider {
 	 * @author Mike Carlin
 	 * @since 1.2.13
 	 */
-	public interface ConvertToManagedFacet {
-		ServiceResponse<ConvertToManagedResponse> convertToManaged(ConvertToManagedRequest convertToManagedRequest);
+	interface ConvertToManagedFacet {
+		ServiceResponse<BeforeConvertToManagedResponse> beforeConvertToManaged(BeforeConvertToManagedRequest beforeConvertToManagedRequest);
+		ServiceResponse<AfterConvertToManagedResponse> afterConvertToManaged(AfterConvertToManagedRequest afterConvertToManagedRequest);
 	}
 }

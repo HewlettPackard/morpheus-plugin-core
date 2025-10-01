@@ -2,7 +2,7 @@ package com.morpheusdata.request;
 
 import com.morpheusdata.model.ComputeServer;
 
-public class ConvertToManagedRequest {
+public class BeforeConvertToManagedRequest {
 	public ComputeServer server;
 
 	public ComputeServer getServer() {
