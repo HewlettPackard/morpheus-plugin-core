@@ -21,6 +21,7 @@ import com.morpheusdata.model.provisioning.RemoveWorkloadRequest;
 import com.morpheusdata.model.provisioning.WorkloadRequest;
 import com.morpheusdata.request.ImportWorkloadRequest;
 import com.morpheusdata.request.ResizeRequest;
+import com.morpheusdata.request.ResizeV2Request;
 import com.morpheusdata.response.*;
 
 import java.util.LinkedHashMap;
@@ -219,13 +220,6 @@ public interface WorkloadProvisionProvider extends ComputeProvisionProvider {
 	 * @author Mike Carlin
 	 */
 	interface ResizeV2Facet {
-
-		default ServiceResponse<PrepareResizeWorkloadResponse> prepareResizeWorkload(Instance instance, Workload workload, ResizeRequest resizeRequest, Map opts) {
-			return ServiceResponse.success(new PrepareResizeWorkloadResponse());
-		}
-
-		ServiceResponse<ResizeWorkloadResponse> resizeWorkload(Instance instance, Workload workload, ResizeRequest resizeRequest, Map opts);
-
 		/**
 		 * Validates the provided resize options of an instance's workload. A return of success = false will halt the
 		 * resize and display errors.
@@ -239,12 +233,36 @@ public interface WorkloadProvisionProvider extends ComputeProvisionProvider {
 		 * message as the value.
 		 * @since 1.2.13
 		 */
-		default ServiceResponse<ValidateResizeWorkloadResponse> validateResizeWorkload(Instance instance, Workload workload, ResizeRequest resizeRequest, Map opts) {
-			ValidateResizeWorkloadResponse response = new ValidateResizeWorkloadResponse();
+		default ServiceResponse<ValidateResizeV2WorkloadResponse> validateResizeWorkload(Instance instance, Workload workload, ResizeV2Request resizeRequest, Map opts) {
+			ValidateResizeV2WorkloadResponse response = new ValidateResizeV2WorkloadResponse();
 			response.allowed = true;
 			response.hotResize = false;
 			return new ServiceResponse<>(true, null, null, response);
 		}
+
+		/**
+		 *
+		 * @param instance
+		 * @param workload
+		 * @param resizeRequest
+		 * @param opts
+		 * @return
+		 */
+		default ServiceResponse<PrepareResizeV2WorkloadResponse> prepareResizeWorkload(Instance instance, Workload workload, ResizeV2Request resizeRequest, Map opts) {
+			return ServiceResponse.success(new PrepareResizeV2WorkloadResponse());
+		}
+
+		/**
+		 *
+		 * @param instance
+		 * @param workload
+		 * @param resizeRequest
+		 * @param opts
+		 * @return
+		 */
+		ServiceResponse<ResizeV2WorkloadResponse> resizeWorkload(Instance instance, Workload workload, ResizeV2Request resizeRequest, Map opts);
+
+
 	}
 
 
