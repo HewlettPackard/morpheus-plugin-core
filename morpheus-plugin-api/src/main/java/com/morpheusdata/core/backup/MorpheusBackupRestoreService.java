@@ -25,6 +25,7 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Context methods for interacting with {@link BackupRestore BackupRestores} in Morpheus
@@ -105,5 +106,13 @@ public interface MorpheusBackupRestoreService extends MorpheusDataService<Backup
 	 * @return if the finalize process was triggered successfully
 	 */
 	Single<Boolean> finalizeRestore(com.morpheusdata.model.Workload workload);
+
+	/**
+	 * Trigger the provision finalize process on a restored workload.
+	 * @param workload the workload to be finalized
+	 * @param opts additional options
+	 * @return if the finalize process was triggered successfully
+	 */
+	Single<Boolean> finalizeRestore(com.morpheusdata.model.Workload workload, Map opts);
 
 }

@@ -204,7 +204,6 @@ public interface CloudProvider extends PluginProvider {
 	 * Zones/Clouds sometimes need to have a daily sync for all instances of the same type on a daily basis. An example may be to refresh
 	 * common pricing data that is standard regardless of the cloud account. Rather than doing this once per cloud, it may be better
 	 * to perform it for all the clouds at once.
-	 * 
 	 */
 	default void refreshDailyCloudType() {}
 
@@ -252,6 +251,14 @@ public interface CloudProvider extends PluginProvider {
 	 * @return Boolean
 	 */
 	Boolean hasBareMetal();
+
+	/**
+	 * Returns whether a cloud supports {@link SecurityGroup}
+	 * @return Boolean
+	 */
+	default Boolean hasSecurityGroups() {
+		return false;
+	}
 
 	/**
 	 * Called when a server should be started. Returning a response of success will cause corresponding updates to usage
