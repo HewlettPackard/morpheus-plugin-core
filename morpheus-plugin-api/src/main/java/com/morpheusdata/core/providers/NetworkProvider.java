@@ -20,6 +20,10 @@ import com.morpheusdata.core.util.MorpheusUtils;
 import com.morpheusdata.model.*;
 import com.morpheusdata.model.event.Event;
 import com.morpheusdata.model.provisioning.NetworkConfiguration;
+import com.morpheusdata.model.provisioning.RemoveWorkloadRequest;
+import com.morpheusdata.model.provisioning.WorkloadRequest;
+import com.morpheusdata.response.PrepareWorkloadResponse;
+import com.morpheusdata.response.RemoveWorkloadResponse;
 import com.morpheusdata.response.ServiceResponse;
 import com.morpheusdata.views.HTMLResponse;
 import groovy.util.logging.Slf4j;
@@ -81,7 +85,7 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 	 * @return Collection of NetworkRouterType
 	 */
 	Collection<NetworkRouterType> getRouterTypes();
-	
+
 	Collection<OptionType> getOptionTypes();
 
 	default Boolean isUserVisible() { return false; }
@@ -621,6 +625,26 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 		} else {
 			return ServiceResponse.success();
 		}
+	}
+
+	/**
+	 * This method is called just before a workload is provisioned.  This can be used to perform any pre network
+	 * initialization tasks prior to a VM/Container gets provisioned
+	 * @param workloadRequest
+	 * @return PrepareWorkloadResponse
+	 */
+	default PrepareWorkloadResponse prepareWorkload(WorkloadRequest workloadRequest) {
+		return new PrepareWorkloadResponse();
+	}
+
+	/**
+	 * This method is called right AFTER a workload has been removed from cloud/cluster.  This can be used to perform
+	 * any post network cleanup operations required once a workload is removed.
+	 * @param workloadRequest
+	 * @return RemoveWorkloadResponse
+	 */
+	default RemoveWorkloadResponse deleteWorkload(RemoveWorkloadRequest workloadRequest) {
+		return new RemoveWorkloadResponse();
 	}
 
 	/**
