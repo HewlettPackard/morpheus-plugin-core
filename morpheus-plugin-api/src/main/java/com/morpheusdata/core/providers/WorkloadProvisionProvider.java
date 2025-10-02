@@ -141,6 +141,14 @@ public interface WorkloadProvisionProvider extends ComputeProvisionProvider {
 	}
 
 	/**
+	 * Issues the remote calls necessary to eject all ejectable disks from a workload
+	 * @param workload the Workload we want to eject disks from
+	 * @param opts map of options
+	 * @return Response from API
+	 */
+	default ServiceResponse ejectAllDisksFromWorkload(Workload workload, Map opts) { return ServiceResponse.error(); };
+
+	/**
 	 * Method called after a successful call to runWorkload to obtain the details of the ComputeServer. Implementations
 	 * should not return until the server is successfully created in the underlying cloud or the server fails to
 	 * create.
