@@ -555,7 +555,7 @@ public interface ProvisionProvider extends PluginProvider {
 		}
 
 		/**
-		 * Request to restore a snapshot to a given instanc
+		 * Request to restore a snapshot to a given instance
 		 * @param snapshot snapshot to restore
 		 * @param instance server to restore to snapshot to
 		 * @param opts additional options
@@ -564,6 +564,15 @@ public interface ProvisionProvider extends PluginProvider {
 		default ServiceResponse revertSnapshot(Instance instance, Snapshot snapshot, Map opts){
 			return null;
 		}
+
+		/**
+		 * Request to build a linked clone from a given vm and snapshot
+		 * @param server the vm
+		 * @param snapshot the specific snapshot to use
+		 * @return Success or failure
+		 */
+
+		default ServiceResponse createLinkedClone(ComputeServer server, Snapshot snapshot) { return null; }
 
 	}
 
