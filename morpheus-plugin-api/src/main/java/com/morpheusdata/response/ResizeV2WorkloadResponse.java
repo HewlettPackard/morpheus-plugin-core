@@ -28,4 +28,17 @@ import java.util.Map;
  * This serves as a placeholder for future enhancement.
  */
 public class ResizeV2WorkloadResponse {
+	/**
+	 * Indicates whether we should preserve volumes during removal. If true, we will delete the volume from morpheus
+	 * but not on the datastore. If false, we will delete volumes both from morpheus and on the datastore.
+	 */
+	public Boolean preserveVolumes = false;
+
+	public Boolean getPreserveVolumes() {
+		return preserveVolumes;
+	}
+
+	public void setPreserveVolumes(Boolean preserveVolumes) {
+		this.preserveVolumes = preserveVolumes;
+	}
 }
