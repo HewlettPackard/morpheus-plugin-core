@@ -210,7 +210,13 @@ public interface WorkloadProvisionProvider extends ComputeProvisionProvider {
 		 * @param resizeRequest the resize requested parameters
 		 * @param opts raw + additional options
 		 * @return Response from API. Errors should be returned in the errors Map with the key being the field name and the error
-		 * message as the value.
+		 * message as the value. The possible field names are: "networkInterface", "plan", "volume". Each will result
+		 * in an error for the entire section.
+		 * <p>
+		 * For example, an invalid configuration in the volumes section could be specified like this:
+		 * <pre><code>
+		 *	return ServiceResponse.error('Failed to resize', [volume:'Your error message here.'])
+		 * </code></pre>
 		 * @since 1.2.12
 		 */
 		default ServiceResponse<ValidateResizeWorkloadResponse> validateResizeWorkload(Instance instance, Workload workload, ResizeRequest resizeRequest, Map opts) {
@@ -238,8 +244,14 @@ public interface WorkloadProvisionProvider extends ComputeProvisionProvider {
 		 * @param workload to resize
 		 * @param resizeRequest the resize requested parameters
 		 * @param opts raw + additional options
-		 * @return Response from API. Errors should be returned in the errors Map with the key being the field name and the error
-		 * message as the value.
+		 * @return Response from API.Errors should be returned in the errors Map with the key being the field name and the error
+		 * message as the value. The possible field names are: "networkInterface", "plan", "volume". Each will result
+		 * in an error for the entire section.
+		 * <p>
+		 * For example, an invalid configuration in the volumes section could be specified like this:
+		 * <pre><code>
+		 *	return ServiceResponse.error('Failed to resize', [volume:'Your error message here.'])
+		 * </code></pre>
 		 * @since 1.2.13
 		 */
 		default ServiceResponse<ValidateResizeV2WorkloadResponse> validateResizeWorkload(Instance instance, Workload workload, ResizeV2Request resizeRequest, Map opts) {
