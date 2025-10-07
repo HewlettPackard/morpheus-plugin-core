@@ -648,6 +648,59 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 	}
 
 	/**
+	 * Called for additional validation of of the bgp neighbor input parameters that the provider may require
+	 * @param router {@link NetworkRouter}
+	 * @param neighbor {@link NetworkRouterBgpNeighbor}
+	 * @return An instance of {@link ServiceResponse}
+	 */
+	default ServiceResponse validateBgpNeighbor(NetworkRouter router, NetworkRouterBgpNeighbor neighbor) {
+		return ServiceResponse.success();
+	}
+
+	/**
+	 * This configuration stage is called before the actual bgp neighbor creation phase in case any pre initialization
+	 * work needs to be done on the network infrastructure
+	 * @param router {@link NetworkRouter}
+	 * @param neighbor {@link NetworkRouterBgpNeighbor}
+	 * @param config {@link Map} which contains additional configuration information provided by the framework
+	 * @return An instance of {@link ServiceResponse}
+	 */
+	default ServiceResponse configureBgpNeighbor(NetworkRouter router, NetworkRouterBgpNeighbor neighbor, Map config) {
+		return ServiceResponse.success();
+	}
+
+	/**
+	 * This is called post configure and validation and is where you execute the necessary work on the underlying
+	 * network infrastructure for bgp neighbor creation
+	 * @param router {@link NetworkRouter}
+	 * @param neighbor {@link NetworkRouterBgpNeighbor}
+	 * @return An instance of {@link ServiceResponse}
+	 */
+	default ServiceResponse createBgpNeighbor(NetworkRouter router, NetworkRouterBgpNeighbor neighbor) {
+		return ServiceResponse.success();
+	}
+
+	/**
+	 * Execution step for updating the details of a bgp neighbor
+	 * @param router {@link NetworkRouter}
+	 * @param neighbor {@link NetworkRouterBgpNeighbor}
+	 * @return An instance of {@link ServiceResponse}
+	 */
+	default ServiceResponse updateBgpNeighbor(NetworkRouter router, NetworkRouterBgpNeighbor neighbor) {
+		return ServiceResponse.success();
+	}
+
+	/**
+	 * Execution step for removing a bgp neighbor
+	 * @param router {@link NetworkRouter}
+	 * @param neighbor {@link NetworkRouterBgpNeighbor}
+	 * @return An instance of {@link ServiceResponse}
+	 */
+	default ServiceResponse deleteBgpNeighbor(NetworkRouter router, NetworkRouterBgpNeighbor neighbor) {
+		return ServiceResponse.success();
+	}
+
+	/**
 	 * Integration details provided to your rendering engine
 	 * @param networkServer details of a network server
 	 * @return result of rendering a template
