@@ -17,6 +17,7 @@
 package com.morpheusdata.core.providers;
 
 import com.morpheusdata.core.Plugin;
+import com.morpheusdata.core.util.ClusterTabList;
 import com.morpheusdata.model.*;
 import com.morpheusdata.response.ServiceResponse;
 
@@ -319,5 +320,9 @@ public interface ClusterProvider extends PluginProvider {
 	 */
 	default Collection<BackupProvider> getAvailableBackupProviders() {return new ArrayList<BackupProvider>();}
 
+
+	default ClusterTabList getTabList() {
+		return new ClusterTabList();
+	}
 
 }

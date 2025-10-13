@@ -20,6 +20,10 @@ import com.morpheusdata.core.util.MorpheusUtils;
 import com.morpheusdata.model.*;
 import com.morpheusdata.model.event.Event;
 import com.morpheusdata.model.provisioning.NetworkConfiguration;
+import com.morpheusdata.model.provisioning.RemoveWorkloadRequest;
+import com.morpheusdata.model.provisioning.WorkloadRequest;
+import com.morpheusdata.response.PrepareWorkloadResponse;
+import com.morpheusdata.response.RemoveWorkloadResponse;
 import com.morpheusdata.response.ServiceResponse;
 import com.morpheusdata.views.HTMLResponse;
 import groovy.util.logging.Slf4j;
@@ -81,7 +85,7 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 	 * @return Collection of NetworkRouterType
 	 */
 	Collection<NetworkRouterType> getRouterTypes();
-	
+
 	Collection<OptionType> getOptionTypes();
 
 	default Boolean isUserVisible() { return false; }
@@ -621,6 +625,79 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 		} else {
 			return ServiceResponse.success();
 		}
+	}
+
+	/**
+	 * This method is called just before a workload is provisioned.  This can be used to perform any pre network
+	 * initialization tasks prior to a VM/Container gets provisioned
+	 * @param workloadRequest
+	 * @return PrepareWorkloadResponse
+	 */
+	default PrepareWorkloadResponse prepareWorkload(WorkloadRequest workloadRequest) {
+		return new PrepareWorkloadResponse();
+	}
+
+	/**
+	 * This method is called right AFTER a workload has been removed from cloud/cluster.  This can be used to perform
+	 * any post network cleanup operations required once a workload is removed.
+	 * @param workloadRequest
+	 * @return RemoveWorkloadResponse
+	 */
+	default RemoveWorkloadResponse deleteWorkload(RemoveWorkloadRequest workloadRequest) {
+		return new RemoveWorkloadResponse();
+	}
+
+	/**
+	 * Called for additional validation of of the bgp neighbor input parameters that the provider may require
+	 * @param router {@link NetworkRouter}
+	 * @param neighbor {@link NetworkRouterBgpNeighbor}
+	 * @return An instance of {@link ServiceResponse}
+	 */
+	default ServiceResponse validateBgpNeighbor(NetworkRouter router, NetworkRouterBgpNeighbor neighbor) {
+		return ServiceResponse.success();
+	}
+
+	/**
+	 * This configuration stage is called before the actual bgp neighbor creation phase in case any pre initialization
+	 * work needs to be done on the network infrastructure
+	 * @param router {@link NetworkRouter}
+	 * @param neighbor {@link NetworkRouterBgpNeighbor}
+	 * @param config {@link Map} which contains additional configuration information provided by the framework
+	 * @return An instance of {@link ServiceResponse}
+	 */
+	default ServiceResponse configureBgpNeighbor(NetworkRouter router, NetworkRouterBgpNeighbor neighbor, Map config) {
+		return ServiceResponse.success();
+	}
+
+	/**
+	 * This is called post configure and validation and is where you execute the necessary work on the underlying
+	 * network infrastructure for bgp neighbor creation
+	 * @param router {@link NetworkRouter}
+	 * @param neighbor {@link NetworkRouterBgpNeighbor}
+	 * @return An instance of {@link ServiceResponse}
+	 */
+	default ServiceResponse createBgpNeighbor(NetworkRouter router, NetworkRouterBgpNeighbor neighbor) {
+		return ServiceResponse.success();
+	}
+
+	/**
+	 * Execution step for updating the details of a bgp neighbor
+	 * @param router {@link NetworkRouter}
+	 * @param neighbor {@link NetworkRouterBgpNeighbor}
+	 * @return An instance of {@link ServiceResponse}
+	 */
+	default ServiceResponse updateBgpNeighbor(NetworkRouter router, NetworkRouterBgpNeighbor neighbor) {
+		return ServiceResponse.success();
+	}
+
+	/**
+	 * Execution step for removing a bgp neighbor
+	 * @param router {@link NetworkRouter}
+	 * @param neighbor {@link NetworkRouterBgpNeighbor}
+	 * @return An instance of {@link ServiceResponse}
+	 */
+	default ServiceResponse deleteBgpNeighbor(NetworkRouter router, NetworkRouterBgpNeighbor neighbor) {
+		return ServiceResponse.success();
 	}
 
 	/**

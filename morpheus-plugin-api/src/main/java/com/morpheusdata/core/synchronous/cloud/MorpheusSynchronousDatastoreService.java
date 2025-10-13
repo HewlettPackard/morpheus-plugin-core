@@ -27,4 +27,10 @@ public interface MorpheusSynchronousDatastoreService  extends MorpheusSynchronou
 	 * @return MorpheusSynchronousDatastoreLocationService
 	 */
 	MorpheusSynchronousDatastoreLocationService getLocation();
+
+	/**
+	 * The context for dealing with DatastoreTypes
+	 * @return MorpheusSynchronousCloudDatastoreTypeService
+	 */
+	MorpheusSynchronousCloudDatastoreTypeService getDatastoreType();
 }

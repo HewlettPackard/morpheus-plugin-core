@@ -62,7 +62,7 @@ public class StorageVolume extends StorageVolumeIdentityProjection {
 	protected String poolName;
 	protected String volumeName;
 	protected StorageServer storageServer;
-	
+
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected StorageGroup storageGroup;
 
@@ -89,6 +89,7 @@ public class StorageVolume extends StorageVolumeIdentityProjection {
 	protected String diskMode;
 	protected String wwn;
 	protected Boolean createForMultiAttach = false;
+	protected Boolean activeReplica = false;
 
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	public Account getAccount() {
@@ -611,5 +612,14 @@ public class StorageVolume extends StorageVolumeIdentityProjection {
 	public void setCreateForMultiAttach(Boolean createForMultiAttach) {
 		this.createForMultiAttach = createForMultiAttach;
 		markDirty("createForMultiAttach", createForMultiAttach, this.createForMultiAttach);
+	}
+
+	public Boolean getActiveReplica() {
+		return activeReplica;
+	}
+
+	public void setActiveReplica(Boolean activeReplica) {
+		this.activeReplica = activeReplica;
+		markDirty("activeReplica", activeReplica, this.activeReplica);
 	}
 }

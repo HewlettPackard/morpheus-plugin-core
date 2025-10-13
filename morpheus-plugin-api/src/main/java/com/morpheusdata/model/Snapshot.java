@@ -55,6 +55,8 @@ public class Snapshot extends SnapshotIdentityProjection {
 	protected String uuid;
 	@JsonSerialize(using= ModelCollectionAsIdsOnlySerializer.class)
 	protected List<SnapshotFile> snapshotFiles = new ArrayList<>();
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
+	protected Instance instance;
 
 	public Account getAccount() {
 		return account;
@@ -140,6 +142,15 @@ public class Snapshot extends SnapshotIdentityProjection {
 
 	public void setServer(ComputeServer server) {
 		this.server = server;
+	}
+
+	public Instance getInstance() {
+		return instance;
+	}
+
+	public void setInstance(Instance instance) {
+		this.instance = instance;
+		markDirty("instance", instance);
 	}
 
 	public Long getMaxStorage() {
