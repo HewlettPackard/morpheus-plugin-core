@@ -4,10 +4,14 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.morpheusdata.model.projection.StorageHostGroupIdentityProjection;
 import com.morpheusdata.model.serializers.ModelAsIdOnlySerializer;
 
+import java.util.Collections;
+import java.util.List;
+
 public class StorageHostGroup extends StorageHostGroupIdentityProjection {
 
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	private Account owner;
+	private StorageServer storageServer;
 	private String name;
 	private String code;
 	private String category;
@@ -18,6 +22,13 @@ public class StorageHostGroup extends StorageHostGroupIdentityProjection {
 	private String config;
 	private String status;
 	private String statusMessage;
+	private List<StorageHost> hosts = Collections.EMPTY_LIST;
+	private List<StorageVolume> volumes = Collections.EMPTY_LIST;
+	private List<Account> accounts = Collections.EMPTY_LIST;
+
+	public StorageServer getStorageServer() {return storageServer;}
+
+	public void setStorageServer(StorageServer storageServer) {	this.storageServer = storageServer;	}
 
 	public Account getOwner() {
 		return owner;
@@ -107,5 +118,29 @@ public class StorageHostGroup extends StorageHostGroupIdentityProjection {
 
 	public void setStatusMessage(String statusMessage) {
 		this.statusMessage = statusMessage;
+	}
+
+	public List<StorageHost> getHosts() {
+		return hosts;
+	}
+
+	public void setHosts(List<StorageHost> hosts) {
+		this.hosts = hosts;
+	}
+
+	public List<StorageVolume> getVolumes() {
+		return volumes;
+	}
+
+	public void setVolumes(List<StorageVolume> volumes) {
+		this.volumes = volumes;
+	}
+
+	public List<Account> getAccounts() {
+		return accounts;
+	}
+
+	public void setAccounts(List<Account> accounts) {
+		this.accounts = accounts;
 	}
 }
