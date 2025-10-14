@@ -59,16 +59,24 @@ public class Network extends NetworkIdentityProjection {
 	protected Integer vxlanId;
 	protected String vswitchName;
 	protected String tenantName;
+	protected Boolean ipv4Enabled = true;
+	protected Boolean ipv6Enabled = false;
 	protected Boolean dhcpServer = false;
+	protected Boolean dhcpServerIPv6 = false;
 	protected Boolean hasFloatingIps = false;
 	protected String dhcpIp;
 	protected String gateway;
+	protected String gatewayIPv6;
 	protected String netmask;
+	protected String netmaskIPv6;
 	protected String broadcast;
 	protected String subnetAddress;
 	protected String dnsPrimary;
+	protected String dnsPrimaryIPv6;
 	protected String dnsSecondary;
+	protected String dnsSecondaryIPv6;
 	protected String cidr;
+	protected String cidrIPv6;
 	protected String tftpServer;
 	protected String bootFile;
 	protected String switchId;
@@ -285,6 +293,24 @@ public class Network extends NetworkIdentityProjection {
 		markDirty("tenantName", tenantName);
 	}
 
+	public Boolean getIpv4Enabled() {
+		return ipv4Enabled;
+	}
+
+	public void setIpv4Enabled(Boolean ipv4Enabled) {
+		this.ipv4Enabled = ipv4Enabled;
+		markDirty("ipv4Enabled", ipv4Enabled);
+	}
+
+	public Boolean getIpv6Enabled() {
+		return ipv6Enabled;
+	}
+
+	public void setIpv6Enabled(Boolean ipv6Enabled) {
+		this.ipv6Enabled = ipv6Enabled;
+		markDirty("ipv6Enabled", ipv6Enabled);
+	}
+
 	public Boolean getDhcpServer() {
 		return dhcpServer;
 	}
@@ -292,6 +318,15 @@ public class Network extends NetworkIdentityProjection {
 	public void setDhcpServer(Boolean dhcpServer) {
 		this.dhcpServer = dhcpServer;
 		markDirty("dhcpServer", dhcpServer);
+	}
+
+	public Boolean getDhcpServerIPv6() {
+		return dhcpServerIPv6;
+	}
+
+	public void setDhcpServerIPv6(Boolean dhcpServerIPv6) {
+		this.dhcpServerIPv6 = dhcpServerIPv6;
+		markDirty("dhcpServerIPv6", dhcpServerIPv6);
 	}
 
 	public String getDhcpIp() {
@@ -312,6 +347,15 @@ public class Network extends NetworkIdentityProjection {
 		markDirty("gateway", gateway);
 	}
 
+	public String getGatewayIPv6() {
+		return gatewayIPv6;
+	}
+
+	public void setGatewayIPv6(String gatewayIPv6) {
+		this.gatewayIPv6 = gatewayIPv6;
+		markDirty("gatewayIPv6", gatewayIPv6);
+	}
+
 	public String getNetmask() {
 		return netmask;
 	}
@@ -319,6 +363,15 @@ public class Network extends NetworkIdentityProjection {
 	public void setNetmask(String netmask) {
 		this.netmask = netmask;
 		markDirty("netmask", netmask);
+	}
+
+	public String getNetmaskIPv6() {
+		return netmaskIPv6;
+	}
+
+	public void setNetmaskIPv6(String netmaskIPv6) {
+		this.netmaskIPv6 = netmaskIPv6;
+		markDirty("netmaskIPv6", netmaskIPv6);
 	}
 
 	public String getBroadcast() {
@@ -348,6 +401,15 @@ public class Network extends NetworkIdentityProjection {
 		markDirty("dnsPrimary", dnsPrimary);
 	}
 
+	public String getDnsPrimaryIPv6() {
+		return dnsPrimaryIPv6;
+	}
+
+	public void setDnsPrimaryIPv6(String dnsPrimaryIPv6) {
+		this.dnsPrimaryIPv6 = dnsPrimaryIPv6;
+		markDirty("dnsPrimaryIPv6", dnsPrimaryIPv6);
+	}
+
 	public String getDnsSecondary() {
 		return dnsSecondary;
 	}
@@ -357,6 +419,15 @@ public class Network extends NetworkIdentityProjection {
 		markDirty("dnsSecondary", dnsSecondary);
 	}
 
+	public String getDnsSecondaryIPv6() {
+		return dnsSecondaryIPv6;
+	}
+
+	public void setDnsSecondaryIPv6(String dnsSecondaryIPv6) {
+		this.dnsSecondaryIPv6 = dnsSecondaryIPv6;
+		markDirty("dnsSecondaryIPv6", dnsSecondaryIPv6);
+	}
+
 	public String getCidr() {
 		return cidr;
 	}
@@ -364,6 +435,15 @@ public class Network extends NetworkIdentityProjection {
 	public void setCidr(String cidr) {
 		this.cidr = cidr;
 		markDirty("cidr", cidr);
+	}
+
+	public String getCidrIPv6() {
+		return cidrIPv6;
+	}
+
+	public void setCidrIPv6(String cidrIPv6) {
+		this.cidrIPv6 = cidrIPv6;
+		markDirty("cidrIPv6", cidrIPv6);
 	}
 
 	public String getTftpServer() {
