@@ -3,22 +3,113 @@ package com.morpheusdata.model;
 import org.apache.groovy.util.Maps;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Objects;
 
+/**
+ * Represents the state of a drift check, including its status,
+ * progress, timestamps, and results of executed drift rules.
+ */
 public class DriftState {
-	protected String refType; //associated type of object this drift check is for
-	protected String refId; //associated id of the object this drift check is for
+    protected String code;               // unique code if needed
+    protected String refType;            // associated type of object this drift check is for
+    protected String refId;              // associated id of the object this drift check is for
 
-	DriftStateStatus state; // status of the drift check (e.g., no-drift, drift-detected, error)
-	protected String lastCheckedOn; // last checked timestamp
-	protected String details; // details about the drift state, if any
-	protected String resolvedOn; // timestamp when the drift was resolved, if applicable
-	protected List<String> detectedChanges; // list of detected changes, if any
-	enum DriftStateStatus {
-		NO_DRIFT,
-		DRIFT_DETECTED,
-		ERROR
-	}
-	protected Maps configuration; // configuration details like iSCSI MTU subnet settings etc.
+    protected DriftCheckState state;     // status of the drift check (e.g., pending, in-progress, failed, completed)
+    protected Integer percentComplete = 0; // completion percentage
+    protected String lastUpdatedOn;      // last updated timestamp
+    protected String startedOn;          // start timestamp
+    protected String completedOn;        // completion timestamp
 
+    protected DriftStatus driftStatus;   // status of the drift check (e.g., no-drift, drift-detected, error)
+    protected List<DriftRuleResult> ruleResults = new ArrayList<>(); // list of rules executed and their status
+
+    /** Enum for drift status. */
+    public enum DriftStatus { NO_DRIFT, DRIFT_DETECTED, ERROR }
+
+    /** Enum for drift check status. */
+    public enum DriftCheckStatus { PENDING, IN_PROGRESS, FAILED, COMPLETED }
+
+    /** Enum for check level input. */
+    public enum CheckLevelEnum { ALL, SELECTED, UPDATE }
+
+    /**
+     * Drift rule result structure.
+     */
+    public static class DriftRuleResult {
+        protected String id;                  // unique id
+        protected String ruleName;            // name
+        protected String ruleDescription;     // additional details about the rule
+        protected String ruleType;            // DHCI vs non-DHCI etc.
+        protected Severity severity;          // major / warning / info
+        protected RuleStatus status;          // passed / failed / skipped
+        protected String resultDescription;   // failure details with embedded resource info
+        protected List<String> affectedObjects = new ArrayList<>(); // list of affected objects/resources
+        protected String recommendation;      // how to resolve the issue
+
+        // Getters and setters
+        public String getId() { return id; }
+        public void setId(String id) { this.id = id; }
+
+        public String getRuleName() { return ruleName; }
+        public void setRuleName(String ruleName) { this.ruleName = ruleName; }
+
+        public String getRuleDescription() { return ruleDescription; }
+        public void setRuleDescription(String ruleDescription) { this.ruleDescription = ruleDescription; }
+
+        public String getRuleType() { return ruleType; }
+        public void setRuleType(String ruleType) { this.ruleType = ruleType; }
+
+        public Severity getSeverity() { return severity; }
+        public void setSeverity(Severity severity) { this.severity = severity; }
+
+        public RuleStatus getStatus() { return status; }
+        public void setStatus(RuleStatus status) { this.status = status; }
+
+        public String getResultDescription() { return resultDescription; }
+        public void setResultDescription(String resultDescription) { this.resultDescription = resultDescription; }
+
+        public List<String> getAffectedObjects() { return affectedObjects; }
+        public void setAffectedObjects(List<String> affectedObjects) { this.affectedObjects = affectedObjects; }
+
+        public String getRecommendation() { return recommendation; }
+        public void setRecommendation(String recommendation) { this.recommendation = recommendation; }
+    }
+
+    /** Enum for rule severity. */
+    public enum Severity { MAJOR, WARNING, INFO }
+
+    /** Enum for rule status. */
+    public enum RuleStatus { PASSED, FAILED, SKIPPED }
+
+    // Getters and setters for DriftState
+    public String getCode() { return code; }
+    public void setCode(String code) { this.code = code; }
+
+    public String getRefType() { return refType; }
+    public void setRefType(String refType) { this.refType = refType; }
+
+    public String getRefId() { return refId; }
+    public void setRefId(String refId) { this.refId = refId; }
+
+    public DriftCheckState getState() { return state; }
+    public void setState(DriftCheckState state) { this.state = state; }
+
+    public Integer getPercentComplete() { return percentComplete; }
+    public void setPercentComplete(Integer percentComplete) { this.percentComplete = percentComplete; }
+
+    public String getLastUpdatedOn() { return lastUpdatedOn; }
+    public void setLastUpdatedOn(String lastUpdatedOn) { this.lastUpdatedOn = lastUpdatedOn; }
+
+    public String getStartedOn() { return startedOn; }
+    public void setStartedOn(String startedOn) { this.startedOn = startedOn; }
+
+    public String getCompletedOn() { return completedOn; }
+    public void setCompletedOn(String completedOn) { this.completedOn = completedOn; }
+
+    public DriftStatus getDriftStatus() { return driftStatus; }
+    public void setDriftStatus(DriftStatus driftStatus) { this.driftStatus = driftStatus; }
+
+    public List<DriftRuleResult> getRuleResults() { return ruleResults; }
+    public void setRuleResults(List<DriftRuleResult> ruleResults) { this.ruleResults = ruleResults; }
 }
