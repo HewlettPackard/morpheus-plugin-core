@@ -17,6 +17,7 @@ public class ClusterTabList {
 	Boolean resource = false;
 	Boolean router = false;
 	Boolean service = false;
+	Boolean pool = false;
 
 	public Boolean getNetwork() {
 		return network;
@@ -114,6 +115,10 @@ public class ClusterTabList {
 		this.service = service;
 	}
 
+	public Boolean getPool() { return pool; }
+
+	public void setPool(Boolean pool) { this.pool = pool; }
+
 	public Map<String, Boolean> toMap() {
 		Map<String, Boolean> tabListMap = new HashMap<String, Boolean>();
 		tabListMap.put("network", this.network);
@@ -128,6 +133,7 @@ public class ClusterTabList {
 		tabListMap.put("resource", this.resource);
 		tabListMap.put("router", this.router);
 		tabListMap.put("service", this.service);
+		tabListMap.put("pool", this.pool);
 		return tabListMap;
 	}
 }
