@@ -99,6 +99,7 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 	protected String externalDomain;
 	protected String externalFqdn;
 	protected String apiKey;
+	protected String rawData;
 
 	/**
 	 * Flags whether this ComputeServer has been provisioned outside
@@ -288,6 +289,15 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 	public void setApiKey(String apiKey) {
 		this.apiKey = apiKey;
 		markDirty("apiKey", apiKey);
+	}
+
+	public String getRawData() {
+		return rawData;
+	}
+
+	public void setRawData(String rawData) {
+		this.rawData = rawData;
+		markDirty("rawData", rawData);
 	}
 
 	public Account getAccount() {
