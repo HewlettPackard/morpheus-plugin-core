@@ -8,7 +8,6 @@ public class UpdateDefinition extends UpdateIdentityProjection {
     protected String code;                 // unique code if needed
     protected String version;              // version of the update
     protected String name;                 // name of the update
-    protected String catalogVersion;       // version of the catalog this update came from
     protected String updateType;           // enum to differentiate dryrun vs update, spp vs ilo
 
     protected String refType;              // associated type of object this update is for
@@ -27,8 +26,7 @@ public class UpdateDefinition extends UpdateIdentityProjection {
      */
     public enum OpName {
         UPDATE,      // default - for storage, spp and others
-        DRY_RUN,
-        ILO_UPDATE   // used to differentiate SPP and ILO
+        DRY_RUN
     }
 
     // Getters and setters
@@ -40,9 +38,6 @@ public class UpdateDefinition extends UpdateIdentityProjection {
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
-
-    public String getCatalogVersion() { return catalogVersion; }
-    public void setCatalogVersion(String catalogVersion) { this.catalogVersion = catalogVersion; }
 
     public String getUpdateType() { return updateType; }
     public void setUpdateType(String updateType) { this.updateType = updateType; }
