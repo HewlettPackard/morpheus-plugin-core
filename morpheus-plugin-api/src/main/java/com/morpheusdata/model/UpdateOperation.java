@@ -16,7 +16,7 @@ public class UpdateOperation extends UpdateIdentityProjection {
     private String refType;               // associated type of object this update is for
     private String refId;                 // associated id of the object this update is for
 
-    private String state;                 // status of the update operation (e.g., pending, in-progress, failed, completed)
+    private OpState state;                 // status of the update operation (e.g., pending, in-progress, failed, completed)
     private String statusMessage;         // final status message of the operation
     private int percentComplete = 0;      // completion percentage
 

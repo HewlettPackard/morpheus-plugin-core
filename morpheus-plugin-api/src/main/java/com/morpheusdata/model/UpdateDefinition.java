@@ -8,7 +8,7 @@ public class UpdateDefinition extends UpdateIdentityProjection {
     protected String code;                 // unique code if needed
     protected String version;              // version of the update
     protected String name;                 // name of the update
-    protected String updateType;           // enum to differentiate dryrun vs update, spp vs ilo
+    protected OpType updateType;           // enum to differentiate dryrun vs update, spp vs ilo
 
     protected String refType;              // associated type of object this update is for
     protected String refId;                // associated id of the object this update is for
@@ -24,7 +24,7 @@ public class UpdateDefinition extends UpdateIdentityProjection {
     /**
      * Enum to represent the operation name/type.
      */
-    public enum OpName {
+    public enum OpType {
         UPDATE,      // default - for storage, spp and others
         DRY_RUN
     }
