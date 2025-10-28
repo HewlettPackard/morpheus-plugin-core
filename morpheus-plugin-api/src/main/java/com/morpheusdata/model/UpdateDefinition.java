@@ -1,5 +1,8 @@
 package com.morpheusdata.model;
+
 import com.morpheusdata.model.projection.UpdateIdentityProjection;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Represents the definition of an update, including its metadata, requirements, and type.
@@ -8,27 +11,36 @@ public class UpdateDefinition extends UpdateIdentityProjection {
     protected String code;                 // unique code if needed
     protected String version;              // version of the update
     protected String name;                 // name of the update
-    protected String catalogVersion;       // version of the catalog this update came from
-    protected String updateType;           // enum to differentiate dryrun vs update, spp vs ilo
+    protected OpType updateOpType;         // enum to differentiate dryrun vs update, spp vs ilo
 
     protected String refType;              // associated type of object this update is for
     protected String refId;                // associated id of the object this update is for
-    protected String updateFile;           // file location of the update
+    protected String updateImagePath;      // file location of the update
+    protected ImagePathType imagePathType; // vme_archive_http_path, local_fs_path, external_http_path
 
-    protected Boolean requiresMaintenanceMode = false; // does this require maintenance mode to be enabled
-    protected Boolean requiresRestart = false;         // does this require a service restart
-    protected Boolean supportsRollback = false;        // can this update be rolled back
+    protected Boolean peerPersistence = false;            // true/false, true to indicate peer persistence enabled configuration.
+    protected Boolean requiresMaintenanceMode = false;    // does this require maintenance mode to be enabled.
+    protected Boolean requiresRestart = false;            // does this require a service restart.
+    protected Boolean supportsRollback = false;           // can this update be rolled back. place holder.
 
-    protected Boolean isPlugin = false;    // is this update code located in a plugin
-    protected Object hasMany;              // relationship placeholder (could be typed more strictly)
+    protected Boolean isPlugin = false;                   // is this update code located in a plugin
+    protected Object hasMany;                             // relationship placeholder (could be typed more strictly)
 
     /**
      * Enum to represent the operation name/type.
      */
-    public enum OpName {
+    public enum OpType {
         UPDATE,      // default - for storage, spp and others
-        DRY_RUN,
-        ILO_UPDATE   // used to differentiate SPP and ILO
+        DRY_RUN
+    }
+
+    /**
+     * Enum to represent the image path type.
+     */
+    public enum ImagePathType {
+        VME_ARCHIVE_HTTP_PATH,
+        LOCAL_FS_PATH,
+        EXTERNAL_HTTP_PATH
     }
 
     // Getters and setters
@@ -41,11 +53,8 @@ public class UpdateDefinition extends UpdateIdentityProjection {
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
-    public String getCatalogVersion() { return catalogVersion; }
-    public void setCatalogVersion(String catalogVersion) { this.catalogVersion = catalogVersion; }
-
-    public String getUpdateType() { return updateType; }
-    public void setUpdateType(String updateType) { this.updateType = updateType; }
+    public OpType getUpdateOpType() { return updateOpType; }
+    public void setUpdateOpType(OpType updateOpType) { this.updateOpType = updateOpType; }
 
     public String getRefType() { return refType; }
     public void setRefType(String refType) { this.refType = refType; }
@@ -53,8 +62,17 @@ public class UpdateDefinition extends UpdateIdentityProjection {
     public String getRefId() { return refId; }
     public void setRefId(String refId) { this.refId = refId; }
 
-    public String getUpdateFile() { return updateFile; }
-    public void setUpdateFile(String updateFile) { this.updateFile = updateFile; }
+    public String getUpdateImagePath() { return updateImagePath; }
+    public void setUpdateImagePath(String updateImagePath) { this.updateImagePath = updateImagePath; }
+
+    public ImagePathType getImagePathType() { return imagePathType; }
+    public void setImagePathType(ImagePathType imagePathType) { this.imagePathType = imagePathType; }
+
+    public List<String> getValidateRules() { return validateRules; }
+    public void setValidateRules(List<String> validateRules) { this.validateRules = validateRules; }
+
+    public Boolean getPeerPersistence() { return peerPersistence; }
+    public void setPeerPersistence(Boolean peerPersistence) { this.peerPersistence = peerPersistence; }
 
     public Boolean getRequiresMaintenanceMode() { return requiresMaintenanceMode; }
     public void setRequiresMaintenanceMode(Boolean requiresMaintenanceMode) { this.requiresMaintenanceMode = requiresMaintenanceMode; }

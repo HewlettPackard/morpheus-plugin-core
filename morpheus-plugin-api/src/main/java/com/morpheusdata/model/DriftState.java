@@ -17,9 +17,9 @@ public class DriftState {
 
     protected DriftCheckState state;     // status of the drift check (e.g., pending, in-progress, failed, completed)
     protected Integer percentComplete = 0; // completion percentage
-    protected String lastUpdatedOn;      // last updated timestamp
-    protected String startedOn;          // start timestamp
-    protected String completedOn;        // completion timestamp
+
+    private Instant startedAt;            // start timestamp
+    private Instant completedAt;          // completion timestamp
 
     protected DriftStatus driftStatus;   // status of the drift check (e.g., no-drift, drift-detected, error)
     protected List<DriftRuleResult> ruleResults = new ArrayList<>(); // list of rules executed and their status
@@ -29,9 +29,6 @@ public class DriftState {
 
     /** Enum for drift check status. */
     public enum DriftCheckStatus { PENDING, IN_PROGRESS, FAILED, COMPLETED }
-
-    /** Enum for check level input. */
-    public enum CheckLevelEnum { ALL, SELECTED, UPDATE }
 
     /**
      * Drift rule result structure.
@@ -98,14 +95,11 @@ public class DriftState {
     public Integer getPercentComplete() { return percentComplete; }
     public void setPercentComplete(Integer percentComplete) { this.percentComplete = percentComplete; }
 
-    public String getLastUpdatedOn() { return lastUpdatedOn; }
-    public void setLastUpdatedOn(String lastUpdatedOn) { this.lastUpdatedOn = lastUpdatedOn; }
+    public Instant getStartedAt() { return startedAt; }
+    public void setStartedOn(Instant startedAt) { this.startedAt = startedAt; }
 
-    public String getStartedOn() { return startedOn; }
-    public void setStartedOn(String startedOn) { this.startedOn = startedOn; }
-
-    public String getCompletedOn() { return completedOn; }
-    public void setCompletedOn(String completedOn) { this.completedOn = completedOn; }
+    public Instant getCompletedAt() { return completedAt; }
+    public void setCompletedAt(Instant completedAt) { this.completedAt = completedAt; }
 
     public DriftStatus getDriftStatus() { return driftStatus; }
     public void setDriftStatus(DriftStatus driftStatus) { this.driftStatus = driftStatus; }
