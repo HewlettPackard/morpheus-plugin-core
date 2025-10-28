@@ -12,7 +12,7 @@ public class CheckLevel {
     protected String refId;             // associated id of the object this drift check is for
     protected CheckLevelEnum checkLevel; // level of the drift check (e.g., all, update)
     protected List<String> driftRules = new ArrayList<>(); // Mandatory when checkLevel = TARGETED & ignored for other levels
-    protected List<String> excludeDriftRules = new ArrayList<>(); // use this if some rules need to excluded from execution.
+    protected List<String> excludeDriftRules = new ArrayList<>(); // use this if some rules need to excluded from execution when checkLevel=ALL or UPDATE
 
     /**
      * Enum for levels sent during input.

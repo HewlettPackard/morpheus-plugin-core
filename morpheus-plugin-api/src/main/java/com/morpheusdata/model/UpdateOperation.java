@@ -20,8 +20,8 @@ public class UpdateOperation extends UpdateIdentityProjection {
     private String statusMessage;         // final status message of the operation
     private int percentComplete = 0;      // completion percentage
 
-    private Instant startedOn;            // start timestamp
-    private Instant completedOn;          // completion timestamp
+    private Instant startedAt;            // start timestamp
+    private Instant completedAt;          // completion timestamp
 
     // List of operation entries (flattened structure)
     private List<OpEntry> opEntry = new ArrayList<>();
@@ -38,7 +38,6 @@ public class UpdateOperation extends UpdateIdentityProjection {
         UNKNOWN
     }
 
-
     /**
      * Enum representing the state of the step being performed.
      */
@@ -51,9 +50,9 @@ public class UpdateOperation extends UpdateIdentityProjection {
      * Represents a single step in the update operation.
      */
     public static class OpEntry {
-        private String name;         // name of the step, can repeat
+        private String name;         // name of the step, can repeat. required for storage. Can be empty.
         private List<String> message = new ArrayList<>(); // message(s) of the step
-        private StepState state;     // PASSED/FAILED
+        private StepState state;     // PASSED/FAILED, required for storage. Is be optional. Can be empty.
 
         public String getName() { return name; }
         public void setName(String name) { this.name = name; }
@@ -90,11 +89,11 @@ public class UpdateOperation extends UpdateIdentityProjection {
     public int getPercentComplete() { return percentComplete; }
     public void setPercentComplete(int percentComplete) { this.percentComplete = percentComplete; }
 
-    public Instant getStartedOn() { return startedOn; }
-    public void setStartedOn(Instant startedOn) { this.startedOn = startedOn; }
+    public Instant getStartedAt() { return startedAt; }
+    public void setStartedAt(Instant startedAt) { this.startedAt = startedAt; }
 
-    public Instant getCompletedOn() { return completedOn; }
-    public void setCompletedOn(Instant completedOn) { this.completedOn = completedOn; }
+    public Instant getCompletedAt() { return completedAt; }
+    public void setCompletedAt(Instant completedAt) { this.completedAt = completedAt; }
 
     public List<OpEntry> getOpEntry() { return opEntry; }
     public void setOpEntry(List<OpEntry> opEntry) { this.opEntry = opEntry; }
