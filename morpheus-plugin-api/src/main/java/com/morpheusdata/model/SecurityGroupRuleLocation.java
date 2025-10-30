@@ -23,7 +23,7 @@ import com.morpheusdata.model.serializers.ModelAsIdOnlySerializer;
 
 public class SecurityGroupRuleLocation extends MorpheusModel {
 
-    protected SecurityGroupRuleIdentityProjection securityGroupRule;
+    protected SecurityGroupRule securityGroupRule;
     protected String code;
     protected String category;
     protected String name;
@@ -402,11 +402,11 @@ public class SecurityGroupRuleLocation extends MorpheusModel {
         this.syncSource = syncSource;
     }
 
-    public SecurityGroupRuleIdentityProjection getSecurityGroupRule() {
+    public SecurityGroupRule getSecurityGroupRule() {
         return securityGroupRule;
     }
 
-    public void setSecurityGroupRule(SecurityGroupRuleIdentityProjection securityGroupRule) {
+    public void setSecurityGroupRule(SecurityGroupRule securityGroupRule) {
         this.securityGroupRule = securityGroupRule;
     }
 }
