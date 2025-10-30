@@ -16,21 +16,31 @@
 
 package com.morpheusdata.model.projection;
 
+import com.morpheusdata.model.SecurityGroup;
+import com.morpheusdata.model.SecurityGroupRuleLocation;
 import com.morpheusdata.model.projection.MorpheusIdentityModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class SecurityGroupRuleIdentityProjection extends MorpheusIdentityModel {
 
 	public SecurityGroupRuleIdentityProjection(){}
 
-	public SecurityGroupRuleIdentityProjection(Long id, String name, String externalId) {
+	public SecurityGroupRuleIdentityProjection(Long id, String name, String externalId, SecurityGroupIdentityProjection securityGroup, List<SecurityGroupRuleLocation> locations) {
 		this.id = id;
 		this.name = name;
 		this.externalId = externalId;
+		this.securityGroup = securityGroup;
+		this.locations = locations;
 	}
 
 	protected String name;
 	protected String externalId;
+	protected SecurityGroupIdentityProjection securityGroup;
+	protected List<SecurityGroupRuleLocation> locations = new ArrayList<>();
+
 
 	public String getName() {
 		return name;
@@ -46,5 +56,21 @@ public class SecurityGroupRuleIdentityProjection extends MorpheusIdentityModel {
 
 	public void setExternalId(String externalId) {
 		this.externalId = externalId;
+	}
+
+	public SecurityGroupIdentityProjection getSecurityGroup() {
+		return securityGroup;
+	}
+
+	public void setSecurityGroup(SecurityGroupIdentityProjection securityGroup) {
+		this.securityGroup = securityGroup;
+	}
+
+	public List<SecurityGroupRuleLocation> getLocations() {
+		return locations;
+	}
+
+	public void setLocations(List<SecurityGroupRuleLocation> locations) {
+		this.locations = locations;
 	}
 }
