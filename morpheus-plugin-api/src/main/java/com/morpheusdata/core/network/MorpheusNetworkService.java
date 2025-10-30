@@ -107,6 +107,13 @@ public interface MorpheusNetworkService extends MorpheusDataService<Network, Net
 	MorpheusNetworkProxyService getNetworkProxy();
 
 	/**
+	 * Returns the {@link MorpheusNetworkGroupService} used for performing updates/queries on {@link NetworkGroup} related assets
+	 * within Morpheus
+	 * @return An instance of the {@link MorpheusNetworkGroupService}
+	 */
+	MorpheusNetworkGroupService getNetworkGroup();
+
+	/**
 	 * Used for updating the status of a {@link NetworkPoolServer} integration.
 	 * @param poolServer the pool integration with which we want to update the status.
 	 * @param status the status of the pool server (ok,syncing,error)
