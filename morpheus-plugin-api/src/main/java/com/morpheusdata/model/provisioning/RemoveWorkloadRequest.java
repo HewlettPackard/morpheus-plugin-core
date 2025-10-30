@@ -16,6 +16,9 @@
 
 package com.morpheusdata.model.provisioning;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Parameters for removing a workload
  *
@@ -23,6 +26,8 @@ package com.morpheusdata.model.provisioning;
  * @since 1.2.6
  */
 public class RemoveWorkloadRequest {
+	public Map<String,Object> options;
+
 	/**
 	 * Whether the workload should be forcibly removed
 	 * <p>
@@ -30,4 +35,28 @@ public class RemoveWorkloadRequest {
 	 * is thrown.
 	 */
 	public boolean force;
+
+	public Object getOption(String key) {
+		if (this.options != null) {
+			return this.options.get(key);
+		}
+		else {
+			return null;
+		}
+	}
+
+	public void setOption(String key, Object value) {
+		if (this.options == null) {
+			this.options = new HashMap();
+		}
+		this.options.put(key, value);
+	}
+
+	public Map<String, Object> getOptions() {
+		return this.options;
+	}
+
+	public void setOptions(Map<String, Object> options) {
+		this.options = options;
+	}
 }

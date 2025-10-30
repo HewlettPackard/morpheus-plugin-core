@@ -86,6 +86,16 @@ public interface ResourceProvisionProvider extends ProvisionProvider {
 	ServiceResponse destroyInstance(Instance instance, Map opts);
 
 	/**
+	 * Returns the data necessary for Morpheus to clone an instance, specifically the necessary images and snapshots
+	 * @param instance the new instance object
+	 * @param opts additional configuration options that may have been passed during provisioning
+	 * @return A PrepareCloneInstanceResponse object with the necessary information
+	 */
+	default ServiceResponse<PrepareCloneInstanceResponse> prepareCloneInstance(Instance instance, Map opts) {
+		return null;
+	}
+
+	/**
 	 * Provides methods for provisioning Apps
 	 *
 	 * @since 0.15.4

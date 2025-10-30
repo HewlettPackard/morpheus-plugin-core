@@ -1,0 +1,8 @@
+package com.morpheusdata.core.synchronous.network;
+
+import com.morpheusdata.core.MorpheusSynchronousDataService;
+import com.morpheusdata.model.NetworkRouterBgpNeighbor;
+import com.morpheusdata.model.projection.NetworkRouterBgpNeighborIdentityProjection;
+
+public interface MorpheusSynchronousNetworkBgpService extends MorpheusSynchronousDataService<NetworkRouterBgpNeighbor, NetworkRouterBgpNeighborIdentityProjection> {
+}

@@ -24,6 +24,7 @@ import org.apache.http.*;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.NTCredentials;
 import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.cookie.Cookie;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.ProxyAuthenticationStrategy;
 import org.apache.http.client.HttpClient;
@@ -964,7 +965,12 @@ public class HttpApiClient {
 		String data = rawCookie.split(name + "=")[1].split(";")[0];
 		String value = "";
 		if (data != null && data.length() > 0) {
-			value = data.substring(1, data.length() - 1);
+			if (data.startsWith("\"") && data.endsWith("\"")) {
+				//remove the quotes
+				value = data.substring(1, data.length() - 1);
+			} else {
+				value = data;
+			}
 		}
 		Map<String, String> cookieMap = new LinkedHashMap<>();
 		cookieMap.put(name, value);
@@ -1171,6 +1177,14 @@ public class HttpApiClient {
 				log.error("Error Shutting Down Keep-Alive {}", ex.getMessage(), ex);
 			}
 		}
+	}
+
+	/**
+	 * Return the current cookies within the client cookie store.
+	 * @return Returns an immutable array of {@link Cookie cookies} that this HTTP state currently contains.
+	 */
+	public List<Cookie> getCookies() {
+		return cookieStore.getCookies();
 	}
 
 	@FunctionalInterface

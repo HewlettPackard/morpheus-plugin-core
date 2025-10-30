@@ -21,6 +21,7 @@ import com.morpheusdata.model.provisioning.RemoveWorkloadRequest;
 import com.morpheusdata.model.provisioning.WorkloadRequest;
 import com.morpheusdata.request.ImportWorkloadRequest;
 import com.morpheusdata.request.ResizeRequest;
+import com.morpheusdata.request.ResizeV2Request;
 import com.morpheusdata.response.*;
 
 import java.util.LinkedHashMap;
@@ -140,6 +141,14 @@ public interface WorkloadProvisionProvider extends ComputeProvisionProvider {
 	}
 
 	/**
+	 * Issues the remote calls necessary to eject all ejectable disks from a workload
+	 * @param workload the Workload we want to eject disks from
+	 * @param opts map of options
+	 * @return Response from API
+	 */
+	default ServiceResponse ejectAllDisksFromWorkload(Workload workload, Map opts) { return ServiceResponse.error(); };
+
+	/**
 	 * Method called after a successful call to runWorkload to obtain the details of the ComputeServer. Implementations
 	 * should not return until the server is successfully created in the underlying cloud or the server fails to
 	 * create.
@@ -174,6 +183,7 @@ public interface WorkloadProvisionProvider extends ComputeProvisionProvider {
 	 * @author Alex Clement
 	 */
 	public interface ResizeFacet {
+
 		/**
 		 * Request to scale the size of the Workload. Most likely, the implementation will follow that of resizeServer
 		 * as the Workload usually references a ComputeServer. It is up to implementations to create the volumes, set the memory, etc
@@ -200,7 +210,13 @@ public interface WorkloadProvisionProvider extends ComputeProvisionProvider {
 		 * @param resizeRequest the resize requested parameters
 		 * @param opts raw + additional options
 		 * @return Response from API. Errors should be returned in the errors Map with the key being the field name and the error
-		 * message as the value.
+		 * message as the value. The possible field names are: "networkInterface", "plan", "volume". Each will result
+		 * in an error for the entire section.
+		 * <p>
+		 * For example, an invalid configuration in the volumes section could be specified like this:
+		 * <pre><code>
+		 *	return ServiceResponse.error('Failed to resize', [volume:'Your error message here.'])
+		 * </code></pre>
 		 * @since 1.2.12
 		 */
 		default ServiceResponse<ValidateResizeWorkloadResponse> validateResizeWorkload(Instance instance, Workload workload, ResizeRequest resizeRequest, Map opts) {
@@ -209,6 +225,77 @@ public interface WorkloadProvisionProvider extends ComputeProvisionProvider {
 			response.hotResize = false;
 			return new ServiceResponse<>(true, null, null, response);
 		}
+	}
+
+	/**
+	 * Allows the workload to be resized with assistance in core for common concerns like adding/removing models, IPAM,
+	 * storage and network provider hooks.
+	 *
+	 * @since 1.2.13
+	 * @author Mike Carlin
+	 */
+	interface ResizeV2Facet {
+		/**
+		 * Validates the provided resize options of an instance's workload. A return of success = false will halt the
+		 * resize and display errors.
+		 * <p>
+		 * Note: this functionality in the UI is called 'Reconfigure'.
+		 * @param instance to resize
+		 * @param workload to resize
+		 * @param resizeRequest the resize requested parameters
+		 * @param opts raw + additional options
+		 * @return Response from API.Errors should be returned in the errors Map with the key being the field name and the error
+		 * message as the value. The possible field names are: "networkInterface", "plan", "volume". Each will result
+		 * in an error for the entire section.
+		 * <p>
+		 * For example, an invalid configuration in the volumes section could be specified like this:
+		 * <pre><code>
+		 *	return ServiceResponse.error('Failed to resize', [volume:'Your error message here.'])
+		 * </code></pre>
+		 * @since 1.2.13
+		 */
+		default ServiceResponse<ValidateResizeV2WorkloadResponse> validateResizeWorkload(Instance instance, Workload workload, ResizeV2Request resizeRequest, Map opts) {
+			ValidateResizeV2WorkloadResponse response = new ValidateResizeV2WorkloadResponse();
+			response.allowed = true;
+			response.hotResize = false;
+			return new ServiceResponse<>(true, null, null, response);
+		}
+
+		/**
+		 * Prepares the resize operation.
+		 * <p>
+		 * This gives the plugin a chance to modify anything about the request before core initiates IPAM,
+		 * storage provider, and network provider calls.
+		 * @param instance The parent instance for the workload
+		 * @param workload The workload to resize
+		 * @param resizeRequest The request containing what's to be done in the resize operation
+		 * @param opts raw + additional options. This will be passed to each call along in the resize flow and can
+		 *             be used to carry state between calls.
+		 * @return Response indicating success of operation
+		 */
+		default ServiceResponse<PrepareResizeV2WorkloadResponse> prepareResizeWorkload(Instance instance, Workload workload, ResizeV2Request resizeRequest, Map opts) {
+			return ServiceResponse.success(new PrepareResizeV2WorkloadResponse());
+		}
+
+
+		/**
+		 * Request to scale the size of the Workload.
+		 * <p>
+		 * This is a chance for the plugin to take care of anything host related when adding/updating/deleting the volumes/nics/controllers.
+		 * Any updates can be persisted into the models. With the return of a successful response, the following will occur:
+		 * <ul>
+		 *    <li>The ServicePlan, memory, cores, coresPerSocket, maxStorage values defined on ResizeRequest will be
+		 *        set on the Workload and ComputeServer</li>
+		 *    <li>Any model deletions specified in the resize request will cleaned up with their respective providers/IPAM
+		 *        and deleted from the database. There is no need for the plugin to make calls to remove them.</li>
+		 * </ul>
+		 * @param instance The parent instance for the workload
+		 * @param workload The workload to resize
+		 * @param resizeRequest The request containing what's to be done in the resize operation
+		 * @param opts raw + additional options.
+		 * @return Response indicating success of operation
+		 */
+		ServiceResponse<ResizeV2WorkloadResponse> resizeWorkload(Instance instance, Workload workload, ResizeV2Request resizeRequest, Map opts);
 	}
 
 

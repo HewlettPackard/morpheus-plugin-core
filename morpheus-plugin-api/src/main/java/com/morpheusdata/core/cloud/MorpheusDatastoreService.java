@@ -66,4 +66,16 @@ public interface MorpheusDatastoreService extends MorpheusDataService<Datastore,
 	 */
 	Single<Boolean> remove(List<DatastoreIdentity> datastores, CloudPoolIdentity zonePool);
 
+	/**
+	 * The context for dealing with DatastoreLocations
+	 * @return MorpheusSynchronousDatastoreLocationService
+	 */
+	MorpheusDatastoreLocationService getLocation();
+
+	/**
+	 * The context for dealing with DatastoreTypes
+	 * @return MorpheusSynchronousCloudDatastoreTypeService
+	 */
+	MorpheusCloudDatastoreTypeService getDatastoreType();
+
 }

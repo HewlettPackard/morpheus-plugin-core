@@ -48,6 +48,13 @@ public interface MorpheusNetworkRouterService extends MorpheusDataService<Networ
 	 */
 	MorpheusNetworkRouterNATService getNat();
 
+	/**
+	 * Returns the {@link MorpheusNetworkBgpService} used for performing updates/queries on {@link NetworkRouterBgpNeighbor} related
+	 * object within Morpheus
+	 * @return An instance of {@link MorpheusNetworkBgpService}
+	 */
+	MorpheusNetworkBgpService getBgp();
+
 	//Network Router ORM Object Methods
 	/**
 	 * Lists all network projection objects for a specified integration id.

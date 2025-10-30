@@ -18,9 +18,11 @@ package com.morpheusdata.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.morpheusdata.model.projection.InstanceIdentityProjection;
+import com.morpheusdata.model.projection.SnapshotIdentityProjection;
 import com.morpheusdata.model.serializers.ModelAsIdOnlySerializer;
 import com.morpheusdata.model.serializers.ModelCollectionAsIdsOnlySerializer;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -90,6 +92,8 @@ public class Instance extends InstanceIdentityProjection {
 	protected User createdBy;
 	public List<UserGroup> userGroups;
 	protected List<MetadataTag> metadata;
+	@JsonSerialize(using= ModelCollectionAsIdsOnlySerializer.class)
+	protected List<SnapshotIdentityProjection> snapshots = new ArrayList<>();
 
 	public User getCreatedBy() {
 		return createdBy;
@@ -516,6 +520,15 @@ public class Instance extends InstanceIdentityProjection {
 	public void setUserGroups(List<UserGroup> userGroups) {
 		this.userGroups = userGroups;
 		markDirty("userGroups", userGroups);
+	}
+
+	public List<SnapshotIdentityProjection> getSnapshots() {
+		return snapshots;
+	}
+
+	public void setSnapshots(List<SnapshotIdentityProjection> snapshots) {
+		this.snapshots = snapshots;
+		markDirty("snapshots", snapshots);
 	}
 
 
