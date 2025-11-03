@@ -24,6 +24,21 @@ import com.morpheusdata.response.ServiceResponse;
 
 import java.util.Map;
 
+/**
+ * Provides methods for managing security groups and security group rules within a cloud integration.
+ * This interface enables plugin developers to create, update, and delete security groups and their associated
+ * rules in external cloud systems.
+ * <p>
+ * Security groups define firewall rules that control inbound and outbound traffic to resources. This provider
+ * allows Morpheus to synchronize and manage these security configurations across different cloud platforms.
+ * </p>
+ *
+ * @since 0.15.1
+ * @author David Estes
+ * @see SecurityGroup
+ * @see SecurityGroupRule
+ * @see NetworkProvider
+ */
 public interface  SecurityGroupProvider extends PluginProvider {
 
 	/**

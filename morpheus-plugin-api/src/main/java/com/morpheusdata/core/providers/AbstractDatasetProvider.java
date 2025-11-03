@@ -25,11 +25,19 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Base class 
+ * Abstract base class for implementing a {@link DatasetProvider}.
+ * This class provides common functionality for dataset providers which are used to populate
+ * dynamic dropdown lists and data sources in the Morpheus UI.
+ * <p>
+ * Datasets can be used for option types, providing dynamic lists of values based on context such as
+ * cloud selection, network selection, or custom data sources.
+ * </p>
+ *
+ * @param <T> The Model class type for this dataset - or just basic types for fixed lists
+ * @param <V> The "value" or identifier type on the map of option items - usually a Long or a String
  * @author bdwheeler
  * @since 0.15.1
- * @param <T> The Model class type for this dataset - or just basic types for fixed lists
- * @param <V> The "value" or identifier type on the map of option items - usually a long or a string
+ * @see DatasetProvider
  */
 public abstract class AbstractDatasetProvider<T, V> implements DatasetProvider<T, V> {
 

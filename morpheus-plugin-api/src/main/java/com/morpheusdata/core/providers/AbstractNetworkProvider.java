@@ -19,6 +19,19 @@ package com.morpheusdata.core.providers;
 import com.morpheusdata.views.HandlebarsRenderer;
 import com.morpheusdata.views.Renderer;
 
+/**
+ * Abstract base class for implementing a {@link NetworkProvider}.
+ * This class provides a default implementation of the {@link #getRenderer()} method that creates and configures
+ * a HandlebarsRenderer with common helpers for asset management, nonce generation, and internationalization.
+ * <p>
+ * Plugin developers should extend this class when implementing a NetworkProvider to inherit the default
+ * rendering capabilities.
+ * </p>
+ *
+ * @since 0.15.1
+ * @author Bob Whiton, Dustin DeYoung
+ * @see NetworkProvider
+ */
 public abstract class AbstractNetworkProvider implements NetworkProvider {
 	private HandlebarsRenderer renderer;
 

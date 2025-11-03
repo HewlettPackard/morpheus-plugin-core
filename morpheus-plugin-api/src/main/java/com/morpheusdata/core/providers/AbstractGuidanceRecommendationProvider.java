@@ -19,6 +19,19 @@ package com.morpheusdata.core.providers;
 import com.morpheusdata.views.HandlebarsRenderer;
 import com.morpheusdata.views.Renderer;
 
+/**
+ * Abstract base class for implementing a {@link GuidanceRecommendationProvider}.
+ * This class provides a default implementation of the {@link #getRenderer()} method that creates and configures
+ * a HandlebarsRenderer with common helpers for asset management, nonce generation, and internationalization.
+ * <p>
+ * Plugin developers should extend this class when implementing a GuidanceRecommendationProvider to provide
+ * custom recommendations and guidance within the Morpheus UI.
+ * </p>
+ *
+ * @since 1.1.5
+ * @author David Estes
+ * @see GuidanceRecommendationProvider
+ */
 public abstract class AbstractGuidanceRecommendationProvider implements GuidanceRecommendationProvider {
 	private HandlebarsRenderer renderer;
 

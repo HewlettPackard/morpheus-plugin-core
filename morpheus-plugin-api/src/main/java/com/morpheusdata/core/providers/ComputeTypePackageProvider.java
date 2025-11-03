@@ -27,8 +27,24 @@ import com.morpheusdata.views.HTMLResponse;
 
 import java.util.List;
 
-/*
- * Provides a standard set of methods for using creating and managing ComputeTypePackage objects
+/**
+ * Provides a standard set of methods for creating and managing {@link ComputeServerGroupPackage} objects.
+ * This interface enables plugin developers to define custom package types that can be installed, upgraded,
+ * and deleted on compute server groups (clusters).
+ * <p>
+ * Package providers are commonly used for cluster add-ons such as:
+ * <ul>
+ *   <li>CNI plugins (Calico, Flannel, etc.)</li>
+ *   <li>Ingress controllers</li>
+ *   <li>Monitoring and logging solutions</li>
+ *   <li>Storage drivers</li>
+ * </ul>
+ * </p>
+ *
+ * @since 1.2.4
+ * @author David Estes
+ * @see ComputeServerGroupPackage
+ * @see ClusterProvider
  */
 public interface ComputeTypePackageProvider extends PluginProvider {
 

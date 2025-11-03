@@ -19,6 +19,23 @@ package com.morpheusdata.core.providers;
 import com.morpheusdata.model.Cloud;
 import com.morpheusdata.response.ServiceResponse;
 
+/**
+ * Provides lifecycle hooks for initializing and cleaning up cloud-scoped providers.
+ * This interface is typically implemented by providers that need to perform setup or teardown
+ * operations when a cloud integration is added or removed from Morpheus.
+ * <p>
+ * Use cases include:
+ * <ul>
+ *   <li>Registering cloud-specific resources or services</li>
+ *   <li>Setting up initial synchronization state</li>
+ *   <li>Cleaning up external resources when a cloud is deleted</li>
+ * </ul>
+ * </p>
+ *
+ * @since 1.1.5
+ * @author David Estes
+ * @see CloudProvider
+ */
 public interface CloudInitializationProvider {
 
 	/**

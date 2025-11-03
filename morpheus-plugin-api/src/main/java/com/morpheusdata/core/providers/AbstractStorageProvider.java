@@ -19,6 +19,19 @@ package com.morpheusdata.core.providers;
 import com.morpheusdata.views.HandlebarsRenderer;
 import com.morpheusdata.views.Renderer;
 
+/**
+ * Abstract base class for implementing a {@link StorageProvider}.
+ * This class provides a default implementation of the {@link #getRenderer()} method that creates and configures
+ * a HandlebarsRenderer with common helpers for asset management, nonce generation, and internationalization.
+ * <p>
+ * Plugin developers should extend this class when implementing a StorageProvider to inherit the default
+ * rendering capabilities for UI components.
+ * </p>
+ *
+ * @since 0.15.1
+ * @author David Estes
+ * @see StorageProvider
+ */
 public abstract class AbstractStorageProvider implements StorageProvider {
 	private HandlebarsRenderer renderer;
 	@Override
