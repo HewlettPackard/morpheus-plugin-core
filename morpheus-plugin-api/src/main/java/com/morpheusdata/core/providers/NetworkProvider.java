@@ -750,7 +750,7 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 		 * @param workloadRequest
 		 * @return PrepareWorkloadResponse
 		 */
-		PrepareWorkloadResponse prepareWorkload(Workload workload, WorkloadRequest workloadRequest);
+		MvmWorkloadResponse prepareWorkload(Workload workload, WorkloadRequest workloadRequest);
 
 		/**
 		 * This method is called right AFTER a workload has been removed from cloud/cluster.  This can be used to perform
@@ -758,15 +758,7 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 		 * @param workloadRequest
 		 * @return RemoveWorkloadResponse
 		 */
-		RemoveWorkloadResponse deleteWorkload(Workload workload, RemoveWorkloadRequest workloadRequest);
-
-		/**
-		 * Provides a way to configure meta data that will be applied to the MVM instance during provisioning
-		 * @param workload the workload being provisioned
-		 * @param workloadRequest the request details for the workload being provisioned
-		 * @return MvmMetaDataConfig object containing pre/post start scripts and placement info
-		 */
-		ServiceResponse<MvmMetaDataConfig> buildMvmMetaDataConfig(Workload workload, WorkloadRequest workloadRequest);
+		MvmWorkloadResponse deleteWorkload(Workload workload, RemoveWorkloadRequest workloadRequest);
 
 		/**
 		 * Data structure for holding MVM meta data configuration such as pre/post start scripts and placement info
@@ -775,6 +767,14 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 			public List<String> preStartScripts = new ArrayList<>();
 			public List<String> postCleanupScript = new ArrayList<>();
 			public String placement;
+		}
+
+		/**
+		 * Data structure for holding MVM workload response information
+		 */
+		public static class MvmWorkloadResponse {
+			public Workload workload = null;
+			public MvmMetaDataConfig mvmMetaDataConfig = null;
 		}
 	}
 }
