@@ -75,6 +75,7 @@ public class ComputeServerInterface extends MorpheusModel {
 	protected String vlanId;
 	protected String fabricId;
 	protected String uuid = UUID.randomUUID().toString();
+	protected String hostInterface;
 
 	public String getRefType() {
 		return refType;
@@ -206,6 +207,8 @@ public class ComputeServerInterface extends MorpheusModel {
 	public String getUuid() {
 		return uuid;
 	}
+
+	public String getHostInterface() { return hostInterface; }
 
 	public void setRefType(String refType) {
 		this.refType = refType;
@@ -360,6 +363,11 @@ public class ComputeServerInterface extends MorpheusModel {
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
 		markDirty("uuid", uuid);
+	}
+
+	public void setHostInterface(String hostInterface) {
+		this.hostInterface = hostInterface;
+		markDirty("hostInterface", hostInterface);
 	}
 
 	public List<NetAddress> getAddresses() {

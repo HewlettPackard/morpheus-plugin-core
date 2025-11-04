@@ -633,6 +633,7 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 	 * @param workloadRequest
 	 * @return PrepareWorkloadResponse
 	 */
+	@Deprecated
 	default PrepareWorkloadResponse prepareWorkload(WorkloadRequest workloadRequest) {
 		return new PrepareWorkloadResponse();
 	}
@@ -643,6 +644,7 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 	 * @param workloadRequest
 	 * @return RemoveWorkloadResponse
 	 */
+	@Deprecated
 	default RemoveWorkloadResponse deleteWorkload(RemoveWorkloadRequest workloadRequest) {
 		return new RemoveWorkloadResponse();
 	}
@@ -733,5 +735,46 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 		 * @return the success state of the operation
 		 */
 		public ServiceResponse<Void> releaseComputeServerInterfacesFromServer(NetworkServer networkServer, ComputeServer server, List<ComputeServerInterface> interfaces);
+	}
+
+	/**
+	 * This interface is used to provide hooks for the HVM cluster provisioning for network providers to intercept workloads
+	 * and manipulate them prior to the actual defining of the VM itself.  Useful for performing some network prep and/or
+	 * meta data prep on the VM definition itself.
+	 * @since 1.2.13
+	 */
+	public interface MvmProvisionFacet {
+		/**
+		 * This method is called just before a workload is provisioned.  This can be used to perform any pre network
+		 * initialization tasks prior to a VM/Container gets provisioned
+		 * @param workloadRequest
+		 * @return PrepareWorkloadResponse
+		 */
+		PrepareWorkloadResponse prepareWorkload(Workload workload, WorkloadRequest workloadRequest);
+
+		/**
+		 * This method is called right AFTER a workload has been removed from cloud/cluster.  This can be used to perform
+		 * any post network cleanup operations required once a workload is removed.
+		 * @param workloadRequest
+		 * @return RemoveWorkloadResponse
+		 */
+		RemoveWorkloadResponse deleteWorkload(Workload workload, RemoveWorkloadRequest workloadRequest);
+
+		/**
+		 * Provides a way to configure meta data that will be applied to the MVM instance during provisioning
+		 * @param workload the workload being provisioned
+		 * @param workloadRequest the request details for the workload being provisioned
+		 * @return MvmMetaDataConfig object containing pre/post start scripts and placement info
+		 */
+		ServiceResponse<MvmMetaDataConfig> buildMvmMetaDataConfig(Workload workload, WorkloadRequest workloadRequest);
+
+		/**
+		 * Data structure for holding MVM meta data configuration such as pre/post start scripts and placement info
+		 */
+		public static class MvmMetaDataConfig {
+			public List<String> preStartScripts = new ArrayList<>();
+			public List<String> postCleanupScript = new ArrayList<>();
+			public String placement;
+		}
 	}
 }
