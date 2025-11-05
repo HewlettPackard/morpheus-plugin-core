@@ -747,18 +747,22 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 		/**
 		 * This method is called just before a workload is provisioned.  This can be used to perform any pre network
 		 * initialization tasks prior to a VM/Container gets provisioned
-		 * @param workloadRequest
-		 * @return PrepareWorkloadResponse
+		 * @param workload the {@link Workload} being provisioned
+		 * @param workloadRequest the {@link WorkloadRequest} containing provisioning details
+		 * @param networkServer the {@link NetworkServer} the workload is being provisioned alongside
+		 * @return {@link MvmWorkloadResponse}
 		 */
-		MvmWorkloadResponse prepareWorkload(Workload workload, WorkloadRequest workloadRequest);
+		MvmWorkloadResponse prepareWorkload(Workload workload, WorkloadRequest workloadRequest, NetworkServer networkServer);
 
 		/**
 		 * This method is called right AFTER a workload has been removed from cloud/cluster.  This can be used to perform
 		 * any post network cleanup operations required once a workload is removed.
-		 * @param workloadRequest
-		 * @return RemoveWorkloadResponse
+		 * @param workload the {@link Workload} being removed
+		 * @param workloadRequest the {@link RemoveWorkloadRequest} containing removal details
+		 * @param networkServer the {@link NetworkServer} the workload is being removed from
+		 * @return {@link MvmWorkloadResponse}
 		 */
-		MvmWorkloadResponse deleteWorkload(Workload workload, RemoveWorkloadRequest workloadRequest);
+		MvmWorkloadResponse deleteWorkload(Workload workload, RemoveWorkloadRequest workloadRequest, NetworkServer networkServer);
 
 		/**
 		 * Data structure for holding MVM meta data configuration such as pre/post start scripts and placement info
