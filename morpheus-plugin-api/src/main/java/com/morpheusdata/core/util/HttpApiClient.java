@@ -832,7 +832,6 @@ public class HttpApiClient {
 
 	/**
 	 * Make a request to a JSON API with the specified URL, path, username, password, {@link RequestOptions}, and HTTP method.
-	 * If the parsing of the response content into JSON fails, the raw content will remain in the {@link ServiceResponse}.
 	 * @param url The base URL of the server to which the request is sent. This should include the protocol (e.g., "https://"). Any path or query params
 	 * @param path The specific path or endpoint on the server to which the request is made. This path is appended to the base URL.
 	 * @param username The username used for basic authentication with the server. This can be null if authentication is not required.
@@ -870,22 +869,18 @@ public class HttpApiClient {
 				};
 				TypeReference<List<Map<String,Object>>> typeRefList = new TypeReference<List<Map<String,Object>>>() {
 				};
-				boolean dataSet = false;
 				try {
 					rtn.setData(mapper.readValue(rtn.getContent(), typeRefMap));
-					dataSet = true;
 				} catch(Exception e) {
 					try {
 						rtn.setData(mapper.readValue(rtn.getContent(), typeRefList));
-						dataSet = true;
 					} catch(Exception e2) {
 						log.debug("Error parsing API response JSON: ${e}", e);
 					}
 				}
-				if(dataSet){
-					rtn.setContent(null);
-				}
 
+
+				//rtn.setData(new JsonSlurper().parseText(rtn.getContent()));
 			} catch (Exception e) {
 				log.debug("Error parsing API response JSON: ${e}", e);
 			}
@@ -930,7 +925,6 @@ public class HttpApiClient {
 				Class<?> xmlSlurperClass = Class.forName("groovy.util.XmlSlurper");
 				Object xmlSlurper = xmlSlurperClass.getDeclaredConstructor(boolean.class,boolean.class).newInstance(false, true);
 				rtn.setData(xmlSlurperClass.getMethod("parseText", String.class).invoke(xmlSlurper, rtn.getContent()));
-				rtn.setContent(null); //clear content due to valid xml parsing
 			} catch (Exception e) {
 				log.debug("Error parsing API response XML: " + e.getMessage(), e);
 			}
