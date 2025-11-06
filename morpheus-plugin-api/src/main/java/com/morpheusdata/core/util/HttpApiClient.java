@@ -75,6 +75,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.*;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
@@ -557,7 +558,7 @@ public class HttpApiClient {
 		return parseJsonResponse(rtn);
 	}
 
-	 /**
+	/**
 	 * Executes an HTTP request with streaming capabilities to a specified URL and path. This method is intended for
 	 * scenarios where large amounts of data need to be transferred, such as uploading or downloading files, without
 	 * fully loading the data into memory. The method handles authentication and custom request options, and returns
@@ -645,8 +646,8 @@ public class HttpApiClient {
 				OauthUtility.signOAuthRequestPlainText(request, opts.oauth.consumerKey, opts.oauth.consumerSecret, opts.oauth.apiKey, opts.oauth.apiSecret, opts);
 			}
 
-			// Headers
-			if (opts.binaryBodyFilename == null) {
+			// Headers (Setting Content-Type here not needed for File uploads; handled in body section)
+			if (!(opts.body instanceof File)) {
 				if (opts.headers == null || opts.headers.isEmpty() || !opts.headers.containsKey("Content-Type")) {
 					request.addHeader("Content-Type", "application/json");
 				}
@@ -720,18 +721,17 @@ public class HttpApiClient {
 				} else if (opts.body instanceof byte[]) {
 					postRequest.setEntity(new ByteArrayEntity((byte[]) opts.body));
 				} else if (opts.body instanceof InputStream) {
-					if (opts.binaryBodyFilename != null) {
-						MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-						builder.addBinaryBody(
-								opts.binaryBodyName.isEmpty() ? "file" : opts.binaryBodyName,
-								(InputStream) (opts.body),
-								ContentType.DEFAULT_BINARY,
-								opts.binaryBodyFilename
-						);
-						postRequest.setEntity(builder.build());
-					} else {
-						postRequest.setEntity(new InputStreamEntity((InputStream) (opts.body), opts.contentLength != null ? opts.contentLength : -1));
-					}
+					postRequest.setEntity(new InputStreamEntity((InputStream) (opts.body), opts.contentLength != null ? opts.contentLength : -1));
+				} else if (opts.body instanceof File) {
+					File file = (File) opts.body;
+					MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+					builder.addBinaryBody(
+							"file",
+							file,
+							ContentType.DEFAULT_BINARY,
+							file.getName()
+					);
+					postRequest.setEntity(builder.build());
 				} else {
 					postRequest.setEntity(new StringEntity(opts.body.toString()));
 				}
@@ -1255,16 +1255,6 @@ public class HttpApiClient {
 		 * The query parameters to include in the request.
 		 */
 		public Map<CharSequence, CharSequence> queryParams;
-
-		/**
-		 * Set to filename if InputStream multipart binary body is requested.
-		 */
-		public String binaryBodyFilename = null;
-
-		/**
-		 * The name of the binary body parameter.
-		 */
-		public String binaryBodyName = "file";
 
 		/**
 		 * Suppress logging of the request and response.
