@@ -418,7 +418,7 @@ public class HttpApiClient {
 						}
 						rtn.setSuccess(false);
 						rtn.setErrorCode(Integer.toString(response.getStatusLine().getStatusCode()));
-						log.warn("path: {} error: {} - {}", path, rtn.getErrorCode(), rtn.getContent());
+						log.debug("path: {} error: {} - {}", path, rtn.getErrorCode(), rtn.getContent());
 					}
 				} catch (Exception ex) {
 					try {
@@ -728,7 +728,7 @@ public class HttpApiClient {
 						}
 						rtn.setSuccess(false);
 						rtn.setErrorCode(Integer.toString(response.getStatusLine().getStatusCode()));
-						log.warn("path: {} error: {} - {}", path, rtn.getErrorCode(), rtn.getContent());
+						log.debug("path: {} error: {} - {}", path, rtn.getErrorCode(), rtn.getContent());
 					}
 				} catch (Exception ex) {
 					try {
