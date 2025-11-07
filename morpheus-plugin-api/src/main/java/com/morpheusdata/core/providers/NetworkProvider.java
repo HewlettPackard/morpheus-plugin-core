@@ -769,7 +769,7 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 		 */
 		public static class MvmMetaDataConfig {
 			public List<String> preStartScripts = new ArrayList<>();
-			public List<String> postCleanupScript = new ArrayList<>();
+			public List<String> postCleanupScripts = new ArrayList<>();
 			public String placement;
 		}
 
