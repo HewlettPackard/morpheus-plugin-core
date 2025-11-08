@@ -764,6 +764,33 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 		 */
 		MvmWorkloadResponse deleteWorkload(Workload workload, RemoveWorkloadRequest workloadRequest, NetworkServer networkServer);
 
+
+		/**
+		 * This hook is called prior to an HVM live migration operation.  Allows a network provider to perform any
+		 * necessary pre-migration steps such as prepping network interfaces, etc.
+		 * @param networkServer {@link NetworkServer} The network device tied to the VM network
+		 * @param vm {@link ComputeServer} The VM being migrated between hosts
+		 * @param sourceHost {@link ComputeServer} The source host the VM is migrating from
+		 * @param targetHost {@link ComputeServer} The target host the VM is migrating to
+		 * @return {@link ServiceResponse}
+		 */
+		default ServiceResponse preMigrationHook(NetworkServer networkServer, ComputeServer vm, ComputeServer sourceHost, ComputeServer targetHost) {
+			return ServiceResponse.success();
+		}
+
+		/**
+		 * This hook is called after an HVM live migration operation.  Allows a network provider to perform any
+		 * necessary post-migration steps such as reconfiguring network interfaces, etc.
+		 * @param networkServer {@link NetworkServer} The network device tied to the VM network
+		 * @param vm {@link ComputeServer} The VM being migrated between hosts
+		 * @param sourceHost {@link ComputeServer} The source host the VM is migrating from
+		 * @param targetHost {@link ComputeServer} The target host the VM is migrating to
+		 * @return {@link ServiceResponse}
+		 */
+		default ServiceResponse postMigrationHook(NetworkServer networkServer, ComputeServer vm, ComputeServer sourceHost, ComputeServer targetHost) {
+			return ServiceResponse.success();
+		}
+
 		/**
 		 * Data structure for holding MVM meta data configuration such as pre/post start scripts and placement info
 		 */
