@@ -2,6 +2,85 @@
 
 **Note:** Morpheus Plugin API is now 1.0! This means calls that are used will be supported for a longer period of time and given appropriate deprecation warnings when necessary. Morpheus Plugin API 1.2 requires a minimum Morpheus Version of `8.0.x`. Morpheus `7.0.x` still runs on Core version `1.1.x`
 
+* **1.2.13**
+** *Storage and Datastore Enhancements*
+*** Added checkpoint target capability to datastore type provider for VM snapshot management
+*** Added support for asynchronous datastore type and location operations
+*** Implemented prepareVolumeAttach for datastore type providers
+*** Added StorageHost and StorageHostGroup services with comprehensive models
+*** Enhanced StorageHost with storageServer, accounts, and hosts fields for better storage infrastructure management
+*** Added updateVolume method to StorageProviderVolumes interface
+*** Implemented snapshot file service for advanced snapshot management
+*** Added support for datastore type actions and provider enhancements
+** *Workload and Instance Management*
+*** Added comprehensive workload resize v2 support with validation capabilities
+*** Implemented ResizeV2WorkloadResponse with preserveVolumes flag for flexible volume handling
+*** Added Host ResizeV2Facet for advanced host resizing capabilities
+*** Implemented ejectAllDisksFromWorkload functionality
+*** Added support for prepareCloneInstance with createLinkedClone hook
+*** Added rawData field to ComputeServer model for additional metadata storage
+** *Network Provider Evolution*
+*** Major refactor for CN2 network provider support with enhanced workload provisioning hooks
+*** Added migration hooks for NetworkProvider.MvmProvisionFacet
+*** Added IPv6 fields to Network model for dual-stack networking support
+*** Enhanced NetworkRouterType with BGP option support
+*** Added hasFirewall boolean to NetworkType model
+*** Implemented hasSecurityGroups() method in CloudProvider class
+** *Backup and Replication*
+*** Added support for multiple backup providers with comprehensive integration
+*** Implemented active replica support for enhanced data protection
+*** Enhanced backup provider capabilities with extended plugin integration
+** *Compute and Provisioning*
+*** Added support for pre-provisioned server integration to existing instances
+*** Enhanced service plan capabilities with determination flags in provision providers
+*** Updated ComputeServer model with guestAgentStatus field (not QEMU exclusive)
+*** Exposed computeTypeLayout and computeSet for better provisioning control
+*** Added serverGroupMemberStatus for improved cluster member tracking
+*** Set default visibility on VirtualImage for consistent image management
+** *Cloud and Resource Management*
+*** Added pool support to cluster tabs for enhanced resource organization
+*** Enhanced custom plugin info support with extended provider capabilities
+*** Improved API client response memory footprint (with subsequent refinement)
+** *Documentation and Code Quality*
+*** Enhanced documentation for workload resize validation
+*** Improved code clarity with typo fixes and comment updates
+
+* **1.2.12**
+** *Workload Resize and Validation*
+*** Added comprehensive support for validating workload resize operations
+*** Enhanced resize workflow with proper validation hooks
+*** Improved error handling during workload resize processes
+** *Cluster and Resource Pool Management*
+*** Plugin cloud providers can now enable resource pool creation
+*** Added finalizeLinuxComputeServer to cluster provider for enhanced Linux server management
+*** Enhanced ClusterProvider with comprehensive updates and improvements
+*** Improved server grouping capabilities
+** *Storage and Volume Enhancements*
+*** Implemented shared storage volumes model changes
+*** Enhanced volume management across cluster environments
+*** Fixed field naming on ComputeServerGroup for consistency
+** *Operation and Event Tracking*
+*** Introduced Operation Event Service with related models for comprehensive operation tracking
+*** Added support for tracking system operations and events
+*** Improved process event handling and monitoring
+** *Console and Server Management*
+*** Added consoleUsername field to ComputeServer for enhanced console access
+*** Added consoleKeymap field to ComputeServer for keyboard layout support
+*** Improved remote console capabilities
+** *Option Types and UI*
+*** Added BYTESIZE to InputType enum for option types (PCCP-4099)
+*** Enhanced form field options for better user experience
+** *Image and OS Support*
+*** Fixed field naming on OsTypeImage for model consistency
+*** Improved OS type image handling
+** *Performance Optimizations*
+*** Memory improvements in streaming QCOW2 writer for better resource utilization
+*** Enhanced large file handling efficiency
+** *Code Quality and Maintenance*
+*** Updated editor config with development standards
+*** Improved code consistency across the project
+*** Reverted redundant fields to maintain clean codebase
+
 * **1.2.11**
 ** *Storage and Compute Enhancements*
 *** Exposed StorageGroups for plugins with comprehensive service support
