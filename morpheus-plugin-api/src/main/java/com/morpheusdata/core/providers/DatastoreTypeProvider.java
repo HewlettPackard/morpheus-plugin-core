@@ -105,7 +105,7 @@ public interface DatastoreTypeProvider extends PluginProvider {
 	 * Flags if this datastore is checkpoint target capable. If true, the option to designate as a checkpoint target will be available.
 	 * @return whether, or not this datastore is checkpoint target capable
 	 */
-	default boolean checkpointTargetCapable() { return false; }
+	default boolean getCheckpointTargetCapable() { return false; }
 
 	/**
 	 * Flags if this datastore can be created by the user. Some datastores are system injected and cannot be created by the user
