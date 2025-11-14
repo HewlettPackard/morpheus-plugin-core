@@ -20,12 +20,22 @@ package com.morpheusdata.model;
  * Platform constants
  */
 public enum PlatformType {
-	windows,
-	linux,
-	osx,
-	other,
-	esxi,
-	none,
-	unknown,
-	solaris
+	windows("windows"),
+	linux("linux"),
+	osx("osx"),
+	other("other"),
+	ESXi("esxi"),
+	none("none"),
+	unknown("unknown"),
+	solaris("solaris");
+
+	private final String value;
+
+	PlatformType(String value) {
+		this.value = value;
+	}
+
+	public String toString() {
+		return this.value;
+	}
 }
