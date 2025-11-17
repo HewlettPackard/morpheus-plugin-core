@@ -80,8 +80,8 @@ public class UpdateOperation extends UpdateIdentityProjection {
     public String getRefId() { return refId; }
     public void setRefId(String refId) { this.refId = refId; }
 
-    public String getState() { return state; }
-    public void setState(String state) { this.state = state; }
+    public OpState getState() { return state; }
+    public void setState(OpState state) { this.state = state; }
 
     public String getStatusMessage() { return statusMessage; }
     public void setStatusMessage(String statusMessage) { this.statusMessage = statusMessage; }

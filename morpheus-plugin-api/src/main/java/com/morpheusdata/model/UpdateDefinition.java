@@ -68,8 +68,8 @@ public class UpdateDefinition extends UpdateIdentityProjection {
     public ImagePathType getImagePathType() { return imagePathType; }
     public void setImagePathType(ImagePathType imagePathType) { this.imagePathType = imagePathType; }
 
-    public List<String> getValidateRules() { return validateRules; }
-    public void setValidateRules(List<String> validateRules) { this.validateRules = validateRules; }
+//    public List<String> getValidateRules() { return validateRules; }
+//    public void setValidateRules(List<String> validateRules) { this.validateRules = validateRules; }
 
     public Boolean getPeerPersistence() { return peerPersistence; }
     public void setPeerPersistence(Boolean peerPersistence) { this.peerPersistence = peerPersistence; }
