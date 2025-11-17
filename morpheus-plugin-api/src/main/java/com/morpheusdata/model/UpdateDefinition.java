@@ -25,6 +25,7 @@ public class UpdateDefinition extends UpdateIdentityProjection {
 
     protected Boolean isPlugin = false;                   // is this update code located in a plugin
     protected Object hasMany;                             // relationship placeholder (could be typed more strictly)
+    protected List<String> validateRules;
 
     /**
      * Enum to represent the operation name/type.
@@ -68,8 +69,8 @@ public class UpdateDefinition extends UpdateIdentityProjection {
     public ImagePathType getImagePathType() { return imagePathType; }
     public void setImagePathType(ImagePathType imagePathType) { this.imagePathType = imagePathType; }
 
-//    public List<String> getValidateRules() { return validateRules; }
-//    public void setValidateRules(List<String> validateRules) { this.validateRules = validateRules; }
+    public List<String> getValidateRules() { return validateRules; }
+    public void setValidateRules(List<String> validateRules) { this.validateRules = validateRules; }
 
     public Boolean getPeerPersistence() { return peerPersistence; }
     public void setPeerPersistence(Boolean peerPersistence) { this.peerPersistence = peerPersistence; }

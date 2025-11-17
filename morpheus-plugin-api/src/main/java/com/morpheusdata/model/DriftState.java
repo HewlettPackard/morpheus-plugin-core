@@ -16,7 +16,7 @@ public class DriftState {
     protected String refType;            // associated type of object this drift check is for
     protected String refId;              // associated id of the object this drift check is for
 
-//    protected DriftCheckState state;     // status of the drift check (e.g., pending, in-progress, failed, completed)
+    protected DriftCheckStatus state;     // status of the drift check (e.g., pending, in-progress, failed, completed)
     protected Integer percentComplete = 0; // completion percentage
 
     private Instant startedAt;            // start timestamp
@@ -90,8 +90,8 @@ public class DriftState {
     public String getRefId() { return refId; }
     public void setRefId(String refId) { this.refId = refId; }
 
-//    public DriftCheckState getState() { return state; }
-//    public void setState(DriftCheckState state) { this.state = state; }
+    public DriftCheckStatus getState() { return state; }
+    public void setState(DriftCheckStatus state) { this.state = state; }
 
     public Integer getPercentComplete() { return percentComplete; }
     public void setPercentComplete(Integer percentComplete) { this.percentComplete = percentComplete; }
