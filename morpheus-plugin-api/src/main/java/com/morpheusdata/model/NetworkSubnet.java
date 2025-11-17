@@ -83,6 +83,7 @@ public class NetworkSubnet extends NetworkSubnetIdentityProjection {
 	protected Long networkId;
 	protected Boolean hasFloatingIps = false;
 	protected List<CloudPool> assignedZonePools = new ArrayList<>();
+	protected String regionCode;
 
 	public Boolean getHasFloatingIps() {
 		return hasFloatingIps;
@@ -492,5 +493,14 @@ public class NetworkSubnet extends NetworkSubnetIdentityProjection {
 
 	public void setAssignedZonePools(List<CloudPool> assignedZonePools) {
 		this.assignedZonePools = assignedZonePools;
+	}
+
+	public String getRegionCode() {
+		return regionCode;
+	}
+
+	public void setRegionCode(String regionCode) {
+		this.regionCode = regionCode;
+		markDirty("regionCode", regionCode);
 	}
 }

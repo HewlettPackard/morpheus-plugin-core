@@ -1,0 +1,7 @@
+package com.morpheusdata.core;
+
+import com.morpheusdata.model.StorageHostGroup;
+import com.morpheusdata.model.projection.StorageHostGroupIdentityProjection;
+
+public interface MorpheusSynchronousStorageHostGroupService extends MorpheusSynchronousDataService<StorageHostGroup, StorageHostGroupIdentityProjection>, MorpheusSynchronousIdentityService<StorageHostGroupIdentityProjection> {
+}

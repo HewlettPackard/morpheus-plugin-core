@@ -18,6 +18,7 @@ package com.morpheusdata.model;
 
 import java.util.Date;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.morpheusdata.model.projection.OperationEventIdentityProjection;
 import com.morpheusdata.model.serializers.ModelAsIdOnlySerializer;
 
 

@@ -269,6 +269,19 @@ public interface MorpheusAsyncServices {
 	MorpheusStorageService getStorage();
 
 	/**
+	 * Returns the StorageHost Service
+	 *
+	 * @return An instance of the StorageHost Service
+	 */
+	MorpheusStorageHostService getStorageHost();
+
+	/**
+	 * Returns the StorageHostGroup Service
+	 *
+	 * @return An instance of the StorageHostGroup Service
+	 */
+	MorpheusStorageHostGroupService getStorageHostGroup();
+	/**
 	 * Returns the Usage Service
 	 *
 	 * @return An instance of the Usage Service
@@ -543,4 +556,11 @@ public interface MorpheusAsyncServices {
 	 * @return an instance of {@link MorpheusComputeTypePackageService}
 	 */
 	MorpheusComputeTypePackageService getComputeTypePackage();
+
+	/**
+	 * Returns the Currency Conversion Service for handling currency conversion operations.
+	 *
+	 * @return an instance of the MorpheusCurrencyConversionService
+	 */
+	MorpheusCurrencyConversionService getCurrency();
 }

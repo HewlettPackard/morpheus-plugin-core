@@ -1,6 +1,4 @@
-package com.morpheusdata.model;
-
-import com.morpheusdata.model.projection.MorpheusIdentityModel;
+package com.morpheusdata.model.projection;
 
 public class OperationEventIdentityProjection extends MorpheusIdentityModel {
 	protected String externalId;

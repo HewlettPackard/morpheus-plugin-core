@@ -265,6 +265,21 @@ public interface MorpheusServices {
 	MorpheusSynchronousStorageService getStorage();
 
 	/**
+	 * Returns the StorageHost Service
+	 *
+	 * @return An instance of the StorageHost Service
+	 */
+	MorpheusSynchronousStorageHostService getStorageHost();
+
+	/**
+	 * Returns the StorageHostGroup Service
+	 *
+	 * @return An instance of the StorageHostGroup Service
+	 */
+	MorpheusSynchronousStorageHostGroupService getStorageHostGroup();
+
+
+	/**
 	 * Returns the Instance Service
 	 *
 	 * @return An instance of the Instance Service

@@ -54,6 +54,7 @@ public class StorageVolumeType extends MorpheusModel {
 	protected Long minIOPS = null;
 	protected Long maxIOPS = null;
 	protected Boolean multiAttachSupported = false;
+	protected Boolean hasActiveReplica = false;
 
 	// associations
 	Collection<OptionType> optionTypes;
@@ -284,5 +285,12 @@ public class StorageVolumeType extends MorpheusModel {
 
 	public void setMultiAttachSupported(Boolean multiAttachSupported) {
 		this.multiAttachSupported = multiAttachSupported;
+	}
+
+	public Boolean getHasActiveReplica() {
+		return hasActiveReplica;
+	}
+	public void setHasActiveReplica(Boolean hasActiveReplica) {
+		this.hasActiveReplica = hasActiveReplica;
 	}
 }

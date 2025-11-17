@@ -22,6 +22,7 @@ import com.morpheusdata.model.*;
 import com.morpheusdata.model.event.DatastoreEvent;
 import com.morpheusdata.model.event.EventType;
 import com.morpheusdata.response.ServiceResponse;
+import com.morpheusdata.request.CreateSnapshotRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,6 +100,12 @@ public interface DatastoreTypeProvider extends PluginProvider {
 	 * @return whether, or not this datastore is image target capable
 	 */
 	default boolean getImageTargetCapable() { return false; }
+
+	/**
+	 * Flags if this datastore is checkpoint target capable. If true, the option to designate as a checkpoint target will be available.
+	 * @return whether, or not this datastore is checkpoint target capable
+	 */
+	default boolean getCheckpointTargetCapable() { return false; }
 
 	/**
 	 * Flags if this datastore can be created by the user. Some datastores are system injected and cannot be created by the user
@@ -192,6 +199,17 @@ public interface DatastoreTypeProvider extends PluginProvider {
 	 * @return the success state and a copy of the volume
 	 */
 	ServiceResponse<StorageVolume> resizeVolume(StorageVolume volume, ComputeServer server, Long newSize);
+
+	/**
+	 * Perform any operations necessary to prepare for a volume attach to a specified server.
+	 * It is typically called as part of volume attach.
+	 * @param volume the current volume to attach
+	 * @param server the server the volume is being attached to (may contain information such as parentServer (hypervisor) or cluster)
+	 * @return the success state of the prepare
+	 */
+	default ServiceResponse<StorageVolume> prepareVolumeAttach(StorageVolume volume, ComputeServer server) {
+		return ServiceResponse.success();
+	}
 
 	/**
 	 * Perform any validations necessary on the target prior to create. The default returns success.
@@ -312,6 +330,39 @@ public interface DatastoreTypeProvider extends PluginProvider {
 			 * @return the success state of the removal
 			 */
 			ServiceResponse removeSnapshot(ComputeServer server, Snapshot snapshot);
+		}
+
+		public interface SnapshotInstanceFacet {
+			/**
+			 * Creates volume snapshots of all volumes associated with an instance. If the server volume is of type 'cdrom',
+			 * it is best to not snapshot these as ISO formats are not typically worth snapshotting
+			 * A lot of backup providers may use this to create snapshots for exportability or backup purposes.
+			 * In those scenarios, it is important to create exportPath information on the {@link SnapshotFile} so the
+			 * morphd agent can fetch the snapshot and store it in the backup provider.
+			 * @param instance the instance to create snapshots for
+			 * @param request the snapshot creation request
+			 * @return the success state and a copy of the snapshot
+			 */
+			ServiceResponse<Snapshot> createSnapshot(Instance instance, CreateSnapshotRequest request);
+
+			/**
+			 * Reverts an instance to a snapshot. This is used to revert an instance to a previous state. MVM/VME will automatically
+			 * ensure that  server is powered off during this operation and powered back on to desired user state after this
+			 * operation is complete. NOTE: These snapshots are typically volume based and not vm state based.
+			 * @param instance the instance to revert the snapshot on
+			 * @param snapshot the snapshot to revert to
+			 * @return the success state and a copy of the snapshot
+			 */
+			ServiceResponse<Snapshot> revertSnapshot(Instance instance, Snapshot snapshot);
+
+			/**
+			 * Removes a snapshot from an instance. This is used to remove a snapshot from an instance. Sometimes,
+			 * this means snapshots have to be consolidated or flattened depending on the implementation.
+			 * @param instance the instance to remove the snapshot from
+			 * @param snapshot the snapshot to remove
+			 * @return the success state of the removal
+			 */
+			ServiceResponse removeSnapshot(Instance instance, Snapshot snapshot);
 		}
 	}
 

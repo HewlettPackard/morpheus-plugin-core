@@ -28,7 +28,7 @@ import com.morpheusdata.model.VirtualImageType;
  * @since 0.8.0
  */
 public class VirtualImageIdentityProjection extends MorpheusIdentityModel {
-	
+
 	protected String externalId;
 	protected String name;
 	protected ImageType imageType;
@@ -38,7 +38,7 @@ public class VirtualImageIdentityProjection extends MorpheusIdentityModel {
 	protected Long ownerId;
 	protected Boolean systemImage;
 	protected Boolean deleted;
-	protected String visibility;
+	protected String visibility = "private";
 	protected String externalDiskId;
 
 	public String getExternalId() {

@@ -18,6 +18,12 @@ package com.morpheusdata.core.providers;
 
 import com.morpheusdata.model.DriftState;
 import com.morpheusdata.model.*;
+import com.morpheusdata.model.event.Event;
+import com.morpheusdata.model.provisioning.NetworkConfiguration;
+import com.morpheusdata.model.provisioning.RemoveWorkloadRequest;
+import com.morpheusdata.model.provisioning.WorkloadRequest;
+import com.morpheusdata.response.PrepareWorkloadResponse;
+import com.morpheusdata.response.RemoveWorkloadResponse;
 import com.morpheusdata.response.ServiceResponse;
 import com.morpheusdata.views.HTMLResponse;
 
@@ -619,6 +625,81 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 	}
 
 	/**
+	 * This method is called just before a workload is provisioned.  This can be used to perform any pre network
+	 * initialization tasks prior to a VM/Container gets provisioned
+	 * @param workloadRequest
+	 * @return PrepareWorkloadResponse
+	 */
+	@Deprecated
+	default PrepareWorkloadResponse prepareWorkload(WorkloadRequest workloadRequest) {
+		return new PrepareWorkloadResponse();
+	}
+
+	/**
+	 * This method is called right AFTER a workload has been removed from cloud/cluster.  This can be used to perform
+	 * any post network cleanup operations required once a workload is removed.
+	 * @param workloadRequest
+	 * @return RemoveWorkloadResponse
+	 */
+	@Deprecated
+	default RemoveWorkloadResponse deleteWorkload(RemoveWorkloadRequest workloadRequest) {
+		return new RemoveWorkloadResponse();
+	}
+
+	/**
+	 * Called for additional validation of of the bgp neighbor input parameters that the provider may require
+	 * @param router {@link NetworkRouter}
+	 * @param neighbor {@link NetworkRouterBgpNeighbor}
+	 * @return An instance of {@link ServiceResponse}
+	 */
+	default ServiceResponse validateBgpNeighbor(NetworkRouter router, NetworkRouterBgpNeighbor neighbor) {
+		return ServiceResponse.success();
+	}
+
+	/**
+	 * This configuration stage is called before the actual bgp neighbor creation phase in case any pre initialization
+	 * work needs to be done on the network infrastructure
+	 * @param router {@link NetworkRouter}
+	 * @param neighbor {@link NetworkRouterBgpNeighbor}
+	 * @param config {@link Map} which contains additional configuration information provided by the framework
+	 * @return An instance of {@link ServiceResponse}
+	 */
+	default ServiceResponse configureBgpNeighbor(NetworkRouter router, NetworkRouterBgpNeighbor neighbor, Map config) {
+		return ServiceResponse.success();
+	}
+
+	/**
+	 * This is called post configure and validation and is where you execute the necessary work on the underlying
+	 * network infrastructure for bgp neighbor creation
+	 * @param router {@link NetworkRouter}
+	 * @param neighbor {@link NetworkRouterBgpNeighbor}
+	 * @return An instance of {@link ServiceResponse}
+	 */
+	default ServiceResponse createBgpNeighbor(NetworkRouter router, NetworkRouterBgpNeighbor neighbor) {
+		return ServiceResponse.success();
+	}
+
+	/**
+	 * Execution step for updating the details of a bgp neighbor
+	 * @param router {@link NetworkRouter}
+	 * @param neighbor {@link NetworkRouterBgpNeighbor}
+	 * @return An instance of {@link ServiceResponse}
+	 */
+	default ServiceResponse updateBgpNeighbor(NetworkRouter router, NetworkRouterBgpNeighbor neighbor) {
+		return ServiceResponse.success();
+	}
+
+	/**
+	 * Execution step for removing a bgp neighbor
+	 * @param router {@link NetworkRouter}
+	 * @param neighbor {@link NetworkRouterBgpNeighbor}
+	 * @return An instance of {@link ServiceResponse}
+	 */
+	default ServiceResponse deleteBgpNeighbor(NetworkRouter router, NetworkRouterBgpNeighbor neighbor) {
+		return ServiceResponse.success();
+	}
+
+	/**
 	 * Integration details provided to your rendering engine
 	 * @param networkServer details of a network server
 	 * @return result of rendering a template
@@ -651,6 +732,78 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 		 * @return the success state of the operation
 		 */
 		public ServiceResponse<Void> releaseComputeServerInterfacesFromServer(NetworkServer networkServer, ComputeServer server, List<ComputeServerInterface> interfaces);
+	}
+
+	/**
+	 * This interface is used to provide hooks for the HVM cluster provisioning for network providers to intercept workloads
+	 * and manipulate them prior to the actual defining of the VM itself.  Useful for performing some network prep and/or
+	 * metadata prep on the VM definition itself.
+	 * @since 1.2.13
+	 */
+	public interface MvmProvisionFacet {
+		/**
+		 * This method is called just before a workload is provisioned.  This can be used to perform any pre network
+		 * initialization tasks prior to a VM/Container gets provisioned
+		 * @param workload the {@link Workload} being provisioned
+		 * @param workloadRequest the {@link WorkloadRequest} containing provisioning details
+		 * @param networkServer the {@link NetworkServer} the workload is being provisioned alongside
+		 * @return {@link MvmWorkloadResponse}
+		 */
+		MvmWorkloadResponse prepareWorkload(Workload workload, WorkloadRequest workloadRequest, NetworkServer networkServer);
+
+		/**
+		 * This method is called right AFTER a workload has been removed from cloud/cluster.  This can be used to perform
+		 * any post network cleanup operations required once a workload is removed.
+		 * @param workload the {@link Workload} being removed
+		 * @param workloadRequest the {@link RemoveWorkloadRequest} containing removal details
+		 * @param networkServer the {@link NetworkServer} the workload is being removed from
+		 * @return {@link MvmWorkloadResponse}
+		 */
+		MvmWorkloadResponse deleteWorkload(Workload workload, RemoveWorkloadRequest workloadRequest, NetworkServer networkServer);
+
+
+		/**
+		 * This hook is called prior to an HVM live migration operation.  Allows a network provider to perform any
+		 * necessary pre-migration steps such as prepping network interfaces, etc.
+		 * @param networkServer {@link NetworkServer} The network device tied to the VM network
+		 * @param vm {@link ComputeServer} The VM being migrated between hosts
+		 * @param sourceHost {@link ComputeServer} The source host the VM is migrating from
+		 * @param targetHost {@link ComputeServer} The target host the VM is migrating to
+		 * @return {@link ServiceResponse}
+		 */
+		default ServiceResponse preMigrationHook(NetworkServer networkServer, ComputeServer vm, ComputeServer sourceHost, ComputeServer targetHost) {
+			return ServiceResponse.success();
+		}
+
+		/**
+		 * This hook is called after an HVM live migration operation.  Allows a network provider to perform any
+		 * necessary post-migration steps such as reconfiguring network interfaces, etc.
+		 * @param networkServer {@link NetworkServer} The network device tied to the VM network
+		 * @param vm {@link ComputeServer} The VM being migrated between hosts
+		 * @param sourceHost {@link ComputeServer} The source host the VM is migrating from
+		 * @param targetHost {@link ComputeServer} The target host the VM is migrating to
+		 * @return {@link ServiceResponse}
+		 */
+		default ServiceResponse postMigrationHook(NetworkServer networkServer, ComputeServer vm, ComputeServer sourceHost, ComputeServer targetHost) {
+			return ServiceResponse.success();
+		}
+
+		/**
+		 * Data structure for holding MVM meta data configuration such as pre/post start scripts and placement info
+		 */
+		public static class MvmMetaDataConfig {
+			public List<String> preStartScripts = new ArrayList<>();
+			public List<String> postCleanupScripts = new ArrayList<>();
+			public String placement;
+		}
+
+		/**
+		 * Data structure for holding MVM workload response information
+		 */
+		public static class MvmWorkloadResponse {
+			public Workload workload = null;
+			public MvmMetaDataConfig mvmMetaDataConfig = null;
+		}
 	}
 
 	public interface NetworkUpdateFacet extends UpdateFacet<NetworkServer> {

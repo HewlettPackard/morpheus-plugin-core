@@ -17,6 +17,7 @@
 package com.morpheusdata.core.providers;
 
 import com.morpheusdata.core.Plugin;
+import com.morpheusdata.core.util.ClusterTabList;
 import com.morpheusdata.model.*;
 import com.morpheusdata.response.ServiceResponse;
 
@@ -65,6 +66,13 @@ public interface ClusterProvider extends PluginProvider {
 	 * @param cluster the cluster details
 	 */
 	ServiceResponse deleteCluster(ComputeServerGroup cluster);
+
+	/**
+	 * Called when a server is being deleted. This is a chance to clean up any external resources associated with the server
+	 * @since 1.2.13
+	 * @param server the server details
+	 */
+	ServiceResponse deleteServer(ComputeServer server);
 
 	/**
 	 * Clusters are refreshed periodically by the Morpheus Environment. This includes things like caching of brownfield
@@ -298,5 +306,23 @@ public interface ClusterProvider extends PluginProvider {
 		return ServiceResponse.success();
 	}
 
+	/**
+	 * If the cloud supports IaC based provisioning, return the mapping provider here and implement the {@link com.morpheusdata.core.providers.ProvisionProvider.IacResourceFacet} in your ProvisionProvider
+	 * @since 1.2.13
+	 * @return an instance of a cloud specific IacResourceMappingProvider.
+	 */
+	default IacResourceMappingProvider getIacResourceMappingProvider() { return null; }
+
+	/**
+	 * Grabs available backup providers related to the target cluster plugin.
+	 * @since 1.2.13
+	 * @return Collection of BackupProvider
+	 */
+	default Collection<BackupProvider> getAvailableBackupProviders() {return new ArrayList<BackupProvider>();}
+
+
+	default ClusterTabList getTabList() {
+		return new ClusterTabList();
+	}
 
 }

@@ -18,6 +18,10 @@ package com.morpheusdata.core.providers;
 
 import com.morpheusdata.core.MorpheusComputeTypeLayoutFactoryService;
 import com.morpheusdata.model.*;
+import com.morpheusdata.request.AfterConvertToManagedRequest;
+import com.morpheusdata.request.BeforeConvertToManagedRequest;
+import com.morpheusdata.response.AfterConvertToManagedResponse;
+import com.morpheusdata.response.BeforeConvertToManagedResponse;
 import com.morpheusdata.response.InitializeHypervisorResponse;
 import com.morpheusdata.response.ServiceResponse;
 
@@ -376,6 +380,15 @@ public interface ProvisionProvider extends PluginProvider {
 	}
 
 	/**
+	 * Indicates if the current service plan can be changed on a reconfigure operation
+	 * @since 1.2.13
+	 * @return Boolean
+	 */
+	default public Boolean canChangeServicePlanOnReconfigure() {
+		return true;
+	}
+
+	/**
 	 * Indicates if StorageControllers are utilized
 	 * @return Boolean
 	 */
@@ -446,6 +459,22 @@ public interface ProvisionProvider extends PluginProvider {
 		return new ArrayList<ComputeTypeLayout>();
 	}
 
+	/**
+	 * Indicates whether snapshots are supported at instance level for this ProvisionProvider.
+	 * Default behavior supports snapshots at workload level.
+	 * @return Boolean
+	 */
+	default public Boolean hasInstanceSnapshots() {
+		return false;
+	}
+
+	/**
+	 * Indicates if adding preprovisioned servers to an existing instance is supported
+	 * @return Boolean
+	 */
+	default Boolean supportsAddPreprovisionedServer() {
+		return false;
+	}
 
 	/**
 	 * Provides methods for interacting with provisioned vms to manage associated snapshots
@@ -466,6 +495,16 @@ public interface ProvisionProvider extends PluginProvider {
 		}
 
 		/**
+		 * Request to create a snapshot for the given instance
+		 * @param instance to snapshot
+		 * @param opts additional options including the requested name and description of the snapshot
+		 * @return Success or failure
+		 */
+		default ServiceResponse createSnapshot(Instance instance, Map opts){
+			return null;
+		}
+
+		/**
 		 * Request to delete all snapshots for a given compute server
 		 * They only need to be deleted from the cloud, Morpheus will
 		 * handle the cleanup of snapshot database records after a successful response
@@ -475,6 +514,18 @@ public interface ProvisionProvider extends PluginProvider {
 		 * @return Success or failure
 		 */
 		default ServiceResponse deleteSnapshots(ComputeServer server, Map opts){
+			return null;
+		}
+
+		/**
+		 * Request to delete all snapshots for a given instance
+		 * They only need to be deleted from the cloud, Morpheus will
+		 * handle the cleanup of snapshot database records after a successful response
+		 * @param instance server to remove snapshots from
+		 * @param opts additional options
+		 * @return Success or failure
+		 */
+		default ServiceResponse deleteSnapshots(Instance instance, Map opts){
 			return null;
 		}
 
@@ -502,6 +553,26 @@ public interface ProvisionProvider extends PluginProvider {
 		default ServiceResponse revertSnapshot(ComputeServer server, Snapshot snapshot, Map opts){
 			return null;
 		}
+
+		/**
+		 * Request to restore a snapshot to a given instance
+		 * @param snapshot snapshot to restore
+		 * @param instance server to restore to snapshot to
+		 * @param opts additional options
+		 * @return Success or failure
+		 */
+		default ServiceResponse revertSnapshot(Instance instance, Snapshot snapshot, Map opts){
+			return null;
+		}
+
+		/**
+		 * Request to build a linked clone from a given vm and snapshot
+		 * @param server the vm
+		 * @param snapshot the specific snapshot to use
+		 * @return Success or failure
+		 */
+
+		default ServiceResponse createLinkedClone(ComputeServer server, Snapshot snapshot) { return null; }
 
 	}
 
@@ -667,6 +738,16 @@ public interface ProvisionProvider extends PluginProvider {
 		 * used to fill in necessary attributes of the server.
 		 */
 		ServiceResponse<InitializeHypervisorResponse> initializeHypervisor(Cloud cloud, ComputeServer server);
+	}
+
+	/**
+	 * Provides methods for hooks for converting pre-provisioned ComputeServers to managed Instances
+	 * @author Mike Carlin
+	 * @since 1.2.13
+	 */
+	interface ConvertToManagedFacet {
+		ServiceResponse<BeforeConvertToManagedResponse> beforeConvertToManaged(BeforeConvertToManagedRequest beforeConvertToManagedRequest);
+		ServiceResponse<AfterConvertToManagedResponse> afterConvertToManaged(AfterConvertToManagedRequest afterConvertToManagedRequest);
 	}
 
 	public interface ComputeUpdateFacet extends UpdateFacet<ComputeServer> {

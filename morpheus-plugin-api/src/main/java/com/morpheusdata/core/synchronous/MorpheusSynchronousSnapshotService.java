@@ -22,4 +22,11 @@ import com.morpheusdata.model.Snapshot;
 import com.morpheusdata.model.projection.SnapshotIdentityProjection;
 
 public interface MorpheusSynchronousSnapshotService extends MorpheusSynchronousDataService<Snapshot, SnapshotIdentityProjection>, MorpheusSynchronousIdentityService<SnapshotIdentityProjection> {
+
+	/**
+	 * Returns the SnapshotFileService for interacting with {@link com.morpheusdata.model.SnapshotFile} via
+	 * the morpheus context
+	 * @return SnapshotFileService
+	 */
+	MorpheusSynchronousSnapshotFileService getFile();
 }

@@ -16,6 +16,7 @@
 
 package com.morpheusdata.core;
 
+import com.morpheusdata.core.storage.MorpheusDatastoreTypeService;
 import com.morpheusdata.core.storage.MorpheusVmeQcow2DatastoreService;
 import com.morpheusdata.core.synchronous.*;
 import com.morpheusdata.model.CheckLevel;
@@ -61,6 +62,13 @@ public interface MorpheusSynchronousStorageService {
 	 * @return An instance of the StorageGroup Service
 	 */
 	MorpheusSynchronousStorageGroupService getGroup();
+
+	/**
+	 * Returns the DatastoreType Service for performing actions on a Datastore
+	 *
+	 * @return An instance of the DatastoreType Service
+	 */
+	MorpheusDatastoreTypeService getDatastoreType();
 
 	ServiceResponse validateUpdate(StorageServer storageServer, UpdateDefinition updateDefinition);
 

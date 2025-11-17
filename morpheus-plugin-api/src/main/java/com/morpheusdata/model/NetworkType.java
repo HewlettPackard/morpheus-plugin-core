@@ -49,6 +49,7 @@ public class NetworkType extends MorpheusModel {
 	protected Boolean validateUsageOnDelete = false;
 	private Boolean hasCidr = true;
 	protected Boolean hasNetworkServer = false;
+	protected Boolean hasFirewall = false;
 	protected Boolean cidrRequired = false;
 	protected Boolean ipv6Editable = true;
 
@@ -241,6 +242,14 @@ public class NetworkType extends MorpheusModel {
 
 	public void setCidrRequired(Boolean cidrRequired) {
 		this.cidrRequired = cidrRequired;
+	}
+
+	public Boolean getHasFirewall() {
+		return hasFirewall;
+	}
+
+	public Boolean setHasFirewall(Boolean hasFirewall) {
+		return this.hasFirewall = hasFirewall;
 	}
 
 	public Boolean getIpv6Editable() {
