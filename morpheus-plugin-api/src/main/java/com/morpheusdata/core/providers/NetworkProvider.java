@@ -628,6 +628,52 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 	}
 
 	/**
+	 * Validate the submitted NetworkFirewallRule information.
+	 * If a {@link ServiceResponse} is not marked as successful the validation results will be
+	 * bubbled up to the user.
+	 * @param network Network information
+	 * @param rule SecurityGroupRule information
+	 * @param opts additional configuration options.
+	 * @return ServiceResponse
+	 */
+	default ServiceResponse validateNetworkFirewallRule(Network network, SecurityGroupRule rule, Map opts) {
+		return ServiceResponse.success();
+	}
+
+	/**
+	 * Creates the submitted NetworkFirewallRule
+	 * @param network Network information
+	 * @param rule SecurityGroupRule information
+	 * @param opts additional configuration options.
+	 * @return ServiceResponse
+	 */
+	default ServiceResponse createNetworkFirewallRule(Network network, SecurityGroupRule rule, Map opts) {
+		return ServiceResponse.success();
+	}
+
+	/**
+	 * Updates the submitted NetworkFirewallRule.
+	 * @param network Network information
+	 * @param rule SecurityGroupRule information
+	 * @param opts additional configuration options.
+	 * @return ServiceResponse
+	 */
+	default ServiceResponse updateNetworkFirewallRule(Network network, SecurityGroupRule rule, Map opts) {
+		return ServiceResponse.success();
+	}
+
+	/**
+	 * Deletes the submitted NetworkFirewallRule.
+	 * @param network Network information
+	 * @param rule SecurityGroupRule information
+	 * @param opts additional configuration options.
+	 * @return ServiceResponse
+	 */
+	default ServiceResponse deleteNetworkFirewallRule(Network network, SecurityGroupRule rule, Map opts) {
+		return ServiceResponse.success();
+	}
+
+	/**
 	 * This method is called just before a workload is provisioned.  This can be used to perform any pre network
 	 * initialization tasks prior to a VM/Container gets provisioned
 	 * @param workloadRequest
