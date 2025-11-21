@@ -9,18 +9,18 @@ import java.util.ArrayList;
  * progress, timestamps, and results of executed drift rules.
  */
 public class DriftState {
-    private String code;               // unique code if needed
-    private String refType;            // associated type of object this drift check is for
-    private Long refId;                // associated id of the object this drift check is for
+    protected String code;               // unique code if needed
+    protected String refType;            // associated type of object this drift check is for
+    protected Long refId;                // associated id of the object this drift check is for
 
-    private DriftCheckStatus status;     // status of the drift check (e.g., pending, in-progress, failed, completed)
-    private Integer percentComplete = 0; // completion percentage
+    protected DriftCheckStatus status;     // status of the drift check (e.g., pending, in-progress, failed, completed)
+    protected Integer percentComplete = 0; // completion percentage
 
-    private Instant startedAt;            // start timestamp
-    private Instant completedAt;          // completion timestamp
+    protected Instant startedAt;            // start timestamp
+    protected Instant completedAt;          // completion timestamp
 
-    private DriftSummary driftSummary;    // summary of the drift check (e.g., no-drift, drift-detected, error)
-    private List<DriftRuleResult> ruleResults = new ArrayList<>(); // list of rules executed and their status
+    protected DriftSummary driftSummary;    // summary of the drift check (e.g., no-drift, drift-detected, error)
+    protected List<DriftRuleResult> ruleResults = new ArrayList<>(); // list of rules executed and their status
 
     /** Enum for drift summary. */
     public enum DriftSummary { NO_DRIFT, DRIFT_DETECTED, ERROR }
@@ -38,15 +38,15 @@ public class DriftState {
      * Drift rule result structure.
      */
     public static class DriftRuleResult {
-        private String id;                  // unique id
-        private String ruleName;            // name
-        private String ruleDescription;     // additional details about the rule
-        private String ruleType;            // DHCI vs non-DHCI etc.
-        private Severity severity;          // major / warning / info
-        private RuleStatus status;          // passed / failed / skipped
-        private String resultDescription;   // failure details with embedded resource info
-        private List<String> affectedObjects = new ArrayList<>(); // list of affected objects/resources
-        private String recommendation;      // how to resolve the issue
+    protected String id;                  // unique id
+    protected String ruleName;            // name
+    protected String ruleDescription;     // additional details about the rule
+    protected String ruleType;            // DHCI vs non-DHCI etc.
+    protected Severity severity;          // major / warning / info
+    protected RuleStatus status;          // passed / failed / skipped
+    protected String resultDescription;   // failure details with embedded resource info
+    protected List<String> affectedObjects = new ArrayList<>(); // list of affected objects/resources
+    protected String recommendation;      // how to resolve the issue
 
         // Getters and setters
         public String getId() { return id; }
