@@ -87,4 +87,19 @@ public interface MorpheusAccountPriceSetService extends MorpheusDataService<Acco
 	 * @return status of add results
 	 */
 	Single<Boolean> addToPriceSet(AccountPriceSetIdentityProjection accountPriceSetIdp, AccountPriceIdentityProjection accountPriceIdp);
+
+	/**
+	 * Adds a price to all price sets associated with a plan
+	 * @param planModel target plan
+	 * @param accountPrice AccountPrice to add
+	 * @return status of add resultsgetOrCreatePri
+	 */
+	Single<Boolean> addPriceToPlanPriceSets(MorpheusModel planModel, AccountPrice accountPrice);
+
+	/**
+	 * Gets or creates a price based on the provided options
+	 * @param accountPrice AccountPrice for price creation or lookup
+	 * @return list of prices, errors
+	 */
+	AccountPrice getOrCreatePrice(AccountPrice accountPrice);
 }
