@@ -25,7 +25,7 @@ public class UpdateDefinition extends UpdateIdentityProjection {
 
     protected Boolean isPlugin = false;                   // is this update code located in a plugin
     protected Object hasMany;                             // relationship placeholder (could be typed more strictly)
-    protected List<String> validateRules;                 
+    protected List<String> validateRules;                 // optional - in case any specific rule needs to be executed pre-check.
 
     /**
      * Enum to represent the operation name/type.
