@@ -16,7 +16,6 @@
 
 package com.morpheusdata.core.providers;
 
-import com.morpheusdata.model.DriftState;
 import com.morpheusdata.model.*;
 import com.morpheusdata.model.event.Event;
 import com.morpheusdata.model.provisioning.NetworkConfiguration;
@@ -826,7 +825,7 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 		 * Refresh the update operation status against the target switches.
 		 * @param networkServer
 		 */
-		ServiceResponse<UpdateOperation> refreshUpdate(NetworkServer networkServer);
+		ServiceResponse<UpdateOperation> refreshUpdate(NetworkServer networkServer, UpdateOperation updateOperation);
 
 		/**
 		 * Finalize the update operation status against the target switches.
@@ -861,6 +860,6 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 		 * @param networkServer the target device to check
 		 * @return a ServiceResponse containing details about the configuration drift
 		 */
-		ServiceResponse<DriftState> getConfigurationDriftDetails(NetworkServer networkServer);
+		ServiceResponse<DriftState> getConfigurationDriftDetails(NetworkServer networkServer, DriftState driftState);
 	}
 }

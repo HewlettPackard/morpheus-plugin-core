@@ -16,7 +16,6 @@
 
 package com.morpheusdata.core.providers;
 
-import com.morpheusdata.model.DriftState;
 import com.morpheusdata.model.*;
 import com.morpheusdata.response.ServiceResponse;
 import com.morpheusdata.views.HTMLResponse;
@@ -122,7 +121,7 @@ public interface StorageProvider extends PluginProvider,UIExtensionProvider {
 		 * @param storageServer
 		 * @return
 		 */
-		ServiceResponse<UpdateOperation> refreshUpdate(StorageServer storageServer);
+		ServiceResponse<UpdateOperation> refreshUpdate(StorageServer storageServer, UpdateOperation updateOperation);
 
 		/**
 		 * Post update operations can be performed here.  This is useful for cleanup, verification, or other
@@ -160,6 +159,6 @@ public interface StorageProvider extends PluginProvider,UIExtensionProvider {
 		 * @param storageServer the target device to check
 		 * @return a ServiceResponse containing details about the configuration drift
 		 */
-		ServiceResponse<DriftState> getConfigurationDriftDetails(StorageServer storageServer);
+		ServiceResponse<DriftState> getConfigurationDriftDetails(StorageServer storageServer, DriftState driftState);
 	}
 }
