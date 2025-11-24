@@ -161,7 +161,7 @@ public interface PluginProvider {
 		 *
 		 * @param target the target device to refresh
 		 */
-		default ServiceResponse refreshUpdate(T target) {
+		default ServiceResponse refreshUpdate(T target, UpdateOperation updateoperation) {
 			return ServiceResponse.success();
 		}
 	}
@@ -185,7 +185,7 @@ public interface PluginProvider {
 		 * @param target the target device to check
 		 * @return a ServiceResponse containing details about the configuration drift
 		 */
-		default ServiceResponse<DriftState> getConfigurationDriftDetails(T target) {
+		default ServiceResponse<DriftState> getConfigurationDriftDetails(T target, DriftState driftState) {
 			return ServiceResponse.success();
 		}
 	}

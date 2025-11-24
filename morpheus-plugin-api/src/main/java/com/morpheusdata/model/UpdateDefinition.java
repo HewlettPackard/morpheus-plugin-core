@@ -14,9 +14,9 @@ public class UpdateDefinition extends UpdateIdentityProjection {
     protected OpType updateOpType;         // enum to differentiate dryrun vs update, spp vs ilo
 
     protected String refType;              // associated type of object this update is for
-    protected String refId;                // associated id of the object this update is for
+    protected Long refId;                  // associated id of the object this update is for
     protected String updateImagePath;      // file location of the update
-    protected ImagePathType imagePathType; // vme_archive_http_path, local_fs_path, external_http_path
+    protected ImagePathType imagePathType; // vme_archive_http_path, local_fs_path, external_http_path, vme_image_lib_path
 
     protected Boolean peerPersistence = false;            // true/false, true to indicate peer persistence enabled configuration.
     protected Boolean requiresMaintenanceMode = false;    // does this require maintenance mode to be enabled.
@@ -25,7 +25,7 @@ public class UpdateDefinition extends UpdateIdentityProjection {
 
     protected Boolean isPlugin = false;                   // is this update code located in a plugin
     protected Object hasMany;                             // relationship placeholder (could be typed more strictly)
-    protected List<String> validateRules;
+    protected List<String> validateRules;                 // optional - in case any specific rule needs to be executed pre-check.
 
     /**
      * Enum to represent the operation name/type.
@@ -39,9 +39,10 @@ public class UpdateDefinition extends UpdateIdentityProjection {
      * Enum to represent the image path type.
      */
     public enum ImagePathType {
-        VME_ARCHIVE_HTTP_PATH,
-        LOCAL_FS_PATH,
-        EXTERNAL_HTTP_PATH
+    VME_ARCHIVE_HTTP_PATH,
+    LOCAL_FS_PATH,
+    EXTERNAL_HTTP_PATH,
+    VME_IMAGE_LIB_PATH
     }
 
     // Getters and setters
@@ -60,8 +61,8 @@ public class UpdateDefinition extends UpdateIdentityProjection {
     public String getRefType() { return refType; }
     public void setRefType(String refType) { this.refType = refType; }
 
-    public String getRefId() { return refId; }
-    public void setRefId(String refId) { this.refId = refId; }
+    public Long getRefId() { return refId; }
+    public void setRefId(Long refId) { this.refId = refId; }
 
     public String getUpdateImagePath() { return updateImagePath; }
     public void setUpdateImagePath(String updateImagePath) { this.updateImagePath = updateImagePath; }

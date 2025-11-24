@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class CheckLevel {
     protected String code;              // unique code if needed
     protected String refType;           // associated type of object this drift check is for
-    protected String refId;             // associated id of the object this drift check is for
+    protected Long refId;               // associated id of the object this drift check is for
     protected CheckLevelEnum checkLevel; // level of the drift check (e.g., all, update)
     protected List<String> driftRules = new ArrayList<>(); // Mandatory when checkLevel = TARGETED & ignored for other levels
     protected List<String> excludeDriftRules = new ArrayList<>(); // use this if some rules need to excluded from execution when checkLevel=ALL or UPDATE
@@ -28,8 +28,8 @@ public class CheckLevel {
     public String getRefType() { return refType; }
     public void setRefType(String refType) { this.refType = refType; }
 
-    public String getRefId() { return refId; }
-    public void setRefId(String refId) { this.refId = refId; }
+    public Long getRefId() { return refId; }
+    public void setRefId(Long refId) { this.refId = refId; }
 
     public CheckLevelEnum getCheckLevel() { return checkLevel; }
     public void setCheckLevel(CheckLevelEnum checkLevel) { this.checkLevel = checkLevel; }

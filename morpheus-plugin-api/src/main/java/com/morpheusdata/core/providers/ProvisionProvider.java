@@ -775,7 +775,7 @@ public interface ProvisionProvider extends PluginProvider {
 		 * @param computeServer
 		 * @return
 		 */
-		ServiceResponse<UpdateOperation> refreshUpdate(ComputeServer... computeServer);
+		ServiceResponse<UpdateOperation> refreshUpdate(UpdateOperation updateOperation, ComputeServer... computeServer);
 
 		/**
 		 * Post update operations can be performed here.  This is useful for cleanup, verification, or other
@@ -811,6 +811,6 @@ public interface ProvisionProvider extends PluginProvider {
 		 * @param  computeServer the target device to check
 		 * @return a ServiceResponse containing details about the configuration drift
 		 */
-		ServiceResponse<DriftState> getConfigurationDriftDetails(ComputeServer... computeServer);
+		ServiceResponse<DriftState> getConfigurationDriftDetails(DriftState driftState, ComputeServer... computeServer);
 	}
 }
