@@ -353,6 +353,55 @@ public interface CloudProvider extends PluginProvider {
 	 */
 	default String getDefaultLoadBalancerTypeCode() { return null; }
 
+	/**
+	 * Indicates whether the cloud provider supports costing functionality.
+	 * Costing functionality typically involves tracking and managing costs associated with cloud resources.
+	 *
+	 * @return Boolean - `true` if costing is supported, `false` otherwise.
+	 */
+	default Boolean hasCosting() { return false; }
+
+	/**
+	 * Indicates whether the cloud provider supports reservations.
+	 * Reservations allow users to reserve specific resources or capacities in the cloud.
+	 *
+	 * @return Boolean - `true` if reservations are supported, `false` otherwise.
+	 */
+	default Boolean hasReservations() { return false; }
+
+	/**
+	 * Indicates whether the cloud provider supports agentless metrics collection.
+	 * Agentless metrics collection involves gathering performance data without requiring an agent on the resource.
+	 *
+	 * @return Boolean - `true` if agentless metrics are supported, `false` otherwise.
+	 */
+	default Boolean supportsAgentlessMetrics() { return false; }
+
+	/**
+	 * Indicates whether the cloud provider supports orphaned guidance.
+	 * Orphaned guidance helps identify and manage unused or orphaned resources in the cloud.
+	 *
+	 * @return Boolean - `true` if orphaned guidance is supported, `false` otherwise.
+	 */
+	default Boolean supportsOrphanedGuidance() { return false; }
+
+	/**
+	 * Indicates whether the cloud provider can synchronize hypervisor statistics.
+	 * Synchronizing hypervisor stats involves collecting and updating data about the hypervisor's performance and usage.
+	 *
+	 * @return Boolean - `true` if hypervisor stats synchronization is supported, `false` otherwise.
+	 */
+	default Boolean canSyncHypervisorStats() { return false; }
+
+	/**
+	 * Indicates whether the cloud provider supports native plans.
+	 * Native plans refer to predefined service plans specific to the cloud provider.
+	 *
+	 * @return Boolean - `true` if native plans are supported, `false` otherwise.
+	 */
+	default Boolean hasNativePlans() { return false; }
+
+
 	default ServiceResponse<CloudPool> createCloudPool(Cloud cloud, CloudPool cloudPool) {
 		return ServiceResponse.success(cloudPool);
 	}
