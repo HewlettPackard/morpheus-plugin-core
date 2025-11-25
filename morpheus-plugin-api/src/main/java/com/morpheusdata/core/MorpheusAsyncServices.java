@@ -420,6 +420,12 @@ public interface MorpheusAsyncServices {
 	MorpheusAccountPriceSetService getAccountPriceSet();
 
 	/**
+	 * Returns the MorpheusAccountPriceSetService
+	 * @return an instance of the MorpheusAccountPriceSetService
+	 */
+	MorpheusAccountPriceHistoryService getAccountPriceHistory();
+
+	/**
 	 * Returns the MorpheusAccountPriceService
 	 * @return an instance of the MorpheusAccountPriceService
 	 */

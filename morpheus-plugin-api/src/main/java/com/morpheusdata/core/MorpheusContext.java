@@ -463,6 +463,14 @@ public interface MorpheusContext {
 	MorpheusAccountPriceService getAccountPrice();
 
 	/**
+	 * Returns the MorpheusAccountPriceHistoryService
+	 * @return an instance of the MorpheusAccountPriceHistoryService
+	 * @deprecated
+	 */
+	@Deprecated
+	MorpheusAccountPriceHistoryService getAccountPriceHistory();
+
+	/**
 	 * Returns the MorpheusServicePlanPriceSetService
 	 * @return an instance of the MorpheusServicePlanPriceSetService
 	 * @deprecated
