@@ -62,6 +62,15 @@ public class ComputeServerType  extends MorpheusModel implements IModelCodeName 
 	 * @since 1.2.11
 	 */
 	protected Boolean supportsDeviceAttachment = false;
+	/**
+	 * Flags whether this ComputeServerType supports agentless metrics collection.
+	 * <p>
+	 * If <code>true</code>, Morpheus will call the CloudProvider's getServerStats() method to collect
+	 * metrics for servers without an agent installed. This enables cloud providers to collect
+	 * CPU, memory, and storage metrics directly from their cloud APIs.
+	 * @since 1.2.14
+	 */
+	protected Boolean supportsAgentlessMetrics = false;
 	protected Boolean supportsConsoleKeymap = false;
 	protected Integer displayOrder;
 	protected String managedServerType;
@@ -355,6 +364,15 @@ public class ComputeServerType  extends MorpheusModel implements IModelCodeName 
 	public void setSupportsDeviceAttachment(Boolean supportsDeviceAttachment) {
 		this.supportsDeviceAttachment = supportsDeviceAttachment;
 		markDirty("supportsDeviceAttachment", hasDevices);
+	}
+
+ 	public Boolean getSupportsAgentlessMetrics() {
+		return supportsAgentlessMetrics;
+	}
+
+	public void setSupportsAgentlessMetrics(Boolean supportsAgentlessMetrics) {
+		this.supportsAgentlessMetrics = supportsAgentlessMetrics;
+		markDirty("supportsAgentlessMetrics", supportsAgentlessMetrics);
 	}
 
 	public Boolean getForceResourceCleanupOnDelete() {
