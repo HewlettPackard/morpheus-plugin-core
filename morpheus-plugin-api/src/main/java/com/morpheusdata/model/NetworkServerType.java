@@ -16,6 +16,9 @@
 
 package com.morpheusdata.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class NetworkServerType extends MorpheusModel {
 	public String code;
 	public String name;
@@ -61,6 +64,11 @@ public class NetworkServerType extends MorpheusModel {
 	public String titleEdgeClusters;
 	public Boolean hasEdgeClusters = false;
 	protected Boolean hasFloatingIps = false;
+
+	public List<SecurityGroupRuleTargetType> securityGroupRuleIngressDestTypes = new ArrayList<>();
+	public List<SecurityGroupRuleTargetType> securityGroupRuleEgressDestTypes = new ArrayList<>();
+	public List<SecurityGroupRuleTargetType> securityGroupRuleIngressSourceTypes = new ArrayList<>();
+	public List<SecurityGroupRuleTargetType> securityGroupRuleEgressSourceTypes = new ArrayList<>();
 
 	public String getCode() {
 		return code;
