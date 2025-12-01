@@ -48,6 +48,15 @@ public class BackupRestoreResponse {
 	protected Map restoreConfig;
 
 	/**
+	 * Status of the succeeded restored instance
+	 */
+	protected String restoredInstanceStatus;
+
+	/**
+	 * Status of the succeeded restored container
+	 */
+	protected String restoredContainerStatus;
+	/**
 	 * are there updates available on the associated {@link BackupRestore}
 	 * @return Boolean updates available on the backupRestore object
 	 */
@@ -90,4 +99,35 @@ public class BackupRestoreResponse {
 	 * @param restoreConfig restoreConfig to set on the response
 	 */
 	public void setRestoreConfig(Map restoreConfig) { this.restoreConfig = restoreConfig; }
+
+
+	/**
+	 * get the restoredInstanceStatus
+	 * @return String restoredInstanceStatus
+	 */
+	public String getRestoredInstanceStatus() {
+		return restoredInstanceStatus;
+	}
+
+	/**
+	 * set the restoredInstanceStatus
+	 * @param restoredInstanceStatus restoredInstanceStatus to set on the response
+	 */
+	public void setRestoredInstanceStatus(String restoredInstanceStatus) {
+		this.restoredInstanceStatus = restoredInstanceStatus;
+	}
+	/**
+	 * get the restoredContainerStatus
+	 * @return String restoredContainerStatus
+	 */
+	public String getRestoredContainerStatus() {
+		return restoredContainerStatus;
+	}
+	/**
+	 * set the restoredContainerStatus
+	 * @param restoredContainerStatus restoredContainerStatus to set on the response
+	 */
+	public void setRestoredContainerStatus(String restoredContainerStatus) {
+		this.restoredContainerStatus = restoredContainerStatus;
+	}
 }
