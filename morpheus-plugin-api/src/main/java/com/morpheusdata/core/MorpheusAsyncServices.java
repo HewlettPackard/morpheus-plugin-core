@@ -40,6 +40,7 @@ import com.morpheusdata.core.providers.TaskProvider;
 import com.morpheusdata.core.provisioning.MorpheusProvisionService;
 import com.morpheusdata.model.BackupProvider;
 import com.morpheusdata.core.admin.MorpheusAdminService;
+import com.morpheusdata.core.library.MorpheusResourceSpecTemplateService;
 
 public interface MorpheusAsyncServices {
 	/**
@@ -563,4 +564,16 @@ public interface MorpheusAsyncServices {
 	 * @return an instance of the MorpheusCurrencyConversionService
 	 */
 	MorpheusCurrencyConversionService getCurrency();
+
+	/**
+	 * Returns the {@link MorpheusResourceSpecTemplateService} which allows access to Resource Spec Template operations
+	 * @return an instance of {@link MorpheusResourceSpecTemplateService}
+	 */
+	MorpheusResourceSpecTemplateService getResourceSpecTemplate();
+
+	/**
+	 * Returns the {@link MorpheusFileContentService} which allows access to File Content operations
+	 * @return an instance of {@link MorpheusFileContentService}
+	 */
+	MorpheusFileContentService getFileContent();
 }

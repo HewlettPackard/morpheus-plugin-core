@@ -32,7 +32,7 @@ public class ComputeTypeLayout extends MorpheusModel {
 	protected Collection<ComputeTypeSet> computeServers;
 	protected ProvisionType provisionType;
 	protected ComputeServerGroupType groupType;
-
+	protected Collection<ResourceSpecTemplate> specTemplates;
 	protected Collection<ComputeTypePackage> packages;
 
 	public String getCode() {
