@@ -26,6 +26,8 @@ import com.morpheusdata.response.ServiceResponse;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Provides a standard set of methods for interacting with cloud integrations or on-prem service providers.
@@ -283,6 +285,24 @@ public interface CloudProvider extends PluginProvider {
 	 * @return ServiceResponse
 	 */
 	ServiceResponse deleteServer(ComputeServer computeServer);
+
+	/**
+	 * Called to retrieve server statistics for a compute server. This method allows cloud providers
+	 * to return historical metrics data for CPU, memory, and storage usage. Cloud providers that
+	 * support server statistics should override this method to fetch and return the metrics data.
+	 *
+	 * <p>The returned list should contain {@link ServerStatsData} objects representing metrics at
+	 * different points in time. Each data point should include timestamp, CPU usage, memory usage,
+	 * and storage usage information.</p>
+	 *
+	 *
+	 * @param computeServer the server to retrieve statistics for
+	 * @param opts additional options that may be passed to customize the statistics retrieval (e.g., time range, date filters)
+	 * @return List of ServerStatsData containing historical metrics, or null if not supported by this cloud provider
+	 */
+	default List<ServerStatsData> getServerStats(ComputeServer computeServer, Map<String, Object> opts) {
+		return null;
+	}
 
 	/**
 	 * Indicates if the cloud supports cloud-init. Returning true will allow configuration of the Cloud
