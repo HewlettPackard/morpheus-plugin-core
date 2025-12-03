@@ -737,6 +737,7 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 		public ServiceResponse<Void> releaseComputeServerInterfacesFromServer(NetworkServer networkServer, ComputeServer server, List<ComputeServerInterface> interfaces);
 	}
 
+
 	/**
 	 * This interface is used to provide hooks for the HVM cluster provisioning for network providers to intercept workloads
 	 * and manipulate them prior to the actual defining of the VM itself.  Useful for performing some network prep and/or
@@ -807,5 +808,34 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 			public Workload workload = null;
 			public MvmMetaDataConfig mvmMetaDataConfig = null;
 		}
+
+		//TODO: add JAVADOC
+		public interface FirewallGroupFacet {
+			ServiceResponse deleteFirewallGroup(Account account, NetworkRouter router, ReferenceData group);
+			ServiceResponse createFirewallGroup(Account account, NetworkRouter router, FirewallGroupConfig createConfig);
+		}
+		public interface AppPortProfileFacet {
+			ServiceResponse deleteAppPortProfile(Account account, NetworkRouter router, ReferenceData profile);
+			ServiceResponse createAppPortProfile(Account account, NetworkRouter router, AppPortProfileConfig createConfig);
+		}
+		public interface NATFacet {
+			ServiceResponse createNAT(Account account, NetworkRouter router, NATConfig createConfig);
+			ServiceResponse updateNAT(Account account, NetworkRouter router, NetworkRouterNAT nat, NATConfig updateConfig);
+			ServiceResponse deleteNAT(Account account, NetworkRouter router, NetworkRouterNAT nat);
+		}
+
+		public static class FirewallGroupConfig {
+			//TODO: define properties
+		}
+
+		public static class AppPortProfileConfig {
+			//TODO: define properties
+		}
+
+		public static class NATConfig {
+			//TODO: define properties
+		}
+
+
 	}
 }
