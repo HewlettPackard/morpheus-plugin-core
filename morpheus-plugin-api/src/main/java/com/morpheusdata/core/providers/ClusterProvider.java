@@ -325,4 +325,23 @@ public interface ClusterProvider extends PluginProvider {
 		return new ClusterTabList();
 	}
 
+	public interface ServerPowerFacet {
+
+		/**
+		 * Called when a server should be started. Returning a response of success will cause corresponding updates to usage
+		 * records, result in the powerState of the computeServer to be set to 'on', and related instances set to 'running'
+		 * @param computeServer server to start
+		 * @return ServiceResponse
+		 */
+		ServiceResponse startServer(ComputeServer computeServer);
+
+		/**
+		 * Called when a server should be stopped. Returning a response of success will cause corresponding updates to usage
+		 * records, result in the powerState of the computeServer to be set to 'off', and related instances set to 'stopped'
+		 * @param computeServer server to stop
+		 * @return ServiceResponse
+		 */
+		ServiceResponse stopServer(ComputeServer computeServer);
+	}
+
 }
