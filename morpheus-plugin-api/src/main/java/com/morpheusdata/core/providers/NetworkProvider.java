@@ -813,12 +813,15 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 		public interface FirewallGroupFacet {
 			ServiceResponse deleteFirewallGroup(Account account, NetworkRouter router, ReferenceData group);
 			ServiceResponse createFirewallGroup(Account account, NetworkRouter router, FirewallGroupConfig createConfig);
+			ServiceResponse validateFirewallGroup(Account account, NetworkRouter router, FirewallGroupConfig createConfig);
 		}
 		public interface AppPortProfileFacet {
 			ServiceResponse deleteAppPortProfile(Account account, NetworkRouter router, ReferenceData profile);
 			ServiceResponse createAppPortProfile(Account account, NetworkRouter router, AppPortProfileConfig createConfig);
+			ServiceResponse validateAppPortProfile(Account account, NetworkRouter router, AppPortProfileConfig createConfig);
 		}
 		public interface NATFacet {
+			ServiceResponse validateNAT(Account account, NetworkRouter router, NATConfig createConfig);
 			ServiceResponse createNAT(Account account, NetworkRouter router, NATConfig createConfig);
 			ServiceResponse updateNAT(Account account, NetworkRouter router, NetworkRouterNAT nat, NATConfig updateConfig);
 			ServiceResponse deleteNAT(Account account, NetworkRouter router, NetworkRouterNAT nat);
