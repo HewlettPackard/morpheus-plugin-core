@@ -139,7 +139,7 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 	protected Boolean provision = true;
 	protected String macAddress;
 	protected ComputeCapacityInfo capacityInfo;
-	protected Boolean agentInstalled;
+	protected Boolean agentInstalled = false;
 	protected Boolean toolsInstalled = false;
 	protected Date lastAgentUpdate;
 	protected String agentVersion;
@@ -179,6 +179,7 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 	protected Double hardwareCpuFrequency;
 	protected Boolean systemServer=false;
 	protected String managedBy;
+	protected Date lastMetricRunDate;
 
 	protected GuestAgentStatus guestAgentStatus = GuestAgentStatus.unknown;
 
@@ -1176,6 +1177,14 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 		markDirty("guestAgentStatus", guestAgentStatus);
 	}
 
+	public Date getLastMetricRunDate() {
+		return lastMetricRunDate;
+	}
+
+	public void setLastMetricRunDate(Date lastMetricRunDate) {
+		this.lastMetricRunDate = lastMetricRunDate;
+		markDirty("lastMetricRunDate", lastMetricRunDate);
+	}
 
 	public enum GuestConsoleType {
 		disabled,
