@@ -500,6 +500,46 @@ public interface CloudProvider extends PluginProvider {
 	}
 
 	/**
+	 * Gets the cloud summary information to be displayed in the Cloud -> Summary tab.
+	 * This allows plugins to provide custom summary information including:
+	 * <ul>
+	 *   <li>Standard info items (label-value pairs) via {@link com.morpheusdata.model.CloudSummaryInfoItem}</li>
+	 *   <li>Custom zone summary renderer via {@link CloudSummaryProvider}</li>
+	 *   <li>Custom costing summary renderer via {@link CloudCostingSummaryProvider}</li>
+	 * </ul>
+	 *
+	 * @param cloud the cloud for which to get the summary
+	 * @param user the current user requesting the summary
+	 * @return CloudSummary containing the summary information, or null if not implemented
+	 * @since 1.2.15
+	 */
+	default com.morpheusdata.model.CloudSummary getCloudSummary(Cloud cloud, com.morpheusdata.model.User user) {
+		return null;
+	}
+
+	/**
+	 * Gets the cloud summary provider for rendering custom zone summary content.
+	 * This provider will be used to render custom HTML in the zone summary section.
+	 *
+	 * @return CloudSummaryProvider instance, or null if custom rendering is not needed
+	 * @since 1.2.15
+	 */
+	default CloudSummaryProvider getCloudSummaryProvider() {
+		return null;
+	}
+
+	/**
+	 * Gets the costing summary provider for rendering custom costing summary content.
+	 * This provider will be used to render custom HTML in the costing summary section.
+	 *
+	 * @return CloudCostingSummaryProvider instance, or null if custom rendering is not needed
+	 * @since 1.2.15
+	 */
+	default CloudCostingSummaryProvider getCloudCostingSummaryProvider() {
+		return null;
+	}
+
+	/**
 	 * Adds support to a {@link CloudProvider} for managing Affinity and anti-affinity groups. Some clouds, like vmware, may support
 	 * setting these rules on a set of compute servers to either ensure they run on separate hosts, or run on the same host.
 	 * @since 1.2.4
