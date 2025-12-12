@@ -86,6 +86,19 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 	 */
 	Collection<NetworkRouterType> getRouterTypes();
 
+	/**
+	 * Provides a Collection Maps containing String key value pairs for available port types (e.g.):
+	 *  [
+	 *  	[id:'TCP', name:'TCP'],
+	 *      [id:'UDP', name:'UDP']
+	 *  ]
+	 *
+	 * @return Collection of Maps
+	 */
+	default Collection<Map> getPortTypes() {
+		return new ArrayList<>();
+	}
+
 	Collection<OptionType> getOptionTypes();
 
 	default Boolean isUserVisible() { return false; }
