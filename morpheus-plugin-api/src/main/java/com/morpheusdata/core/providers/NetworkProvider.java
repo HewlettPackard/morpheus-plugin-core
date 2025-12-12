@@ -82,6 +82,19 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 	 */
 	Collection<NetworkRouterType> getRouterTypes();
 
+	/**
+	 * Provides a Collection Maps containing String key value pairs for available port types (e.g.):
+	 *  [
+	 *  	[id:'TCP', name:'TCP'],
+	 *      [id:'UDP', name:'UDP']
+	 *  ]
+	 *
+	 * @return Collection of Maps
+	 */
+	default Collection<Map> getPortTypes() {
+		return new ArrayList<>();
+	}
+
 	Collection<OptionType> getOptionTypes();
 
 	default Boolean isUserVisible() { return false; }
@@ -733,6 +746,7 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 		public ServiceResponse<Void> releaseComputeServerInterfacesFromServer(NetworkServer networkServer, ComputeServer server, List<ComputeServerInterface> interfaces);
 	}
 
+
 	/**
 	 * This interface is used to provide hooks for the HVM cluster provisioning for network providers to intercept workloads
 	 * and manipulate them prior to the actual defining of the VM itself.  Useful for performing some network prep and/or
@@ -803,6 +817,38 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 			public Workload workload = null;
 			public MvmMetaDataConfig mvmMetaDataConfig = null;
 		}
+
+		//TODO: add JAVADOC
+		public interface FirewallGroupFacet {
+			ServiceResponse deleteFirewallGroup(Account account, NetworkRouter router, ReferenceData group);
+			ServiceResponse createFirewallGroup(Account account, NetworkRouter router, FirewallGroupConfig createConfig);
+			ServiceResponse validateFirewallGroup(Account account, NetworkRouter router, FirewallGroupConfig createConfig);
+		}
+		public interface AppPortProfileFacet {
+			ServiceResponse deleteAppPortProfile(Account account, NetworkRouter router, ReferenceData profile);
+			ServiceResponse createAppPortProfile(Account account, NetworkRouter router, AppPortProfileConfig createConfig);
+			ServiceResponse validateAppPortProfile(Account account, NetworkRouter router, AppPortProfileConfig createConfig);
+		}
+		public interface NATFacet {
+			ServiceResponse validateNAT(Account account, NetworkRouter router, NATConfig createConfig);
+			ServiceResponse createNAT(Account account, NetworkRouter router, NATConfig createConfig);
+			ServiceResponse updateNAT(Account account, NetworkRouter router, NetworkRouterNAT nat, NATConfig updateConfig);
+			ServiceResponse deleteNAT(Account account, NetworkRouter router, NetworkRouterNAT nat);
+		}
+
+		public static class FirewallGroupConfig {
+			//TODO: define properties
+		}
+
+		public static class AppPortProfileConfig {
+			//TODO: define properties
+		}
+
+		public static class NATConfig {
+			//TODO: define properties
+		}
+
+
 	}
 
 	public interface NetworkUpdateFacet extends UpdateFacet<NetworkServer> {
