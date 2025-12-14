@@ -17,6 +17,7 @@
 package com.morpheusdata.core.providers;
 
 import com.morpheusdata.core.NetworkProvider;
+import com.morpheusdata.core.network.loadbalancer.LoadBalancerProvider;
 import com.morpheusdata.core.Plugin;
 import com.morpheusdata.model.*;
 import com.morpheusdata.request.FilterServicePlansCriteria;
@@ -345,6 +346,12 @@ public interface CloudProvider extends PluginProvider {
 	 */
 	default String getDefaultNetworkServerTypeCode() { return null; }
 
+	/**
+	 * Returns the default load balancer type code for fetching a {@link LoadBalancerProvider} for this cloud.
+	 * This is only really necessary if the load balancer type code is the exact same as the cloud code.
+	 * @return the load balancer provider code
+	 */
+	default String getDefaultLoadBalancerTypeCode() { return null; }
 
 	default ServiceResponse<CloudPool> createCloudPool(Cloud cloud, CloudPool cloudPool) {
 		return ServiceResponse.success(cloudPool);

@@ -16,6 +16,7 @@
 
 package com.morpheusdata.core.network.loadbalancer;
 
+import com.morpheusdata.core.providers.CloudProvider;
 import com.morpheusdata.core.providers.PluginProvider;
 import com.morpheusdata.model.*;
 import com.morpheusdata.response.ServiceResponse;
@@ -55,6 +56,15 @@ public interface LoadBalancerProvider extends PluginProvider {
 	 * @return Collection of NetworkLoadBalancerType
 	 */
 	Collection<NetworkLoadBalancerType> getLoadBalancerTypes();
+
+	/**
+	 * Some older clouds have a load balancer server type code that is the exact same as the cloud code. This allows one to set it
+	 * to match and in doing so the provider will be fetched via the cloud providers {@link CloudProvider#getDefaultLoadBalancerTypeCode()} method.
+	 * @return code for overriding the ProvisionType record code property
+	 */
+	default String getLoadBalancerServerTypeCode() {
+		return getCode();
+	}
 
 	/**
 	 * Validates the user submitted load balancer connection information to ensure the appliance can communicate with it.
