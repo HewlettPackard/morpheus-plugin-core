@@ -117,7 +117,7 @@ public class StreamingQcow2Writer {
 		//outputStream.write(magic.getBytes(StandardCharsets.US_ASCII));
 
 		// Version
-		writeInt(outputStream, 2);
+		writeInt(outputStream, 3);
 
 		// Backing file name offset (0 = no backing file)
 		writeLong(outputStream, 0);
