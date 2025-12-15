@@ -835,17 +835,23 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 		}
 		public interface NATFacet {
 			ServiceResponse validateNAT(Account account, NetworkRouter router, NATConfig createConfig);
-			ServiceResponse createNAT(Account account, NetworkRouter router, NATConfig createConfig);
+			ServiceResponse createNAT(Account account, NetworkRouter router, NetworkRouterNAT nat, NATConfig createConfig);
 			ServiceResponse updateNAT(Account account, NetworkRouter router, NetworkRouterNAT nat, NATConfig updateConfig);
 			ServiceResponse deleteNAT(Account account, NetworkRouter router, NetworkRouterNAT nat);
 		}
 
 		public static class FirewallGroupConfig {
-			//TODO: define properties
+			public String name;
+			public String description;
+			public String groupType;
+			public List<String> ipRange = new ArrayList<>();
 		}
 
 		public static class AppPortProfileConfig {
-			//TODO: define properties
+			public String name;
+			public String description;
+			public String protocol;
+			public List<String> portRange = new ArrayList<>();
 		}
 
 		public static class NATConfig {
