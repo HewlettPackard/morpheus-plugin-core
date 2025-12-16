@@ -90,6 +90,27 @@ public class StorageVolume extends StorageVolumeIdentityProjection {
 	protected String wwn;
 	protected Boolean createForMultiAttach = false;
 	protected Boolean activeReplica = false;
+	/**
+	 * An identifier for volumes sharing the same role across servers in an instance.
+	 * <p>
+	 * Used as a fallback for reconfigure volume comparison when volumes have no inherent information
+	 * that ties them together. Core automatically supplies a definitionId during provisioning
+	 * or reconfigure, but manual assignment is required for volumes added to a ComputeServer out of band.
+	 * <p>
+	 * For example:
+	 * <pre>
+	 * - Instance
+	 *   - Server A
+	 *     - Volumes
+	 *       - deviceDisplayName: data1-a89f6, definitionId: 'application-storage'
+	 *   - Server B
+	 *     - Volumes
+	 *       - deviceDisplayName: data1-beb17, definitionId: 'application-storage'
+	 * </pre>
+	 * In this case, even though their volume names are different on the array, we can still treat these volumes as in the same "role"
+	 * when attempting to reconfigure their size or datastore at the instance level.
+	 */
+	protected String definitionId;
 
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	public Account getAccount() {
@@ -621,5 +642,14 @@ public class StorageVolume extends StorageVolumeIdentityProjection {
 	public void setActiveReplica(Boolean activeReplica) {
 		this.activeReplica = activeReplica;
 		markDirty("activeReplica", activeReplica, this.activeReplica);
+	}
+
+	public String getDefinitionId() {
+		return definitionId;
+	}
+
+	public void setDefinitionId(String definitionId) {
+		this.definitionId = definitionId;
+		markDirty("definitionId", definitionId, this.definitionId);
 	}
 }
