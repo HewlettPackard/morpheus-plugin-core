@@ -155,7 +155,19 @@ public class StreamingQcow2Writer {
 		// Offset of the snapshot table (must be aligned to clusters)
 		writeLong(outputStream, 0);
 
-		outputStream.write(new byte[(int) CLUSTER_SIZE - 72]);
+		//incompatible_features
+		writeLong(outputStream, 0);
+		//compatible_features
+		writeLong(outputStream, 0);
+		//autoclear_features
+		writeLong(outputStream, 0);
+		//recount_order 4
+		writeInt(outputStream, 4);
+		//header length 104
+		writeInt(outputStream, 104);
+
+
+		outputStream.write(new byte[(int) CLUSTER_SIZE - 104]);
 
 		writeRefcountTable(outputStream);
 		writeMappingTable(outputStream);
@@ -290,6 +302,36 @@ public class StreamingQcow2Writer {
 			written += CLUSTER_SIZE;
 		}
 		bos.flush();
+	}
+
+	public void copyData(InputStream inputStream, RandomAccessFile writer) throws IOException {
+//		BufferedOutputStream bos = new BufferedOutputStream(writer, (int)(CLUSTER_SIZE * 2));
+		long written = firstDataCluster * CLUSTER_SIZE;
+		byte[] buffer = new byte[(int) CLUSTER_SIZE];
+		for (Long cluster : dataClusterIterable) {
+			long desiredPosition = cluster * CLUSTER_SIZE;
+			long skipBytes = desiredPosition - position;
+			if(skipBytes > 0) {
+				inputStream.skip(skipBytes);
+				position += skipBytes;
+			}
+
+
+			int bytesRead = inputStream.read(buffer);
+			//TODO: if entire chunk is zeroes, skip writing it
+			//TODO: Update QCOW2 refcount table accordingly to reflect skipped clusters
+			//This should allow for sparse file writing
+
+			if(bytesRead > 0) {
+				writer.write(buffer,0,bytesRead);
+				position += bytesRead;
+			}
+			if ((written + CLUSTER_SIZE) / REPORT_INTERVAL_BYTES != written / REPORT_INTERVAL_BYTES) {
+				System.err.printf("%d/%d bytes written%n", written + CLUSTER_SIZE, fileSize());
+			}
+			written += CLUSTER_SIZE;
+		}
+
 	}
 
 //	public void copyData(InputStream reader, OutputStream writer) throws IOException {
