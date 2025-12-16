@@ -466,6 +466,23 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 	 */
 	default ServiceResponse deleteRouterRoute(NetworkRouter router, NetworkRoute route, Map opts) { return ServiceResponse.success(); };
 
+	/**
+	 * Create the Router firewall rule
+	 * @param router NetworkRouter information
+	 * @param rule SecurityGroupRule information
+	 * @param opts additional configuration options
+	 * @return ServiceResponse
+	 */
+	default ServiceResponse createRouterFirewallRule(NetworkRouter router, SecurityGroupRule rule, Map opts) { return ServiceResponse.success(); };
+
+	/**
+	 * Delete the Router firewall rule
+	 * @param router NetworkRouter information
+	 * @param rule SecurityGroupRule information
+	 * @param opts additional configuration options
+	 * @return ServiceResponse
+	 */
+	default ServiceResponse deleteRouterFirewallRule(NetworkRouter router, SecurityGroupRule rule, Map opts) { return ServiceResponse.success(); };
 
 	/**
 	 * Prepare the security group before validate, create, and update.
