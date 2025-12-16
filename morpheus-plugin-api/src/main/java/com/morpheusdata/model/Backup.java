@@ -17,7 +17,7 @@
 package com.morpheusdata.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.morpheusdata.model.BackupProvider;
+
 import java.util.Date;
 import com.morpheusdata.model.serializers.ModelAsIdOnlySerializer;
 
@@ -95,7 +95,7 @@ public class Backup extends MorpheusModel {
 	//general
 	protected String internalId;
 	protected String externalId;
-
+	protected String location;
 	protected String restoreConfig;
 	protected String dateDay;
 	protected Integer retentionCount;
@@ -626,5 +626,12 @@ public class Backup extends MorpheusModel {
 		markDirty("errorMessage", errorMessage, this.errorMessage);
 		this.errorMessage = errorMessage;
 	}
-	
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
 }

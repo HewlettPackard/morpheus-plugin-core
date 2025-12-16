@@ -19,10 +19,7 @@ package com.morpheusdata.model;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.morpheusdata.model.serializers.ModelAsIdOnlySerializer;
 
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 public class BackupResult extends MorpheusModel {
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
@@ -34,7 +31,7 @@ public class BackupResult extends MorpheusModel {
 	protected String backupFormat; //data,file,snapshot
 	protected String backupType;
 	protected String containerFormat; //container,vm,all
-
+	protected String location;
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected User createdBy;
 	// protected StorageBucket storageProvider;
@@ -687,6 +684,14 @@ public class BackupResult extends MorpheusModel {
 	public void setInternalProcessId(Long internalProcessId) {
 		this.internalProcessId = internalProcessId;
 		markDirty("internalProcessId", internalProcessId, this.internalProcessId);
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
 	}
 
 	public enum Status {
