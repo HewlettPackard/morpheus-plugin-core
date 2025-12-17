@@ -87,13 +87,13 @@ public interface MorpheusSynchronousComputeServerService extends MorpheusSynchro
 	Single<Boolean> restartServer(Long computeServerId);
 
 	/**
-	 * Build a ComputeNetworkInterface from the provided parameters.
+	 * Returns a ComputeNetworkInterface built from the provided parameters.
 	 *
-	 * @param account           Account
-	 * @param instance          Instance
-	 * @param server            ComputeServer
-	 * @param networkInterfaceConfig  NetworkInterfaceConfig
-	 * @return populated ComputeServerInterface
+	 * @param account {@link Account}
+	 * @param instance {@link Instance}
+	 * @param server {@link ComputeServer}
+	 * @param networkInterfaceConfig {@link MorpheusComputeServerNetworkInterfaceConfig}
+	 * @return A ComputeServerInterface instance
 	 */
 	ComputeServerInterface buildComputeServerInterface(Account account, Instance instance, ComputeServer server, MorpheusComputeServerNetworkInterfaceConfig networkInterfaceConfig);
 }

@@ -25,21 +25,21 @@ public class MorpheusComputeServerNetworkInterfaceConfig {
 
 	public Map<String, Object> toMap() {
 		Map<String, Object> map = new java.util.HashMap<>();
-		if (macAddress != null) map.put("macAddress", macAddress);
-		if (externalId != null) map.put("externalId", externalId);
-		if (externalType != null) map.put("externalType", externalType);
-		if (type != null) map.put("type", type);
-		if (networkInterfaceTypeId != null) map.put("networkInterfaceTypeId", networkInterfaceTypeId);
-		map.put("index", index); // always include index as it's a primitive int
-		if (parent != null) map.put("parent", parent);
-		if (isPrimaryOverride != null) map.put("isPrimaryOverride", isPrimaryOverride);
-		if (opts != null) map.put("opts", opts);
-		if (ipMode != null) map.put("ipMode", ipMode);
-		if (replaceHostRecord != null) map.put("replaceHostRecord", replaceHostRecord);
-		if (isPrimary != null) map.put("isPrimary", isPrimary);
-		if (network != null) map.put("network", network);
-		if (nicName != null) map.put("nicName", nicName);
-		if (ipAddress != null) map.put("ipAddress", ipAddress);
+		map.put("macAddress", macAddress);
+		map.put("externalId", externalId);
+		map.put("externalType", externalType);
+		map.put("type", type);
+		map.put("networkInterfaceTypeId", networkInterfaceTypeId);
+		map.put("index", index);
+		map.put("parent", parent);
+		map.put("isPrimaryOverride", isPrimaryOverride);
+		map.put("opts", opts);
+		map.put("ipMode", ipMode);
+		map.put("replaceHostRecord", replaceHostRecord);
+		map.put("isPrimary", isPrimary);
+		map.put("network", network);
+		map.put("nicName", nicName);
+		map.put("ipAddress", ipAddress);
 		return map;
 	}
 }
