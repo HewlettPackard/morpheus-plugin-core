@@ -59,6 +59,12 @@ public interface MorpheusSynchronousNetworkService extends MorpheusSynchronousDa
 	 */
 	MorpheusSynchronousNetworkTypeService getType();
 
+	/**
+	 * Returns the {@link MorpheusNetworkServerService} used for performing updates/queries on {@link NetworkServer} related assets
+	 * within Morpheus
+	 * @return An instance of the {@link MorpheusNetworkServerService}
+	 */
+	MorpheusSynchronousNetworkServerService getServer();
 
 	/**
 	 * Returns the {@link MorpheusSynchronousNetworkRouterService} used for performing updates/queries on {@link NetworkRouter} related assets
@@ -80,5 +86,5 @@ public interface MorpheusSynchronousNetworkService extends MorpheusSynchronousDa
 	 * @return An instance of the {@link MorpheusSynchronousNetworkProxyService}
 	 */
 	MorpheusSynchronousNetworkProxyService getNetworkProxy();
-	
+
 }
