@@ -16,6 +16,7 @@
 
 package com.morpheusdata.core.synchronous.compute;
 
+import com.morpheusdata.core.MorpheusComputeServerService;
 import com.morpheusdata.core.MorpheusSynchronousIdentityService;
 import com.morpheusdata.core.MorpheusSynchronousDataService;
 import com.morpheusdata.model.*;
@@ -63,4 +64,36 @@ public interface MorpheusSynchronousComputeServerService extends MorpheusSynchro
 	ServiceResponse runConfigurationDriftCheck(CheckLevel checkLevel, ComputeServer... computeServer);
 
 	ServiceResponse getConfigurationDriftDetails(ComputeServer... computeServer);
+
+	/**
+	 * Stop a ComputeServer. This is an async operation and the server may not be stopped immediately.
+	 * @param computeServerId ComputeServer id to stop
+	 * @return success if the request to stop the server was successful
+	 */
+	Single<Boolean> stopServer(Long computeServerId);
+
+	/**
+	 * Start a ComputeServer. This is an async operation and the server may not be started immediately.
+	 * @param computeServerId ComputeServer id to start
+	 * @return success if the request to start the server was successful
+	 */
+	Single<Boolean> startServer(Long computeServerId);
+
+	/**
+	 * Restart a ComputeServer. This is an async operation and the server may not be restarted immediately.
+	 * @param computeServerId ComputeServer id to restart
+	 * @return success if the request to restart the server was successful
+	 */
+	Single<Boolean> restartServer(Long computeServerId);
+
+	/**
+	 * Build a ComputeNetworkInterface from the provided parameters.
+	 *
+	 * @param account           Account
+	 * @param instance          Instance
+	 * @param server            ComputeServer
+	 * @param networkInterfaceConfig  NetworkInterfaceConfig
+	 * @return populated ComputeServerInterface
+	 */
+	ComputeServerInterface buildComputeServerInterface(Account account, Instance instance, ComputeServer server, MorpheusComputeServerService.NetworkInterfaceConfig networkInterfaceConfig);
 }
