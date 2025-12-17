@@ -25,6 +25,15 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+/**
+ * A class for generating QCOW2 format disk images in a streaming manner.
+ * This class constructs the QCOW2 header, refcount tables, and mapping tables
+ * based on the specified virtual disk size and data ranges. It supports writing
+ * the QCOW2 structures to output streams or random access files, and copying
+ * data clusters from input streams or random access files while skipping sparse regions.
+ *
+ * @author David Estes
+ */
 public class StreamingQcow2Writer {
 
 	private static final long CLUSTER_SIZE = 65536;
@@ -39,6 +48,15 @@ public class StreamingQcow2Writer {
 	Long dataClusterSize = 0L;
 	public DataClusterIterable dataClusterIterable;
 
+	/**
+	 * Constructs a StreamingQcow2Writer for generating QCOW2 format disk images.
+	 * Initializes the QCOW2 header structure, calculates cluster mappings, and sets up
+	 * the refcount tables based on the provided input size and data ranges.
+	 *
+	 * @param inputSize the virtual disk size in bytes
+	 * @param ranges an iterable collection of byte ranges that contain actual data (non-sparse regions)
+	 * @throws IllegalArgumentException if the data clusters in ranges are not sorted
+	 */
 	public StreamingQcow2Writer(long inputSize, Iterable<Range<Long>> ranges) {
 		this.inputSize = inputSize;
 
@@ -90,22 +108,52 @@ public class StreamingQcow2Writer {
 		this.firstDataCluster = 1 + refcountTableClusters + refcountBlocks + l1Clusters + l2Tables;
 	}
 
+	/**
+	 * Divides two numbers and rounds up to the nearest integer.
+	 *
+	 * @param a the dividend
+	 * @param b the divisor
+	 * @return the result of a/b rounded up to the nearest integer
+	 */
 	private static long divideAndRoundUp(long a, long b) {
 		return (a + b - 1) / b;
 	}
 
+	/**
+	 * Calculates the total file size of the QCOW2 image.
+	 *
+	 * @return the total file size in bytes (total clusters * cluster size)
+	 */
 	public long fileSize() {
 		return CLUSTER_SIZE * totalClusters();
 	}
 
+	/**
+	 * Calculates the total number of clusters in the QCOW2 image.
+	 *
+	 * @return the total number of clusters (header + metadata + data)
+	 */
 	private long totalClusters() {
 		return firstDataCluster + dataClusterSize;
 	}
 
+	/**
+	 * Calculates the total number of clusters needed to represent the guest virtual disk.
+	 *
+	 * @return the number of clusters in the virtual disk
+	 */
 	public long totalGuestClusters() {
 		return divideAndRoundUp(inputSize, CLUSTER_SIZE);
 	}
 
+	/**
+	 * Writes the complete QCOW2 header, refcount table, and mapping tables to an output stream.
+	 * This includes the QCOW2 magic bytes, version 3 format header fields, L1/L2 mapping tables,
+	 * and refcount structures necessary for a valid QCOW2 image.
+	 *
+	 * @param outputStream the output stream to write the QCOW2 header to
+	 * @throws IOException if an I/O error occurs during writing
+	 */
 	public void writeHeader(OutputStream outputStream) throws IOException {
 		// Magic
 		//String magic = "QFI" + (char) 0xFB;
@@ -173,6 +221,91 @@ public class StreamingQcow2Writer {
 		writeMappingTable(outputStream);
 	}
 
+	/**
+	 * Writes the complete QCOW2 header, refcount table, and mapping tables to a random access file.
+	 * This method seeks to the beginning of the file and writes the QCOW2 magic bytes, version 3
+	 * format header fields, L1/L2 mapping tables, and refcount structures necessary for a valid QCOW2 image.
+	 *
+	 * @param randomAccessFile the random access file to write the QCOW2 header to (will seek to position 0)
+	 * @throws IOException if an I/O error occurs during writing
+	 */
+	public void writeHeader(RandomAccessFile randomAccessFile) throws IOException {
+		// Seek to the beginning of the file
+		randomAccessFile.seek(0);
+
+		// Magic
+		//String magic = "QFI" + (char) 0xFB;
+		randomAccessFile.write('Q');
+		randomAccessFile.write('F');
+		randomAccessFile.write('I');
+		randomAccessFile.write(0xFB);
+
+		//randomAccessFile.write(magic.getBytes(StandardCharsets.US_ASCII));
+
+		// Version
+		writeInt(randomAccessFile, 3);
+
+		// Backing file name offset (0 = no backing file)
+		writeLong(randomAccessFile, 0);
+
+		// Backing file name length
+		writeInt(randomAccessFile, 0);
+
+		// Number of bits per cluster address, 1<<bits is the cluster size
+		assert CLUSTER_SIZE == 1 << 16;
+		writeInt(randomAccessFile, 16);
+
+		// Virtual disk size in bytes
+		writeLong(randomAccessFile, inputSize);
+
+		// Encryption method (none)
+		writeInt(randomAccessFile, 0);
+
+		// L1 table size (number of entries)
+		long l2EntriesPerCluster = CLUSTER_SIZE / 8;
+		long l1Entries = totalGuestClusters() / l2EntriesPerCluster;
+		writeInt(randomAccessFile, (int) l1Entries);
+
+		// L1 table offset
+		writeLong(randomAccessFile, l1Offset);
+
+		// Refcount table offset
+		writeLong(randomAccessFile, CLUSTER_SIZE);
+
+		// Refcount table length in clusters
+		writeInt(randomAccessFile, refcountTableClusters);
+
+		// Number of snapshots in the image
+		writeInt(randomAccessFile, 0);
+
+		// Offset of the snapshot table (must be aligned to clusters)
+		writeLong(randomAccessFile, 0);
+
+		//incompatible_features
+		writeLong(randomAccessFile, 0);
+		//compatible_features
+		writeLong(randomAccessFile, 0);
+		//autoclear_features
+		writeLong(randomAccessFile, 0);
+		//recount_order 4
+		writeInt(randomAccessFile, 4);
+		//header length 104
+		writeInt(randomAccessFile, 104);
+
+
+		randomAccessFile.write(new byte[(int) CLUSTER_SIZE - 104]);
+
+		writeRefcountTable(randomAccessFile);
+		writeMappingTable(randomAccessFile);
+	}
+
+	/**
+	 * Writes the QCOW2 refcount table and refcount blocks to an output stream.
+	 * The refcount table tracks cluster usage for copy-on-write and snapshot functionality.
+	 *
+	 * @param outputStream the output stream to write the refcount table to
+	 * @throws IOException if an I/O error occurs during writing
+	 */
 	private void writeRefcountTable(OutputStream outputStream) throws IOException {
 		long refcountBlocks = divideAndRoundUp(totalClusters() * 2, CLUSTER_SIZE);
 
@@ -203,6 +336,50 @@ public class StreamingQcow2Writer {
 		}
 	}
 
+	/**
+	 * Writes the QCOW2 refcount table and refcount blocks to a random access file.
+	 * The refcount table tracks cluster usage for copy-on-write and snapshot functionality.
+	 *
+	 * @param randomAccessFile the random access file to write the refcount table to
+	 * @throws IOException if an I/O error occurs during writing
+	 */
+	private void writeRefcountTable(RandomAccessFile randomAccessFile) throws IOException {
+		long refcountBlocks = divideAndRoundUp(totalClusters() * 2, CLUSTER_SIZE);
+
+		// Table
+		for (long block = 0; block < refcountBlocks; block++) {
+			writeLong(randomAccessFile, CLUSTER_SIZE * (1 + refcountTableClusters + block));
+		}
+
+		long refcountEntriesPerCluster = CLUSTER_SIZE / 8;
+		long lastClusterEntries = refcountBlocks % refcountEntriesPerCluster;
+		if (lastClusterEntries > 0) {
+			for (long i = lastClusterEntries; i < refcountEntriesPerCluster; i++) {
+				writeLong(randomAccessFile, 0);
+			}
+		}
+
+		// Blocks
+		for (long i = 0; i < totalClusters(); i++) {
+			writeShort(randomAccessFile, (short) 1);
+		}
+
+		long blockEntriesPerCluster = CLUSTER_SIZE / 2;
+		long lastBlockClusterEntries = totalClusters() % blockEntriesPerCluster;
+		if (lastBlockClusterEntries > 0) {
+			for (long i = lastBlockClusterEntries; i < blockEntriesPerCluster; i++) {
+				writeShort(randomAccessFile, (short) 0);
+			}
+		}
+	}
+
+	/**
+	 * Writes the QCOW2 L1 and L2 mapping tables to an output stream.
+	 * These tables map guest virtual disk addresses to physical cluster offsets in the QCOW2 file.
+	 *
+	 * @param outputStream the output stream to write the mapping tables to
+	 * @throws IOException if an I/O error occurs during writing
+	 */
 	private void writeMappingTable(OutputStream outputStream) throws IOException {
 
 
@@ -261,6 +438,80 @@ public class StreamingQcow2Writer {
 		}
 	}
 
+	/**
+	 * Writes the QCOW2 L1 and L2 mapping tables to a random access file.
+	 * These tables map guest virtual disk addresses to physical cluster offsets in the QCOW2 file.
+	 *
+	 * @param randomAccessFile the random access file to write the mapping tables to
+	 * @throws IOException if an I/O error occurs during writing
+	 */
+	private void writeMappingTable(RandomAccessFile randomAccessFile) throws IOException {
+
+
+		// L1 table
+		long l1EntriesPerCluster = CLUSTER_SIZE / 8;
+		long l1Entries = divideAndRoundUp(totalGuestClusters(), l1EntriesPerCluster);
+		for (long entry = 0; entry < l1Entries; entry++) {
+			long offset = l1Offset + l1Clusters * CLUSTER_SIZE + entry * CLUSTER_SIZE;
+			long l1Entry = offset | (1L << 63);
+			writeLong(randomAccessFile, l1Entry);
+		}
+
+		long lastClusterEntries = l1Entries % l1EntriesPerCluster;
+		if (lastClusterEntries > 0) {
+			for (long i = lastClusterEntries; i < l1EntriesPerCluster; i++) {
+				writeLong(randomAccessFile, 0);
+			}
+		}
+
+		// L2 table
+
+		Iterator<Long> iterator = dataClusterIterable.iterator();
+		Long nextCluster = null;
+		if(iterator.hasNext()) {
+			nextCluster = iterator.next();
+		}
+		long clusterCounter=0;
+		for (long guestCluster = 0; guestCluster < totalGuestClusters(); guestCluster++) {
+			long l2Entry = 0L;
+			if(nextCluster == guestCluster) {
+				l2Entry = clusterCounter + firstDataCluster;
+				if(iterator.hasNext()) {
+					nextCluster = iterator.next();
+					clusterCounter++;
+				} else {
+					nextCluster = null;
+				}
+			} else {
+				l2Entry = 0L;
+			}
+
+			long offset = l2Entry*CLUSTER_SIZE;
+			if (offset != 0) {
+				offset |= (0L << 62) | (1L << 63);
+			}
+
+			writeLong(randomAccessFile, offset);
+		}
+
+		long l2EntriesPerCluster = CLUSTER_SIZE / 8;
+		lastClusterEntries = totalGuestClusters() % l2EntriesPerCluster;
+		if (lastClusterEntries > 0) {
+			for (long i = lastClusterEntries; i < l2EntriesPerCluster; i++) {
+				writeLong(randomAccessFile, 0);
+			}
+		}
+	}
+
+	/**
+	 * Copies data clusters from a random access file to an output stream.
+	 * Only copies clusters identified in the data ranges provided during construction,
+	 * skipping sparse/empty regions. Progress is reported to stderr at regular intervals.
+	 *
+	 * @param reader the random access file to read data from
+	 * @param writer the output stream to write data to
+	 * @throws IOException if an I/O error occurs during copying
+	 */
 	public void copyData(RandomAccessFile reader, OutputStream writer) throws IOException {
 		long written = firstDataCluster * CLUSTER_SIZE;
 		byte[] buffer = new byte[(int) CLUSTER_SIZE];
@@ -277,6 +528,16 @@ public class StreamingQcow2Writer {
 	}
 
 	long position = 0;
+	/**
+	 * Copies data clusters from an input stream to an output stream.
+	 * Only copies clusters identified in the data ranges provided during construction,
+	 * skipping sparse/empty regions by advancing the input stream position.
+	 * Progress is reported to stderr at regular intervals.
+	 *
+	 * @param inputStream the input stream to read data from
+	 * @param writer the output stream to write data to (will be buffered)
+	 * @throws IOException if an I/O error occurs during copying
+	 */
 	public void copyData(InputStream inputStream, OutputStream writer) throws IOException {
 		BufferedOutputStream bos = new BufferedOutputStream(writer, (int)(CLUSTER_SIZE * 2));
 		long written = firstDataCluster * CLUSTER_SIZE;
@@ -304,34 +565,147 @@ public class StreamingQcow2Writer {
 		bos.flush();
 	}
 
+	/**
+	 * Copies data clusters from an input stream to a random access file.
+	 * Only copies clusters identified in the data ranges provided during construction,
+	 * skipping sparse/empty regions by advancing the input stream position.
+	 * Detects zero-filled clusters and marks them as empty in the L2 table to create
+	 * a thin QCOW2 image. If the input stream ends before all clusters are processed,
+	 * all remaining clusters are marked as empty in the L2 table.
+	 * Progress is reported to stderr at regular intervals.
+	 *
+	 * @param inputStream the input stream to read data from
+	 * @param writer the random access file to write data to
+	 * @throws IOException if an I/O error occurs during copying
+	 */
 	public void copyData(InputStream inputStream, RandomAccessFile writer) throws IOException {
-//		BufferedOutputStream bos = new BufferedOutputStream(writer, (int)(CLUSTER_SIZE * 2));
 		long written = firstDataCluster * CLUSTER_SIZE;
 		byte[] buffer = new byte[(int) CLUSTER_SIZE];
+		long dataClusterIndex = 0;
+		boolean streamEnded = false;
+
 		for (Long cluster : dataClusterIterable) {
+			if (streamEnded) {
+				// Stream ended, mark all remaining clusters as empty
+				long l2TableOffset = calculateL2EntryOffset(cluster);
+				long currentPosition = writer.getFilePointer();
+
+				writer.seek(l2TableOffset);
+				writeLong(writer, 0L);
+				writer.seek(currentPosition);
+
+				if ((written + CLUSTER_SIZE) / REPORT_INTERVAL_BYTES != written / REPORT_INTERVAL_BYTES) {
+					System.err.printf("%d/%d bytes written%n", written + CLUSTER_SIZE, fileSize());
+				}
+				written += CLUSTER_SIZE;
+				dataClusterIndex++;
+				continue;
+			}
+
 			long desiredPosition = cluster * CLUSTER_SIZE;
 			long skipBytes = desiredPosition - position;
 			if(skipBytes > 0) {
-				inputStream.skip(skipBytes);
-				position += skipBytes;
+				long skipped = inputStream.skip(skipBytes);
+				if (skipped < skipBytes) {
+					// Could not skip, stream likely ended
+					streamEnded = true;
+					long l2TableOffset = calculateL2EntryOffset(cluster);
+					long currentPosition = writer.getFilePointer();
+
+					writer.seek(l2TableOffset);
+					writeLong(writer, 0L);
+					writer.seek(currentPosition);
+
+					if ((written + CLUSTER_SIZE) / REPORT_INTERVAL_BYTES != written / REPORT_INTERVAL_BYTES) {
+						System.err.printf("%d/%d bytes written%n", written + CLUSTER_SIZE, fileSize());
+					}
+					written += CLUSTER_SIZE;
+					dataClusterIndex++;
+					continue;
+				}
+				position += skipped;
 			}
 
+			// Read the full cluster, handling incomplete reads
+			int totalBytesRead = 0;
+			while (totalBytesRead < CLUSTER_SIZE) {
+				int bytesRead = inputStream.read(buffer, totalBytesRead, (int) CLUSTER_SIZE - totalBytesRead);
+				if (bytesRead == -1) {
+					// End of stream reached
+					streamEnded = true;
+					if (totalBytesRead == 0) {
+						// No data read for this cluster at all, mark as empty
+						long l2TableOffset = calculateL2EntryOffset(cluster);
+						long currentPosition = writer.getFilePointer();
 
-			int bytesRead = inputStream.read(buffer);
-			//TODO: if entire chunk is zeroes, skip writing it
-			//TODO: Update QCOW2 refcount table accordingly to reflect skipped clusters
-			//This should allow for sparse file writing
+						writer.seek(l2TableOffset);
+						writeLong(writer, 0L);
+						writer.seek(currentPosition);
 
-			if(bytesRead > 0) {
-				writer.write(buffer,0,bytesRead);
-				position += bytesRead;
+						if ((written + CLUSTER_SIZE) / REPORT_INTERVAL_BYTES != written / REPORT_INTERVAL_BYTES) {
+							System.err.printf("%d/%d bytes written%n", written + CLUSTER_SIZE, fileSize());
+						}
+						written += CLUSTER_SIZE;
+						dataClusterIndex++;
+						break;
+					} else {
+						// Partial data read, fill the rest with zeros
+						for (int i = totalBytesRead; i < CLUSTER_SIZE; i++) {
+							buffer[i] = 0;
+						}
+					}
+					break;
+				}
+				totalBytesRead += bytesRead;
 			}
+
+			if(totalBytesRead > 0) {
+				// Check if the entire buffer is zero-filled
+				boolean isZeroFilled = true;
+				for (int i = 0; i < CLUSTER_SIZE; i++) {
+					if (buffer[i] != 0) {
+						isZeroFilled = false;
+						break;
+					}
+				}
+
+			if (isZeroFilled) {
+					// Mark this cluster as empty in the L2 table
+					long l2TableOffset = calculateL2EntryOffset(cluster);
+					long currentPosition = writer.getFilePointer();
+
+					// Seek to the L2 entry and write 0 to mark it as empty
+					writer.seek(l2TableOffset);
+					writeLong(writer, 0L);
+
+					// Seek back to continue writing data
+					writer.seek(currentPosition);
+				} else {
+					// Write the data and update the L2 table to point to it
+					long dataPosition = writer.getFilePointer();
+					writer.write(buffer, 0, (int) CLUSTER_SIZE);
+
+					// Update the L2 table entry to point to the actual data location
+					long l2TableOffset = calculateL2EntryOffset(cluster);
+					long currentPosition = writer.getFilePointer();
+
+					writer.seek(l2TableOffset);
+					long offset = dataPosition | (0L << 62) | (1L << 63);
+					writeLong(writer, offset);
+
+					// Seek back to continue writing data
+					writer.seek(currentPosition);
+				}
+
+				position += totalBytesRead;
+			}
+
 			if ((written + CLUSTER_SIZE) / REPORT_INTERVAL_BYTES != written / REPORT_INTERVAL_BYTES) {
 				System.err.printf("%d/%d bytes written%n", written + CLUSTER_SIZE, fileSize());
 			}
 			written += CLUSTER_SIZE;
+			dataClusterIndex++;
 		}
-
 	}
 
 //	public void copyData(InputStream reader, OutputStream writer) throws IOException {
@@ -349,49 +723,170 @@ public class StreamingQcow2Writer {
 //		}
 //	}
 
+	/**
+	 * Calculates the file offset of the L2 table entry for a given guest cluster.
+	 * The L2 table maps guest cluster indices to physical cluster offsets in the QCOW2 file.
+	 *
+	 * @param guestCluster the guest cluster index
+	 * @return the file offset (in bytes) of the L2 table entry for this cluster
+	 */
+	private long calculateL2EntryOffset(long guestCluster) {
+		long l2EntriesPerCluster = CLUSTER_SIZE / 8;
+
+		// Calculate which L2 table this cluster belongs to
+		long l2TableIndex = guestCluster / l2EntriesPerCluster;
+
+		// Calculate the offset within that L2 table
+		long l2EntryIndex = guestCluster % l2EntriesPerCluster;
+
+		// Calculate the file offset of the L2 table
+		long l2TableOffset = l1Offset + l1Clusters * CLUSTER_SIZE + l2TableIndex * CLUSTER_SIZE;
+
+		// Calculate the file offset of the specific entry
+		return l2TableOffset + l2EntryIndex * 8;
+	}
+
+	/**
+	 * Writes a 32-bit integer value in big-endian byte order to an output stream.
+	 *
+	 * @param outputStream the output stream to write to
+	 * @param value the integer value to write
+	 * @throws IOException if an I/O error occurs during writing
+	 */
 	private void writeInt(OutputStream outputStream, int value) throws IOException {
 		ByteBuffer buffer = ByteBuffer.allocate(4).order(ByteOrder.BIG_ENDIAN);
 		buffer.putInt(value);
 		outputStream.write(buffer.array());
 	}
 
+	/**
+	 * Writes a 32-bit integer value in big-endian byte order to a random access file.
+	 *
+	 * @param randomAccessFile the random access file to write to
+	 * @param value the integer value to write
+	 * @throws IOException if an I/O error occurs during writing
+	 */
+	private void writeInt(RandomAccessFile randomAccessFile, int value) throws IOException {
+		ByteBuffer buffer = ByteBuffer.allocate(4).order(ByteOrder.BIG_ENDIAN);
+		buffer.putInt(value);
+		randomAccessFile.write(buffer.array());
+	}
+
+	/**
+	 * Writes a 64-bit long value in big-endian byte order to an output stream.
+	 *
+	 * @param outputStream the output stream to write to
+	 * @param value the long value to write
+	 * @throws IOException if an I/O error occurs during writing
+	 */
 	private void writeLong(OutputStream outputStream, long value) throws IOException {
 		ByteBuffer buffer = ByteBuffer.allocate(8).order(ByteOrder.BIG_ENDIAN);
 		buffer.putLong(value);
 		outputStream.write(buffer.array());
 	}
 
+	/**
+	 * Writes a 64-bit long value in big-endian byte order to a random access file.
+	 *
+	 * @param randomAccessFile the random access file to write to
+	 * @param value the long value to write
+	 * @throws IOException if an I/O error occurs during writing
+	 */
+	private void writeLong(RandomAccessFile randomAccessFile, long value) throws IOException {
+		ByteBuffer buffer = ByteBuffer.allocate(8).order(ByteOrder.BIG_ENDIAN);
+		buffer.putLong(value);
+		randomAccessFile.write(buffer.array());
+	}
+
+	/**
+	 * Writes a 16-bit short value in big-endian byte order to an output stream.
+	 *
+	 * @param outputStream the output stream to write to
+	 * @param value the short value to write
+	 * @throws IOException if an I/O error occurs during writing
+	 */
 	private void writeShort(OutputStream outputStream, short value) throws IOException {
 		ByteBuffer buffer = ByteBuffer.allocate(2).order(ByteOrder.BIG_ENDIAN);
 		buffer.putShort(value);
 		outputStream.write(buffer.array());
 	}
 
+	/**
+	 * Writes a 16-bit short value in big-endian byte order to a random access file.
+	 *
+	 * @param randomAccessFile the random access file to write to
+	 * @param value the short value to write
+	 * @throws IOException if an I/O error occurs during writing
+	 */
+	private void writeShort(RandomAccessFile randomAccessFile, short value) throws IOException {
+		ByteBuffer buffer = ByteBuffer.allocate(2).order(ByteOrder.BIG_ENDIAN);
+		buffer.putShort(value);
+		randomAccessFile.write(buffer.array());
+	}
+
+	/**
+	 * Represents a range with a start and end value.
+	 * Used to define byte ranges that contain actual data in the virtual disk.
+	 *
+	 * @param <T> the type of the range bounds, must be comparable
+	 */
 	public static class Range<T extends Comparable<? super T>> {
 		private final T start;
 		private final T end;
 
+		/**
+		 * Constructs a new Range with the specified start and end values.
+		 *
+		 * @param start the start value of the range (inclusive)
+		 * @param end the end value of the range (exclusive)
+		 */
 		public Range(T start, T end) {
 			this.start = start;
 			this.end = end;
 		}
 
+		/**
+		 * Returns the start value of this range.
+		 *
+		 * @return the start value
+		 */
 		public T getStart() {
 			return start;
 		}
 
+		/**
+		 * Returns the end value of this range.
+		 *
+		 * @return the end value
+		 */
 		public T getEnd() {
 			return end;
 		}
 	}
 
+	/**
+	 * An iterable that converts byte ranges into cluster indices.
+	 * This allows iteration over all clusters that contain actual data,
+	 * handling overlapping ranges and ensuring clusters are returned in sorted order.
+	 */
 	public static class DataClusterIterable implements Iterable<Long> {
 		private final Iterable<Range<Long>> ranges;
 		private Range<Long> currentRange = null;
+		/**
+		 * Constructs a DataClusterIterable from the given byte ranges.
+		 *
+		 * @param ranges the byte ranges containing actual data
+		 */
 		public DataClusterIterable(Iterable<Range<Long>> ranges) {
 			this.ranges = ranges;
 		}
 
+		/**
+		 * Returns an iterator over cluster indices in sorted order.
+		 * Handles range boundaries and ensures no duplicate clusters are returned.
+		 *
+		 * @return an iterator of cluster indices
+		 */
 		@Override
 		public Iterator<Long> iterator() {
 
@@ -413,6 +908,12 @@ public class StreamingQcow2Writer {
 					}
 				}
 
+				/**
+				 * Loads the next cluster index from the ranges.
+				 * Handles range transitions and ensures no duplicate clusters.
+				 *
+				 * @return true if a next cluster was loaded, false if no more clusters exist
+				 */
 				public boolean loadNext() {
 
 					if(currentRange == null) {
