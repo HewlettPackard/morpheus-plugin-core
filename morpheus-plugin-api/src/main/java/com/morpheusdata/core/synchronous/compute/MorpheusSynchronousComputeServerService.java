@@ -16,9 +16,9 @@
 
 package com.morpheusdata.core.synchronous.compute;
 
-import com.morpheusdata.core.MorpheusComputeServerService;
 import com.morpheusdata.core.MorpheusSynchronousIdentityService;
 import com.morpheusdata.core.MorpheusSynchronousDataService;
+import com.morpheusdata.core.compute.MorpheusComputeServerNetworkInterfaceConfig;
 import com.morpheusdata.model.*;
 import com.morpheusdata.model.projection.ComputeServerIdentityProjection;
 import com.morpheusdata.response.ServiceResponse;
@@ -95,5 +95,5 @@ public interface MorpheusSynchronousComputeServerService extends MorpheusSynchro
 	 * @param networkInterfaceConfig  NetworkInterfaceConfig
 	 * @return populated ComputeServerInterface
 	 */
-	ComputeServerInterface buildComputeServerInterface(Account account, Instance instance, ComputeServer server, MorpheusComputeServerService.NetworkInterfaceConfig networkInterfaceConfig);
+	ComputeServerInterface buildComputeServerInterface(Account account, Instance instance, ComputeServer server, MorpheusComputeServerNetworkInterfaceConfig networkInterfaceConfig);
 }
