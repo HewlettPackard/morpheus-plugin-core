@@ -264,18 +264,4 @@ public interface MorpheusNetworkService extends MorpheusDataService<Network, Net
 	 * @return Observable stream of sync projection
 	 */
 	Single<NetworkServer> getNetworkServerById(Long id);
-
-	Single<ServiceResponse> validateUpdate(NetworkServer networkServer, UpdateDefinition updateDefinition);
-
-	Single<ServiceResponse> executeUpdate(NetworkServer networkServer, UpdateDefinition updateDefinition);
-
-	Single<ServiceResponse> postUpdate(NetworkServer networkServer, UpdateDefinition updateDefinition);
-
-	Single<ServiceResponse> rollbackUpdate(NetworkServer networkServer, UpdateDefinition updateDefinition);
-
-	Single<ServiceResponse> refreshUpdate(NetworkServer networkServer);
-
-	Single<ServiceResponse> runConfigurationDriftCheck(NetworkServer networkServer, CheckLevel checkLevel);
-
-	Single<ServiceResponse> getConfigurationDriftDetails(NetworkServer networkServer);
 }

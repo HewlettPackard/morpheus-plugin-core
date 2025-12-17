@@ -64,17 +64,4 @@ public interface MorpheusStorageService {
 	 */
 	MorpheusStorageGroupService getGroup();
 
-	Single<ServiceResponse> validateUpdate(StorageServer storageServer, UpdateDefinition updateDefinition);
-
-	Single<ServiceResponse> executeUpdate(StorageServer storageServer, UpdateDefinition updateDefinition);
-
-	Single<ServiceResponse> postUpdate(StorageServer storageServer, UpdateDefinition updateDefinition);
-
-	Single<ServiceResponse> rollbackUpdate(StorageServer storageServer, UpdateDefinition updateDefinition);
-
-	Single<ServiceResponse> refreshUpdate(StorageServer storageServer);
-
-	Single<ServiceResponse> runConfigurationDriftCheck(StorageServer storageServer, CheckLevel checkLevel);
-
-	Single<ServiceResponse> getConfigurationDriftDetails(StorageServer storageServer);
 }
