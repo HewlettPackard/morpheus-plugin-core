@@ -374,6 +374,13 @@ public interface CloudProvider extends PluginProvider {
 	default String getDefaultLoadBalancerTypeCode() { return null; }
 
 	/**
+	 * Returns the default zone instance type layout code for this cloud.
+	 * This is used when discovered vm is to be assigned an instance type layout by default.
+	 * @return String - the default zone instance type layout code
+	 */
+	default String getZoneInstanceTypeLayoutCode() { return null; }
+
+	/**
 	 * Indicates whether the cloud provider supports costing functionality.
 	 * Costing functionality typically involves tracking and managing costs associated with cloud resources.
 	 *
