@@ -20,7 +20,9 @@ import com.morpheusdata.core.MorpheusDataService;
 import com.morpheusdata.core.MorpheusIdentityService;
 import com.morpheusdata.model.*;
 import com.morpheusdata.model.projection.NetworkServerIdentityProjection;
+import com.morpheusdata.response.ServiceResponse;
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
 
 
 /**
@@ -66,5 +68,19 @@ public interface MorpheusNetworkServerService extends MorpheusDataService<Networ
 	 * @return an RxJava Observable stream of result projection objects.
 	 */
 	Observable<NetworkServer> listIdentityProjections(Long cloudId, String typeCode);
+
+	Single<ServiceResponse> validateUpdate(UpdateDefinition updateDefinition, NetworkServer networkServer);
+
+	Single<ServiceResponse> executeUpdate(UpdateDefinition updateDefinition, NetworkServer networkServer);
+
+	Single<ServiceResponse> postUpdate(UpdateDefinition updateDefinition, NetworkServer networkServer);
+
+	Single<ServiceResponse> rollbackUpdate(UpdateDefinition updateDefinition, NetworkServer networkServer);
+
+	Single<ServiceResponse> refreshUpdate(NetworkServer networkServer);
+
+	Single<ServiceResponse> runConfigurationDriftCheck(CheckLevel checkLevel, NetworkServer networkServer);
+
+	Single<ServiceResponse> getConfigurationDriftDetails(NetworkServer networkServer);
 
 }

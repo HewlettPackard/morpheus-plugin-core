@@ -70,17 +70,52 @@ public interface MorpheusSynchronousStorageService {
 	 */
 	MorpheusDatastoreTypeService getDatastoreType();
 
+	/**
+	 * Validates an update on a {@link StorageServer} before executing the update.
+	 * @deprecated use {@link MorpheusSynchronousStorageServerService#validateUpdate(UpdateDefinition, StorageServer)}instead
+	 */
+	@Deprecated
 	ServiceResponse validateUpdate(StorageServer storageServer, UpdateDefinition updateDefinition);
 
+	/**
+	 * Executes an update on a {@link StorageServer}.
+	 * @deprecated use {@link MorpheusSynchronousStorageServerService#executeUpdate(UpdateDefinition, StorageServer)} instead
+	 */
+	@Deprecated
 	ServiceResponse executeUpdate(StorageServer storageServer, UpdateDefinition updateDefinition);
 
+	/**
+	 * Post processes an update on a {@link StorageServer} after executing the update.
+	 * @deprecated use {@link MorpheusSynchronousStorageServerService#postUpdate(UpdateDefinition, StorageServer)} instead
+	 */
+	@Deprecated
 	ServiceResponse postUpdate(StorageServer storageServer, UpdateDefinition updateDefinition);
 
+	/**
+	 * Rolls back an update on a {@link StorageServer} if the update failed.
+	 * @deprecated use {@link MorpheusSynchronousStorageServerService#rollbackUpdate(UpdateDefinition, StorageServer)} instead
+	 */
+	@Deprecated
 	ServiceResponse rollbackUpdate(StorageServer storageServer, UpdateDefinition updateDefinition);
 
+	/**
+	 * Refresh the update status in a {@link StorageServer}.
+	 * @deprecated use {@link MorpheusSynchronousStorageServerService#refreshUpdate(StorageServer)}  instead
+	 */
+	@Deprecated
 	ServiceResponse refreshUpdate(StorageServer storageServer);
 
+	/**
+	 * Run a configuration drift check on a {@link StorageServer}.
+	 * @deprecated use {@link MorpheusSynchronousStorageServerService#runConfigurationDriftCheck(CheckLevel, StorageServer)}  instead
+	 */
+	@Deprecated
 	ServiceResponse runConfigurationDriftCheck(StorageServer storageServer, CheckLevel checkLevel);
 
+	/**
+	 * Get configuration drift details on a {@link StorageServer}.
+	 * @deprecated use {@link MorpheusSynchronousStorageServerService#getConfigurationDriftDetails(StorageServer)}  instead
+	 */
+	@Deprecated
 	ServiceResponse getConfigurationDriftDetails(StorageServer storageServer);
 }

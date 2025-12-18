@@ -18,6 +18,7 @@ package com.morpheusdata.core.synchronous.network;
 
 import com.morpheusdata.core.MorpheusSynchronousDataService;
 import com.morpheusdata.core.MorpheusSynchronousIdentityService;
+import com.morpheusdata.core.network.MorpheusNetworkServerService;
 import com.morpheusdata.core.providers.DNSProvider;
 import com.morpheusdata.core.providers.IPAMProvider;
 import com.morpheusdata.model.*;
@@ -87,17 +88,52 @@ public interface MorpheusSynchronousNetworkService extends MorpheusSynchronousDa
 	 */
 	MorpheusSynchronousNetworkProxyService getNetworkProxy();
 
+	/**
+	 * Validates an update on a {@link NetworkServer} before executing the update.
+	 * @deprecated use {@link MorpheusSynchronousNetworkServerService#validateUpdate(UpdateDefinition, NetworkServer)}  instead
+	 */
+	@Deprecated
 	ServiceResponse validateUpdate(NetworkServer networkServer, UpdateDefinition updateDefinition);
 
+	/**
+	 * Executes an update on a {@link NetworkServer}.
+	 * @deprecated use {@link MorpheusSynchronousNetworkServerService#executeUpdate(UpdateDefinition, NetworkServer)}  instead
+	 */
+	@Deprecated
 	ServiceResponse executeUpdate(NetworkServer networkServer, UpdateDefinition updateDefinition);
 
+	/**
+	 * Post processes an update on a {@link NetworkServer} after executing the update.
+	 * @deprecated use {@link MorpheusSynchronousNetworkServerService#postUpdate(UpdateDefinition, NetworkServer)}  instead
+	 */
+	@Deprecated
 	ServiceResponse postUpdate(NetworkServer networkServer, UpdateDefinition updateDefinition);
 
+	/**
+	 * Rolls back an update on a {@link NetworkServer} if the update failed.
+	 * @deprecated use {@link MorpheusSynchronousNetworkServerService#rollbackUpdate(UpdateDefinition, NetworkServer)}  instead
+	 */
+	@Deprecated
 	ServiceResponse rollbackUpdate(NetworkServer networkServer, UpdateDefinition updateDefinition);
 
+	/**
+	 * Refreshes the update status on a {@link NetworkServer}.
+	 * @deprecated use {@link MorpheusSynchronousNetworkServerService#refreshUpdate(NetworkServer)}  instead
+	 */
+	@Deprecated
 	ServiceResponse refreshUpdate(NetworkServer networkServer);
 
+	/**
+	 * Run a configuration drift check on a {@link NetworkServer}.
+	 * @deprecated use {@link MorpheusSynchronousNetworkServerService#runConfigurationDriftCheck(CheckLevel, NetworkServer)}  instead
+	 */
+	@Deprecated
 	ServiceResponse runConfigurationDriftCheck(NetworkServer networkServer, CheckLevel level);
 
+	/**
+	 * Get configuration drift details on a {@link NetworkServer}.
+	 * @deprecated use {@link MorpheusSynchronousNetworkServerService#getConfigurationDriftDetails(NetworkServer)}  instead
+	 */
+	@Deprecated
 	ServiceResponse getConfigurationDriftDetails(NetworkServer networkServer);
 }

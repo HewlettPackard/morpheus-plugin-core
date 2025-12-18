@@ -18,8 +18,26 @@ package com.morpheusdata.core.synchronous;
 
 import com.morpheusdata.core.MorpheusSynchronousIdentityService;
 import com.morpheusdata.core.MorpheusSynchronousDataService;
+import com.morpheusdata.model.CheckLevel;
 import com.morpheusdata.model.StorageServer;
+import com.morpheusdata.model.UpdateDefinition;
 import com.morpheusdata.model.projection.StorageServerIdentityProjection;
+import com.morpheusdata.response.ServiceResponse;
+import io.reactivex.rxjava3.core.Single;
 
 public interface MorpheusSynchronousStorageServerService extends MorpheusSynchronousDataService<StorageServer, StorageServerIdentityProjection>, MorpheusSynchronousIdentityService<StorageServerIdentityProjection> {
+
+	Single<ServiceResponse> validateUpdate(UpdateDefinition updateDefinition, StorageServer storageServer);
+
+	Single<ServiceResponse> executeUpdate(UpdateDefinition updateDefinition, StorageServer storageServer);
+
+	Single<ServiceResponse> postUpdate(UpdateDefinition updateDefinition, StorageServer storageServer);
+
+	Single<ServiceResponse> rollbackUpdate(UpdateDefinition updateDefinition, StorageServer storageServer);
+
+	Single<ServiceResponse> refreshUpdate(StorageServer storageServer);
+
+	Single<ServiceResponse> runConfigurationDriftCheck(CheckLevel checkLevel, StorageServer storageServer);
+
+	Single<ServiceResponse> getConfigurationDriftDetails(StorageServer storageServer);
 }

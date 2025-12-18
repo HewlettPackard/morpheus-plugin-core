@@ -265,17 +265,52 @@ public interface MorpheusNetworkService extends MorpheusDataService<Network, Net
 	 */
 	Single<NetworkServer> getNetworkServerById(Long id);
 
+	/**
+	 * Validates an update on a {@link NetworkServer} before executing the update.
+	 * @deprecated use {@link MorpheusNetworkServerService#validateUpdate(UpdateDefinition, NetworkServer)}  instead
+	 */
+	@Deprecated
 	Single<ServiceResponse> validateUpdate(NetworkServer networkServer, UpdateDefinition updateDefinition);
 
+	/**
+	 * Executes an update on a {@link NetworkServer}.
+	 * @deprecated use {@link MorpheusNetworkServerService#executeUpdate(UpdateDefinition, NetworkServer)}  instead
+	 */
+	@Deprecated
 	Single<ServiceResponse> executeUpdate(NetworkServer networkServer, UpdateDefinition updateDefinition);
 
+	/**
+	 * Post update operations on a {@link NetworkServer}.
+	 * @deprecated use {@link MorpheusNetworkServerService#postUpdate(UpdateDefinition, NetworkServer)}  instead
+	 */
+	@Deprecated
 	Single<ServiceResponse> postUpdate(NetworkServer networkServer, UpdateDefinition updateDefinition);
 
+	/**
+	 * Rollback update operations on a {@link NetworkServer}.
+	 * @deprecated use {@link MorpheusNetworkServerService#rollbackUpdate(UpdateDefinition, NetworkServer)}  instead
+	 */
+	@Deprecated
 	Single<ServiceResponse> rollbackUpdate(NetworkServer networkServer, UpdateDefinition updateDefinition);
 
+	/**
+	 * Refresh update status on a {@link NetworkServer}.
+	 * @deprecated use {@link MorpheusNetworkServerService#refreshUpdate(NetworkServer)}  instead
+	 */
+	@Deprecated
 	Single<ServiceResponse> refreshUpdate(NetworkServer networkServer);
 
+	/**
+	 * Run a configuration drift check on a {@link NetworkServer}.
+	 * @deprecated use {@link MorpheusNetworkServerService#runConfigurationDriftCheck(CheckLevel, NetworkServer)}  instead
+	 */
+	@Deprecated
 	Single<ServiceResponse> runConfigurationDriftCheck(NetworkServer networkServer, CheckLevel checkLevel);
 
+	/**
+	 * Get configuration drift details on a {@link NetworkServer}.
+	 * @deprecated use {@link MorpheusNetworkServerService#getConfigurationDriftDetails(NetworkServer)}  instead
+	 */
+	@Deprecated
 	Single<ServiceResponse> getConfigurationDriftDetails(NetworkServer networkServer);
 }

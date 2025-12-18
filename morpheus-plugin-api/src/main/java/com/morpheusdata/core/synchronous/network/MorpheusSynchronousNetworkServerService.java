@@ -20,7 +20,8 @@ import com.morpheusdata.core.MorpheusSynchronousDataService;
 import com.morpheusdata.core.MorpheusSynchronousIdentityService;
 import com.morpheusdata.model.*;
 import com.morpheusdata.model.projection.NetworkServerIdentityProjection;
-import io.reactivex.rxjava3.core.Observable;
+import com.morpheusdata.response.ServiceResponse;
+import io.reactivex.rxjava3.core.Single;
 
 
 /**
@@ -31,4 +32,18 @@ import io.reactivex.rxjava3.core.Observable;
 public interface MorpheusSynchronousNetworkServerService extends MorpheusSynchronousDataService<NetworkServer, NetworkServerIdentityProjection>, MorpheusSynchronousIdentityService<NetworkServer> {
 
 	MorpheusSynchronousNetworkSwitchService getSwitch();
+
+	Single<ServiceResponse> validateUpdate(UpdateDefinition updateDefinition, NetworkServer networkServer);
+
+	Single<ServiceResponse> executeUpdate(UpdateDefinition updateDefinition, NetworkServer networkServer);
+
+	Single<ServiceResponse> postUpdate(UpdateDefinition updateDefinition, NetworkServer networkServer);
+
+	Single<ServiceResponse> rollbackUpdate(UpdateDefinition updateDefinition, NetworkServer networkServer);
+
+	Single<ServiceResponse> refreshUpdate(NetworkServer networkServer);
+
+	Single<ServiceResponse> runConfigurationDriftCheck(CheckLevel checkLevel, NetworkServer networkServer);
+
+	Single<ServiceResponse> getConfigurationDriftDetails(NetworkServer networkServer);
 }

@@ -16,6 +16,7 @@
 
 package com.morpheusdata.core;
 
+import com.morpheusdata.core.network.MorpheusNetworkServerService;
 import com.morpheusdata.model.CheckLevel;
 import com.morpheusdata.model.NetworkServer;
 import com.morpheusdata.model.StorageServer;
@@ -64,17 +65,52 @@ public interface MorpheusStorageService {
 	 */
 	MorpheusStorageGroupService getGroup();
 
+	/**
+	 * Validates an update on a {@link StorageServer} before executing the update.
+	 * @deprecated use {@link MorpheusStorageServerService#validateUpdate(UpdateDefinition, StorageServer)}  instead
+	 */
+	@Deprecated
 	Single<ServiceResponse> validateUpdate(StorageServer storageServer, UpdateDefinition updateDefinition);
 
+	/**
+	 * Executes an update on a {@link StorageServer}.
+	 * @deprecated use {@link MorpheusStorageServerService#executeUpdate(UpdateDefinition, StorageServer)}  instead
+	 */
+	@Deprecated
 	Single<ServiceResponse> executeUpdate(StorageServer storageServer, UpdateDefinition updateDefinition);
 
+	/**
+	 * Post processes an update on a {@link StorageServer} after executing the update.
+	 * @deprecated use {@link MorpheusStorageServerService#postUpdate(UpdateDefinition, StorageServer)}  instead
+	 */
+	@Deprecated
 	Single<ServiceResponse> postUpdate(StorageServer storageServer, UpdateDefinition updateDefinition);
 
+	/**
+	 * Rolls back an update on a {@link StorageServer} if the update failed.
+	 * @deprecated use {@link MorpheusStorageServerService#rollbackUpdate(UpdateDefinition, StorageServer)}  instead
+	 */
+	@Deprecated
 	Single<ServiceResponse> rollbackUpdate(StorageServer storageServer, UpdateDefinition updateDefinition);
 
+	/**
+	 * Refresh the update status in a {@link StorageServer}.
+	 * @deprecated use {@link MorpheusStorageServerService#refreshUpdate(StorageServer)}  instead
+	 */
+	@Deprecated
 	Single<ServiceResponse> refreshUpdate(StorageServer storageServer);
 
+	/**
+	 * Run a configuration drift check on a {@link StorageServer}.
+	 * @deprecated use {@link MorpheusStorageServerService#runConfigurationDriftCheck(CheckLevel, StorageServer)}  instead
+	 */
+	@Deprecated
 	Single<ServiceResponse> runConfigurationDriftCheck(StorageServer storageServer, CheckLevel checkLevel);
 
+	/**
+	 * Get configuration drift details on a {@link StorageServer}.
+	 * @deprecated use {@link MorpheusStorageServerService#getConfigurationDriftDetails(StorageServer)}  instead
+	 */
+	@Deprecated
 	Single<ServiceResponse> getConfigurationDriftDetails(StorageServer storageServer);
 }
