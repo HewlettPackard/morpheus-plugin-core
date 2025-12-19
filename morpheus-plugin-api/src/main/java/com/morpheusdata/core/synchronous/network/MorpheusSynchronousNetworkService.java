@@ -89,6 +89,13 @@ public interface MorpheusSynchronousNetworkService extends MorpheusSynchronousDa
 	MorpheusSynchronousNetworkProxyService getNetworkProxy();
 
 	/**
+	 * Returns the {@link MorpheusSynchronousNetworkGroupService} used for performing updates/queries on {@link NetworkGroup} related assets
+	 * within Morpheus
+	 * @return An instance of the {@link MorpheusSynchronousNetworkProxyService}
+	 */
+	MorpheusSynchronousNetworkGroupService getNetworkGroup();
+
+	/**
 	 * Validates an update on a {@link NetworkServer} before executing the update.
 	 * @deprecated use {@link MorpheusSynchronousNetworkServerService#validateUpdate(UpdateDefinition, NetworkServer)}  instead
 	 */
