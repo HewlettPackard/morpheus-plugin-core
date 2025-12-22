@@ -23,6 +23,8 @@ import com.morpheusdata.model.ComputePort;
 import com.morpheusdata.model.ComputeServer;
 import com.morpheusdata.model.ComputeServerAccess;
 import com.morpheusdata.model.ComputeServerInterface;
+import com.morpheusdata.core.compute.MorpheusComputeServerNetworkInterfaceConfig;
+import com.morpheusdata.model.*;
 import com.morpheusdata.model.projection.ComputeServerIdentityProjection;
 
 public interface MorpheusSynchronousComputeServerService extends MorpheusSynchronousDataService<ComputeServer, ComputeServerIdentityProjection>, MorpheusSynchronousIdentityService<ComputeServerIdentityProjection> {
@@ -51,4 +53,36 @@ public interface MorpheusSynchronousComputeServerService extends MorpheusSynchro
 	 * @return An instance of the ComputeServerAccess context
 	 */
 	MorpheusSynchronousComputeServerAccessService getAccess();
+
+	/**
+	 * Stop a ComputeServer. This is an async operation and the server may not be stopped immediately.
+	 * @param computeServerId ComputeServer id to stop
+	 * @return success if the request to stop the server was successful
+	 */
+	Boolean stopServer(Long computeServerId);
+
+	/**
+	 * Start a ComputeServer. This is an async operation and the server may not be started immediately.
+	 * @param computeServerId ComputeServer id to start
+	 * @return success if the request to start the server was successful
+	 */
+	Boolean startServer(Long computeServerId);
+
+	/**
+	 * Restart a ComputeServer. This is an async operation and the server may not be restarted immediately.
+	 * @param computeServerId ComputeServer id to restart
+	 * @return success if the request to restart the server was successful
+	 */
+	Boolean restartServer(Long computeServerId);
+
+	/**
+	 * Returns a ComputeNetworkInterface built from the provided parameters.
+	 *
+	 * @param account {@link Account}
+	 * @param instance {@link Instance}
+	 * @param server {@link ComputeServer}
+	 * @param networkInterfaceConfig {@link MorpheusComputeServerNetworkInterfaceConfig}
+	 * @return A ComputeServerInterface instance
+	 */
+	ComputeServerInterface buildComputeServerInterface(Account account, Instance instance, ComputeServer server, MorpheusComputeServerNetworkInterfaceConfig networkInterfaceConfig);
 }
