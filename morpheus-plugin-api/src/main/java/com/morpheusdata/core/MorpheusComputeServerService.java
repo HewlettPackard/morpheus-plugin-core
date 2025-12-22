@@ -18,6 +18,7 @@ package com.morpheusdata.core;
 
 import com.morpheusdata.core.compute.MorpheusComputeDeviceService;
 import com.morpheusdata.core.compute.MorpheusComputeServerAccessService;
+import com.morpheusdata.core.compute.MorpheusComputeServerNetworkInterfaceConfig;
 import com.morpheusdata.model.*;
 import com.morpheusdata.model.projection.ComputeServerIdentityProjection;
 import com.morpheusdata.core.compute.MorpheusComputeServerInterfaceService;
@@ -143,4 +144,6 @@ public interface MorpheusComputeServerService extends MorpheusDataService<Comput
 	Single<ServiceResponse> runConfigurationDriftCheck(CheckLevel checkLevel, ComputeServer... computeServer);
 
 	Single<ServiceResponse> getConfigurationDriftDetails(ComputeServer... computeServer);
+
+	ComputeServerInterface buildComputeServerInterface(Account account, Instance instance, ComputeServer server, MorpheusComputeServerNetworkInterfaceConfig networkInterfaceConfig);
 }
