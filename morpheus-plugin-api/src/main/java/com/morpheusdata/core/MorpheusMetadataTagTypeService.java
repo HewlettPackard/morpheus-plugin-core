@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * Context methods for syncing MetadataTagTypes in Morpheus
  */
-public interface MorpheusMetadataTagTypeService extends MorpheusDataService<MetadataTagType, MetadataTagTypeIdentityProjection>, MorpheusIdentityService<MetadataTagType> {
+public interface MorpheusMetadataTagTypeService extends MorpheusDataService<MetadataTagType, MetadataTagTypeIdentityProjection> {
 
 	/**
 	 * Get a list of MetadataTagType projections based on the refId and refType associated with the MetadataTagType
