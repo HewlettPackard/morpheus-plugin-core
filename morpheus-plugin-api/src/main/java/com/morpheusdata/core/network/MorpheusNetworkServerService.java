@@ -30,7 +30,7 @@ import io.reactivex.rxjava3.core.Single;
  * @author Alex Clement
  * @since 1.1.7
  */
-public interface MorpheusNetworkServerService extends MorpheusDataService<NetworkServer, NetworkServerIdentityProjection>, MorpheusIdentityService<NetworkServer> {
+public interface MorpheusNetworkServerService extends MorpheusDataService<NetworkServer, NetworkServerIdentityProjection>, MorpheusIdentityService<NetworkServerIdentityProjection> {
 
 	MorpheusNetworkSwitchService getSwitch();
 
