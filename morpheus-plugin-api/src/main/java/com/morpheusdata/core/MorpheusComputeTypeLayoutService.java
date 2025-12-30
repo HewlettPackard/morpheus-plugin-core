@@ -23,6 +23,6 @@ import com.morpheusdata.model.MorpheusModel;
  * Context methods for managing ComputeTypeLayout objects in Morpheus.
  * Provides CRUD operations for ComputeTypeLayout data model.
  */
-public interface MorpheusComputeTypeLayoutService extends MorpheusDataService<ComputeTypeLayout, MorpheusModel> {
+public interface MorpheusComputeTypeLayoutService extends MorpheusDataService<ComputeTypeLayout, ComputeTypeLayout> {
     // Standard CRUD operations are inherited from MorpheusDataService
 }
