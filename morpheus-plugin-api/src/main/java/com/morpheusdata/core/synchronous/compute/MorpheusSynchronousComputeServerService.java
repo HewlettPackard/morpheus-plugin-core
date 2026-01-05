@@ -18,6 +18,12 @@ package com.morpheusdata.core.synchronous.compute;
 
 import com.morpheusdata.core.MorpheusSynchronousIdentityService;
 import com.morpheusdata.core.MorpheusSynchronousDataService;
+
+import com.morpheusdata.model.ComputeDevice;
+import com.morpheusdata.model.ComputePort;
+import com.morpheusdata.model.ComputeServer;
+import com.morpheusdata.model.ComputeServerAccess;
+import com.morpheusdata.model.ComputeServerInterface;
 import com.morpheusdata.core.compute.MorpheusComputeServerNetworkInterfaceConfig;
 import com.morpheusdata.model.*;
 import com.morpheusdata.model.projection.ComputeServerIdentityProjection;
@@ -51,6 +57,7 @@ public interface MorpheusSynchronousComputeServerService extends MorpheusSynchro
 	 */
 	MorpheusSynchronousComputeServerAccessService getAccess();
 
+
 	ServiceResponse validateUpdate(UpdateDefinition updateDefinition, ComputeServer... computeServer);
 
 	ServiceResponse executeUpdate(UpdateDefinition updateDefinition, ComputeServer... computeServer);
@@ -64,6 +71,7 @@ public interface MorpheusSynchronousComputeServerService extends MorpheusSynchro
 	ServiceResponse runConfigurationDriftCheck(CheckLevel checkLevel, ComputeServer... computeServer);
 
 	ServiceResponse getConfigurationDriftDetails(ComputeServer... computeServer);
+
 
 	/**
 	 * Stop a ComputeServer. This is an async operation and the server may not be stopped immediately.

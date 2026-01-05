@@ -131,6 +131,7 @@ public interface MorpheusComputeServerService extends MorpheusDataService<Comput
 	 */
 	Single<Boolean> restartServer(Long computeServerId);
 
+
 	Single<ServiceResponse> validateUpdate(UpdateDefinition updateDefinition, ComputeServer... computeServer);
 
 	Single<ServiceResponse> executeUpdate(UpdateDefinition updateDefinition, ComputeServer... computeServer);
@@ -146,4 +147,5 @@ public interface MorpheusComputeServerService extends MorpheusDataService<Comput
 	Single<ServiceResponse> getConfigurationDriftDetails(ComputeServer... computeServer);
 
 	ComputeServerInterface buildComputeServerInterface(Account account, Instance instance, ComputeServer server, MorpheusComputeServerNetworkInterfaceConfig networkInterfaceConfig);
+
 }
