@@ -62,6 +62,8 @@ public class NetworkLoadBalancer extends NetworkLoadBalancerIdentityProjection {
 	protected Double hourlyPrice = 0.0d;
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Cloud cloud;
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
+	protected ComputeSite site;
 	protected String serverName;
 	protected String poolName;
 	protected String serviceName;
@@ -411,5 +413,14 @@ public class NetworkLoadBalancer extends NetworkLoadBalancerIdentityProjection {
 	public void setRegion(CloudRegion region) {
 		this.region = region;
 		markDirty("region", region);
+	}
+
+	public ComputeSite getSite() {
+		return site;
+	}
+
+	public void setSite(ComputeSite site) {
+		this.site = site;
+		markDirty("site", site);
 	}
 }
