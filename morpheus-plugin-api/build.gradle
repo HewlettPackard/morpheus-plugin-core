@@ -20,7 +20,7 @@ repositories {
 configurations {
     provided
 }
- 
+
 dependencies {
 	api 'io.reactivex.rxjava3:rxjava:3.1.7'
 	api 'commons-codec:commons-codec:1.13'
@@ -36,7 +36,7 @@ dependencies {
 	implementation "org.codehaus.groovy:groovy:$groovyVersion"
 	implementation "org.codehaus.groovy:groovy-json:$groovyVersion"
   implementation "org.codehaus.groovy:groovy-xml:$groovyVersion"
-	implementation "org.codehaus.groovy:groovy-console:$groovyVersion"
+//	implementation "org.codehaus.groovy:groovy-console:$groovyVersion"
 	compileOnly('com.morpheusdata:cypher-core:0.10.0')
 	implementation 'commons-net:commons-net:3.9.0'
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.1'
@@ -132,12 +132,12 @@ javadoc {
     title = 'Morpheus Plugin API'
     options.addBooleanOption('html5', true)
     // options.addBooleanOption "-no-module-directories", true
-    
+
     // Additional options for customization
     options.addBooleanOption('splitindex', true)
     options.addBooleanOption('use', true)
     options.addStringOption('windowtitle', 'Morpheus Plugin API')
-    
+
     // Finalize with custom post-processing
     finalizedBy 'customizeJavadoc'
 }
@@ -145,16 +145,16 @@ javadoc {
 task customizeJavadoc {
     description = 'Post-process Javadoc to add custom header, footer, and HPE JS'
     dependsOn javadoc
-    
+
     doLast {
         def javadocDir = file("$buildDir/docs/javadoc")
-        
-        
+
+
         // Process all HTML files
         javadocDir.eachFileRecurse { file ->
             if (file.name.endsWith('.html')) {
                 def content = file.text
-                
+
                 // Add external JS files to head section
                 def headCloseIndex = content.indexOf('</head>')
                 if (headCloseIndex > -1) {
@@ -165,7 +165,7 @@ task customizeJavadoc {
 '''
                     content = content.substring(0, headCloseIndex) + externalJs + content.substring(headCloseIndex)
                 }
-                
+
                 // Add custom header div after body tag
                 def bodyOpenIndex = content.indexOf('<body')
                 if (bodyOpenIndex > -1) {
@@ -177,7 +177,7 @@ task customizeJavadoc {
 '''
                     content = content.substring(0, bodyTagEndIndex) + headerDiv + content.substring(bodyTagEndIndex)
                 }
-                
+
                 // Add custom footer div before body close tag
                 def bodyCloseIndex = content.lastIndexOf('</body>')
                 if (bodyCloseIndex > -1) {
@@ -188,29 +188,29 @@ task customizeJavadoc {
 '''
                     content = content.substring(0, bodyCloseIndex) + footerDiv + content.substring(bodyCloseIndex)
                 }
-                
+
                 file.text = content
             }
         }
-        
+
         // Copy and merge custom stylesheet - append to default stylesheet
         def stylesheetFile = new File(javadocDir, 'stylesheet.css')
         def customStylesheet = file('src/main/javadoc/stylesheet.css')
         if (customStylesheet.exists()) {
             // Read the existing default stylesheet content
             def originalStylesheet = stylesheetFile.exists() ? stylesheetFile.text : ''
-            
+
             // Append custom styles to the default stylesheet
             def customStyles = customStylesheet.text
             def appendedContent = originalStylesheet + '\n\n/* ========================================= */\n'
             appendedContent += '/* Custom Styles TO WORK WITH HPE HEADER/FOOTER */\n'
             appendedContent += '/* ========================================= */\n\n'
             appendedContent += customStyles
-            
+
             stylesheetFile.text = appendedContent
             println "Custom stylesheet appended to default Javadoc stylesheet"
         }
-        
+
         println "Javadoc customization completed. Custom header, footer, and JS files added."
     }
 }
