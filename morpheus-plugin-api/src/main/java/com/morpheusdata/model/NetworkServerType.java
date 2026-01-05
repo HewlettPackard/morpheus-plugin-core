@@ -70,6 +70,8 @@ public class NetworkServerType extends MorpheusModel {
 	public List<SecurityGroupRuleTargetType> securityGroupRuleIngressSourceTypes = new ArrayList<>();
 	public List<SecurityGroupRuleTargetType> securityGroupRuleEgressSourceTypes = new ArrayList<>();
 
+	public List<OptionType> securityGroupOptionTypes = new ArrayList<>();
+
 	public String getCode() {
 		return code;
 	}
@@ -456,4 +458,13 @@ public class NetworkServerType extends MorpheusModel {
 		this.hasFloatingIps = hasFloatingIps;
 		markDirty("hasFloatingIps", hasFloatingIps);
 	}
+
+	public List<OptionType> getSecurityGroupOptionTypes() {
+		return securityGroupOptionTypes;
+	}
+
+	public void setSecurityGroupOptionTypes(List<OptionType> securityGroupOptionTypes) {
+		this.securityGroupOptionTypes = securityGroupOptionTypes;
+	}
+
 }
