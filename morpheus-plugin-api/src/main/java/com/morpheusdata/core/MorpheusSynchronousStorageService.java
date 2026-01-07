@@ -64,6 +64,14 @@ public interface MorpheusSynchronousStorageService {
 	MorpheusSynchronousStorageGroupService getGroup();
 
 	/**
+	 * Returns the StorageAggregate Service
+	 *
+	 * @return An instance of the StorageAggregate Service
+	 * @since 1.3.0
+	 */
+	MorpheusSynchronousStorageAggregateService getAggregate();
+
+	/**
 	 * Returns the DatastoreType Service for performing actions on a Datastore
 	 *
 	 * @return An instance of the DatastoreType Service

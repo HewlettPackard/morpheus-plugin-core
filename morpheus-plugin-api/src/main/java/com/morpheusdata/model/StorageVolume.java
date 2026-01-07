@@ -112,6 +112,23 @@ public class StorageVolume extends StorageVolumeIdentityProjection {
 	 */
 	protected String definitionId;
 
+	/**
+	 * The storage aggregate this volume is a member of (i.e., part of its physical storage pool).
+	 * <p>
+	 * For example, in a RAID array, the volume would be a member disk; in ZFS, a vdev in the zpool.
+	 * A volume can only be a member of one aggregate.
+	 */
+	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	protected StorageAggregate memberOfAggregate;
+
+	/**
+	 * The storage aggregate that exposes/provides this volume.
+	 * <p>
+	 * This is the aggregate that makes this volume available for use. A volume can only be exposed by one aggregate.
+	 */
+	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	protected StorageAggregate exposedByAggregate;
+
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	public Account getAccount() {
 		return account;
@@ -651,5 +668,39 @@ public class StorageVolume extends StorageVolumeIdentityProjection {
 	public void setDefinitionId(String definitionId) {
 		this.definitionId = definitionId;
 		markDirty("definitionId", definitionId, this.definitionId);
+	}
+
+	/**
+	 * Gets the storage aggregate this volume is a member of (i.e., part of its physical storage pool).
+	 * @return memberOfAggregate
+	 */
+	public StorageAggregate getMemberOfAggregate() {
+		return memberOfAggregate;
+	}
+
+	/**
+	 * Sets the storage aggregate this volume is a member of.
+	 * @param memberOfAggregate the aggregate this volume is a member of
+	 */
+	public void setMemberOfAggregate(StorageAggregate memberOfAggregate) {
+		this.memberOfAggregate = memberOfAggregate;
+		markDirty("memberOfAggregate", memberOfAggregate, this.memberOfAggregate);
+	}
+
+	/**
+	 * Gets the storage aggregate that exposes/provides this volume.
+	 * @return exposedByAggregate
+	 */
+	public StorageAggregate getExposedByAggregate() {
+		return exposedByAggregate;
+	}
+
+	/**
+	 * Sets the storage aggregate that exposes/provides this volume.
+	 * @param exposedByAggregate the aggregate that exposes this volume
+	 */
+	public void setExposedByAggregate(StorageAggregate exposedByAggregate) {
+		this.exposedByAggregate = exposedByAggregate;
+		markDirty("exposedByAggregate", exposedByAggregate, this.exposedByAggregate);
 	}
 }
