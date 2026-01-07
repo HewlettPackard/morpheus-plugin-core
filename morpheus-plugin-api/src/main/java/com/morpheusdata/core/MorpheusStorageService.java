@@ -66,6 +66,14 @@ public interface MorpheusStorageService {
 	MorpheusStorageGroupService getGroup();
 
 	/**
+	 * Returns the StorageAggregate Service
+	 *
+	 * @return An instance of the StorageAggregate Service
+	 * @since 1.3.0
+	 */
+	MorpheusStorageAggregateService getAggregate();
+
+	/**
 	 * Validates an update on a {@link StorageServer} before executing the update.
 	 * @deprecated use {@link MorpheusStorageServerService#validateUpdate(UpdateDefinition, StorageServer)}  instead
 	 */

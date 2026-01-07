@@ -165,6 +165,15 @@ public interface CloudProvider extends PluginProvider {
 	 */
 	Collection<StorageControllerType> getStorageControllerTypes();
 
+
+	/**
+	 * Provides a Collection of {@link StorageAggregateType} related to this CloudProvider
+	 * @return Collection of StorageAggregateType
+	 */
+	default Collection<StorageAggregateType> getStorageAggregateTypes() {
+		return new ArrayList<>();
+	}
+
 	/**
 	 * Validates the submitted cloud information to make sure it is functioning correctly.
 	 * If a {@link ServiceResponse} is not marked as successful then the validation results will be
