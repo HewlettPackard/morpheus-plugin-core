@@ -25,6 +25,7 @@ public class ApplianceInstance extends ApplianceInstanceIdentityProjection {
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Account account;
 	protected String applianceUrl;
+	protected String uuid;
 	protected String buildVersion;
 
 	public Account getAccount() {
@@ -51,5 +52,13 @@ public class ApplianceInstance extends ApplianceInstanceIdentityProjection {
 	public void setBuildVersion(String buildVersion) {
 		this.buildVersion = buildVersion;
 		markDirty("buildVersion", buildVersion, this.buildVersion);
+	}
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
 	}
 }
