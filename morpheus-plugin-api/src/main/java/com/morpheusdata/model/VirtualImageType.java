@@ -2,6 +2,9 @@ package com.morpheusdata.model;
 
 import com.morpheusdata.model.projection.VirtualImageTypeIdentityProjection;
 
+import java.util.Collection;
+import java.util.List;
+
 public class VirtualImageType extends VirtualImageTypeIdentityProjection {
 
 	/**
@@ -24,6 +27,8 @@ public class VirtualImageType extends VirtualImageTypeIdentityProjection {
 	 * Images associated with this type can be created by users
 	 */
 	protected Boolean creatable = true;
+
+	protected Collection<OptionType> optionTypes;
 
 	public String getNameCode() {
 		return nameCode;
@@ -59,6 +64,14 @@ public class VirtualImageType extends VirtualImageTypeIdentityProjection {
 	public void setDeleted(Boolean deleted) {
 		this.deleted = deleted;
 		markDirty("deleted", deleted, this.deleted);
+	}
+
+	public Collection<OptionType> getOptionTypes() {
+		return optionTypes;
+	}
+
+	public void setOptionTypes(List<OptionType> optionTypes) {
+		this.optionTypes = optionTypes;
 	}
 
 	public Boolean getCreatable() {
