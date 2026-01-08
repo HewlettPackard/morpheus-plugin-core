@@ -23,6 +23,7 @@ import com.morpheusdata.model.serializers.ModelAsIdOnlySerializer;
 
 public class SecurityGroupRuleLocation extends MorpheusModel {
 
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
     protected SecurityGroupRuleIdentityProjection securityGroupRule;
     protected String code;
     protected String category;

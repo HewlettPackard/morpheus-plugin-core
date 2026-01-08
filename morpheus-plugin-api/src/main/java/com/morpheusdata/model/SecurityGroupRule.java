@@ -31,6 +31,7 @@ import java.util.List;
  */
 public class SecurityGroupRule extends SecurityGroupRuleIdentityProjection {
 
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
     protected SecurityGroupIdentityProjection securityGroup;
     protected String groupName; //for things that also group rules into a set
     protected String groupType = "instance"; //firewall,instance,router
