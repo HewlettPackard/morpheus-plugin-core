@@ -245,8 +245,9 @@ public class PluginManager {
 					log.error("Error Loading Message Properties files from Plugin: {} - {}", plugin.getName(), io.getMessage(), io);
 				}
 			}
+			return properties;
 		}
-		return properties;
+
 	}
 
 	/**
