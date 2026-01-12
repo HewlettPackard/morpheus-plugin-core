@@ -49,6 +49,7 @@ public class PluginManager {
 	static Logger log = LoggerFactory.getLogger(PluginManager.class);
 
 	private ArrayList<Plugin> plugins = new ArrayList<>();
+	private final Object pluginMutex = new Object();
 	private MorpheusContext morpheus;
 	private Dispatcher dispatcher;
 	private Renderer<?> renderer = new HandlebarsRenderer();
@@ -122,7 +123,10 @@ public class PluginManager {
 				deregisterPlugin(tmpPlugin);
 			}
 		}
-		plugins.add(plugin);
+		synchronized (this.pluginMutex) {
+			plugins.add(plugin);
+		}
+
 		cachedLocaleProperties.clear();
 		return plugin;
 	}
@@ -160,7 +164,10 @@ public class PluginManager {
 	void deregisterPlugin(Plugin plugin) {
 		plugin.onDestroy();
 		this.renderer.removeTemplateLoader(plugin.getClassLoader());
-		plugins.remove(plugin);
+		synchronized (pluginMutex) {
+			plugins.remove(plugin);
+		}
+
 		cachedLocaleProperties.clear();
 	}
 
@@ -174,21 +181,26 @@ public class PluginManager {
 
 	public Map<Class, List<Route>> getRoutes() {
 		Map<Class, List<Route>> routes = new HashMap<>();
-		for (Plugin p : this.getPlugins()) {
-			for (PluginController c : p.getControllers()) {
-				if (c.getRoutes().size() > 0) {
-					routes.put(c.getClass(), c.getRoutes());
+		synchronized (this.pluginMutex) {
+			for (Plugin p : this.getPlugins()) {
+				for (PluginController c : p.getControllers()) {
+					if (c.getRoutes().size() > 0) {
+						routes.put(c.getClass(), c.getRoutes());
+					}
 				}
 			}
 		}
+
 		return routes;
 	}
 
 	public PluginProvider findByCode(String code) {
-		for(Plugin plugin: this.plugins) {
-			PluginProvider pp = plugin.getProviderByCode(code);
-			if(pp != null) {
-				return pp;
+		synchronized (this.pluginMutex) {
+			for (Plugin plugin : this.plugins) {
+				PluginProvider pp = plugin.getProviderByCode(code);
+				if (pp != null) {
+					return pp;
+				}
 			}
 		}
 		return null;
@@ -196,8 +208,10 @@ public class PluginManager {
 
 	public Collection<PluginProvider> getProvidersByType(Class clazz) {
 		Collection<PluginProvider> providers = new ArrayList<>();
-		for(Plugin plugin: this.plugins) {
-			providers.addAll(plugin.getProvidersByType(clazz));
+		synchronized (this.pluginMutex) {
+			for (Plugin plugin : this.plugins) {
+				providers.addAll(plugin.getProvidersByType(clazz));
+			}
 		}
 		return providers;
 	}
@@ -218,16 +232,18 @@ public class PluginManager {
 		if(cachedLocaleProperties != null && cachedLocaleProperties.containsKey(locale)) {
 			return cachedLocaleProperties.get(locale);
 		}
-		Properties properties = new Properties();
-		for(Plugin plugin : this.plugins) {
-			try {
-				Properties pluginProperties = getProperties(plugin,locale);
-				if(pluginProperties != null) {
-					properties.putAll(pluginProperties);
+		synchronized (pluginMutex) {
+			Properties properties = new Properties();
+			for (Plugin plugin : this.plugins) {
+				try {
+					Properties pluginProperties = getProperties(plugin, locale);
+					if (pluginProperties != null) {
+						properties.putAll(pluginProperties);
+					}
+					cachedLocaleProperties.put(locale, properties);
+				} catch (IOException io) {
+					log.error("Error Loading Message Properties files from Plugin: {} - {}", plugin.getName(), io.getMessage(), io);
 				}
-				cachedLocaleProperties.put(locale,properties);
-			} catch(IOException io) {
-				log.error("Error Loading Message Properties files from Plugin: {} - {}",plugin.getName(),io.getMessage(),io);
 			}
 		}
 		return properties;
@@ -315,11 +331,11 @@ public class PluginManager {
 						//ignore
 					}
 				}
-			}	
+			}
 			//now put the file list into the results
 			if(fileList != null && fileList.length > 0) {
 				rtn = new ArrayList<String>();
-				Collections.addAll(rtn, fileList); 	
+				Collections.addAll(rtn, fileList);
 				//done
 			}
 		}
@@ -354,11 +370,11 @@ public class PluginManager {
 						//ignore
 					}
 				}
-			}	
+			}
 			//now put the file list into the results
 			if(fileList != null && fileList.length > 0) {
 				rtn = new ArrayList<String>();
-				Collections.addAll(rtn, fileList); 	
+				Collections.addAll(rtn, fileList);
 				//done
 			}
 		}
@@ -393,11 +409,11 @@ public class PluginManager {
 						//ignore
 					}
 				}
-			}	
+			}
 			//now put the file list into the results
 			if(fileList != null && fileList.length > 0) {
 				rtn = new ArrayList<String>();
-				Collections.addAll(rtn, fileList); 	
+				Collections.addAll(rtn, fileList);
 				//done
 			}
 		}
