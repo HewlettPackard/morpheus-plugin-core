@@ -154,12 +154,12 @@ public interface MorpheusSynchronousNetworkService extends MorpheusSynchronousDa
 	 * @param group the {@link NetworkGroup} to pick networks or subnets from
 	 * @param accountId the account id to filter selections by
 	 * @param siteId the site id to filter selections by
-	 * @param zoneId the zone id to filter selections by
+	 * @param cloudId the cloud id to filter selections by
 	 * @param usedNetworks list of networks already in use to avoid selection
 	 * @param usedSubnets list of subnets already in use to avoid selection
 	 * @param cloudPool the {@link CloudPool} context for the selection; this is optional.
 	 * @return a ServiceResponse containing the selected network or subnet
 	 * @since 1.3.0
 	 */
-	ServiceResponse<NetworkGroupPickResponse> pickNextNetworkOrSubnetFromGroup(NetworkGroup group, Long accountId, Long siteId, Long zoneId, List<Network> usedNetworks, List<NetworkSubnet> usedSubnets, CloudPool cloudPool);
+	ServiceResponse<NetworkGroupPickResponse> pickNextNetworkOrSubnetFromGroup(NetworkGroup group, Long accountId, Long siteId, Long cloudId, List<Network> usedNetworks, List<NetworkSubnet> usedSubnets, CloudPool cloudPool);
 }
