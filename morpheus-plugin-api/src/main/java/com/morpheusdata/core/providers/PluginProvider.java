@@ -67,11 +67,7 @@ public interface PluginProvider {
 	 */
 	String getName();
 
-	/**
-	 * Returns true if the Provider is a plugin. Always true for plugin but null or false for Morpheus internal providers.
-	 * @return provider is plugin
-	 */
-	default boolean isPlugin() { return true; }
+	
 
 	/**
 	 *	Applying this Facet to an integration will allow it to subscribe to events and perform operations based on the event
