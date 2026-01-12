@@ -44,6 +44,7 @@ public class SecurityGroup extends SecurityGroupIdentityProjection {
 	protected String visibility = "private";
 	protected String syncSource = "external";
 	protected Long zoneId;  // compute_zone if scoped (see Cloud)
+	protected Long networkServerId; // network server if scoped
 	protected String refType;
 	protected Long refId;
 	//linking
@@ -171,6 +172,14 @@ public class SecurityGroup extends SecurityGroupIdentityProjection {
 
 	public void setZoneId(Long zoneId) {
 		this.zoneId = zoneId;
+	}
+
+	public void setNetworkServerId(Long networkServerId) {
+		this.networkServerId = networkServerId;
+	}
+
+	public Long getNetworkServerId() {
+		return networkServerId;
 	}
 
 	public String getRefType() {

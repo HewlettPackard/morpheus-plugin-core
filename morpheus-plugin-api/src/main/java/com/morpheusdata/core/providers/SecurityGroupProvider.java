@@ -16,10 +16,7 @@
 
 package com.morpheusdata.core.providers;
 
-import com.morpheusdata.model.SecurityGroup;
-import com.morpheusdata.model.SecurityGroupLocation;
-import com.morpheusdata.model.SecurityGroupRule;
-import com.morpheusdata.model.SecurityGroupRuleLocation;
+import com.morpheusdata.model.*;
 import com.morpheusdata.response.ServiceResponse;
 
 import java.util.Map;
@@ -120,4 +117,28 @@ public interface  SecurityGroupProvider extends PluginProvider {
 	 * @return ServiceResponse
 	 */
 	ServiceResponse deleteSecurityGroupRule(SecurityGroupLocation securityGroupLocation, SecurityGroupRule rule);
+
+	/**
+	 * This method is called for every security group that is associationed to a server.  Often called on the provisioning
+	 * of new workloads or the update of existing workloads.
+	 * @param server {@link ComputeServer} the server to associate the security group to
+	 * @param securityGroup {@link SecurityGroup} the security group to associate
+	 * @param networkServer {@link NetworkServer} the network server context for the association
+	 * @return {@link ServiceResponse} describing the success of the operation
+	 */
+	default ServiceResponse addSecurityGroupAssociation(ComputeServer server, SecurityGroup securityGroup, NetworkServer networkServer) {
+		return ServiceResponse.success();
+	}
+
+	/**
+	 * This method is called for every security group that is disassociated from a server.  Often called on the deprovisioning
+	 * of workloads or the update of existing workloads.
+	 * @param server {@link ComputeServer} the server to remove the security group from
+	 * @param securityGroup {@link SecurityGroup} the security group to disassociate
+	 * @param networkServer {@link NetworkServer} the network server context for the disassociation
+	 * @return {@link ServiceResponse} describing the success of the operation
+	 */
+	default ServiceResponse removeSecurityGroupAssociation(ComputeServer server, SecurityGroup securityGroup, NetworkServer networkServer) {
+		return ServiceResponse.success();
+	}
 }
