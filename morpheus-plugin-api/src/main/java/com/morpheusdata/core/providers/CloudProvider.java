@@ -374,6 +374,13 @@ public interface CloudProvider extends PluginProvider {
 	default String getDefaultLoadBalancerTypeCode() { return null; }
 
 	/**
+	 * Returns the default cloud instance type layout code when syncing the plugin provider.
+	 * This can be used to overwrite the default layout code to one different from the provision type code.
+	 * @return the cloud instance type layout code
+	 */
+	default String getCloudInstanceTypeLayoutCode() { return null; }
+
+	/**
 	 * Indicates whether the cloud provider supports costing functionality.
 	 * Costing functionality typically involves tracking and managing costs associated with cloud resources.
 	 *
