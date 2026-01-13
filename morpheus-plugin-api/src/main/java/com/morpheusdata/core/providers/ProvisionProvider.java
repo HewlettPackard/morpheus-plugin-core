@@ -20,8 +20,12 @@ import com.morpheusdata.core.MorpheusComputeTypeLayoutFactoryService;
 import com.morpheusdata.model.*;
 import com.morpheusdata.request.AfterConvertToManagedRequest;
 import com.morpheusdata.request.BeforeConvertToManagedRequest;
-import com.morpheusdata.response.AfterConvertToManagedResponse;
+import com.morpheusdata.request.BuildResizeChangelistRequest;
 import com.morpheusdata.response.BeforeConvertToManagedResponse;
+import com.morpheusdata.response.AfterConvertToManagedResponse;
+import com.morpheusdata.response.BuildResizeControllerChangelistResponse;
+import com.morpheusdata.response.BuildResizeInterfaceChangelistResponse;
+import com.morpheusdata.response.BuildResizeVolumeChangelistResponse;
 import com.morpheusdata.response.InitializeHypervisorResponse;
 import com.morpheusdata.response.ServiceResponse;
 
@@ -812,5 +816,59 @@ public interface ProvisionProvider extends PluginProvider {
 		 * @return a ServiceResponse containing details about the configuration drift
 		 */
 		ServiceResponse<DriftState> getConfigurationDriftDetails(DriftState driftState, ComputeServer... computeServer);
+	}
+
+	/**
+	 * Overrides the default behavior for building the StorageVolume changelist (add/update/delete) during reconfigure.
+	 * @author Mike Carlin
+	 * @since 1.3.0
+ 	 */
+	interface BuildResizeVolumeChangelistFacet {
+		/**
+		 * Builds the StorageVolume changelist
+		 * <p>
+		 * The request provides a *desired* configuration and *existing* configuration. This method derives a changelist (add/update/delete)
+		 * that when applied to the *existing* configuration, reaches the *desired* configuration.
+		 * @param request the BuildResizeChangelistRequest containing StorageVolume changes
+		 * @return a ServiceResponse containing the StorageVolume changelist response
+		 * @since 1.3.0
+		 */
+		ServiceResponse<BuildResizeVolumeChangelistResponse> buildVolumeChangelist(BuildResizeChangelistRequest<StorageVolume> request);
+	}
+
+	/**
+	 * Overrides the default behavior for building the ComputeServerInterface changelist (add/update/delete) during reconfigure.
+	 * @author Mike Carlin
+	 * @since 1.3.0
+	 */
+	interface BuildResizeInterfaceChangelistFacet {
+		/**
+		 * Builds the ComputeServerInterface changelist
+		 * <p>
+		 * The request provides a *desired* configuration and *existing* configuration. This method derives a changelist (add/update/delete)
+		 * that when applied to the *existing* configuration, reaches the *desired* configuration.
+		 * @param request the BuildResizeChangelistRequest containing ComputeServerInterface changes
+		 * @return a ServiceResponse containing the ComputeServerInterface changelist response
+		 * @since 1.3.0
+		 */
+		ServiceResponse<BuildResizeInterfaceChangelistResponse> buildInterfaceChangelist(BuildResizeChangelistRequest<ComputeServerInterface> request);
+	}
+
+	/**
+	 * Overrides the default behavior for building the StorageController changelist (add/update/delete) during reconfigure.
+	 * @author Mike Carlin
+	 * @since 1.3.0
+	 */
+	interface BuildResizeControllerChangelistFacet {
+		/**
+		 * Builds the StorageController changelist
+		 * <p>
+		 * The request provides a *desired* configuration and *existing* configuration. This method derives a changelist (add/update/delete)
+		 * that when applied to the *existing* configuration, reaches the *desired* configuration.
+		 * @param request the BuildResizeChangelistRequest containing StorageController changes
+		 * @return a ServiceResponse containing the StorageController changelist response
+		 * @since 1.3.0
+		 */
+		ServiceResponse<BuildResizeControllerChangelistResponse> buildControllerChangelist(BuildResizeChangelistRequest<StorageController> request);
 	}
 }

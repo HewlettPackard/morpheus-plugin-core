@@ -23,6 +23,7 @@ import com.morpheusdata.core.providers.DNSProvider;
 import com.morpheusdata.core.providers.IPAMProvider;
 import com.morpheusdata.model.*;
 import com.morpheusdata.model.projection.NetworkIdentityProjection;
+import com.morpheusdata.response.NetworkGroupPickResponse;
 import com.morpheusdata.response.ServiceResponse;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
@@ -107,6 +108,13 @@ public interface MorpheusNetworkService extends MorpheusDataService<Network, Net
 	 * @return An instance of the {@link MorpheusNetworkProxyService}
 	 */
 	MorpheusNetworkProxyService getNetworkProxy();
+
+	/**
+	 * Returns the {@link MorpheusNetworkGroupService} used for performing updates/queries on {@link NetworkGroup} related assets
+	 * within Morpheus
+	 * @return An instance of the {@link MorpheusNetworkGroupService}
+	 */
+	MorpheusNetworkGroupService getNetworkGroup();
 
 	/**
 	 * Used for updating the status of a {@link NetworkPoolServer} integration.
@@ -313,4 +321,20 @@ public interface MorpheusNetworkService extends MorpheusDataService<Network, Net
 	 */
 	@Deprecated
 	Single<ServiceResponse> getConfigurationDriftDetails(NetworkServer networkServer);
+
+	/**
+	 * Picks the next network or subnet to use from the given group.
+	 * <p>
+	 * This is typically used during provisioning or reconfigure.
+	 * @param group the {@link NetworkGroup} to pick networks or subnets from
+	 * @param accountId the account id to filter selections by
+	 * @param siteId the site id to filter selections by
+	 * @param cloudId the cloud id to filter selections by
+	 * @param usedNetworks list of networks already in use to avoid selection
+	 * @param usedSubnets list of subnets already in use to avoid selection
+	 * @param cloudPool the {@link CloudPool} context for the selection; this is optional.
+	 * @return a ServiceResponse containing the selected network or subnet
+	 * @since 1.3.0
+	 */
+	Single<ServiceResponse<NetworkGroupPickResponse>> pickNextNetworkOrSubnetFromGroup(NetworkGroup group, Long accountId, Long siteId, Long cloudId, List<Network> usedNetworks, List<NetworkSubnet> usedSubnets, CloudPool cloudPool);
 }

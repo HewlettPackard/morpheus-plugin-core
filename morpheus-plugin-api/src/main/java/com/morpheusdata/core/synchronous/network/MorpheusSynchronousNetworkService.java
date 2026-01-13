@@ -23,7 +23,10 @@ import com.morpheusdata.core.providers.DNSProvider;
 import com.morpheusdata.core.providers.IPAMProvider;
 import com.morpheusdata.model.*;
 import com.morpheusdata.model.projection.NetworkIdentityProjection;
+import com.morpheusdata.response.NetworkGroupPickResponse;
 import com.morpheusdata.response.ServiceResponse;
+
+import java.util.List;
 
 public interface MorpheusSynchronousNetworkService extends MorpheusSynchronousDataService<Network, NetworkIdentityProjection>, MorpheusSynchronousIdentityService<NetworkIdentityProjection> {
 
@@ -89,6 +92,13 @@ public interface MorpheusSynchronousNetworkService extends MorpheusSynchronousDa
 	MorpheusSynchronousNetworkProxyService getNetworkProxy();
 
 	/**
+	 * Returns the {@link MorpheusSynchronousNetworkGroupService} used for performing updates/queries on {@link NetworkGroup} related assets
+	 * within Morpheus
+	 * @return An instance of the {@link MorpheusSynchronousNetworkProxyService}
+	 */
+	MorpheusSynchronousNetworkGroupService getNetworkGroup();
+
+	/**
 	 * Validates an update on a {@link NetworkServer} before executing the update.
 	 * @deprecated use {@link MorpheusSynchronousNetworkServerService#validateUpdate(UpdateDefinition, NetworkServer)}  instead
 	 */
@@ -136,4 +146,20 @@ public interface MorpheusSynchronousNetworkService extends MorpheusSynchronousDa
 	 */
 	@Deprecated
 	ServiceResponse getConfigurationDriftDetails(NetworkServer networkServer);
+
+	/**
+	 * Picks the next network or subnet to use from the given group.
+	 * <p>
+	 * This is typically used during provisioning or reconfigure.
+	 * @param group the {@link NetworkGroup} to pick networks or subnets from
+	 * @param accountId the account id to filter selections by
+	 * @param siteId the site id to filter selections by
+	 * @param cloudId the cloud id to filter selections by
+	 * @param usedNetworks list of networks already in use to avoid selection
+	 * @param usedSubnets list of subnets already in use to avoid selection
+	 * @param cloudPool the {@link CloudPool} context for the selection; this is optional.
+	 * @return a ServiceResponse containing the selected network or subnet
+	 * @since 1.3.0
+	 */
+	ServiceResponse<NetworkGroupPickResponse> pickNextNetworkOrSubnetFromGroup(NetworkGroup group, Long accountId, Long siteId, Long cloudId, List<Network> usedNetworks, List<NetworkSubnet> usedSubnets, CloudPool cloudPool);
 }

@@ -25,7 +25,7 @@ import java.util.ArrayList;
  *
  * @author Eric Helgeson
  */
-class NetworkGroup extends NetworkBase {
+public class NetworkGroup extends NetworkBase {
 	protected String name;
 	protected String description;
 
