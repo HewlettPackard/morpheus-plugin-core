@@ -180,6 +180,7 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 	protected Boolean systemServer=false;
 	protected String managedBy;
 	protected Date lastMetricRunDate;
+	protected Boolean appliance = false;
 
 	protected GuestAgentStatus guestAgentStatus = GuestAgentStatus.unknown;
 
@@ -1184,6 +1185,15 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 	public void setLastMetricRunDate(Date lastMetricRunDate) {
 		this.lastMetricRunDate = lastMetricRunDate;
 		markDirty("lastMetricRunDate", lastMetricRunDate);
+	}
+
+	public Boolean getAppliance() {
+		return appliance;
+	}
+
+	public void setAppliance(Boolean appliance) {
+		this.appliance = appliance;
+		markDirty("appliance", appliance);
 	}
 
 	public enum GuestConsoleType {
