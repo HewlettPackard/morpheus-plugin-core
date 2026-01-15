@@ -91,10 +91,16 @@ public class StorageVolume extends StorageVolumeIdentityProjection {
 	protected Boolean createForMultiAttach = false;
 	protected Boolean activeReplica = false;
 
+	/**
+	 * Indicates whether this volume supports attachment to multiple hosts simultaneously
+	 */
+	protected Boolean isMultiAttach;
+
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	public Account getAccount() {
 		return account;
 	}
+
 
 	public Long getCloud() {
 		return cloudId;
@@ -621,5 +627,20 @@ public class StorageVolume extends StorageVolumeIdentityProjection {
 	public void setActiveReplica(Boolean activeReplica) {
 		this.activeReplica = activeReplica;
 		markDirty("activeReplica", activeReplica, this.activeReplica);
+	}
+
+	/**
+	 * @return true if this is multi attach; false otherwise
+	 */
+	public Boolean getMultiAttach() {
+		return isMultiAttach;
+	}
+	/**
+	 * Sets whether this volume is multi attach
+	 * @param isMultiAttach true if this volume is multi attach; false otherwise
+	 */
+	public void setMultiAttach(Boolean isMultiAttach) {
+		this.isMultiAttach = isMultiAttach;
+		markDirty("isMultiAttach", this.isMultiAttach, this.isMultiAttach);
 	}
 }
