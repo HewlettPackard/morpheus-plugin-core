@@ -139,7 +139,6 @@ public class StorageVolume extends StorageVolumeIdentityProjection {
 		return account;
 	}
 
-
 	public Long getCloud() {
 		return cloudId;
 	}
