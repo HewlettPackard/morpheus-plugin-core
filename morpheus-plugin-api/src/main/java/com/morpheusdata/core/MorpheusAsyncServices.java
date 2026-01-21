@@ -569,4 +569,6 @@ public interface MorpheusAsyncServices {
 	 * @return an instance of the MorpheusCurrencyConversionService
 	 */
 	MorpheusCurrencyConversionService getCurrency();
+
+	MorpheusAffinityGroupService getAffinityGroup();
 }

@@ -16,14 +16,25 @@
 
 package com.morpheusdata.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.morpheusdata.model.projection.MorpheusIdentityModel;
+import com.morpheusdata.model.serializers.ModelAsIdOnlySerializer;
 
 import java.util.Collection;
 
 public class AffinityGroup extends MorpheusIdentityModel {
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
+	protected Account owner;
 	protected String name;
 	protected Boolean active = true;
 	protected String visibility = "private";
+	protected AffinityType affinityType = AffinityType.KEEP_SEPARATE;
+	protected String refType; //ComputeZone, ComputeServerGroup
+	protected Long refId;
+	protected String source = "user"; //user, sync
+	protected String externalId;
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
+	protected CloudPool pool;
 
 	protected Collection<ComputeServer> servers;
 
@@ -57,5 +68,66 @@ public class AffinityGroup extends MorpheusIdentityModel {
 
 	public void setServers(Collection<ComputeServer> servers) {
 		this.servers = servers;
+	}
+
+	public Account getOwner() {
+		return owner;
+	}
+
+	public void setOwner(Account owner) {
+		this.owner = owner;
+	}
+
+	public AffinityType getAffinityType() {
+		return affinityType;
+	}
+
+	public void setAffinityType(AffinityType affinityType) {
+		this.affinityType = affinityType;
+	}
+
+	public String getRefType() {
+		return refType;
+	}
+
+	public void setRefType(String refType) {
+		this.refType = refType;
+	}
+
+	public Long getRefId() {
+		return refId;
+	}
+
+	public void setRefId(Long refId) {
+		this.refId = refId;
+	}
+
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
+	}
+
+	public String getExternalId() {
+		return externalId;
+	}
+
+	public void setExternalId(String externalId) {
+		this.externalId = externalId;
+	}
+
+	public CloudPool getPool() {
+		return pool;
+	}
+
+	public void setPool(CloudPool pool) {
+		this.pool = pool;
+	}
+
+	public enum AffinityType {
+		KEEP_SEPARATE,
+		KEEP_TOGETHER
 	}
 }

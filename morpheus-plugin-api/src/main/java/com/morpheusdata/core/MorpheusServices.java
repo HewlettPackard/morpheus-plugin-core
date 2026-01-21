@@ -561,4 +561,6 @@ public interface MorpheusServices {
 	 * @return an instance of {@link MorpheusSynchronousProcessService}
 	 */
 	MorpheusSynchronousProcessService getProcess();
+
+	MorpheusSynchronousAffinityGroupService getAffinityGroup();
 }
