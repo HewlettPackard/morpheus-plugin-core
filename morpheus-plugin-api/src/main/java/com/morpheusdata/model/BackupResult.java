@@ -37,6 +37,7 @@ public class BackupResult extends MorpheusModel {
 
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected User createdBy;
+	protected String initiatedBy;
 	// protected StorageBucket storageProvider;
 	//executor
 	protected Long executeServerId;
@@ -101,6 +102,7 @@ public class BackupResult extends MorpheusModel {
 
 	protected String source;
 	protected Boolean deletable = true;
+	protected String location;
 
 	/**
 	 * ID of the {@link Process} that is tracking the progress of the backup execution.
@@ -181,6 +183,15 @@ public class BackupResult extends MorpheusModel {
 	public void setCreatedBy(User createdBy) {
 		markDirty("createdBy", createdBy, this.createdBy);
 		this.createdBy = createdBy;
+	}
+
+	public String getInitiatedBy() {
+		return initiatedBy;
+	}
+
+	public void setInitiatedBy(String initiatedBy) {
+		markDirty("initiatedBy", initiatedBy, this.initiatedBy);
+		this.initiatedBy = initiatedBy;
 	}
 
 	// public StorageBucket getStorageProvider() {
@@ -668,6 +679,15 @@ public class BackupResult extends MorpheusModel {
 	public void setDeletable(Boolean deletable) {
 		markDirty("deletable", deletable, this.deletable);
 		this.deletable = deletable;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		markDirty("location", location, this.location);
+		this.location = location;
 	}
 
 	/**
