@@ -1,8 +1,8 @@
 package com.morpheusdata.model;
 
 import com.morpheusdata.model.projection.UpdateIdentityProjection;
-import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -20,8 +20,8 @@ public class UpdateOperation extends UpdateIdentityProjection {
     protected String statusMessage;         // final status message of the operation
     protected int percentComplete = 0;      // completion percentage
 
-    protected Instant startedAt;            // start timestamp
-    protected Instant completedAt;          // completion timestamp
+    protected Date startedAt;            // start timestamp
+    protected Date completedAt;          // completion timestamp
 
     // List of operation entries (flattened structure)
     protected List<OpEntry> opEntry = new ArrayList<>();
@@ -89,11 +89,11 @@ public class UpdateOperation extends UpdateIdentityProjection {
     public int getPercentComplete() { return percentComplete; }
     public void setPercentComplete(int percentComplete) { this.percentComplete = percentComplete; }
 
-    public Instant getStartedAt() { return startedAt; }
-    public void setStartedAt(Instant startedAt) { this.startedAt = startedAt; }
+    public Date getStartedAt() { return startedAt; }
+    public void setStartedAt(Date startedAt) { this.startedAt = startedAt; }
 
-    public Instant getCompletedAt() { return completedAt; }
-    public void setCompletedAt(Instant completedAt) { this.completedAt = completedAt; }
+    public Date getCompletedAt() { return completedAt; }
+    public void setCompletedAt(Date completedAt) { this.completedAt = completedAt; }
 
     public List<OpEntry> getOpEntry() { return opEntry; }
     public void setOpEntry(List<OpEntry> opEntry) { this.opEntry = opEntry; }
