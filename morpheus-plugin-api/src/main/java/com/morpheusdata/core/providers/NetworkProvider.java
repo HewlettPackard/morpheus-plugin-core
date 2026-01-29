@@ -169,6 +169,14 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 		return new ArrayList<>();
 	}
 
+	default Collection<SecurityGroupRuleTargetType> getSecurityGroupRuleIngressSourceTypes() { return  new ArrayList<>(); }
+
+	default Collection<SecurityGroupRuleTargetType> getSecurityGroupRuleEgressSourceTypes() { return new ArrayList<>(); }
+
+	default Collection<SecurityGroupRuleTargetType> getSecurityGroupRuleIngressDestTypes() { return new ArrayList<>(); }
+
+	default Collection<SecurityGroupRuleTargetType> getSecurityGroupRuleEgressDestTypes() { return new ArrayList<>(); }
+
 	default SecurityGroupProvider getSecurityGroupProvider() { return null; }
 
 	default Collection<NetworkSwitchType> getNetworkSwitchTypes() { return new ArrayList<>(); }
