@@ -99,14 +99,14 @@ public class SystemTypeLayout extends MorpheusModel {
 		this.systemType = systemType;
 	}
 
-	public Map<String,List<SystemComponentType>> getGroupedComponents() {
+	public Map<String, List<SystemComponentType>> getGroupedComponents() {
 		return this.components.stream()
-			.collect(Collectors.groupingBy(type -> type.getCode()));
+				.collect(Collectors.groupingBy(type -> type.getCode()));
 	}
 
 	public List<SystemComponentType> getComponentsByCode(String code) {
 		return this.components.stream()
-			.filter(component -> component.getCode().equals(code))
-			.collect(Collectors.toList());
+				.filter(component -> component.getCode().equals(code))
+				.collect(Collectors.toList());
 	}
 }

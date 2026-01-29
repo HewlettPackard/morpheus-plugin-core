@@ -99,6 +99,7 @@ public class BackupResult extends MorpheusModel {
 
 	protected String source;
 	protected Boolean deletable = true;
+	protected String initiatedBy;
 
 	/**
 	 * ID of the {@link Process} that is tracking the progress of the backup execution.
@@ -676,6 +677,14 @@ public class BackupResult extends MorpheusModel {
 	public void setDeletable(Boolean deletable) {
 		markDirty("deletable", deletable, this.deletable);
 		this.deletable = deletable;
+	}
+
+	public String getInitiatedBy() {
+		return initiatedBy;
+	}
+	public void setInitiatedBy(String initiatedBy) {
+		markDirty("initiatedBy", initiatedBy, this.initiatedBy);
+		this.initiatedBy = initiatedBy;
 	}
 
 	/**

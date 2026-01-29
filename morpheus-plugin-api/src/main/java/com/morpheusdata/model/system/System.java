@@ -12,8 +12,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * This model is a conceptual representation of n number of hardware and/or software
- * (hosts, storage arrays, network devices, etc) units that make up a managed system.
+ * This model is a conceptual representation of n number of hardware and/or
+ * software
+ * (hosts, storage arrays, network devices, etc) units that make up a managed
+ * system.
  */
 public class System extends MorpheusModel {
 	protected String name;
@@ -27,9 +29,12 @@ public class System extends MorpheusModel {
 	protected String externalId;
 	protected Date dateCreated;
 	protected Date lastUpdated;
-	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using = ModelAsIdOnlySerializer.class)
 	protected Account owner;
 	protected List<SystemComponent> components = new ArrayList<>();
+
+	// Orchestration state stored as JSON
+	protected String orchestrationState;
 
 	public String getName() {
 		return name;
@@ -148,14 +153,23 @@ public class System extends MorpheusModel {
 		this.components = components;
 	}
 
-	public Map<String,List<SystemComponent>> getGroupedComponents() {
+	public String getOrchestrationState() {
+		return orchestrationState;
+	}
+
+	public void setOrchestrationState(String orchestrationState) {
+		markDirty("orchestrationState", orchestrationState);
+		this.orchestrationState = orchestrationState;
+	}
+
+	public Map<String, List<SystemComponent>> getGroupedComponents() {
 		return this.components.stream()
-			.collect(Collectors.groupingBy(component -> component.getType().getCode()));
+				.collect(Collectors.groupingBy(component -> component.getType().getCode()));
 	}
 
 	public List<SystemComponent> getComponentsByCode(String code) {
 		return this.components.stream()
-			.filter(component -> component.getType().getCode().equals(code))
-			.collect(Collectors.toList());
+				.filter(component -> component.getType().getCode().equals(code))
+				.collect(Collectors.toList());
 	}
 }
