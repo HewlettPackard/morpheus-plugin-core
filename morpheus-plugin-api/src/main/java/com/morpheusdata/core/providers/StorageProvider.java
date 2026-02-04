@@ -16,6 +16,7 @@
 
 package com.morpheusdata.core.providers;
 
+import com.morpheusdata.core.providers.PluginProvider.SupportBundleFacet;
 import com.morpheusdata.model.*;
 import com.morpheusdata.response.ServiceResponse;
 import com.morpheusdata.views.HTMLResponse;
@@ -161,4 +162,13 @@ public interface StorageProvider extends PluginProvider,UIExtensionProvider {
 		 */
 		ServiceResponse<DriftState> getConfigurationDriftDetails(StorageServer storageServer, DriftState driftState);
 	}
+
+	/**
+	 * Facet for generating support bundle contents for Storage Server integrations.
+	 * Implement this facet to provide support bundle generation capabilities for storage providers.
+	 *
+	 * @since 1.4.0
+	 * @author Mike Carlin
+	 */
+	interface StorageServerSupportBundleFacet extends SupportBundleFacet<StorageServer> {}
 }

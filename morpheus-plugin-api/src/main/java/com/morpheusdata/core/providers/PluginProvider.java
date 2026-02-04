@@ -21,6 +21,8 @@ import com.morpheusdata.core.MorpheusContext;
 import com.morpheusdata.core.Plugin;
 import com.morpheusdata.model.AccountIntegration;
 import com.morpheusdata.model.CheckLevel;
+import com.morpheusdata.model.GenerateSupportBundleContentsRequest;
+import com.morpheusdata.model.GenerateSupportBundleContentsResponse;
 import com.morpheusdata.model.UpdateOperation;
 import com.morpheusdata.model.UpdateDefinition;
 import com.morpheusdata.model.event.*;
@@ -67,7 +69,7 @@ public interface PluginProvider {
 	 */
 	String getName();
 
-	
+
 
 	/**
 	 *	Applying this Facet to an integration will allow it to subscribe to events and perform operations based on the event
@@ -183,6 +185,29 @@ public interface PluginProvider {
 		 */
 		default ServiceResponse<DriftState> getConfigurationDriftDetails(T target, DriftState driftState) {
 			return ServiceResponse.success();
+		}
+	}
+
+	/**
+	 * Applying this Facet to a provider will allow it to generate support bundle contents for target devices.
+	 * This is useful for collecting logs, configuration files, and other relevant information for
+	 * troubleshooting and analysis.
+	 *
+	 * @param <T> the type of target device this facet operates on
+	 * @since 1.4.0
+	 * @author Mike Carlin
+	 */
+	public interface SupportBundleFacet<T> {
+		/**
+		 * Generate support bundle contents for the target device. This is useful for collecting logs,
+		 * configuration files, and other relevant information for troubleshooting.
+		 *
+		 * @param target the target device to generate the support bundle contents for
+		 * @param request request containing the bundle and directory for placing support bundle files
+		 * @return a ServiceResponse indicating the success or failure of the support bundle contents generation
+		 */
+		default ServiceResponse<GenerateSupportBundleContentsResponse> generateSupportBundleContents(T target, GenerateSupportBundleContentsRequest request) {
+			return ServiceResponse.success(new GenerateSupportBundleContentsResponse());
 		}
 	}
 }

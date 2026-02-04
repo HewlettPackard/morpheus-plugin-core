@@ -186,4 +186,13 @@ public interface HostProvisionProvider extends ComputeProvisionProvider {
 		ServiceResponse finalizeHost(ComputeServer server);
 	}
 
+	/**
+	 * Facet for generating support bundle contents for hosts
+	 * Implement this facet to provide support bundle generation capabilities for hosts.
+	 *
+	 * @since 1.4.0
+	 * @author Mike Carlin
+	 */
+	interface HostSupportBundleFacet extends SupportBundleFacet<ComputeServer> {}
+
 }
