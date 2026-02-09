@@ -132,7 +132,7 @@ public class StorageVolume extends StorageVolumeIdentityProjection {
 	/**
 	 * Indicates whether this volume supports attachment to multiple hosts simultaneously
 	 */
-	protected Boolean isMultiAttach;
+	protected Boolean isMultiAttach = false;
 
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	public Account getAccount() {
