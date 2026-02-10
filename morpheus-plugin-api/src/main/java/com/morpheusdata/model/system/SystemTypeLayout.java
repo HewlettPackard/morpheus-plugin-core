@@ -18,6 +18,7 @@ public class SystemTypeLayout extends MorpheusModel {
 	protected List<TaskSet> updateWorkflows = new ArrayList<>();
 	protected Boolean enabled = true;
 	protected SystemType systemType;
+	protected String configurationWorkflowCode;
 
 	public String getCode() {
 		return code;
@@ -97,6 +98,15 @@ public class SystemTypeLayout extends MorpheusModel {
 
 	public void setSystemType(SystemType systemType) {
 		this.systemType = systemType;
+	}
+
+	public String getConfigurationWorkflowCode() {
+		return configurationWorkflowCode;
+	}
+
+	public void setConfigurationWorkflowCode(String configurationWorkflowCode) {
+		this.configurationWorkflowCode = configurationWorkflowCode;
+		markDirty("configurationWorkflowCode", configurationWorkflowCode);
 	}
 
 	public Map<String, List<SystemComponentType>> getGroupedComponents() {

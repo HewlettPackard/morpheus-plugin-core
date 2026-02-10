@@ -115,15 +115,4 @@ public interface FormProvider extends PluginProvider {
 		return data;
 	}
 
-	/**
-	 * Optional method called after successful form submission.
-	 * Useful for cleanup, notifications, or triggering dependent actions.
-	 * 
-	 * @param data           the submitted form data
-	 * @param submitResponse the response from submitForm()
-	 * @param opts           additional options or context
-	 */
-	default void afterSubmit(Map data, ServiceResponse submitResponse, Map opts) {
-		// Default implementation does nothing
-	}
 }

@@ -16,6 +16,7 @@
 
 package com.morpheusdata.core.providers;
 
+import com.morpheusdata.model.WizardStep;
 import com.morpheusdata.response.ServiceResponse;
 
 import java.util.List;
@@ -33,15 +34,6 @@ import java.util.Map;
  * @since 1.2.6
  */
 public interface WizardProvider extends PluginProvider {
-
-	/**
-	 * Returns a unique identifier for this wizard. This should be unique across
-	 * all wizard providers
-	 * to prevent conflicts.
-	 * 
-	 * @return unique wizard identifier
-	 */
-	String getWizardKey();
 
 	/**
 	 * Returns the display name for this wizard
@@ -99,7 +91,8 @@ public interface WizardProvider extends PluginProvider {
 	/**
 	 * Validates all wizard data before final submission. This method can perform
 	 * cross-step validation and business rule checks that span multiple steps.
-	 * Individual step validation is handled by each step's form, but this method
+	 * Individual step validation is handled by validateWizardStep(), but this
+	 * method
 	 * provides a final validation point for the complete wizard.
 	 * 
 	 * @param wizardData map containing all data collected from all wizard steps,
@@ -110,6 +103,26 @@ public interface WizardProvider extends PluginProvider {
 	 *         wrong.
 	 */
 	ServiceResponse validateWizard(Map wizardData, Map opts);
+
+	/**
+	 * Validates the data submitted for a specific wizard step. This method is
+	 * called
+	 * when a user completes a step and before moving to the next step. It allows
+	 * validation logic to consider the entire wizard state collected so far.
+	 * 
+	 * @param stepCode   the code of the step being validated
+	 * @param stepData   map containing data submitted for this specific step
+	 * @param wizardData map containing all data collected from previous steps,
+	 *                   keyed by step code
+	 * @param opts       additional options or context
+	 * @return ServiceResponse containing validation results. If validation fails,
+	 *         the response should contain error messages explaining what went
+	 *         wrong.
+	 */
+	default ServiceResponse validateWizardStep(String stepCode, Map stepData, Map wizardData, Map opts) {
+		// Default implementation - can be overridden for step-specific validation
+		return ServiceResponse.success();
+	}
 
 	/**
 	 * Processes and submits the completed wizard data after all steps have been

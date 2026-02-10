@@ -20,20 +20,24 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.morpheusdata.model.serializers.ModelAsIdOnlySerializer;
 import com.morpheusdata.model.system.SystemTypeLayout;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
- * Represents an orchestration workflow instance that maintains state across
+ * Represents an configuration workflow workflow instance that maintains state
+ * across
  * multiple configuration steps. The orchestrator is linked to a
  * SystemTypeLayout
- * and uses an OrchestrationState object to track progress and configuration
+ * and uses an ConfigurationWorkflowState object to track progress and
+ * configuration
  * data
- * collected through a multi-step orchestration process.
+ * collected through a multi-step configuration workflow process.
  * 
  * @author Andy Warner
  * @since 1.2.6
  */
-public class Orchestrator extends MorpheusModel {
+public class ConfigurationWorkflow extends MorpheusModel {
 
 	@JsonSerialize(using = ModelAsIdOnlySerializer.class)
 	protected Account owner;
@@ -47,6 +51,9 @@ public class Orchestrator extends MorpheusModel {
 	protected String name;
 	protected String code;
 	protected String description;
+
+	// Steps in this workflow
+	protected List<ConfigurationWorkflowStep> steps = new ArrayList<>();
 
 	// Audit fields
 	protected Date dateCreated;
@@ -117,6 +124,15 @@ public class Orchestrator extends MorpheusModel {
 	public void setDescription(String description) {
 		this.description = description;
 		markDirty("description", description);
+	}
+
+	public List<ConfigurationWorkflowStep> getSteps() {
+		return steps;
+	}
+
+	public void setSteps(List<ConfigurationWorkflowStep> steps) {
+		this.steps = steps;
+		markDirty("steps", steps);
 	}
 
 	public Date getDateCreated() {

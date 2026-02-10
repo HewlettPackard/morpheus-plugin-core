@@ -14,30 +14,33 @@
  * limitations under the License.
  */
 
-package com.morpheusdata.core.providers;
+package com.morpheusdata.model;
+
+import java.util.List;
 
 /**
- * Represents a single step in a wizard flow. Each step contains a form
- * provider for collecting data and validation.
+ * Represents a single step in a wizard flow. Each step contains optionTypes
+ * and optionTypeFieldGroups for collecting data, along with validation logic.
  * 
  * @author Andy Warner
  * @since 1.2.6
  */
-public class WizardStep {
+public class WizardStep extends MorpheusModel {
 
-	private String code;
-	private String name;
-	private String description;
-	private FormProvider form;
-	private Integer displayOrder;
+	protected String code;
+	protected String name;
+	protected String description;
+	protected List<OptionType> optionTypes;
+	protected List<OptionTypeFieldGroup> optionTypeFieldGroups;
+	protected Integer displayOrder;
 
 	public WizardStep() {
 	}
 
-	public WizardStep(String code, String name, FormProvider form) {
+	public WizardStep(String code, String name, List<OptionType> optionTypes) {
 		this.code = code;
 		this.name = name;
-		this.form = form;
+		this.optionTypes = optionTypes;
 	}
 
 	/**
@@ -56,6 +59,7 @@ public class WizardStep {
 	 */
 	public void setCode(String code) {
 		this.code = code;
+		markDirty("code", code);
 	}
 
 	/**
@@ -74,6 +78,7 @@ public class WizardStep {
 	 */
 	public void setName(String name) {
 		this.name = name;
+		markDirty("name", name);
 	}
 
 	/**
@@ -92,26 +97,45 @@ public class WizardStep {
 	 */
 	public void setDescription(String description) {
 		this.description = description;
+		markDirty("description", description);
 	}
 
 	/**
-	 * Returns the form provider that handles data collection and validation for
-	 * this step
+	 * Returns the option types for this wizard step
 	 * 
-	 * @return FormProvider instance
+	 * @return list of OptionType
 	 */
-	public FormProvider getForm() {
-		return form;
+	public List<OptionType> getOptionTypes() {
+		return optionTypes;
 	}
 
 	/**
-	 * Sets the form provider that handles data collection and validation for this
-	 * step
+	 * Sets the option types for this wizard step
 	 * 
-	 * @param form FormProvider instance
+	 * @param optionTypes list of OptionType
 	 */
-	public void setForm(FormProvider form) {
-		this.form = form;
+	public void setOptionTypes(List<OptionType> optionTypes) {
+		this.optionTypes = optionTypes;
+		markDirty("optionTypes", optionTypes);
+	}
+
+	/**
+	 * Returns the option type field groups for this wizard step
+	 * 
+	 * @return list of OptionTypeFieldGroup
+	 */
+	public List<OptionTypeFieldGroup> getOptionTypeFieldGroups() {
+		return optionTypeFieldGroups;
+	}
+
+	/**
+	 * Sets the option type field groups for this wizard step
+	 * 
+	 * @param optionTypeFieldGroups list of OptionTypeFieldGroup
+	 */
+	public void setOptionTypeFieldGroups(List<OptionTypeFieldGroup> optionTypeFieldGroups) {
+		this.optionTypeFieldGroups = optionTypeFieldGroups;
+		markDirty("optionTypeFieldGroups", optionTypeFieldGroups);
 	}
 
 	/**
@@ -130,6 +154,7 @@ public class WizardStep {
 	 */
 	public void setDisplayOrder(Integer displayOrder) {
 		this.displayOrder = displayOrder;
+		markDirty("displayOrder", displayOrder);
 	}
 
 }

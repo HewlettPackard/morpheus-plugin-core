@@ -20,16 +20,20 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.morpheusdata.model.serializers.ModelAsIdOnlySerializer;
 
 /**
- * A Model representation of an input / option that is represented either in a UI or CLI. This allows an Integration to
- * specify custom inputs for various configuration screens where custom data may need to be provided. This could include
- * provisioning options as well as cloud configuration options. There are several different input types as well as display
- * orders. This used to belong in seed within the main Morpheus appliance but since plugins are being separated this must
+ * A Model representation of an input / option that is represented either in a
+ * UI or CLI. This allows an Integration to
+ * specify custom inputs for various configuration screens where custom data may
+ * need to be provided. This could include
+ * provisioning options as well as cloud configuration options. There are
+ * several different input types as well as display
+ * orders. This used to belong in seed within the main Morpheus appliance but
+ * since plugins are being separated this must
  * be provided by the relevant provider interface.
  *
  * @author David Estes
  */
 public class OptionType extends MorpheusModel implements IModelUuidCodeName {
-	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using = ModelAsIdOnlySerializer.class)
 	protected Account account;
 
 	protected String name;
@@ -48,25 +52,26 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	protected String fieldContext = "config";
 	protected String fieldClass;
 	protected String fieldLabel;
-	protected String fieldCode; //for i18
+	protected String fieldCode; // for i18
 	protected String fieldName;
-	protected String fieldGetName;//for getting the value from a different property
-	protected String fieldSetName;//for setting the value from a different property
+	protected String fieldGetName;// for getting the value from a different property
+	protected String fieldSetName;// for setting the value from a different property
 	protected String fieldGetContext;
 	protected String fieldSetContext;
-	protected String fieldInput; //additional input for a multi value
+	protected String fieldInput; // additional input for a multi value
 	protected Integer fieldSize;
 	protected String fieldSet; // for same line stuff - pairs of inputs
 	protected String fieldCondition;
 	protected String fieldAddOn;
 	protected String fieldEvar;
-	protected String fieldComponent; //if this type is part of a component - the ui and cli might filter it out but leave the type for backward compatibility
-	protected String fieldGroup; //goes under same heading
-	protected String fieldGroupI18nCode; //i18n code for field group heading
+	protected String fieldComponent; // if this type is part of a component - the ui and cli might filter it out but
+										// leave the type for backward compatibility
+	protected String fieldGroup; // goes under same heading
+	protected String fieldGroupI18nCode; // i18n code for field group heading
 
-	protected String labelClass; //goes on a label
-	protected String blockCLass; //goes on element holding input
-	protected String wrapperClass; //goes on element around the label and input
+	protected String labelClass; // goes on a label
+	protected String blockCLass; // goes on element holding input
+	protected String wrapperClass; // goes on element around the label and input
 	protected String wrapperSelector; // selector used to scope changes when looking for dependent elements
 
 	protected InputType inputType = InputType.TEXT;
@@ -75,33 +80,39 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	protected String defaultValue;
 
 	protected String helpText; // text displayed near the input
-	protected String helpTextI18nCode; //for i18
+	protected String helpTextI18nCode; // for i18
 
 	protected String optionSourceType;
-	protected String optionSource; //Dynamic dropdown field method reference (How to add via provider...)
-	protected String dependsOn; //Marked for refresh for a comma delimited list of other option type codes
+	protected String optionSource; // Dynamic dropdown field method reference (How to add via provider...)
+	protected String dependsOn; // Marked for refresh for a comma delimited list of other option type codes
 	/**
 	 * Controls when this optionType is indicated as required on the form
-	 * Format is 'fieldName:regex'.  e.g. 'config.haMode:ACTIVE_STANDBY'
-	 * Where fieldName is the full name of another input on the form and regex is a regular expression used to
-	 * test against the value for the input named 'fieldName'.  If a match is obtained, the optionType is inidicated as required.
-	 * Default match behavior for multiple rules is matchAny. The match type can be customized with a 'matchAll::' or 'matchAny::' prefix.
+	 * Format is 'fieldName:regex'. e.g. 'config.haMode:ACTIVE_STANDBY'
+	 * Where fieldName is the full name of another input on the form and regex is a
+	 * regular expression used to
+	 * test against the value for the input named 'fieldName'. If a match is
+	 * obtained, the optionType is inidicated as required.
+	 * Default match behavior for multiple rules is matchAny. The match type can be
+	 * customized with a 'matchAll::' or 'matchAny::' prefix.
 	 * Examples:
-	 * 		matchAll::domain.fieldName1:value1,config.fieldName2:value1,domain.fieldName3:(value1|value2|value3)
-	 * 		matchAny::config.filedName1:value1,config.fieldName2:^some.*?regex$
+	 * matchAll::domain.fieldName1:value1,config.fieldName2:value1,domain.fieldName3:(value1|value2|value3)
+	 * matchAny::config.filedName1:value1,config.fieldName2:^some.*?regex$
 	 *
 	 * Usage logic can be found in option-type-form.js
 	 **/
 	protected String requireOnCode;
 	/**
 	 * Controls when this optionType is visible
-	 * Format is 'fieldName:regex'.  e.g. 'config.haMode:ACTIVE_STANDBY'
-	 * Where fieldName is the full name of another input on the form and regex is a regular expression used to
-	 * test against the value for the input named 'fieldName'.  If a match is obtained, the optionType is visible.
-	 * Default match behavior for multiple rules is matchAny. The match type can be customized with a 'matchAll::' or 'matchAny' prefix.
+	 * Format is 'fieldName:regex'. e.g. 'config.haMode:ACTIVE_STANDBY'
+	 * Where fieldName is the full name of another input on the form and regex is a
+	 * regular expression used to
+	 * test against the value for the input named 'fieldName'. If a match is
+	 * obtained, the optionType is visible.
+	 * Default match behavior for multiple rules is matchAny. The match type can be
+	 * customized with a 'matchAll::' or 'matchAny' prefix.
 	 * Examples:
-	 * 		matchAll::domain.fieldName1:value1,config.fieldName2:value1,domain.fieldName3:(value1|value2|value3)
-	 * 		matchAny::config.filedName1:value1,config.fieldName2:^some.*?regex$
+	 * matchAll::domain.fieldName1:value1,config.fieldName2:value1,domain.fieldName3:(value1|value2|value3)
+	 * matchAny::config.filedName1:value1,config.fieldName2:^some.*?regex$
 	 *
 	 * Usage logic can be found in option-type-form.js
 	 **/
@@ -115,11 +126,11 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	protected String format;
 
 	protected String evarName;
-	protected String conversionType; //double, long, integer, float etc.
-	protected String viewTemplate; //handlebars or gsp template
-	protected String editTemplate; //handlebars or gsp template
-	protected String addTemplate; //handlebars or gsp template
-	protected String idTemplate; //handlebars or gsp template
+	protected String conversionType; // double, long, integer, float etc.
+	protected String viewTemplate; // handlebars or gsp template
+	protected String editTemplate; // handlebars or gsp template
+	protected String addTemplate; // handlebars or gsp template
+	protected String idTemplate; // handlebars or gsp template
 	protected String apiList;
 	protected Boolean ownerEditable = false;
 	protected Boolean tenantEditable = false;
@@ -137,15 +148,16 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	protected Boolean excludeFromSearch = false; // (if true) dont submit this field as extra data in a typeahead
 
 	/**
-	 * If this was sourced as a direct input on a form or not. If true, it is hidden from the main
+	 * If this was sourced as a direct input on a form or not. If true, it is hidden
+	 * from the main
 	 * ui inputs list
 	 */
 
 	protected Boolean formField = false;
 
-
 	/**
-	 * this field is for form functionality only, will not save to the domain object.
+	 * this field is for form functionality only, will not save to the domain
+	 * object.
 	 */
 	protected Boolean ignoreField = false;
 	/**
@@ -167,8 +179,11 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	}
 
 	/**
-	 * Gets the Unique code representation of the option type. This is used for tracking changes and should be globally unique. It also
-	 * allows for multiple provider types to reuse the same input field if they share the same option set.
+	 * Gets the Unique code representation of the option type. This is used for
+	 * tracking changes and should be globally unique. It also
+	 * allows for multiple provider types to reuse the same input field if they
+	 * share the same option set.
+	 * 
 	 * @return unique String code identifier for this particular Option Type
 	 */
 	public String getCode() {
@@ -176,8 +191,11 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	}
 
 	/**
-	 * Sets the Unique code representation of the option type. This is used for tracking changes and should be globally unique. It also
-	 * allows for multiple provider types to reuse the same input field if they share the same option set.
+	 * Sets the Unique code representation of the option type. This is used for
+	 * tracking changes and should be globally unique. It also
+	 * allows for multiple provider types to reuse the same input field if they
+	 * share the same option set.
+	 * 
 	 * @param code unique String code identifier for this particular Option Type
 	 */
 	public void setCode(String code) {
@@ -186,8 +204,10 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	}
 
 	/**
-	 * Gets the field label of the current Option Type. The Field Label is the human readable label that is typically displayed left of the
+	 * Gets the field label of the current Option Type. The Field Label is the human
+	 * readable label that is typically displayed left of the
 	 * input prompt in most UI representations.
+	 * 
 	 * @return Human readable Field Label
 	 */
 	public String getFieldLabel() {
@@ -195,8 +215,10 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	}
 
 	/**
-	 * Sets the field label of the current Option Type. The Field Label is the human readable label that is typically displayed left of the
+	 * Sets the field label of the current Option Type. The Field Label is the human
+	 * readable label that is typically displayed left of the
 	 * input prompt in most UI representations.
+	 * 
 	 * @param fieldLabel Human readable Field Label
 	 */
 	public void setFieldLabel(String fieldLabel) {
@@ -205,9 +227,12 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	}
 
 	/**
-	 * Gets the field name of the current option type. The Field Name is typically the actual property name the field correlates to.
-	 * It can be period seperated for referencing nested objects and is typically combined with the fieldContext.
+	 * Gets the field name of the current option type. The Field Name is typically
+	 * the actual property name the field correlates to.
+	 * It can be period seperated for referencing nested objects and is typically
+	 * combined with the fieldContext.
 	 * (example: config.provider.name).
+	 * 
 	 * @return the field name of the property being saved
 	 */
 	public String getFieldName() {
@@ -215,9 +240,12 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	}
 
 	/**
-	 * Sets the field name of the current option type. The Field Name is typically the actual property name the field correlates to.
-	 * It can be period seperated for referencing nested objects and is typically combined with the fieldContext.
+	 * Sets the field name of the current option type. The Field Name is typically
+	 * the actual property name the field correlates to.
+	 * It can be period seperated for referencing nested objects and is typically
+	 * combined with the fieldContext.
 	 * (example: config.provider.name).
+	 * 
 	 * @param fieldName the field name of the property being saved
 	 */
 	public void setFieldName(String fieldName) {
@@ -226,9 +254,13 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	}
 
 	/**
-	 * Gets the field context which is the primary object the field is being saved onto. This could be something like
-	 * 'instance' or 'config'. It typically gets combined with field names such as a fieldName of 'name' with a context
-	 * of 'instance' would get combined to save onto 'instance.name' within Morpheus data model.
+	 * Gets the field context which is the primary object the field is being saved
+	 * onto. This could be something like
+	 * 'instance' or 'config'. It typically gets combined with field names such as a
+	 * fieldName of 'name' with a context
+	 * of 'instance' would get combined to save onto 'instance.name' within Morpheus
+	 * data model.
+	 * 
 	 * @return the field context to be used for determining where the value is saved
 	 */
 	public String getFieldContext() {
@@ -236,10 +268,15 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	}
 
 	/**
-	 * Sets the field context which is the primary object the field is being saved onto. This could be something like
-	 * 'instance' or 'config'. It typically gets combined with field names such as a fieldName of 'name' with a context
-	 * of 'instance' would get combined to save onto 'instance.name' within Morpheus data model.
-	 * @param fieldContext the field context to be used for determining where the value is saved
+	 * Sets the field context which is the primary object the field is being saved
+	 * onto. This could be something like
+	 * 'instance' or 'config'. It typically gets combined with field names such as a
+	 * fieldName of 'name' with a context
+	 * of 'instance' would get combined to save onto 'instance.name' within Morpheus
+	 * data model.
+	 * 
+	 * @param fieldContext the field context to be used for determining where the
+	 *                     value is saved
 	 */
 	public void setFieldContext(String fieldContext) {
 		this.fieldContext = fieldContext;
@@ -247,8 +284,10 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	}
 
 	/**
-	 * Gets the field group which is the name that is used to group fields together in the user interface.
+	 * Gets the field group which is the name that is used to group fields together
+	 * in the user interface.
 	 * To have all fields at the same level, do not specify a field group.
+	 * 
 	 * @return the field group to be used for grouping fields together
 	 */
 	public String getFieldGroup() {
@@ -256,8 +295,10 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	}
 
 	/**
-	 * Sets the field group which is the name that is used to group fields together in the user interface.
+	 * Sets the field group which is the name that is used to group fields together
+	 * in the user interface.
 	 * To have all fields at the same level, do not specify a field group.
+	 * 
 	 * @param fieldGroup the field group to be used for grouping fields together
 	 */
 	public void setFieldGroup(String fieldGroup) {
@@ -266,8 +307,11 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	}
 
 	/**
-	 * Gets the type of Input this option type represents. This could range in type and be anything from a free form
-	 * text field to a dropdown with remote loaded data from an {@link #getOptionSource()}.
+	 * Gets the type of Input this option type represents. This could range in type
+	 * and be anything from a free form
+	 * text field to a dropdown with remote loaded data from an
+	 * {@link #getOptionSource()}.
+	 * 
 	 * @return the type of input this option type correlates to.
 	 */
 	public InputType getInputType() {
@@ -275,8 +319,11 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	}
 
 	/**
-	 * Sets the type of Input this option type represents. This could range in type and be anything from a free form
-	 * text field to a dropdown with remote loaded data from an {@link #getOptionSource()}.
+	 * Sets the type of Input this option type represents. This could range in type
+	 * and be anything from a free form
+	 * text field to a dropdown with remote loaded data from an
+	 * {@link #getOptionSource()}.
+	 * 
 	 * @param inputType the type of input this option type correlates to.
 	 */
 	public void setInputType(InputType inputType) {
@@ -285,8 +332,11 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	}
 
 	/**
-	 * Gets the display order position of the following Option Type. The Display order is sorted ascending numerically. Sometimes
-	 * it may be advised to use multiples when incrementing the display order to allow for injection points between them.
+	 * Gets the display order position of the following Option Type. The Display
+	 * order is sorted ascending numerically. Sometimes
+	 * it may be advised to use multiples when incrementing the display order to
+	 * allow for injection points between them.
+	 * 
 	 * @return the Numerical display order (typically starting at 0) of the input.
 	 */
 	public Integer getDisplayOrder() {
@@ -294,9 +344,13 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	}
 
 	/**
-	 * Sets the display order position of the following Option Type. The Display order is sorted ascending numerically. Sometimes
-	 * it may be advised to use multiples when incrementing the display order to allow for injection points between them.
-	 * @param displayOrder the Numerical display order (typically starting at 0) of the input.
+	 * Sets the display order position of the following Option Type. The Display
+	 * order is sorted ascending numerically. Sometimes
+	 * it may be advised to use multiples when incrementing the display order to
+	 * allow for injection points between them.
+	 * 
+	 * @param displayOrder the Numerical display order (typically starting at 0) of
+	 *                     the input.
 	 */
 	public void setDisplayOrder(Integer displayOrder) {
 		this.displayOrder = displayOrder;
@@ -304,8 +358,11 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	}
 
 	/**
-	 * Gets an inputs placeholder text for helpful display when awaiting input on a field. A placeholder text can be
-	 * helpful hint to the user as to what type of input should go in the associated field.
+	 * Gets an inputs placeholder text for helpful display when awaiting input on a
+	 * field. A placeholder text can be
+	 * helpful hint to the user as to what type of input should go in the associated
+	 * field.
+	 * 
 	 * @return the place holder input text
 	 */
 	public String getPlaceHolderText() {
@@ -313,15 +370,19 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	}
 
 	/**
-	 * Convenience method for binding data, see {@link #getPlaceHolderText() getPlaceHolderText}
+	 * Convenience method for binding data, see {@link #getPlaceHolderText()
+	 * getPlaceHolderText}
 	 */
 	public String getPlaceHolder() {
 		return getPlaceHolderText();
 	}
 
 	/**
-	 * Sets an inputs placeholder text for helpful display when awaiting input on a field. A placeholder text can be
-	 * helpful hint to the user as to what type of input should go in the associated field.
+	 * Sets an inputs placeholder text for helpful display when awaiting input on a
+	 * field. A placeholder text can be
+	 * helpful hint to the user as to what type of input should go in the associated
+	 * field.
+	 * 
 	 * @param placeHolderText the place holder input text
 	 */
 	public void setPlaceHolderText(String placeHolderText) {
@@ -330,15 +391,18 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	}
 
 	/**
-	 * Convenience method for binding data, see {@link #setPlaceHolderText(String) setPlaceHolderText}
+	 * Convenience method for binding data, see {@link #setPlaceHolderText(String)
+	 * setPlaceHolderText}
 	 */
 	public void setPlaceHolder(String placeHolderText) {
 		setPlaceHolderText(placeHolderText);
 	}
 
 	/**
-	 * Returns a String representation of the default value for the current Input. When a user first is prompted for input
+	 * Returns a String representation of the default value for the current Input.
+	 * When a user first is prompted for input
 	 * if no input is given by the user, this default value is used.
+	 * 
 	 * @return the default value of the following input option
 	 */
 	public String getDefaultValue() {
@@ -346,8 +410,10 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	}
 
 	/**
-	 * Sets a String representation of the default value for the current Input. When a user first is prompted for input
+	 * Sets a String representation of the default value for the current Input. When
+	 * a user first is prompted for input
 	 * if no input is given by the user, this default value is used.
+	 * 
 	 * @param defaultValue the default value of the following input option
 	 */
 	public void setDefaultValue(String defaultValue) {
@@ -356,8 +422,11 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	}
 
 	/**
-	 * Gets the required flag off of the option type. This determines if an input is user required or not. The CLI and UI will use
-	 * this flag as an initial validation step to ensure a user has at least entered a value.
+	 * Gets the required flag off of the option type. This determines if an input is
+	 * user required or not. The CLI and UI will use
+	 * this flag as an initial validation step to ensure a user has at least entered
+	 * a value.
+	 * 
 	 * @return the required flag to determine if an input requires a value or not
 	 */
 	public Boolean getRequired() {
@@ -365,9 +434,13 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	}
 
 	/**
-	 * Sets the required flag off of the option type. This determines if an input is user required or not. The CLI and UI will use
-	 * this flag as an initial validation step to ensure a user has at least entered a value.
-	 * @param required the required flag to determine if an input requires a value or not
+	 * Sets the required flag off of the option type. This determines if an input is
+	 * user required or not. The CLI and UI will use
+	 * this flag as an initial validation step to ensure a user has at least entered
+	 * a value.
+	 * 
+	 * @param required the required flag to determine if an input requires a value
+	 *                 or not
 	 */
 	public void setRequired(Boolean required) {
 		this.required = required;
@@ -375,8 +448,11 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	}
 
 	/**
-	 * Gets the help text pertaining to an input. Some inputs have help text that display below them to give better
-	 * context for the user when determining what value to enter. This data is optional.
+	 * Gets the help text pertaining to an input. Some inputs have help text that
+	 * display below them to give better
+	 * context for the user when determining what value to enter. This data is
+	 * optional.
+	 * 
 	 * @return the descriptive help block of text for an input
 	 */
 	public String getHelpText() {
@@ -388,8 +464,11 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	}
 
 	/**
-	 * Gets the help text pertaining to an input. Some inputs have help text that display below them to give better
-	 * context for the user when determining what value to enter. This data is optional.
+	 * Gets the help text pertaining to an input. Some inputs have help text that
+	 * display below them to give better
+	 * context for the user when determining what value to enter. This data is
+	 * optional.
+	 * 
 	 * @param helpText the descriptive help block of text for an input
 	 */
 	public void setHelpText(String helpText) {
@@ -403,9 +482,13 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	}
 
 	/**
-	 * Gets the option source api method endpoint to hit when using the {@link InputType#SELECT} option. This allows a remote
-	 * data source query to be queried for loading dynamic data. It also can take a POST request with the values of previously entered
-	 * inputs to use as a way to filter the available options. This should be globally unique.
+	 * Gets the option source api method endpoint to hit when using the
+	 * {@link InputType#SELECT} option. This allows a remote
+	 * data source query to be queried for loading dynamic data. It also can take a
+	 * POST request with the values of previously entered
+	 * inputs to use as a way to filter the available options. This should be
+	 * globally unique.
+	 * 
 	 * @return option source api method for loading dynamic options
 	 */
 	public String getOptionSource() {
@@ -413,9 +496,13 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	}
 
 	/**
-	 * Sets the option source api method endpoint to hit when using the {@link InputType#SELECT} option. This allows a remote
-	 * data source query to be queried for loading dynamic data. It also can take a POST request with the values of previously entered
-	 * inputs to use as a way to filter the available options. This should be globally unique.
+	 * Sets the option source api method endpoint to hit when using the
+	 * {@link InputType#SELECT} option. This allows a remote
+	 * data source query to be queried for loading dynamic data. It also can take a
+	 * POST request with the values of previously entered
+	 * inputs to use as a way to filter the available options. This should be
+	 * globally unique.
+	 * 
 	 * @param optionSource option source api method for loading dynamic options
 	 */
 	public void setOptionSource(String optionSource) {
@@ -424,8 +511,11 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	}
 
 	/**
-	 * Gets the code of an option type that this option type depends on. Some option types depend on input from previous option types. By placing the code or fieldName representation of that field into this
+	 * Gets the code of an option type that this option type depends on. Some option
+	 * types depend on input from previous option types. By placing the code or
+	 * fieldName representation of that field into this
 	 * input, this field will refresh upon changes made to that previous input
+	 * 
 	 * @return the code of the parent option type
 	 */
 	public String getDependsOn() {
@@ -440,8 +530,11 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	}
 
 	/**
-	 * Sets the code of an option type that this option type depends on. Some option types depend on input from previous option types. By placing the code or fieldName representation of that field into this
+	 * Sets the code of an option type that this option type depends on. Some option
+	 * types depend on input from previous option types. By placing the code or
+	 * fieldName representation of that field into this
 	 * input, this field will refresh upon changes made to that previous input
+	 * 
 	 * @param dependsOn the code of the parent option type
 	 */
 	public void setDependsOn(String dependsOn) {
@@ -450,15 +543,18 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	}
 
 	/**
-	 * Convenience method for binding data, see {@link #setDependsOn(String) setDependsOn}
+	 * Convenience method for binding data, see {@link #setDependsOn(String)
+	 * setDependsOn}
 	 */
 	public void setDependsOnCode(String dependsOn) {
 		setDependsOn(dependsOn);
 	}
 
 	/**
-	 * Specifies whether this option type is editable on edit. This sometimes is the case where a field can be set on create
+	 * Specifies whether this option type is editable on edit. This sometimes is the
+	 * case where a field can be set on create
 	 * but not changed later
+	 * 
 	 * @return whether or not this option type value is editable
 	 */
 	public Boolean getEditable() {
@@ -466,17 +562,22 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	}
 
 	/**
-	 * Sets whether or not this option type is editable. This sometimes is the case where a field can be set on create
+	 * Sets whether or not this option type is editable. This sometimes is the case
+	 * where a field can be set on create
 	 * but not changed later
-	 * @param editable whether or not this field is editable upon edit and not just create
+	 * 
+	 * @param editable whether or not this field is editable upon edit and not just
+	 *                 create
 	 */
 	public void setEditable(Boolean editable) {
 		this.editable = editable;
 	}
 
 	/**
-	 * Specifies whether this option type is visible on create forms. This sometimes is the case where a field can be set on create
+	 * Specifies whether this option type is visible on create forms. This sometimes
+	 * is the case where a field can be set on create
 	 * but not changed later nor does it make sense to display it after create.
+	 * 
 	 * @return whether or not this option type is visible upon create
 	 */
 	public Boolean getShowOnCreate() {
@@ -484,8 +585,10 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	}
 
 	/**
-	 * Sets whether or not this option type is visible on create forms. This sometimes is the case where a field can be set on create
+	 * Sets whether or not this option type is visible on create forms. This
+	 * sometimes is the case where a field can be set on create
 	 * but not changed later, nor does it make sense to display it after create.
+	 * 
 	 * @param showOnCreate whether or not this option type is visible upon create
 	 */
 	public void setShowOnCreate(Boolean showOnCreate) {
@@ -494,8 +597,10 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	}
 
 	/**
-	 * Specifies if this option type is visible on edit forms. This sometimes is the case where a field can be set on create
+	 * Specifies if this option type is visible on edit forms. This sometimes is the
+	 * case where a field can be set on create
 	 * but not changed later nor does it make sense to display it after create.
+	 * 
 	 * @return determines if this option type is visible upon edit
 	 */
 	public Boolean getShowOnEdit() {
@@ -503,8 +608,10 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	}
 
 	/**
-	 * Sets if this option type is visible on edit forms. This sometimes is the case where a field can be set on create
+	 * Sets if this option type is visible on edit forms. This sometimes is the case
+	 * where a field can be set on create
 	 * but not changed later, nor does it make sense to display it after create.
+	 * 
 	 * @param showOnEdit determines if this option type is visible upon edit
 	 */
 	public void setShowOnEdit(Boolean showOnEdit) {
@@ -529,6 +636,7 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 
 	/**
 	 * Specifies if this option type is visible on resource detail views.
+	 * 
 	 * @return determines if this option type is visible upon edit
 	 */
 	public Boolean getDisplayValueOnDetails() {
@@ -537,7 +645,9 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 
 	/**
 	 * Sets if this option type is visible on resource detail views.
-	 * @param displayValueOnDetails determines if this option type is visible on resource detail views
+	 * 
+	 * @param displayValueOnDetails determines if this option type is visible on
+	 *                              resource detail views
 	 */
 	public void setDisplayValueOnDetails(Boolean displayValueOnDetails) {
 		this.displayValueOnDetails = displayValueOnDetails;
@@ -564,6 +674,7 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 
 	/**
 	 * returns the uuid
+	 * 
 	 * @return the uuid of the current record
 	 */
 	public String getUuid() {
@@ -572,6 +683,7 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 
 	/**
 	 * Sets the uuid. In this class this should not be called directly
+	 * 
 	 * @param uuid the uuid of the current record
 	 */
 	public void setUuid(String uuid) {
@@ -737,7 +849,8 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	}
 
 	/**
-	 * Convenience method for binding data, see {@link #getFieldGroupI18nCode() getFieldGroupI18nCode}
+	 * Convenience method for binding data, see {@link #getFieldGroupI18nCode()
+	 * getFieldGroupI18nCode}
 	 */
 	public String getFieldGroupCode() {
 		return getFieldGroupI18nCode();
@@ -749,7 +862,8 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	}
 
 	/**
-	 * Convenience method for binding data, see {@link #setFieldGroupI18nCode(String) setFieldGroupI18nCode}
+	 * Convenience method for binding data, see
+	 * {@link #setFieldGroupI18nCode(String) setFieldGroupI18nCode}
 	 */
 	public void setFieldGroupCode(String fieldGroupI18nCode) {
 		setFieldGroupI18nCode(fieldGroupI18nCode);
@@ -796,7 +910,8 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	}
 
 	/**
-	 * Convenience method for binding data, see {@link #getHelpTextI18nCode() getHelpTextI18nCode}
+	 * Convenience method for binding data, see {@link #getHelpTextI18nCode()
+	 * getHelpTextI18nCode}
 	 */
 	public String getHelpBlockCode() {
 		return getHelpTextI18nCode();
@@ -808,7 +923,8 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	}
 
 	/**
-	 * Convenience method for binding data, see {@link #setHelpTextI18nCode(String) setHelpTextI18nCode}
+	 * Convenience method for binding data, see {@link #setHelpTextI18nCode(String)
+	 * setHelpTextI18nCode}
 	 */
 	public void setHelpBlockCode(String helpTextI18nCode) {
 		setHelpTextI18nCode(helpTextI18nCode);
@@ -1082,30 +1198,87 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 		this.formField = formField;
 	}
 
-	public enum InputType {
-		TEXT("text"),
-		PASSWORD("password"),
-		NUMBER("number"),
-		TEXTAREA("textarea"),
-		SELECT("select"),
-		MULTI_SELECT("multiSelect"),
-		CHECKBOX("checkbox"),
-		RADIO("radio"),
-		CREDENTIAL("credential"),
-		TYPEAHEAD("typeahead"),
-		MULTI_TYPEAHEAD("multiTypeahead"),
-		CODE_EDITOR("code-editor"),
-		HIDDEN("hidden"),
-		BYTESIZE("byteSize");
+	/**
+	 * Represents the input type for an OptionType field. This class provides
+	 * standard
+	 * input types as constants and also supports custom input types defined by
+	 * plugins.
+	 * 
+	 * To use a custom input type, create a new InputType instance with a custom
+	 * string value
+	 * that matches the registration name in your plugin's JavaScript component:
+	 * 
+	 * <pre>
+	 * OptionType.InputType customType = new OptionType.InputType("my-custom-input");
+	 * </pre>
+	 * 
+	 * The JavaScript component should be registered in your plugin's assets using:
+	 * 
+	 * <pre>
+	 * window.Morpheus.components.registry.register("my-custom-input", MyComponent, {...});
+	 * </pre>
+	 */
+	public static class InputType {
+		public static final InputType TEXT = new InputType("text");
+		public static final InputType PASSWORD = new InputType("password");
+		public static final InputType NUMBER = new InputType("number");
+		public static final InputType TEXTAREA = new InputType("textarea");
+		public static final InputType SELECT = new InputType("select");
+		public static final InputType MULTI_SELECT = new InputType("multiSelect");
+		public static final InputType CHECKBOX = new InputType("checkbox");
+		public static final InputType RADIO = new InputType("radio");
+		public static final InputType CREDENTIAL = new InputType("credential");
+		public static final InputType TYPEAHEAD = new InputType("typeahead");
+		public static final InputType MULTI_TYPEAHEAD = new InputType("multiTypeahead");
+		public static final InputType CODE_EDITOR = new InputType("code-editor");
+		public static final InputType HIDDEN = new InputType("hidden");
+		public static final InputType BYTESIZE = new InputType("byteSize");
 
 		private final String value;
 
-		InputType(String value) {
+		/**
+		 * Creates a new InputType with the specified string value.
+		 * This constructor allows plugins to define custom input types.
+		 * 
+		 * @param value the string identifier for this input type (should match the
+		 *              JavaScript component registration name)
+		 */
+		public InputType(String value) {
 			this.value = value;
 		}
 
+		/**
+		 * Returns the string value of this input type.
+		 * This value is used by the UI to determine which component to render.
+		 * 
+		 * @return the string identifier for this input type
+		 */
 		public String toString() {
 			return this.value;
+		}
+
+		/**
+		 * Returns the string value of this input type.
+		 * 
+		 * @return the string identifier for this input type
+		 */
+		public String getValue() {
+			return this.value;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			InputType inputType = (InputType) o;
+			return value.equals(inputType.value);
+		}
+
+		@Override
+		public int hashCode() {
+			return value.hashCode();
 		}
 	}
 }

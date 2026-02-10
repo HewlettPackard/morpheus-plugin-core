@@ -33,8 +33,8 @@ public class System extends MorpheusModel {
 	protected Account owner;
 	protected List<SystemComponent> components = new ArrayList<>();
 
-	// Orchestration state stored as JSON
-	protected String orchestrationState;
+	// Configuration workflow state stored as JSON
+	protected String configurationWorkflowState;
 
 	public String getName() {
 		return name;
@@ -153,13 +153,13 @@ public class System extends MorpheusModel {
 		this.components = components;
 	}
 
-	public String getOrchestrationState() {
-		return orchestrationState;
+	public String getConfigurationWorkflowState() {
+		return configurationWorkflowState;
 	}
 
-	public void setOrchestrationState(String orchestrationState) {
-		markDirty("orchestrationState", orchestrationState);
-		this.orchestrationState = orchestrationState;
+	public void setConfigurationWorkflowState(String configurationWorkflowState) {
+		markDirty("configurationWorkflowState", configurationWorkflowState);
+		this.configurationWorkflowState = configurationWorkflowState;
 	}
 
 	public Map<String, List<SystemComponent>> getGroupedComponents() {
