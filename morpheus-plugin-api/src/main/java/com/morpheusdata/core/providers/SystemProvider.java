@@ -100,4 +100,24 @@ public interface SystemProvider extends PluginProvider {
 	 * @return
 	 */
 	default ServiceResponse addSystemComponent(System system, SystemRequest systemRequest, SystemComponentType componentType) { return ServiceResponse.success(); }
+
+	public interface SystemConfigurationDriftCheckFacet extends ConfigurationDriftCheckFacet<System> {
+		/**
+		 * Perform a configuration drift check on the target device.  This is useful for ensuring that the
+		 * configuration of the device matches the expected configuration stored in Morpheus.
+		 *
+		 * @param computeServer the target device to check for configuration drift
+		 * @param checkLevel    the level of the drift check to perform (e.g., all, update)
+		 * @return a ServiceResponse indicating the success or failure of the configuration drift check
+		 */
+		ServiceResponse<DriftState> runConfigurationDriftCheck(CheckLevel checkLevel, System... system);
+
+		/**
+		 * Retrieve details about the configuration that is required by a System plugin to crosscheck data against a whole system.
+		 *
+		 * @param  computeServer the target device to check
+		 * @return a ServiceResponse containing details about the configuration drift
+		 */
+		ServiceResponse<DriftState> getConfigurationDriftDetails(DriftState driftState, System... system);
+	}
 }

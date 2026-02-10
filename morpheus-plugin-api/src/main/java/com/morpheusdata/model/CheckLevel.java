@@ -10,16 +10,16 @@ public class CheckLevel {
     protected String code;              // unique code if needed
     protected String refType;           // associated type of object this drift check is for
     protected Long refId;               // associated id of the object this drift check is for
-    protected CheckLevelEnum checkLevel; // level of the drift check (e.g., all, update)
-    protected List<String> driftRules = new ArrayList<>(); // Mandatory when checkLevel = TARGETED & ignored for other levels
-    protected List<String> excludeDriftRules = new ArrayList<>(); // use this if some rules need to excluded from execution when checkLevel=ALL or UPDATE
+    protected CheckLevelEnum checkLevel; // level of the drift check (e.g., system, update)
+    protected List<String> driftRules = new ArrayList<>();
+    protected List<String> excludeDriftRules = new ArrayList<>(); // use this if some rules need to excluded from execution when checkLevel=SYSTEM or UPDATE
 
     /**
      * Enum for levels sent during input.
      * ALL = All system config
      * TARGETED = specific rules given in driftRules field.
      */
-    public enum CheckLevelEnum { ALL, TARGETED, UPDATE }
+    public enum CheckLevelEnum { SYSTEM, UPDATE } 
 
     // Getters and setters
     public String getCode() { return code; }
@@ -39,4 +39,4 @@ public class CheckLevel {
 
     public List<String> getExcludeDriftRules() { return excludeDriftRules; }
     public void setExcludeDriftRules(List<String> excludeDriftRules) { this.excludeDriftRules = excludeDriftRules; }
-}
+} 
