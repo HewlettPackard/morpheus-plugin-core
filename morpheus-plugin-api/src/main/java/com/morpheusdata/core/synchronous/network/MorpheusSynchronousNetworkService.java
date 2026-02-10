@@ -87,4 +87,11 @@ public interface MorpheusSynchronousNetworkService extends MorpheusSynchronousDa
 	 */
 	MorpheusSynchronousNetworkProxyService getNetworkProxy();
 
+	/**
+	 * Returns the {@link MorpheusSynchronousNetworkLocationService} used for performing updates/queries on {@link NetworkLocation} related assets
+	 * within Morpheus
+	 * @return An instance of the {@link MorpheusSynchronousNetworkLocationService}
+	 */
+	MorpheusSynchronousNetworkLocationService getLocation();
+
 }
