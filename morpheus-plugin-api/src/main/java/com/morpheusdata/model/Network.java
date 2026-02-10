@@ -114,6 +114,8 @@ public class Network extends NetworkIdentityProjection {
 
 	protected List<CloudPool> assignedZonePools = new ArrayList<>();
 
+	protected List<NetworkLocation> locations = new ArrayList<>();
+
 	public void setCloudId(Long id) {
 		this.cloud = new Cloud();
 		this.cloud.id = id;
@@ -686,5 +688,14 @@ public class Network extends NetworkIdentityProjection {
 	public void setSubnets(List<NetworkSubnet> subnets) {
 		this.subnets = subnets;
 		markDirty("subnets", subnets, this.subnets);
+	}
+
+	public List<NetworkLocation> getLocations() {
+		return locations;
+	}
+
+	public void setLocations(List<NetworkLocation> locations) {
+		this.locations = locations;
+		markDirty("locations", locations, this.locations);
 	}
 }
