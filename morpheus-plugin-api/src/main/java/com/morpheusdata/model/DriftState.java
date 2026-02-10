@@ -28,11 +28,8 @@ public class DriftState {
     /** Enum for drift check status. */
     public enum DriftCheckStatus { PENDING, IN_PROGRESS, FAILED, COMPLETED }
 
-    /** Enum for rule severity. */
-    public enum Severity { MAJOR, WARNING, INFO }
-
     /** Enum for rule status. */
-    public enum RuleStatus { PASSED, FAILED, SKIPPED }
+    public enum RuleStatus { PASSED, FAILED, SKIPPED, WARNING }
 
     /**
      * Drift rule result structure.
@@ -42,7 +39,6 @@ public class DriftState {
     protected String ruleName;            // name
     protected String ruleDescription;     // additional details about the rule
     protected String ruleType;            // DHCI vs non-DHCI etc.
-    protected Severity severity;          // major / warning / info
     protected RuleStatus status;          // passed / failed / skipped
     protected String resultDescription;   // failure details with embedded resource info
     protected List<String> affectedObjects = new ArrayList<>(); // list of affected objects/resources
@@ -60,9 +56,6 @@ public class DriftState {
 
         public String getRuleType() { return ruleType; }
         public void setRuleType(String ruleType) { this.ruleType = ruleType; }
-
-        public Severity getSeverity() { return severity; }
-        public void setSeverity(Severity severity) { this.severity = severity; }
 
         public RuleStatus getStatus() { return status; }
         public void setStatus(RuleStatus status) { this.status = status; }
