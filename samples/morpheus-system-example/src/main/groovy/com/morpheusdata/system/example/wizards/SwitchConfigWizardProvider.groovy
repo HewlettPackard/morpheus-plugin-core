@@ -45,8 +45,7 @@ class SwitchConfigWizardProvider extends com.morpheusdata.system.example.BasePro
         def credentialsStep = new WizardStep(
             code: 'switch-credentials',
             name: 'Switch Credentials',
-            description: 'Username and password for switch access',
-            displayOrder: 0
+            description: 'Username and password for switch access'
         )
         
         credentialsStep.optionTypes = [
@@ -75,8 +74,7 @@ class SwitchConfigWizardProvider extends com.morpheusdata.system.example.BasePro
         def networkStep = new WizardStep(
             code: 'switch-network',
             name: 'Network Configuration',
-            description: 'Management IP and VLAN settings',
-            displayOrder: 1
+            description: 'Management IP and VLAN settings'
         )
         
         networkStep.optionTypes = [

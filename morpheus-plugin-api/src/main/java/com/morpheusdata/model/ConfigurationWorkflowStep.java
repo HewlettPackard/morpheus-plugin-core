@@ -17,7 +17,9 @@
 package com.morpheusdata.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.morpheusdata.core.providers.WizardProvider;
+import com.morpheusdata.model.serializers.ModelAsIdOnlySerializer;
 
 /**
  * Represents a single step in a configuration workflow. Each step is associated
@@ -32,10 +34,10 @@ public class ConfigurationWorkflowStep extends MorpheusModel {
 	protected String code;
 	protected String name;
 	protected String description;
-	protected Integer displayOrder;
 	protected Boolean isRequired = true;
 	protected Boolean completed = false;
-	protected String wizardCode;
+	@JsonSerialize(using = ModelAsIdOnlySerializer.class)
+	protected Wizard wizard;
 	protected ConfigurationWorkflow configurationWorkflow;
 
 	// Transient field for provider reference (not persisted to database)
@@ -100,25 +102,6 @@ public class ConfigurationWorkflowStep extends MorpheusModel {
 	}
 
 	/**
-	 * Returns the display order for this step in the workflow
-	 * 
-	 * @return display order
-	 */
-	public Integer getDisplayOrder() {
-		return displayOrder;
-	}
-
-	/**
-	 * Sets the display order for this step in the workflow
-	 * 
-	 * @param displayOrder display order
-	 */
-	public void setDisplayOrder(Integer displayOrder) {
-		this.displayOrder = displayOrder;
-		markDirty("displayOrder", displayOrder);
-	}
-
-	/**
 	 * Returns whether this step is required
 	 * 
 	 * @return true if required, false otherwise
@@ -157,22 +140,30 @@ public class ConfigurationWorkflowStep extends MorpheusModel {
 	}
 
 	/**
-	 * Returns the wizard code associated with this step
+	 * Returns the wizard associated with this step.
+	 * If a wizard provider is available, returns the wizard from the provider
+	 * dynamically.
+	 * Otherwise, returns the stored wizard object reference.
 	 * 
-	 * @return wizard code
+	 * @return wizard
 	 */
-	public String getWizardCode() {
-		return wizardCode;
+	public Wizard getWizard() {
+		// If we have a provider, get the wizard from it dynamically
+		if (wizardProvider != null) {
+			return wizardProvider.getWizard();
+		}
+		// Otherwise return the stored wizard reference
+		return wizard;
 	}
 
 	/**
-	 * Sets the wizard code associated with this step
+	 * Sets the wizard associated with this step
 	 * 
-	 * @param wizardCode wizard code
+	 * @param wizard wizard
 	 */
-	public void setWizardCode(String wizardCode) {
-		this.wizardCode = wizardCode;
-		markDirty("wizardCode", wizardCode);
+	public void setWizard(Wizard wizard) {
+		this.wizard = wizard;
+		markDirty("wizard", wizard);
 	}
 
 	/**

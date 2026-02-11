@@ -82,13 +82,18 @@ class ArcusSystemProvider implements SystemProvider {
             description: 'Complete Arcus infrastructure management system'
         )
         
+        // Get or create the ConfigurationWorkflow reference
+        // In a real implementation, retrieve this from MorpheusContext
+        // For example: def workflow = morpheusContext.getConfigurationWorkflow().find(new DataQuery().withFilter('code', 'arcus-system-configuration-workflow')).blockingGet()
+        def workflow = getConfigurationWorkflowByCode('arcus-system-configuration-workflow')
+        
         SystemTypeLayout layout = new SystemTypeLayout(
             code: 'arcus-standard-layout',	
             name: 'Arcus Standard Layout',
             description: 'Standard layout for Arcus infrastructure systems with configuration workflow',
             version: '1.0',
             systemType: systemType,
-            configurationWorkflowCode: 'arcus-system-configuration-workflow'
+            configurationWorkflow: workflow  // Direct object reference
         )
         
         // Add component types to the layout
@@ -126,5 +131,22 @@ class ArcusSystemProvider implements SystemProvider {
             modelType: modelType
         )
         return componentType
+    }
+
+    /**
+     * Helper method to retrieve a ConfigurationWorkflow from the provider
+     * This retrieves the provider by code and calls getConfigurationWorkflow()
+     */
+    private def getConfigurationWorkflowByCode(String workflowCode) {
+        // Get the ConfigurationWorkflowProvider from the plugin
+        def workflowProvider = plugin.getProviderByCode(workflowCode)
+        
+        if (workflowProvider instanceof com.morpheusdata.core.providers.ConfigurationWorkflowProvider) {
+            // Call getConfigurationWorkflow() to get a fresh ConfigurationWorkflow object
+            return workflowProvider.getConfigurationWorkflow()
+        }
+        
+        // Fallback - return null if provider not found
+        return null
     }
 }

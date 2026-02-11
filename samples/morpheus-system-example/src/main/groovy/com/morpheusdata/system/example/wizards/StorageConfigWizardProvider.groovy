@@ -32,8 +32,7 @@ class StorageConfigWizardProvider extends com.morpheusdata.system.example.BasePr
         def storageStep = new WizardStep(
             code: 'storage-arrays',
             name: 'Storage Arrays',
-            description: 'Configure storage arrays',
-            displayOrder: 0
+            description: 'Configure storage arrays'
         )
         
         storageStep.optionTypes = [
@@ -64,8 +63,7 @@ class StorageConfigWizardProvider extends com.morpheusdata.system.example.BasePr
         def capacityStep = new WizardStep(
             code: 'storage-capacity',
             name: 'Storage Capacity',
-            description: 'Configure storage capacity and redundancy',
-            displayOrder: 1
+            description: 'Configure storage capacity and redundancy'
         )
         
         capacityStep.optionTypes = [

@@ -16,6 +16,8 @@
 
 package com.morpheusdata.core.providers;
 
+import com.morpheusdata.model.User;
+import com.morpheusdata.model.Wizard;
 import com.morpheusdata.model.WizardStep;
 import com.morpheusdata.response.ServiceResponse;
 
@@ -59,6 +61,35 @@ public interface WizardProvider extends PluginProvider {
 	 * @return true to show the review step, false to skip directly to submission
 	 */
 	default boolean showReviewStep() {
+		return true;
+	}
+
+	/**
+	 * Returns a complete Wizard object representing this wizard provider.
+	 * This method constructs a Wizard model from the provider's configuration,
+	 * including the code, name, description, and steps.
+	 * 
+	 * @return Wizard object representing this wizard
+	 */
+	default Wizard getWizard() {
+		Wizard wizard = new Wizard();
+		wizard.setCode(getCode());
+		wizard.setName(getWizardName());
+		wizard.setDescription(getWizardDescription());
+		wizard.setSteps(getWizardSteps());
+		wizard.setActive(true);
+		return wizard;
+	}
+
+	/**
+	 * Determines whether the specified user has permission to access this wizard.
+	 * This method allows providers to implement custom authorization logic based on
+	 * user roles, permissions, or other criteria.
+	 * 
+	 * @param user the user to check access for
+	 * @return true if the user can access this wizard, false otherwise
+	 */
+	default boolean canSee(User user) {
 		return true;
 	}
 

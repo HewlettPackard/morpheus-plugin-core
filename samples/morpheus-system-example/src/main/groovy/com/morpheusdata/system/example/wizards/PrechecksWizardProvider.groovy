@@ -37,8 +37,7 @@ class PrechecksWizardProvider extends com.morpheusdata.system.example.BaseProvid
         def checksStep = new WizardStep(
             code: 'check-selection',
             name: 'Check Selection',
-            description: 'Select validation checks to run',
-            displayOrder: 0
+            description: 'Select validation checks to run'
         )
         
         checksStep.optionTypes = [
@@ -77,8 +76,7 @@ class PrechecksWizardProvider extends com.morpheusdata.system.example.BaseProvid
         def executionStep = new WizardStep(
             code: 'run-checks',
             name: 'Run Checks',
-            description: 'Execute system validation',
-            displayOrder: 1
+            description: 'Execute system validation'
         )
         
         executionStep.optionTypes = [

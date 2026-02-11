@@ -36,57 +36,62 @@ class ArcusSystemConfigurationWorkflowProvider extends com.morpheusdata.system.e
 
     @Override
     List<ConfigurationWorkflowStep> getWorkflowSteps() {
-        // Note: Wizard providers are referenced by code using the wizardCode field
-        // The framework will look up the appropriate wizard provider based on the wizardCode
+        // Note: Wizard providers are referenced using direct object references
+        // In a real implementation, you would retrieve these wizard objects from MorpheusContext
+        // For example: def systemWizard = morpheusContext.getWizard().find(new DataQuery().withFilter('code', 'arcus-system-config-wizard')).blockingGet()
+        
+        // For this example, we're demonstrating the structure
+        // In practice, retrieve the actual Wizard objects from your plugin's wizard providers
+        def systemWizard = getWizardByCode('arcus-system-config-wizard')
+        def switchWizard = getWizardByCode('arcus-switch-config-wizard')
+        def hostWizard = getWizardByCode('arcus-host-config-wizard')
+        def storageWizard = getWizardByCode('arcus-storage-config-wizard')
+        def dataNetworkWizard = getWizardByCode('arcus-datanetwork-config-wizard')
+        def clusterWizard = getWizardByCode('arcus-cluster-config-wizard')
+        def prechecksWizard = getWizardByCode('arcus-prechecks-wizard')
+        
         return [
             new ConfigurationWorkflowStep(
                 code: 'system',
                 name: 'System',
                 description: 'Configure basic system settings',
-                displayOrder: 0,
-                wizardCode: 'arcus-system-config-wizard'
+                wizard: systemWizard
             ),
             new ConfigurationWorkflowStep(
                 code: 'switches',
                 name: 'Switches',
                 description: 'Configure network switches',
-                displayOrder: 1,
-                wizardCode: 'arcus-switch-config-wizard'
+                wizard: switchWizard
             ),
             new ConfigurationWorkflowStep(
                 code: 'hosts',
                 name: 'Hosts',
                 description: 'Configure host servers',
-                displayOrder: 2,
-                wizardCode: 'arcus-host-config-wizard'
+                wizard: hostWizard
             ),
             new ConfigurationWorkflowStep(
                 code: 'storage',
                 name: 'Storage',
                 description: 'Configure storage arrays',
-                displayOrder: 3,
-                wizardCode: 'arcus-storage-config-wizard'
+                wizard: storageWizard
             ),
             new ConfigurationWorkflowStep(
                 code: 'data-network',
                 name: 'Data Network',
                 description: 'Configure data network settings',
-                displayOrder: 4,
-                wizardCode: 'arcus-datanetwork-config-wizard'
+                wizard: dataNetworkWizard
             ),
             new ConfigurationWorkflowStep(
                 code: 'cluster',
                 name: 'Cluster',
                 description: 'Configure cluster settings',
-                displayOrder: 5,
-                wizardCode: 'arcus-cluster-config-wizard'
+                wizard: clusterWizard
             ),
             new ConfigurationWorkflowStep(
                 code: 'prechecks',
                 name: 'Prechecks',
                 description: 'Run system validation prechecks',
-                displayOrder: 6,
-                wizardCode: 'arcus-prechecks-wizard'
+                wizard: prechecksWizard
             )
         ]
     }
@@ -148,7 +153,7 @@ class ArcusSystemConfigurationWorkflowProvider extends com.morpheusdata.system.e
     }
 
     @Override
-    ServiceResponse submitOrchestration(Map configurationWorkflowState, Object parentObject, Map opts) {
+    ServiceResponse submitConfigurationWorkflow(Map configurationWorkflowState, Object parentObject, Map opts) {
         // This would typically call another long-running method to execute the setup
         // For now, we'll just mark it as submitted
         
@@ -198,5 +203,22 @@ class ArcusSystemConfigurationWorkflowProvider extends com.morpheusdata.system.e
         // - Skip cluster step if less than 2 hosts configured
         // - Skip prechecks until all other steps are completed
         return true
+    }
+
+    /**
+     * Helper method to retrieve a Wizard from the provider
+     * This retrieves the provider by code and calls getWizard()
+     */
+    private def getWizardByCode(String wizardCode) {
+        // Get the WizardProvider from the plugin
+        def wizardProvider = plugin.getProviderByCode(wizardCode)
+        
+        if (wizardProvider instanceof com.morpheusdata.core.providers.WizardProvider) {
+            // Call getWizard() to get a fresh Wizard object
+            return wizardProvider.getWizard()
+        }
+        
+        // Fallback - return null if provider not found
+        return null
     }
 }

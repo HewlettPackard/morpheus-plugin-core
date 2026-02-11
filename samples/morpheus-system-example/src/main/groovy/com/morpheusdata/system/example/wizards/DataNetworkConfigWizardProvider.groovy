@@ -32,8 +32,7 @@ class DataNetworkConfigWizardProvider extends com.morpheusdata.system.example.Ba
         def networkStep = new WizardStep(
             code: 'network-settings',
             name: 'Network Settings',
-            description: 'Configure data network',
-            displayOrder: 0
+            description: 'Configure data network'
         )
         
         networkStep.optionTypes = [
@@ -63,8 +62,7 @@ class DataNetworkConfigWizardProvider extends com.morpheusdata.system.example.Ba
         def vlanStep = new WizardStep(
             code: 'vlan-settings',
             name: 'VLAN Configuration',
-            description: 'Configure VLANs for data network',
-            displayOrder: 1
+            description: 'Configure VLANs for data network'
         )
         
         vlanStep.optionTypes = [

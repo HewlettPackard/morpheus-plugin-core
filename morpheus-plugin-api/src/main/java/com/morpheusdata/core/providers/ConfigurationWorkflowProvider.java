@@ -17,7 +17,9 @@
 package com.morpheusdata.core.providers;
 
 import com.morpheusdata.response.ServiceResponse;
+import com.morpheusdata.model.ConfigurationWorkflow;
 import com.morpheusdata.model.ConfigurationWorkflowStep;
+import com.morpheusdata.model.User;
 import java.util.List;
 import java.util.Map;
 
@@ -53,6 +55,38 @@ public interface ConfigurationWorkflowProvider extends PluginProvider {
 	 */
 	default String getWorkflowDescription() {
 		return null;
+	}
+
+	/**
+	 * Returns a complete ConfigurationWorkflow object representing this
+	 * configuration workflow provider.
+	 * This method constructs a ConfigurationWorkflow model from the provider's
+	 * configuration,
+	 * including the code, name, description, and steps.
+	 * 
+	 * @return ConfigurationWorkflow object representing this configuration workflow
+	 */
+	default ConfigurationWorkflow getConfigurationWorkflow() {
+		ConfigurationWorkflow workflow = new ConfigurationWorkflow();
+		workflow.setCode(getCode());
+		workflow.setName(getWorkflowName());
+		workflow.setDescription(getWorkflowDescription());
+		workflow.setSteps(getWorkflowSteps());
+		return workflow;
+	}
+
+	/**
+	 * Determines whether the specified user has permission to access this
+	 * configuration workflow.
+	 * This method allows providers to implement custom authorization logic based on
+	 * user roles, permissions, or other criteria.
+	 * 
+	 * @param user the user to check access for
+	 * @return true if the user can access this configuration workflow, false
+	 *         otherwise
+	 */
+	default boolean canSee(User user) {
+		return true;
 	}
 
 	/**
@@ -115,9 +149,9 @@ public interface ConfigurationWorkflowProvider extends PluginProvider {
 	ServiceResponse validateConfigurationWorkflow(Map configurationWorkflowState, Object parentObject, Map opts);
 
 	/**
-	 * Submits and executes the configuration workflow workflow.
+	 * Submits and executes the configuration workflow.
 	 * This method is called after all steps are completed and validated.
-	 * It should initiate the actual execution of the orchestrated workflow.
+	 * It should initiate the actual execution of the configuration workflow.
 	 * 
 	 * Since this method typically triggers another long-running process or method,
 	 * it returns a synchronous ServiceResponse. The long-running execution should
@@ -133,7 +167,7 @@ public interface ConfigurationWorkflowProvider extends PluginProvider {
 	 * @return ServiceResponse containing the result of the configuration workflow
 	 *         submission
 	 */
-	ServiceResponse submitOrchestration(Map configurationWorkflowState, Object parentObject, Map opts);
+	ServiceResponse submitConfigurationWorkflow(Map configurationWorkflowState, Object parentObject, Map opts);
 
 	/**
 	 * Optional method to retrieve the current configuration workflow state from the
@@ -177,7 +211,8 @@ public interface ConfigurationWorkflowProvider extends PluginProvider {
 	 * @param configurationWorkflowState map containing all configuration data from
 	 *                                   all
 	 *                                   steps
-	 * @param submitResponse             the response from submitOrchestration()
+	 * @param submitResponse             the response from
+	 *                                   submitConfigurationWorkflow()
 	 * @param parentObject               the parent object that holds the
 	 *                                   configuration workflow
 	 *                                   state

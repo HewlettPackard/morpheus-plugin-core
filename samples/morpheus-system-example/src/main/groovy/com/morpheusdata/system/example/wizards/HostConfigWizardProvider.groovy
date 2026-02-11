@@ -32,8 +32,7 @@ class HostConfigWizardProvider extends com.morpheusdata.system.example.BaseProvi
         def hostStep = new WizardStep(
             code: 'host-list',
             name: 'Host List',
-            description: 'Configure host servers',
-            displayOrder: 0
+            description: 'Configure host servers'
         )
         
         hostStep.optionTypes = [
@@ -62,8 +61,7 @@ class HostConfigWizardProvider extends com.morpheusdata.system.example.BaseProvi
         def credentialsStep = new WizardStep(
             code: 'host-credentials',
             name: 'Host Credentials',
-            description: 'IPMI/iLO credentials for host management',
-            displayOrder: 1
+            description: 'IPMI/iLO credentials for host management'
         )
         
         credentialsStep.optionTypes = [
@@ -92,8 +90,7 @@ class HostConfigWizardProvider extends com.morpheusdata.system.example.BaseProvi
         def networkStep = new WizardStep(
             code: 'host-network',
             name: 'Network Configuration',
-            description: 'Host network settings',
-            displayOrder: 2
+            description: 'Host network settings'
         )
         
         networkStep.optionTypes = [

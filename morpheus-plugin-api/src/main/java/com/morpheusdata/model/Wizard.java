@@ -33,6 +33,17 @@ public class Wizard extends MorpheusModel implements IModelCodeName {
 	protected String description;
 	protected List<WizardStep> steps;
 	protected Boolean active = true;
+	@com.fasterxml.jackson.databind.annotation.JsonSerialize(using = com.morpheusdata.model.serializers.ModelAsIdOnlySerializer.class)
+	protected ConfigurationWorkflowStep configurationWorkflowStep;
+
+	public ConfigurationWorkflowStep getConfigurationWorkflowStep() {
+		return configurationWorkflowStep;
+	}
+
+	public void setConfigurationWorkflowStep(ConfigurationWorkflowStep configurationWorkflowStep) {
+		this.configurationWorkflowStep = configurationWorkflowStep;
+		markDirty("configurationWorkflowStep", configurationWorkflowStep);
+	}
 
 	public Wizard() {
 	}

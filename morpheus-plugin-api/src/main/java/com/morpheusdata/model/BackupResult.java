@@ -22,49 +22,50 @@ import com.morpheusdata.model.serializers.ModelAsIdOnlySerializer;
 import java.util.Date;
 
 public class BackupResult extends MorpheusModel {
-	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using = ModelAsIdOnlySerializer.class)
 	protected Account account;
-	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using = ModelAsIdOnlySerializer.class)
 	protected Backup backup;
 	protected String backupName;
-	protected String backupSetId; //to tie together backups that go together
-	protected String backupFormat; //data,file,snapshot
+	protected String backupSetId; // to tie together backups that go together
+	protected String backupFormat; // data,file,snapshot
 	protected String backupType;
-	protected String containerFormat; //container,vm,all
+	protected String containerFormat; // container,vm,all
 	protected String location;
-	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
+	@JsonSerialize(using = ModelAsIdOnlySerializer.class)
 	protected User createdBy;
 	protected String initiatedBy;
 	// protected StorageBucket storageProvider;
-	//executor
+	// executor
 	protected Long executeServerId;
 	protected String executorIpAddress;
-	//target
+	// target
 	protected Long serverId;
 	protected Long zoneId;
 	protected Long containerId;
 	protected Long instanceId;
 	protected Long containerTypeId;
-	//timers
+	// timers
 	protected Date startDay;
 	protected Date startDate;
 	protected Date endDay;
 	protected Date endDate;
-	//status
+	// status
 	protected String processId;
 	protected String processCommand;
 	protected Boolean encrypted = true;
 	protected Boolean active = true;
-	protected String status = "START_REQUESTED"; //START_REQUESTED, IN_PROGRESS, CANCEL_REQUESTED, CANCELLED, SUCCEEDED, FAILED
+	protected String status = "START_REQUESTED"; // START_REQUESTED, IN_PROGRESS, CANCEL_REQUESTED, CANCELLED,
+													// SUCCEEDED, FAILED
 	protected String statusMessage;
 	protected Boolean error = false;
 	protected String errorOutput;
 	protected String errorMessage;
-	//snapshot
+	// snapshot
 	protected String snapshotId;
 	protected String snapshotExternalId;
 	protected Boolean snapshotExtracted;
-	//stats
+	// stats
 	protected Long durationMillis = 0L;
 	protected Long sizeInMb = 0L;
 	protected Long sizeInBytes = 0L;
@@ -79,7 +80,7 @@ public class BackupResult extends MorpheusModel {
 	protected String internalId;
 	protected String externalId;
 
-	//mirrored instance information for restoration
+	// mirrored instance information for restoration
 	protected String volumes;
 	protected String controllers;
 	protected String interfaces;
@@ -93,16 +94,17 @@ public class BackupResult extends MorpheusModel {
 	protected String sshUsername;
 	protected String sshPassword;
 	protected Long osTypeId;
-	//gorm timestamps
+	// gorm timestamps
 	protected Date dateCreated;
 	protected Date lastUpdated;
 
 	protected String source;
 	protected Boolean deletable = true;
-	protected String initiatedBy;
+	// ...existing code...
 
 	/**
-	 * ID of the {@link Process} that is tracking the progress of the backup execution.
+	 * ID of the {@link Process} that is tracking the progress of the backup
+	 * execution.
 	 */
 	protected Long internalProcessId;
 
@@ -191,16 +193,14 @@ public class BackupResult extends MorpheusModel {
 		this.initiatedBy = initiatedBy;
 	}
 
-
 	// public StorageBucket getStorageProvider() {
-	// 	return storageProvider;
+	// return storageProvider;
 	// }
 
 	// public void setStorageProvider(StorageBucket storageProvider) {
-	// 	markDirty("storageProvider", storageProvider, this.storageProvider);
-	// 	this.storageProvider = storageProvider;
+	// markDirty("storageProvider", storageProvider, this.storageProvider);
+	// this.storageProvider = storageProvider;
 	// }
-
 
 	public Long getExecuteServerId() {
 		return executeServerId;
@@ -679,17 +679,11 @@ public class BackupResult extends MorpheusModel {
 		this.deletable = deletable;
 	}
 
-	public String getInitiatedBy() {
-		return initiatedBy;
-	}
-	public void setInitiatedBy(String initiatedBy) {
-		markDirty("initiatedBy", initiatedBy, this.initiatedBy);
-		this.initiatedBy = initiatedBy;
-	}
-
 	/**
-	 * Returns the internal process ID for the backup result. This is typically used to track the progress of the backup's
+	 * Returns the internal process ID for the backup result. This is typically used
+	 * to track the progress of the backup's
 	 * internal {@link Process}.
+	 * 
 	 * @return the internal process ID for the backup result
 	 */
 	public Long getInternalProcessId() {
@@ -697,8 +691,10 @@ public class BackupResult extends MorpheusModel {
 	}
 
 	/**
-	 * Sets the internal process ID for the backup result. This is typically used to track the progress of the backup's
+	 * Sets the internal process ID for the backup result. This is typically used to
+	 * track the progress of the backup's
 	 * internal {@link Process}.
+	 * 
 	 * @param internalProcessId the internal process ID for the backup result
 	 */
 	public void setInternalProcessId(Long internalProcessId) {

@@ -45,8 +45,7 @@ class SystemConfigWizardProvider extends com.morpheusdata.system.example.BasePro
         def basicInfoStep = new WizardStep(
             code: 'basic-info',
             name: 'Basic Information',
-            description: 'System name and location',
-            displayOrder: 0
+            description: 'System name and location'
         )
         
         basicInfoStep.optionTypes = [
@@ -76,8 +75,7 @@ class SystemConfigWizardProvider extends com.morpheusdata.system.example.BasePro
         def locationStep = new WizardStep(
             code: 'location',
             name: 'Location',
-            description: 'System location details',
-            displayOrder: 1
+            description: 'System location details'
         )
         
         locationStep.optionTypes = [
@@ -117,8 +115,7 @@ class SystemConfigWizardProvider extends com.morpheusdata.system.example.BasePro
         def contactStep = new WizardStep(
             code: 'contact',
             name: 'Contact Information',
-            description: 'System administrator contact details',
-            displayOrder: 2
+            description: 'System administrator contact details'
         )
         
         contactStep.optionTypes = [

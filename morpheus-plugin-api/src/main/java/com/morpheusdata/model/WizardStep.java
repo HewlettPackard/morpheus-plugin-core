@@ -32,7 +32,6 @@ public class WizardStep extends MorpheusModel {
 	protected String description;
 	protected List<OptionType> optionTypes;
 	protected List<OptionTypeFieldGroup> optionTypeFieldGroups;
-	protected Integer displayOrder;
 
 	public WizardStep() {
 	}
@@ -136,25 +135,6 @@ public class WizardStep extends MorpheusModel {
 	public void setOptionTypeFieldGroups(List<OptionTypeFieldGroup> optionTypeFieldGroups) {
 		this.optionTypeFieldGroups = optionTypeFieldGroups;
 		markDirty("optionTypeFieldGroups", optionTypeFieldGroups);
-	}
-
-	/**
-	 * Returns the display order for this step in the wizard sequence
-	 * 
-	 * @return display order
-	 */
-	public Integer getDisplayOrder() {
-		return displayOrder;
-	}
-
-	/**
-	 * Sets the display order for this step in the wizard sequence
-	 * 
-	 * @param displayOrder display order
-	 */
-	public void setDisplayOrder(Integer displayOrder) {
-		this.displayOrder = displayOrder;
-		markDirty("displayOrder", displayOrder);
 	}
 
 }

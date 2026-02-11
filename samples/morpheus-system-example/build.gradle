@@ -43,7 +43,7 @@ jar {
 		attributes(
 			'Plugin-Class': 'com.morpheusdata.system.example.SystemExamplePlugin',
 			'Plugin-Version': version,
-			'Morpheus-Name': 'Morpheus System Example Plugin',
+			'Morpheus-Name': 'Arcus System Example Plugin',
 			'Morpheus-Organization': 'Morpheus Data',
 			'Morpheus-Code': 'morpheus-system-example',
 			'Morpheus-Description': 'Example plugin demonstrating System Provider, Configuration Workflow, Wizards, Forms, and Custom Input Types',

@@ -13,18 +13,18 @@ Configuration Workflow Providers work in conjunction with System Providers to en
 3. **Wizard Provider** - Handles individual workflow steps with form-based data collection
 4. **InputTypeLibraryProvider** - Registers JavaScript libraries for custom input components
 5. **System Model** - Stores system data including `configurationWorkflowState`
-6. **SystemTypeLayout** - Links systems to their configuration workflows via `configurationWorkflowCode` (string reference to the ConfigurationWorkflowProvider's code)
+6. **SystemTypeLayout** - Links systems to their configuration workflows via direct `configurationWorkflow` object reference
 
 ### Relationship Diagram
 
 ```
 SystemProvider
     └── SystemTypeLayout
-            └── configurationWorkflowCode (string) → references ConfigurationWorkflowProvider by code
-                    └── ConfigurationWorkflowProvider
+            └── configurationWorkflow (object) → direct reference to ConfigurationWorkflow
+                    └── ConfigurationWorkflow
                             └── ConfigurationWorkflowSteps
-                                    └── wizardCode (string) → references WizardProvider by code
-                                            └── WizardProvider
+                                    └── wizard (object) → direct reference to Wizard
+                                            └── Wizard
                                                     └── WizardSteps
                                                             └── OptionTypes
 ```
@@ -65,12 +65,17 @@ class ArcusSystemProvider implements SystemProvider {
             name: 'Arcus Infrastructure System'
         )
 
+        // Get the ConfigurationWorkflow reference (e.g., from MorpheusContext)
+        ConfigurationWorkflow workflow = morpheus.getConfigurationWorkflow()
+            .find(new DataQuery().withFilter('code', 'arcus-system-configuration-workflow'))
+            .blockingGet()
+
         SystemTypeLayout layout = new SystemTypeLayout(
             code: 'arcus-standard-layout',
             name: 'Arcus Standard Layout',
             description: 'Standard layout with configuration workflow',
             systemType: systemType,
-            configurationWorkflowCode: 'arcus-system-configuration-workflow'  // References ConfigurationWorkflowProvider
+            configurationWorkflow: workflow  // Direct object reference
         )
 
         // Add component types to the layout
@@ -98,19 +103,20 @@ class ArcusSystemProvider implements SystemProvider {
 
 ### 2. Configuration Workflow Linking
 
-The SystemTypeLayout uses a string-based code reference to link to the ConfigurationWorkflowProvider, enabling loose coupling:
+The SystemTypeLayout uses a direct object reference to link to the ConfigurationWorkflow:
 
 ```java
 // In SystemTypeLayout
-protected String configurationWorkflowCode; // Direct reference to ConfigurationWorkflowProvider's code
+@JsonSerialize(using = ModelAsIdOnlySerializer.class)
+protected ConfigurationWorkflow configurationWorkflow; // Direct object reference
 
-public String getConfigurationWorkflowCode() {
-    return configurationWorkflowCode;
+public ConfigurationWorkflow getConfigurationWorkflow() {
+    return configurationWorkflow;
 }
 
-public void setConfigurationWorkflowCode(String configurationWorkflowCode) {
-    this.configurationWorkflowCode = configurationWorkflowCode;
-    markDirty("configurationWorkflowCode", configurationWorkflowCode);
+public void setConfigurationWorkflow(ConfigurationWorkflow configurationWorkflow) {
+    this.configurationWorkflow = configurationWorkflow;
+    markDirty("configurationWorkflow", configurationWorkflow);
 }
 ```
 
@@ -119,13 +125,66 @@ public void setConfigurationWorkflowCode(String configurationWorkflowCode) {
 When a system is created or configured, Morpheus:
 
 1. Looks up the SystemTypeLayout
-2. Retrieves the `configurationWorkflowCode` string
-3. Uses the code to find the registered ConfigurationWorkflowProvider (matched by `getCode()` method)
+2. Retrieves the `configurationWorkflow` object reference
+3. Uses the workflow's code to find the registered ConfigurationWorkflowProvider (matched by `getCode()` method)
 4. Initiates the multi-step workflow
 
-This string-based reference enables loose coupling between models and providers, making the system more flexible and maintainable.
+The direct object reference provides type safety while still enabling loose coupling between models and providers at the provider layer.
 
-### 4. Configuration Workflow Execution
+### 4. Dynamic Wizard Loading from Provider
+
+ConfigurationWorkflowStep supports dynamic wizard loading through the WizardProvider:
+
+```java
+// In ConfigurationWorkflowStep - smart getter that uses provider if available
+public Wizard getWizard() {
+    // If we have a provider, get the wizard from it dynamically
+    if (wizardProvider != null) {
+        return wizardProvider.getWizard();
+    }
+    // Otherwise return the stored wizard reference
+    return wizard;
+}
+```
+
+The WizardProvider's `getWizard()` method builds a Wizard object dynamically:
+
+```java
+// In WizardProvider interface - default implementation
+default Wizard getWizard() {
+    Wizard wizard = new Wizard();
+    wizard.setCode(getCode());
+    wizard.setName(getWizardName());
+    wizard.setDescription(getWizardDescription());
+    wizard.setSteps(getWizardSteps());
+    wizard.setActive(true);
+    return wizard;
+}
+```
+
+**Benefits of this approach:**
+
+- **Dynamic Data**: Wizard configuration is always current from the provider
+- **Flexibility**: Provider can customize wizard based on context
+- **Fallback**: If provider isn't available (e.g., database load), uses stored reference
+- **Clean Separation**: The provider controls wizard structure, not the stored data
+
+**Usage in workflow:**
+
+```groovy
+ConfigurationWorkflowStep step = new ConfigurationWorkflowStep(
+    code: 'system',
+    name: 'System Configuration'
+)
+
+// Set the wizard provider (transient, runtime only)
+step.setWizardProvider(myWizardProvider)
+
+// Get wizard dynamically from provider
+Wizard wizard = step.getWizard()  // Calls wizardProvider.getWizard()
+```
+
+### 5. Configuration Workflow Execution
 
 The ConfigurationWorkflowProvider orchestrates the entire configuration process:
 
@@ -149,14 +208,17 @@ class ArcusSystemConfigurationWorkflowProvider implements ConfigurationWorkflowP
 
     @Override
     List<ConfigurationWorkflowStep> getWorkflowSteps() {
-        // Each step references its wizard provider by code using wizardCode field
-        // The framework will look up the WizardProvider using the wizardCode
+        // Each step references its wizard using a direct object reference
+        // Get wizard references (e.g., from MorpheusContext or registry)
+        Wizard systemWizard = getWizardByCode('arcus-system-config-wizard')
+        Wizard switchWizard = getWizardByCode('arcus-switch-config-wizard')
+
         return [
             new ConfigurationWorkflowStep(
                 code: 'system',
                 name: 'System',
                 description: 'Configure basic system settings',
-                wizardCode: 'arcus-system-config-wizard',  // References WizardProvider by code
+                wizard: systemWizard,  // Direct object reference
                 displayOrder: 0,
                 isRequired: true
             ),
@@ -164,7 +226,7 @@ class ArcusSystemConfigurationWorkflowProvider implements ConfigurationWorkflowP
                 code: 'switches',
                 name: 'Switches',
                 description: 'Configure network switches',
-                wizardCode: 'arcus-switch-config-wizard',
+                wizard: switchWizard,  // Direct object reference
                 displayOrder: 1,
                 isRequired: true
             )
@@ -220,7 +282,12 @@ ServiceResponse updateParentState(Object parentObject, Map configurationWorkflow
 
 For each ConfigurationWorkflowStep:
 
-1. **Load Wizard**: WizardProvider is retrieved using the `wizardCode` string reference (matched by WizardProvider's `getCode()` method)
+1. **Load Wizard**: The wizard can be retrieved in two ways:
+   - **From WizardProvider** (preferred): If a `WizardProvider` is set on the step (via the transient `wizardProvider` field), calling `step.getWizard()` dynamically retrieves the wizard from `wizardProvider.getWizard()`. This ensures the wizard data is always current from the provider.
+   - **From stored reference**: If no provider is set, the stored `wizard` object reference is used (useful when loading from database).
+
+   The WizardProvider is looked up using the wizard's code (matched by WizardProvider's `getCode()` method).
+
 2. **Render Forms**: WizardSteps define OptionTypes to display
 3. **Collect Data**: User fills out forms in each wizard step
 4. **Validate**: WizardProvider's `validateWizardStep()` method validates input
@@ -795,7 +862,7 @@ class ArcusSystemConfigurationWorkflowProviderSpec extends Specification {
         then:
         steps.size() == 7
         steps[0].code == 'system'
-        steps[0].wizardCode == 'arcus-system-wizard'  // String reference to WizardProvider
+        steps[0].wizard.code == 'arcus-system-wizard'  // Direct object reference to Wizard
     }
 
     def "should validate complete workflow state"() {
@@ -837,7 +904,7 @@ Configuration Workflow Providers extend System Providers by:
 3. **Enabling complex validation logic** via `validateConfigurationWorkflow()`
 4. **Coordinating with System Provider lifecycle methods** via `submitOrchestration()`
 5. **Providing guided user experience for system setup** through wizard-based forms
-6. **Using string-based code references for loose coupling** - `configurationWorkflowCode` references ConfigurationWorkflowProvider, `wizardCode` references WizardProvider
+6. **Using direct object references with type safety** - `configurationWorkflow` directly references ConfigurationWorkflow object, `wizard` directly references Wizard object. ConfigurationWorkflowStep can dynamically load wizards from WizardProvider using `wizardProvider.getWizard()` for fresh data, or use stored references when providers are unavailable. The providers remain loosely coupled and are discovered via the model's code field.
 7. **Requiring DatasetProviders for option lists** - OptionTypes do NOT support inline `optionList`, must use `optionSource`/`optionSourceType`
 
-This architecture enables plugin developers to create sophisticated, user-friendly configuration experiences while maintaining clean separation of concerns between system management and configuration workflows. The string-based reference pattern ensures loose coupling, making the system more flexible and maintainable.
+This architecture enables plugin developers to create sophisticated, user-friendly configuration experiences while maintaining clean separation of concerns between system management and configuration workflows. The direct object reference pattern provides type safety, while the dynamic wizard loading from providers ensures current data and flexibility.

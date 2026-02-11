@@ -65,14 +65,14 @@ class ClusterSettingsFormProvider extends com.morpheusdata.system.example.BasePr
                 inputType: CUSTOM_SLIDER,  // Use custom slider input type
                 defaultValue: '3',
                 helpText: 'Number of cluster replicas for high availability',
-                config: [
+                config: groovy.json.JsonOutput.toJson([
                     min: 1,
                     max: 9,
                     step: 1,
                     defaultValue: 3,
                     showValue: true,
                     unit: 'replicas'
-                ],
+                ]),
                 required: true,
                 displayOrder: 2
             ),
@@ -85,14 +85,14 @@ class ClusterSettingsFormProvider extends com.morpheusdata.system.example.BasePr
                 inputType: CUSTOM_SLIDER,  // Another custom slider
                 defaultValue: '4',
                 helpText: 'Number of CPU cores allocated to each cluster node',
-                config: [
+                config: groovy.json.JsonOutput.toJson([
                     min: 1,
                     max: 32,
                     step: 1,
                     defaultValue: 4,
                     showValue: true,
                     unit: 'cores'
-                ],
+                ]),
                 required: true,
                 displayOrder: 3
             )

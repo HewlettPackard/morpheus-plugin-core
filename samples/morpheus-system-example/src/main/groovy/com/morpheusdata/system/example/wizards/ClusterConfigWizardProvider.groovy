@@ -34,8 +34,7 @@ class ClusterConfigWizardProvider extends com.morpheusdata.system.example.BasePr
         def clusterStep = new WizardStep(
             code: 'cluster-settings',
             name: 'Cluster Settings',
-            description: 'Basic cluster configuration',
-            displayOrder: 0
+            description: 'Basic cluster configuration'
         )
         
         clusterStep.optionTypes = [
@@ -64,8 +63,7 @@ class ClusterConfigWizardProvider extends com.morpheusdata.system.example.BasePr
         def resourcesStep = new WizardStep(
             code: 'cluster-resources',
             name: 'Resource Allocation',
-            description: 'Configure cluster resources',
-            displayOrder: 1
+            description: 'Configure cluster resources'
         )
         
         resourcesStep.optionTypes = [
@@ -78,14 +76,14 @@ class ClusterConfigWizardProvider extends com.morpheusdata.system.example.BasePr
                 inputType: CUSTOM_SLIDER,
                 defaultValue: '3',
                 helpText: 'Number of cluster replicas for high availability',
-                config: [
+                config: groovy.json.JsonOutput.toJson([
                     min: 1,
                     max: 9,
                     step: 1,
                     defaultValue: 3,
                     showValue: true,
                     unit: 'replicas'
-                ],
+                ]),
                 required: true,
                 displayOrder: 0
             ),
