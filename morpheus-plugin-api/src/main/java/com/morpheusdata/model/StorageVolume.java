@@ -132,7 +132,7 @@ public class StorageVolume extends StorageVolumeIdentityProjection {
 	/**
 	 * Indicates whether this volume supports attachment to multiple hosts simultaneously
 	 */
-	protected Boolean isMultiAttach;
+	protected Boolean isMultiAttach = false;
 
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	public Account getAccount() {
@@ -711,15 +711,34 @@ public class StorageVolume extends StorageVolumeIdentityProjection {
 
 	/**
 	 * @return true if this is multi attach; false otherwise
+	 * @deprecated use {@link #getIsMultiAttach()}
 	 */
+	@Deprecated(since="1.3.0")
 	public Boolean getMultiAttach() {
 		return isMultiAttach;
 	}
 	/**
 	 * Sets whether this volume is multi attach
 	 * @param isMultiAttach true if this volume is multi attach; false otherwise
+	 * @deprecated use {@link #setIsMultiAttach(Boolean)}
 	 */
+	@Deprecated(since="1.3.0")
 	public void setMultiAttach(Boolean isMultiAttach) {
+		this.isMultiAttach = isMultiAttach;
+		markDirty("isMultiAttach", this.isMultiAttach, this.isMultiAttach);
+	}
+
+	/**
+	 * @return true if this is multi attach; false otherwise
+	 */
+	public Boolean getIsMultiAttach() {
+		return isMultiAttach;
+	}
+	/**
+	 * Sets whether this volume is multi attach
+	 * @param isMultiAttach true if this volume is multi attach; false otherwise
+	 */
+	public void setIsMultiAttach(Boolean isMultiAttach) {
 		this.isMultiAttach = isMultiAttach;
 		markDirty("isMultiAttach", this.isMultiAttach, this.isMultiAttach);
 	}

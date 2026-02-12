@@ -2,6 +2,7 @@ package com.morpheusdata.model.system;
 
 import java.util.HashMap;
 import java.util.Map;
+import com.morpheusdata.model.Process;
 
 public class SystemRequest {
 	protected Process process;
