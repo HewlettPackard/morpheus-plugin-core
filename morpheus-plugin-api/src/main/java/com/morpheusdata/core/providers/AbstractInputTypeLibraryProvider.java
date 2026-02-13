@@ -32,23 +32,23 @@ import java.util.Map;
  * </p>
  * 
  * <pre>{@code
- * 	public class CustomInputTypeLibraryProvider extends AbstractInputTypeLibraryProvider {
+ * public class CustomInputTypeLibraryProvider extends AbstractInputTypeLibraryProvider {
  *
- * 		@Override
- * 		public String getCode() {
- * 			return "custom-input-types";
- * 		}
- *
- * 		@Override
- * 		public String getName() {
- * 			return "Custom Input Types Library";
- * 		}
- *
- * 		@Override
- * 		public String getLibraryScriptPath(Map<String, Object> opts) {
- * 			return "/js/custom-input-types.js";
- * 		}
+ * 	@Override
+ * 	public String getCode() {
+ * 		return "custom-input-types";
  * 	}
+ *
+ * 	@Override
+ * 	public String getName() {
+ * 		return "Custom Input Types Library";
+ * 	}
+ *
+ * 	@Override
+ * 	public String getLibraryScriptPath(Map<String, Object> opts) {
+ * 		return "/js/custom-input-types.js";
+ * 	}
+ * }
  * }</pre>
  * 
  * @author Andy Warner

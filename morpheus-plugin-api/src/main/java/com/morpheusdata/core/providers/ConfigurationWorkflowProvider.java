@@ -113,7 +113,8 @@ public interface ConfigurationWorkflowProvider extends PluginProvider {
 	 * @param opts         additional options or context
 	 * @return ServiceResponse containing the updated configuration workflow state
 	 */
-	ServiceResponse saveStepConfiguration(String stepCode, Map stepData, Map currentState, Map opts);
+	ServiceResponse<?> saveStepConfiguration(String stepCode, Map<String, Object> stepData,
+			Map<String, Object> currentState, Map<String, Object> opts);
 
 	/**
 	 * Updates the parent object with the current configuration workflow state.
@@ -128,7 +129,8 @@ public interface ConfigurationWorkflowProvider extends PluginProvider {
 	 * @param opts                       additional options or context
 	 * @return ServiceResponse indicating success or failure of the update
 	 */
-	ServiceResponse updateParentState(Object parentObject, Map configurationWorkflowState, Map opts);
+	ServiceResponse<?> updateParentState(Object parentObject, Map<String, Object> configurationWorkflowState,
+			Map<String, Object> opts);
 
 	/**
 	 * Validates the complete configuration workflow state before final submission.
@@ -146,7 +148,8 @@ public interface ConfigurationWorkflowProvider extends PluginProvider {
 	 *         the response should contain error messages explaining what went
 	 *         wrong.
 	 */
-	ServiceResponse validateConfigurationWorkflow(Map configurationWorkflowState, Object parentObject, Map opts);
+	ServiceResponse<?> validateConfigurationWorkflow(Map<String, Object> configurationWorkflowState,
+			Object parentObject, Map<String, Object> opts);
 
 	/**
 	 * Submits and executes the configuration workflow.
@@ -167,7 +170,8 @@ public interface ConfigurationWorkflowProvider extends PluginProvider {
 	 * @return ServiceResponse containing the result of the configuration workflow
 	 *         submission
 	 */
-	ServiceResponse submitConfigurationWorkflow(Map configurationWorkflowState, Object parentObject, Map opts);
+	ServiceResponse<?> submitConfigurationWorkflow(Map<String, Object> configurationWorkflowState, Object parentObject,
+			Map<String, Object> opts);
 
 	/**
 	 * Optional method to retrieve the current configuration workflow state from the
@@ -182,7 +186,7 @@ public interface ConfigurationWorkflowProvider extends PluginProvider {
 	 * @param opts         additional options or context
 	 * @return Map containing the current configuration workflow state
 	 */
-	default Map getConfigurationWorkflowState(Object parentObject, Map opts) {
+	default Map<String, Object> getConfigurationWorkflowState(Object parentObject, Map<String, Object> opts) {
 		return null;
 	}
 
@@ -199,7 +203,8 @@ public interface ConfigurationWorkflowProvider extends PluginProvider {
 	 * @param opts                       additional options or context
 	 * @return true if the step should be shown, false to skip it
 	 */
-	default boolean shouldShowStep(ConfigurationWorkflowStep step, Map configurationWorkflowState, Map opts) {
+	default boolean shouldShowStep(ConfigurationWorkflowStep step, Map<String, Object> configurationWorkflowState,
+			Map<String, Object> opts) {
 		return true;
 	}
 
@@ -218,8 +223,9 @@ public interface ConfigurationWorkflowProvider extends PluginProvider {
 	 *                                   state
 	 * @param opts                       additional options or context
 	 */
-	default void afterSubmit(Map configurationWorkflowState, ServiceResponse submitResponse, Object parentObject,
-			Map opts) {
+	default void afterSubmit(Map<String, Object> configurationWorkflowState, ServiceResponse<?> submitResponse,
+			Object parentObject,
+			Map<String, Object> opts) {
 		// Default implementation does nothing
 	}
 
@@ -234,7 +240,8 @@ public interface ConfigurationWorkflowProvider extends PluginProvider {
 	 * @param opts                       additional options or context
 	 * @return ServiceResponse indicating success or failure of the cancellation
 	 */
-	default ServiceResponse cancelConfigurationWorkflow(Map configurationWorkflowState, Object parentObject, Map opts) {
+	default ServiceResponse<?> cancelConfigurationWorkflow(Map<String, Object> configurationWorkflowState,
+			Object parentObject, Map<String, Object> opts) {
 		return ServiceResponse.error("Cancellation not supported");
 	}
 }
