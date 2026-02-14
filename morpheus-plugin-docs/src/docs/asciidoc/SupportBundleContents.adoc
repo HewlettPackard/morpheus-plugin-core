@@ -35,20 +35,12 @@ class MySystemProvider implements SystemProvider, SystemProvider.SystemSupportBu
 		log.info("Generating support bundle contents for system: ${system.name}")
 
 		try {
-			def contentsDir = request.contentsDir
-
-			def systemConfigFile = contentsDir['system-config.json']
-			def systemConfig = [
-				systemId: system.id,
-				systemName: system.name,
-				status: system.status,
-				enabled: system.enabled,
-				visibility: system.visibility,
-				accountId: system.owner?.id,
-				createdDate: system.dateCreated?.toString(),
-				lastUpdated: system.lastUpdated?.toString()
-			]
-			systemConfigFile.text = JsonOutput.prettyPrint(JsonOutput.toJson(systemConfig))
+			// Add system-specific configuration to resourceInfo
+			// This will be written to info.json for this resource
+			request.resourceInfo.putAll([
+				// Add any additional provider-specific information
+				providerSpecificData: "custom value"
+			])
 
 			log.info("Successfully generated support bundle contents for system: ${system.name}")
 			return ServiceResponse.success()
@@ -74,27 +66,17 @@ class MyCloudProvider implements CloudProvider, CloudProvider.CloudSupportBundle
 		log.info("Generating support bundle contents for cloud: ${cloud.name}")
 
 		try {
-			def contentsDir = request.contentsDir
+			// Add cloud-specific configuration to resourceInfo
+			// This will be written to info.json for this resource
+			request.resourceInfo.putAll([
+				// Add any additional provider-specific information
+				providerSpecificData: "custom value"
+			])
 
-			def cloudConfigFile = contentsDir['cloud-config.json']
-			def cloudConfig = [
-				cloudId: cloud.id,
-				cloudName: cloud.name,
-				cloudCode: cloud.code,
-				enabled: cloud.enabled,
-				status: cloud.status,
-				visibility: cloud.visibility,
-				apiUrl: cloud.serviceUrl,
-				accountId: cloud.account?.id,
-				createdDate: cloud.dateCreated?.toString(),
-				lastUpdated: cloud.lastUpdated?.toString()
-			]
-			cloudConfigFile.text = JsonOutput.prettyPrint(JsonOutput.toJson(cloudConfig))
-
-			// Add resource pool information
+			// Query and include related resource pools as a separate file
 			def resourcePools = context.async.cloud.pool.listByCloudAndExternalIdIn(cloud.id, []).toList().blockingGet()
 			if (resourcePools) {
-				def poolsFile = contentsDir['resource-pools.json']
+				def poolsFile = request.contentsDir['resource-pools.json']
 				def poolsData = resourcePools.collect { pool ->
 					[
 						id: pool.id,
@@ -130,26 +112,12 @@ class MyStorageProvider implements StorageProvider, StorageProvider.StorageServe
 		log.info("Generating support bundle contents for storage server: ${storageServer.name}")
 
 		try {
-			def contentsDir = request.contentsDir
-
-			def serverConfigFile = contentsDir['storage-server-config.json']
-			def serverConfig = [
-				serverId: storageServer.id,
-				serverName: storageServer.name,
-				serverType: storageServer.type?.name,
-				status: storageServer.status,
-				statusMessage: storageServer.statusMessage,
-				serviceUrl: storageServer.serviceUrl,
-				serviceHost: storageServer.serviceHost,
-				servicePort: storageServer.servicePort,
-				internalIp: storageServer.internalIp,
-				externalIp: storageServer.externalIp,
-				enabled: storageServer.enabled,
-				accountId: storageServer.account?.id,
-				createdDate: storageServer.dateCreated?.toString(),
-				lastUpdated: storageServer.lastUpdated?.toString()
-			]
-			serverConfigFile.text = JsonOutput.prettyPrint(JsonOutput.toJson(serverConfig))
+			// Add storage-specific configuration to resourceInfo
+			// This will be written to info.json for this resource
+			request.resourceInfo.putAll([
+				// Add any additional provider-specific information
+				providerSpecificData: "custom value"
+			])
 
 			log.info("Successfully generated support bundle contents for storage server: ${storageServer.name}")
 			return ServiceResponse.success()
@@ -175,32 +143,12 @@ class MyNetworkProvider implements NetworkProvider, NetworkProvider.NetworkServe
 		log.info("Generating support bundle contents for network server: ${networkServer.name}")
 
 		try {
-			def contentsDir = request.contentsDir
-
-			def serverConfigFile = contentsDir['network-server-config.json']
-			def serverConfig = [
-				serverId: networkServer.id,
-				serverName: networkServer.name,
-				serverType: networkServer.type?.name,
-				status: networkServer.status,
-				statusMessage: networkServer.statusMessage,
-				serviceUrl: networkServer.serviceUrl,
-				enabled: networkServer.enabled,
-				accountId: networkServer.account?.id,
-				createdDate: networkServer.dateCreated?.toString(),
-				lastUpdated: networkServer.lastUpdated?.toString()
-			]
-			serverConfigFile.text = JsonOutput.prettyPrint(JsonOutput.toJson(serverConfig))
-
-			// Add provider diagnostics
-			def diagnosticsFile = contentsDir['network-diagnostics.json']
-			def diagnostics = [
-				providerCode: getCode(),
-				providerName: getName(),
-				description: getDescription(),
-				timestamp: new Date().toString()
-			]
-			diagnosticsFile.text = JsonOutput.prettyPrint(JsonOutput.toJson(diagnostics))
+			// Add network-specific configuration to resourceInfo
+			// This will be written to info.json for this resource
+			request.resourceInfo.putAll([
+				// Add any additional provider-specific information
+				providerSpecificData: "custom value"
+			])
 
 			log.info("Successfully generated support bundle contents for network server: ${networkServer.name}")
 			return ServiceResponse.success()
@@ -226,31 +174,12 @@ class MyProvisionProvider extends AbstractProvisionProvider implements HostProvi
 		log.info("Generating support bundle contents for server: ${server.name}")
 
 		try {
-			def contentsDir = request.contentsDir
-
-			def serverConfigFile = contentsDir['server-config.json']
-			def serverConfig = [
-				serverId: server.id,
-				serverName: server.name,
-				externalId: server.externalId,
-				status: server.status,
-				powerState: server.powerState,
-				plan: server.plan?.name,
-				osType: server.osType,
-				platform: server.platform,
-				agentInstalled: server.agentInstalled,
-				resourcePoolId: server.resourcePool?.id,
-				resourcePoolName: server.resourcePool?.name,
-				cloudId: server.cloud?.id,
-				cloudName: server.cloud?.name,
-				accountId: server.account?.id,
-				maxMemory: server.maxMemory,
-				maxCores: server.maxCores,
-				maxStorage: server.maxStorage,
-				createdDate: server.dateCreated?.toString(),
-				lastUpdated: server.lastUpdated?.toString()
-			]
-			serverConfigFile.text = JsonOutput.prettyPrint(JsonOutput.toJson(serverConfig))
+			// Add server-specific configuration to resourceInfo
+			// This will be written to info.json for this resource
+			request.resourceInfo.putAll([
+				// Add any additional provider-specific information
+				providerSpecificData: "custom value"
+			])
 
 			log.info("Successfully generated support bundle contents for server: ${server.name}")
 			return ServiceResponse.success()
@@ -283,7 +212,7 @@ configFile.text = JsonOutput.prettyPrint(JsonOutput.toJson(dataMap))
 def outputFile = contentsDir['output.txt']
 outputFile.text = "Diagnostic information here"
 
-// Write to a subdirectory path
+// Write to a subdirectory path, the intermediate directories will automatically be created
 def errorLogFile = contentsDir['logs/error.log']
 errorLogFile.text = errorLogContent
 ----
@@ -315,83 +244,21 @@ diagnosticsFile.text = JsonOutput.prettyPrint(JsonOutput.toJson(diagnostics))
 
 ==== Focus on Domain-Specific Data
 
-Include information specific to the resource being bundled, not plugin metadata. The core Morpheus logic handles plugin version information:
+Include information specific to the resource being bundled using the `resourceInfo` map. The core Morpheus logic already populates basic fields (id, name, status, enabled, type, etc.), so plugins should add provider-specific information:
 
 [source,groovy]
 ----
-// Good - domain-specific data with proper date conversion
-def serverConfigFile = contentsDir['server-config.json']
-def serverConfig = [
-	serverId: server.id,
-	serverName: server.name,
-	externalId: server.externalId,
-	powerState: server.powerState,
-	maxMemory: server.maxMemory,
-	agentInstalled: server.agentInstalled,
-	createdDate: server.dateCreated?.toString(),
-	lastUpdated: server.lastUpdated?.toString()
-]
-serverConfigFile.text = JsonOutput.prettyPrint(JsonOutput.toJson(serverConfig))
+// Good - add provider-specific data to resourceInfo
+request.resourceInfo.putAll([
+	customSetting: "value"
+])
 
-// Avoid - plugin metadata (handled by core)
-def config = [
-	pluginVersion: "1.0.0",  // Don't include
-	pluginName: "My Plugin"  // Don't include
-]
-----
-
-==== Include Resource Identifiers
-
-Include the resource ID and name in the file contents for easier identification and troubleshooting:
-
-[source,groovy]
-----
-// Good - include id and name for clarity
-def cloudConfigFile = contentsDir['cloud-config.json']
-def cloudConfig = [
-	cloudId: cloud.id,
-	cloudName: cloud.name,
-	cloudCode: cloud.code,
-	status: cloud.status,
-	enabled: cloud.enabled,
-	createdDate: cloud.dateCreated?.toString(),
-	lastUpdated: cloud.lastUpdated?.toString()
-]
-cloudConfigFile.text = JsonOutput.prettyPrint(JsonOutput.toJson(cloudConfig))
-----
-
-==== Use JSON for Structured Data
-
-JSON format is preferred for configuration and structured diagnostic data as it's easy to parse and human-readable:
-
-[source,groovy]
-----
-def serverConfigFile = contentsDir['server-config.json']
-def serverConfig = [
-	serverId: server.id,
-	serverName: server.name,
-	externalId: server.externalId,
-	powerState: server.powerState,
-	platform: server.platform,
-	maxMemory: server.maxMemory,
-	createdDate: server.dateCreated?.toString(),
-	lastUpdated: server.lastUpdated?.toString()
-]
-serverConfigFile.text = JsonOutput.prettyPrint(JsonOutput.toJson(serverConfig))
-----
-
-==== Include Timestamps from Models
-
-Include timestamp fields from the domain models to help with troubleshooting. Always convert dates to strings:
-
-[source,groovy]
-----
-def resourceInfo = [
-	status: resource.status,
-	enabled: resource.enabled,
-	createdDate: resource.dateCreated?.toString(),
-	lastUpdated: resource.lastUpdated?.toString()
-]
+// Avoid - redundant basic info (already added by core)
+request.resourceInfo.putAll([
+	id: server.id,         // Already added by core
+	name: server.name,     // Already added by core
+	status: server.status  // Already added by core
+])
 ----
 
 ==== Handle Exceptions Gracefully
