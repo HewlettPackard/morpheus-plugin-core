@@ -18,6 +18,7 @@ package com.morpheusdata.core.providers;
 
 import com.morpheusdata.model.OptionType;
 import com.morpheusdata.model.OptionTypeFieldGroup;
+import com.morpheusdata.model.User;
 import com.morpheusdata.response.ServiceResponse;
 
 import java.util.Collection;
@@ -36,15 +37,6 @@ import java.util.Map;
 public interface FormProvider extends PluginProvider {
 
 	/**
-	 * Returns a unique identifier for this form. This should be unique across all
-	 * form providers
-	 * to prevent conflicts.
-	 * 
-	 * @return unique form identifier
-	 */
-	String getFormKey();
-
-	/**
 	 * Returns the display name for this form
 	 * 
 	 * @return form display name
@@ -58,6 +50,18 @@ public interface FormProvider extends PluginProvider {
 	 */
 	default String getFormDescription() {
 		return null;
+	}
+
+	/**
+	 * Determines whether the specified user has permission to access this form.
+	 * This method allows providers to implement custom authorization logic based on
+	 * user roles, permissions, or other criteria.
+	 * 
+	 * @param user the user to check access for
+	 * @return true if the user can access this form, false otherwise
+	 */
+	default boolean canSee(User user) {
+		return true;
 	}
 
 	/**
