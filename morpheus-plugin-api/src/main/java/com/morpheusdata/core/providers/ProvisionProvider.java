@@ -17,7 +17,6 @@
 package com.morpheusdata.core.providers;
 
 import com.morpheusdata.core.MorpheusComputeTypeLayoutFactoryService;
-import com.morpheusdata.core.providers.PluginProvider.SupportBundleFacet;
 import com.morpheusdata.model.*;
 import com.morpheusdata.request.AfterConvertToManagedRequest;
 import com.morpheusdata.request.BeforeConvertToManagedRequest;
@@ -872,6 +871,4 @@ public interface ProvisionProvider extends PluginProvider {
 		 */
 		ServiceResponse<BuildResizeControllerChangelistResponse> buildControllerChangelist(BuildResizeChangelistRequest<StorageController> request);
 	}
-
-
 }
