@@ -85,7 +85,7 @@ public interface ConfigurationWorkflowProvider extends PluginProvider {
 	 * @return true if the user can access this configuration workflow, false
 	 *         otherwise
 	 */
-	default boolean canSee(User user) {
+	default boolean hasAccess(User user) {
 		return true;
 	}
 

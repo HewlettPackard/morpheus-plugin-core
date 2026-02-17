@@ -60,7 +60,7 @@ public interface FormProvider extends PluginProvider {
 	 * @param user the user to check access for
 	 * @return true if the user can access this form, false otherwise
 	 */
-	default boolean canSee(User user) {
+	default boolean hasAccess(User user) {
 		return true;
 	}
 
