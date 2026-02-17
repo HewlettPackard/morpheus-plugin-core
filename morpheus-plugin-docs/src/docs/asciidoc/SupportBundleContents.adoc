@@ -1,0 +1,309 @@
+[#support-bundle-contents]
+== Support Bundle Contents
+
+Morpheus plugins support contributing diagnostic information to support bundles through the `SupportBundleFacet` interface. Support bundles are collections of diagnostic files that help troubleshoot issues by capturing system state, configuration, and logs at a specific point in time. Plugins can add relevant diagnostic data to these bundles for their specific integrations.
+
+NOTE: Support bundle generation is available through various facet interfaces depending on the resource type being bundled.
+
+TIP: The link:https://github.com/gomorpheus/morpheus-omega-test-plugin[morpheus-omega-plugin] provides various examples of implementing support bundle content generation.
+
+=== Understanding Support Bundle Facets
+
+Morpheus provides several facet interfaces that plugins can implement to contribute content to support bundles:
+
+* `SystemSupportBundleFacet` - For system-level diagnostic information
+* `CloudSupportBundleFacet` - For cloud integration diagnostic data
+* `StorageServerSupportBundleFacet` - For storage server diagnostic information
+* `NetworkServerSupportBundleFacet` - For network server diagnostic data
+* `HostSupportBundleFacet` - For host/server diagnostic information
+* `ClusterSupportBundleFacet` - For cluster diagnostic information
+
+Each facet provides a `generateSupportBundleContents` method that receives the resource model as the first parameter and a request object as the second parameter containing a Karman `Directory` to write files to, and returns a response indicating success or failure status.
+
+=== Implementing Support Bundle Content Generation
+
+==== System-Level Support Bundles
+
+System-level providers can implement `SystemProvider.SystemSupportBundleFacet` to contribute diagnostic information:
+
+[source,groovy]
+----
+class MySystemProvider implements SystemProvider, SystemProvider.SystemSupportBundleFacet {
+
+	@Override
+	ServiceResponse generateSupportBundleContents(System system, GenerateSupportBundleContentsRequest request) {
+		log.info("Generating support bundle contents for system: ${system.name}")
+
+		try {
+			// Add system-specific configuration to resourceInfo
+			// This will be written to info.json for this resource
+			request.resourceInfo.putAll([
+				// Add any additional provider-specific information
+				providerSpecificData: "custom value"
+			])
+
+			log.info("Successfully generated support bundle contents for system: ${system.name}")
+			return ServiceResponse.success()
+
+		} catch (Exception e) {
+			log.error("Error generating support bundle contents for system ${system.name}: ${e.message}", e)
+			return ServiceResponse.error("Failed to generate support bundle contents: ${e.message}")
+		}
+	}
+}
+----
+
+==== Cloud Integration Support Bundles
+
+Cloud providers can implement `CloudProvider.CloudSupportBundleFacet` to include cloud-specific diagnostic data:
+
+[source,groovy]
+----
+class MyCloudProvider implements CloudProvider, CloudProvider.CloudSupportBundleFacet {
+
+	@Override
+	ServiceResponse generateSupportBundleContents(Cloud cloud, GenerateSupportBundleContentsRequest request) {
+		log.info("Generating support bundle contents for cloud: ${cloud.name}")
+
+		try {
+			// Add cloud-specific configuration to resourceInfo
+			// This will be written to info.json for this resource
+			request.resourceInfo.putAll([
+				// Add any additional provider-specific information
+				providerSpecificData: "custom value"
+			])
+
+			// Query and include related resource pools as a separate file
+			def resourcePools = context.async.cloud.pool.listByCloudAndExternalIdIn(cloud.id, []).toList().blockingGet()
+			if (resourcePools) {
+				def poolsFile = request.contentsDir['resource-pools.json']
+				def poolsData = resourcePools.collect { pool ->
+					[
+						id: pool.id,
+						name: pool.name,
+						externalId: pool.externalId,
+						active: pool.active
+					]
+				}
+				poolsFile.text = JsonOutput.prettyPrint(JsonOutput.toJson(poolsData))
+			}
+
+			log.info("Successfully generated support bundle contents for cloud: ${cloud.name}")
+			return ServiceResponse.success()
+
+		} catch (Exception e) {
+			log.error("Error generating support bundle contents for cloud ${cloud.name}: ${e.message}", e)
+			return ServiceResponse.error("Failed to generate support bundle contents: ${e.message}")
+		}
+	}
+}
+----
+
+==== Storage Server Support Bundles
+
+Storage server providers can implement `StorageProvider.StorageServerSupportBundleFacet`:
+
+[source,groovy]
+----
+class MyStorageProvider implements StorageProvider, StorageProvider.StorageServerSupportBundleFacet {
+
+	@Override
+	ServiceResponse generateSupportBundleContents(StorageServer storageServer, GenerateSupportBundleContentsRequest request) {
+		log.info("Generating support bundle contents for storage server: ${storageServer.name}")
+
+		try {
+			// Add storage-specific configuration to resourceInfo
+			// This will be written to info.json for this resource
+			request.resourceInfo.putAll([
+				// Add any additional provider-specific information
+				providerSpecificData: "custom value"
+			])
+
+			log.info("Successfully generated support bundle contents for storage server: ${storageServer.name}")
+			return ServiceResponse.success()
+
+		} catch (Exception e) {
+			log.error("Error generating support bundle contents for storage server ${storageServer.name}: ${e.message}", e)
+			return ServiceResponse.error("Failed to generate support bundle contents: ${e.message}")
+		}
+	}
+}
+----
+
+==== Network Server Support Bundles
+
+Network providers can implement `NetworkProvider.NetworkServerSupportBundleFacet`:
+
+[source,groovy]
+----
+class MyNetworkProvider implements NetworkProvider, NetworkProvider.NetworkServerSupportBundleFacet {
+
+	@Override
+	ServiceResponse generateSupportBundleContents(NetworkServer networkServer, GenerateSupportBundleContentsRequest request) {
+		log.info("Generating support bundle contents for network server: ${networkServer.name}")
+
+		try {
+			// Add network-specific configuration to resourceInfo
+			// This will be written to info.json for this resource
+			request.resourceInfo.putAll([
+				// Add any additional provider-specific information
+				providerSpecificData: "custom value"
+			])
+
+			log.info("Successfully generated support bundle contents for network server: ${networkServer.name}")
+			return ServiceResponse.success()
+
+		} catch (Exception e) {
+			log.error("Error generating support bundle contents for network server ${networkServer.name}: ${e.message}", e)
+			return ServiceResponse.error("Failed to generate support bundle contents: ${e.message}")
+		}
+	}
+}
+----
+
+==== Host/Server Support Bundles
+
+Provision providers can implement `HostProvisionProvider.HostSupportBundleFacet` to include host-level diagnostic information:
+
+[source,groovy]
+----
+class MyProvisionProvider extends AbstractProvisionProvider implements HostProvisionProvider, HostProvisionProvider.HostSupportBundleFacet {
+
+	@Override
+	ServiceResponse generateSupportBundleContents(ComputeServer server, GenerateSupportBundleContentsRequest request) {
+		log.info("Generating support bundle contents for server: ${server.name}")
+
+		try {
+			// Add server-specific configuration to resourceInfo
+			// This will be written to info.json for this resource
+			request.resourceInfo.putAll([
+				// Add any additional provider-specific information
+				providerSpecificData: "custom value"
+			])
+
+			log.info("Successfully generated support bundle contents for server: ${server.name}")
+			return ServiceResponse.success()
+
+		} catch (Exception e) {
+			log.error("Error generating support bundle contents for server ${server.name}: ${e.message}", e)
+			return ServiceResponse.error("Failed to generate support bundle contents: ${e.message}")
+		}
+	}
+}
+----
+
+=== Working with the Karman Directory
+
+The `GenerateSupportBundleContentsRequest` provides a Karman `Directory` object via `request.contentsDir` that represents the directory for this specific resource's bundle contents. Karman is a Groovy-based abstraction library for cloud storage and file systems.
+
+==== Writing Files
+
+Write diagnostic information to files using the directory indexing syntax and separate file variables:
+
+[source,groovy]
+----
+def contentsDir = request.contentsDir
+
+// Write JSON content with a file variable
+def configFile = contentsDir['config.json']
+configFile.text = JsonOutput.prettyPrint(JsonOutput.toJson(dataMap))
+
+// Write text content
+def outputFile = contentsDir['output.txt']
+outputFile.text = "Diagnostic information here"
+
+// Write to a subdirectory path, the intermediate directories will automatically be created
+def errorLogFile = contentsDir['logs/error.log']
+errorLogFile.text = errorLogContent
+----
+
+==== Multiple Files
+
+You can write multiple files to provide comprehensive diagnostic information:
+
+[source,groovy]
+----
+def contentsDir = request.contentsDir
+
+// Main configuration
+def configFile = contentsDir['config.json']
+configFile.text = JsonOutput.prettyPrint(JsonOutput.toJson(config))
+
+// Resource pools or related data
+if (relatedData) {
+	def relatedDataFile = contentsDir['related-data.json']
+	relatedDataFile.text = JsonOutput.prettyPrint(JsonOutput.toJson(relatedData))
+}
+
+// Diagnostic information
+def diagnosticsFile = contentsDir['diagnostics.json']
+diagnosticsFile.text = JsonOutput.prettyPrint(JsonOutput.toJson(diagnostics))
+----
+
+=== Best Practices
+
+==== Focus on Domain-Specific Data
+
+Include information specific to the resource being bundled using the `resourceInfo` map. The core Morpheus logic already populates basic fields (id, name, status, enabled, type, etc.), so plugins should add provider-specific information:
+
+[source,groovy]
+----
+// Good - add provider-specific data to resourceInfo
+request.resourceInfo.putAll([
+	customSetting: "value"
+])
+
+// Avoid - redundant basic info (already added by core)
+request.resourceInfo.putAll([
+	id: server.id,         // Already added by core
+	name: server.name,     // Already added by core
+	status: server.status  // Already added by core
+])
+----
+
+==== Handle Exceptions Gracefully
+
+Always wrap your bundle generation in try-catch blocks and return appropriate error responses:
+
+[source,groovy]
+----
+try {
+	// Generate bundle contents
+	log.info("Successfully generated support bundle contents for resource: ${resource.name}")
+	return ServiceResponse.success()
+} catch (Exception e) {
+	log.error("Error generating support bundle contents for resource ${resource.name}: ${e.message}", e)
+	return ServiceResponse.error("Failed to generate support bundle contents: ${e.message}")
+}
+----
+
+==== Avoid Sensitive Information
+
+Do not include passwords, API keys, tokens, or other sensitive credentials in support bundle contents:
+
+[source,groovy]
+----
+def config = [
+	apiEndpoint: settings.apiEndpoint,
+	username: settings.username,
+	// Do NOT include password or API keys
+	timeout: settings.timeout
+]
+----
+
+==== Use Descriptive File Names
+
+Use clear, descriptive file names that indicate the content:
+
+[source,groovy]
+----
+// Good file names
+contentsDir['server-config.json']
+contentsDir['resource-pools.json']
+contentsDir['diagnostics.json']
+
+// Avoid generic names
+contentsDir['data.json']
+contentsDir['output.txt']
+contentsDir['file1.json']
+----

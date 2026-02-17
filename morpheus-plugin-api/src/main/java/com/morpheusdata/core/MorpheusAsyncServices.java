@@ -571,4 +571,10 @@ public interface MorpheusAsyncServices {
 	MorpheusCurrencyConversionService getCurrency();
 
 	MorpheusAffinityGroupService getAffinityGroup();
+
+	/**
+	 * Returns the {@link MorpheusSupportBundleService} which allows access to support bundle services
+	 * @return an instance of {@link MorpheusSupportBundleService}
+	 */
+	MorpheusSupportBundleService getSupportBundle();
 }
