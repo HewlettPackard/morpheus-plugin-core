@@ -18,6 +18,8 @@ public class SystemTypeLayout extends MorpheusModel {
 	protected List<TaskSet> updateWorkflows = new ArrayList<>();
 	protected Boolean enabled = true;
 	protected SystemType systemType;
+	@com.fasterxml.jackson.databind.annotation.JsonSerialize(using = com.morpheusdata.model.serializers.ModelAsIdOnlySerializer.class)
+	protected com.morpheusdata.model.ConfigurationWorkflow configurationWorkflow;
 
 	public String getCode() {
 		return code;
@@ -99,14 +101,23 @@ public class SystemTypeLayout extends MorpheusModel {
 		this.systemType = systemType;
 	}
 
-	public Map<String,List<SystemComponentType>> getGroupedComponents() {
+	public com.morpheusdata.model.ConfigurationWorkflow getConfigurationWorkflow() {
+		return configurationWorkflow;
+	}
+
+	public void setConfigurationWorkflow(com.morpheusdata.model.ConfigurationWorkflow configurationWorkflow) {
+		this.configurationWorkflow = configurationWorkflow;
+		markDirty("configurationWorkflow", configurationWorkflow);
+	}
+
+	public Map<String, List<SystemComponentType>> getGroupedComponents() {
 		return this.components.stream()
-			.collect(Collectors.groupingBy(type -> type.getCode()));
+				.collect(Collectors.groupingBy(type -> type.getCode()));
 	}
 
 	public List<SystemComponentType> getComponentsByCode(String code) {
 		return this.components.stream()
-			.filter(component -> component.getCode().equals(code))
-			.collect(Collectors.toList());
+				.filter(component -> component.getCode().equals(code))
+				.collect(Collectors.toList());
 	}
 }
