@@ -344,4 +344,18 @@ public interface ClusterProvider extends PluginProvider {
 		ServiceResponse stopServer(ComputeServer computeServer);
 	}
 
+	/**
+	 * Filter storage volume types based on the datastore type capabilities.
+	 * This allows cluster providers to restrict which storage volume types are compatible with their datastores.
+	 * For example, a datastore may only support certain disk types or configurations.
+	 * 
+	 * @param datastoreType the datastore type to filter for
+	 * @param storageVolumeTypes the collection of storage volume types to filter
+	 * @return a ServiceResponse containing the filtered collection of storage volume types
+	 * @since 1.2.14
+	 */
+	default ServiceResponse<Collection<StorageVolumeType>> filterStorageVolumeTypes(DatastoreType datastoreType, Collection<StorageVolumeType> storageVolumeTypes) {
+		return ServiceResponse.success(storageVolumeTypes);
+	}
+
 }

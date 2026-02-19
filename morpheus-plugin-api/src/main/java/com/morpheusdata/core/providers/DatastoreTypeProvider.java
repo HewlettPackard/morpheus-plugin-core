@@ -25,6 +25,7 @@ import com.morpheusdata.response.ServiceResponse;
 import com.morpheusdata.request.CreateSnapshotRequest;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -472,6 +473,20 @@ public interface DatastoreTypeProvider extends PluginProvider {
 				IDE
 			}
 		}
+	}
+
+	/**
+	 * Filter storage volume types based on the datastore type capabilities.
+	 * This allows providers to restrict which storage volume types are compatible with their datastore.
+	 * For example, a datastore may only support certain disk types or configurations.
+	 * 
+	 * @param datastoreType the datastore type to filter for
+	 * @param storageVolumeTypes the collection of storage volume types to filter
+	 * @return a ServiceResponse containing the filtered collection of storage volume types
+	 * @since 1.2.14
+	 */
+	default ServiceResponse<Collection<StorageVolumeType>> filterStorageVolumeTypes(DatastoreType datastoreType, Collection<StorageVolumeType> storageVolumeTypes) {
+		return ServiceResponse.success(storageVolumeTypes);
 	}
 
 	/**
