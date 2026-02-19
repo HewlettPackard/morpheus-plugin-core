@@ -352,7 +352,7 @@ public interface ClusterProvider extends PluginProvider {
 	 * @param datastoreType the datastore type to filter for
 	 * @param storageVolumeTypes the collection of storage volume types to filter
 	 * @return a ServiceResponse containing the filtered collection of storage volume types
-	 * @since 1.2.14
+	 * @since 1.3.1
 	 */
 	default ServiceResponse<Collection<StorageVolumeType>> filterStorageVolumeTypes(DatastoreType datastoreType, Collection<StorageVolumeType> storageVolumeTypes) {
 		return ServiceResponse.success(storageVolumeTypes);
