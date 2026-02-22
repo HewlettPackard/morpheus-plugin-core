@@ -378,6 +378,8 @@ public class AccountIntegration extends MorpheusModel {
 		automation,
 		dns,
 		code,
+		llmEngine,
+		mcp,
 		repository,
 		serviceRegistry,
 		build,
