@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.morpheusdata.model.llmEngine;
+package com.morpheusdata.model.languageModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,12 +24,12 @@ import java.util.Map;
 /**
  * Capability metadata for an LLM provider integration.
  */
-public class LLMEngineCapabilities {
+public class LanguageModelCapabilities {
 	protected Boolean chatSupported = true;
 	protected Boolean streamingChatSupported = false;
 	protected Boolean embeddingSupported = false;
 	protected List<String> supportedModels = new ArrayList<>();
-	protected List<LLMEngineModel> models = new ArrayList<>();
+	protected List<LanguageModel> models = new ArrayList<>();
 	protected Map<String, Object> metadata = new HashMap<>();
 
 	public Boolean getChatSupported() {
@@ -64,15 +64,15 @@ public class LLMEngineCapabilities {
 		this.supportedModels = supportedModels;
 	}
 
-	public List<LLMEngineModel> getModels() {
+	public List<LanguageModel> getModels() {
 		return models;
 	}
 
-	public void setModels(List<LLMEngineModel> models) {
+	public void setModels(List<LanguageModel> models) {
 		this.models = models;
 		this.supportedModels = new ArrayList<>();
 		if(models != null) {
-			for(LLMEngineModel model : models) {
+			for(LanguageModel model : models) {
 				if(model != null && model.getCode() != null) {
 					this.supportedModels.add(model.getCode());
 				}

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.morpheusdata.model.llmEngine;
+package com.morpheusdata.model.languageModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,8 +24,8 @@ import java.util.Map;
 /**
  * Normalized chat request payload across LLM providers.
  */
-public class LLMEngineChatRequest {
-	protected List<LLMEngineChatMessage> messages = new ArrayList<>();
+public class LanguageModelChatRequest {
+	protected List<LanguageModelChatMessage> messages = new ArrayList<>();
 	protected String model;
 	protected Double temperature;
 	protected Double topP;
@@ -33,11 +33,11 @@ public class LLMEngineChatRequest {
 	protected List<String> stopSequences = new ArrayList<>();
 	protected Map<String, Object> options = new HashMap<>();
 
-	public List<LLMEngineChatMessage> getMessages() {
+	public List<LanguageModelChatMessage> getMessages() {
 		return messages;
 	}
 
-	public void setMessages(List<LLMEngineChatMessage> messages) {
+	public void setMessages(List<LanguageModelChatMessage> messages) {
 		this.messages = messages;
 	}
 

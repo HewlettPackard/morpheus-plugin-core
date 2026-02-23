@@ -19,14 +19,14 @@ package com.morpheusdata.core.providers;
 import com.morpheusdata.model.AccountIntegration;
 import com.morpheusdata.model.Icon;
 import com.morpheusdata.model.OptionType;
-import com.morpheusdata.model.llmEngine.LLMEngineCapabilities;
-import com.morpheusdata.model.llmEngine.LLMEngineChatRequest;
-import com.morpheusdata.model.llmEngine.LLMEngineChatResponse;
-import com.morpheusdata.model.llmEngine.LLMEngineEmbeddingRequest;
-import com.morpheusdata.model.llmEngine.LLMEngineEmbeddingResponse;
-import com.morpheusdata.model.llmEngine.LLMEngineIntegrationType;
-import com.morpheusdata.model.llmEngine.LLMEngineModel;
-import com.morpheusdata.response.LLMEngineStreamingResponseHandler;
+import com.morpheusdata.model.languageModel.LanguageModelCapabilities;
+import com.morpheusdata.model.languageModel.LanguageModelChatRequest;
+import com.morpheusdata.model.languageModel.LanguageModelChatResponse;
+import com.morpheusdata.model.languageModel.LanguageModelEmbeddingRequest;
+import com.morpheusdata.model.languageModel.LanguageModelEmbeddingResponse;
+import com.morpheusdata.model.languageModel.LanguageModelIntegrationType;
+import com.morpheusdata.model.languageModel.LanguageModel;
+import com.morpheusdata.response.LanguageModelStreamingResponseHandler;
 import com.morpheusdata.response.ServiceResponse;
 
 import java.util.ArrayList;
@@ -34,20 +34,20 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Integration provider contract for LLM/LLMEngine service integrations.
- * Plugins implement this interface to register an LLMEngine integration type
+ * Integration provider contract for LLM/LanguageModel service integrations.
+ * Plugins implement this interface to register an LanguageModel integration type
  * under Admin &gt; Integrations. Similar to {@link IPAMProvider}, this creates
  * its own {@link com.morpheusdata.model.AccountIntegrationType} and related
- * {@link LLMEngineIntegrationType} during plugin load.
+ * {@link LanguageModelIntegrationType} during plugin load.
  */
-public interface LLMEngineIntegrationProvider extends PluginProvider {
+public interface LanguageModelIntegrationProvider extends PluginProvider {
 
 	/**
 	 * The integration category used for routing and grouping.
 	 * @return the category string
 	 */
 	default String getCategory() {
-		return "llmEngine";
+		return "languageModel";
 	}
 
 	/**
@@ -89,12 +89,12 @@ public interface LLMEngineIntegrationProvider extends PluginProvider {
 	void refresh(AccountIntegration accountIntegration);
 
 	/**
-	 * Returns the LLMEngine integration type representation for this provider.
+	 * Returns the LanguageModel integration type representation for this provider.
 	 *
 	 * @return a typed provider descriptor
 	 */
-	default LLMEngineIntegrationType getLLMEngineIntegrationType() {
-		LLMEngineIntegrationType type = new LLMEngineIntegrationType();
+	default LanguageModelIntegrationType getLanguageModelIntegrationType() {
+		LanguageModelIntegrationType type = new LanguageModelIntegrationType();
 		type.setCode(getCode());
 		type.setName(getName());
 		type.setProviderService(getCode());
@@ -112,9 +112,9 @@ public interface LLMEngineIntegrationProvider extends PluginProvider {
 	 * @param opts optional call options
 	 * @return response containing capabilities
 	 */
-	default ServiceResponse<LLMEngineCapabilities> getCapabilities(AccountIntegration accountIntegration, Map opts) {
-		LLMEngineIntegrationType type = getLLMEngineIntegrationType();
-		LLMEngineCapabilities capabilities = new LLMEngineCapabilities();
+	default ServiceResponse<LanguageModelCapabilities> getCapabilities(AccountIntegration accountIntegration, Map opts) {
+		LanguageModelIntegrationType type = getLanguageModelIntegrationType();
+		LanguageModelCapabilities capabilities = new LanguageModelCapabilities();
 		capabilities.setChatSupported(type.getChatSupported() != null ? type.getChatSupported() : true);
 		capabilities.setStreamingChatSupported(type.getStreamingChatSupported() != null ? type.getStreamingChatSupported() : false);
 		capabilities.setEmbeddingSupported(type.getEmbeddingSupported() != null ? type.getEmbeddingSupported() : false);
@@ -128,13 +128,13 @@ public interface LLMEngineIntegrationProvider extends PluginProvider {
 	 * @param opts optional call options
 	 * @return response containing available models
 	 */
-	default ServiceResponse<List<LLMEngineModel>> listModels(AccountIntegration accountIntegration, Map opts) {
-		ServiceResponse<LLMEngineCapabilities> capabilitiesResponse = getCapabilities(accountIntegration, opts);
+	default ServiceResponse<List<LanguageModel>> listModels(AccountIntegration accountIntegration, Map opts) {
+		ServiceResponse<LanguageModelCapabilities> capabilitiesResponse = getCapabilities(accountIntegration, opts);
 		if(capabilitiesResponse.getSuccess() != true) {
 			return ServiceResponse.error(capabilitiesResponse.getMsg(), capabilitiesResponse.getErrors());
 		}
 
-		LLMEngineCapabilities capabilities = capabilitiesResponse.getData();
+		LanguageModelCapabilities capabilities = capabilitiesResponse.getData();
 		if(capabilities == null) {
 			return ServiceResponse.success(new ArrayList<>());
 		}
@@ -143,10 +143,10 @@ public interface LLMEngineIntegrationProvider extends PluginProvider {
 			return ServiceResponse.success(capabilities.getModels());
 		}
 
-		List<LLMEngineModel> models = new ArrayList<>();
+		List<LanguageModel> models = new ArrayList<>();
 		if(capabilities.getSupportedModels() != null) {
 			for(String supportedModel : capabilities.getSupportedModels()) {
-				LLMEngineModel model = new LLMEngineModel();
+				LanguageModel model = new LanguageModel();
 				model.setCode(supportedModel);
 				model.setName(supportedModel);
 				models.add(model);
@@ -163,7 +163,7 @@ public interface LLMEngineIntegrationProvider extends PluginProvider {
 	 * @param opts optional call options
 	 * @return response containing the generated chat completion
 	 */
-	ServiceResponse<LLMEngineChatResponse> chatCompletion(AccountIntegration accountIntegration, LLMEngineChatRequest request, Map opts);
+	ServiceResponse<LanguageModelChatResponse> chatCompletion(AccountIntegration accountIntegration, LanguageModelChatRequest request, Map opts);
 
 	/**
 	 * Performs a streaming chat completion request.
@@ -173,7 +173,7 @@ public interface LLMEngineIntegrationProvider extends PluginProvider {
 	 * @param handler streaming callback handler
 	 * @param opts optional call options
 	 */
-	default void streamChatCompletion(AccountIntegration accountIntegration, LLMEngineChatRequest request, LLMEngineStreamingResponseHandler handler, Map opts) {
+	default void streamChatCompletion(AccountIntegration accountIntegration, LanguageModelChatRequest request, LanguageModelStreamingResponseHandler handler, Map opts) {
 		if(handler != null) {
 			handler.onError(new UnsupportedOperationException("Streaming chat is not supported by this provider"));
 		}
@@ -187,76 +187,59 @@ public interface LLMEngineIntegrationProvider extends PluginProvider {
 	 * @param opts optional call options
 	 * @return response containing embedding vectors
 	 */
-	default ServiceResponse<LLMEngineEmbeddingResponse> generateEmbeddings(AccountIntegration accountIntegration, LLMEngineEmbeddingRequest request, Map opts) {
+	default ServiceResponse<LanguageModelEmbeddingResponse> generateEmbeddings(AccountIntegration accountIntegration, LanguageModelEmbeddingRequest request, Map opts) {
 		return ServiceResponse.error("Embeddings are not supported by this provider");
 	}
 
 	/**
-	 * Default integration fields common to most LLM providers.
+	 * Provides default option types for LLM Engine integrations including
+	 * service URL, username, password, and token fields.
 	 *
-	 * @param providerCode provider code used as option code prefix
-	 * @return default option type list
+	 * @param providerCode the provider code prefix for field names
+	 * @return a list of default OptionType definitions
 	 */
 	static List<OptionType> defaultOptionTypes(String providerCode) {
 		List<OptionType> optionTypes = new ArrayList<>();
 
-		OptionType endpoint = new OptionType();
-		endpoint.setCode(providerCode + ".serviceUrl");
-		endpoint.setName("Service Endpoint");
-		endpoint.setInputType(OptionType.InputType.TEXT);
-		endpoint.setFieldName("serviceUrl");
-		endpoint.setFieldLabel("Service Endpoint");
-		endpoint.setFieldContext("domain");
-		endpoint.setRequired(true);
-		endpoint.setDisplayOrder(0);
-		optionTypes.add(endpoint);
+		OptionType serviceUrl = new OptionType();
+		serviceUrl.setCode(providerCode + ".serviceUrl");
+		serviceUrl.setName("Service URL");
+		serviceUrl.setFieldName("serviceUrl");
+		serviceUrl.setFieldLabel("API Endpoint");
+		serviceUrl.setInputType(OptionType.InputType.TEXT);
+		serviceUrl.setDisplayOrder(0);
+		serviceUrl.setRequired(true);
+		optionTypes.add(serviceUrl);
 
-		OptionType credentials = new OptionType();
-		credentials.setCode(providerCode + ".credential");
-		credentials.setName("Credentials");
-		credentials.setInputType(OptionType.InputType.CREDENTIAL);
-		credentials.setFieldName("type");
-		credentials.setFieldLabel("Credentials");
-		credentials.setFieldContext("credential");
-		credentials.setRequired(true);
-		credentials.setDisplayOrder(1);
-		credentials.setDefaultValue("local");
-		credentials.setOptionSource("credentials");
-		credentials.setConfig("{\"credentialTypes\":[\"username-password\",\"api-key\",\"oauth2\",\"client-id-secret\"]}");
-		optionTypes.add(credentials);
+		OptionType serviceUsername = new OptionType();
+		serviceUsername.setCode(providerCode + ".serviceUsername");
+		serviceUsername.setName("Username");
+		serviceUsername.setFieldName("serviceUsername");
+		serviceUsername.setFieldLabel("Username");
+		serviceUsername.setInputType(OptionType.InputType.TEXT);
+		serviceUsername.setDisplayOrder(1);
+		serviceUsername.setRequired(false);
+		optionTypes.add(serviceUsername);
 
-		OptionType username = new OptionType();
-		username.setCode(providerCode + ".serviceUsername");
-		username.setName("Username");
-		username.setInputType(OptionType.InputType.TEXT);
-		username.setFieldName("serviceUsername");
-		username.setFieldLabel("Username");
-		username.setFieldContext("domain");
-		username.setDisplayOrder(2);
-		username.setLocalCredential(true);
-		optionTypes.add(username);
+		OptionType servicePassword = new OptionType();
+		servicePassword.setCode(providerCode + ".servicePassword");
+		servicePassword.setName("Password");
+		servicePassword.setFieldName("servicePassword");
+		servicePassword.setFieldLabel("Password");
+		servicePassword.setInputType(OptionType.InputType.PASSWORD);
+		servicePassword.setDisplayOrder(2);
+		servicePassword.setRequired(false);
+		optionTypes.add(servicePassword);
 
-		OptionType password = new OptionType();
-		password.setCode(providerCode + ".servicePassword");
-		password.setName("Password");
-		password.setInputType(OptionType.InputType.PASSWORD);
-		password.setFieldName("servicePassword");
-		password.setFieldLabel("Password");
-		password.setFieldContext("domain");
-		password.setDisplayOrder(3);
-		password.setLocalCredential(true);
-		optionTypes.add(password);
-
-		OptionType token = new OptionType();
-		token.setCode(providerCode + ".serviceToken");
-		token.setName("API Key");
-		token.setInputType(OptionType.InputType.PASSWORD);
-		token.setFieldName("serviceToken");
-		token.setFieldLabel("API Key");
-		token.setFieldContext("domain");
-		token.setDisplayOrder(4);
-		token.setLocalCredential(true);
-		optionTypes.add(token);
+		OptionType serviceToken = new OptionType();
+		serviceToken.setCode(providerCode + ".serviceToken");
+		serviceToken.setName("API Token");
+		serviceToken.setFieldName("serviceToken");
+		serviceToken.setFieldLabel("API Token");
+		serviceToken.setInputType(OptionType.InputType.PASSWORD);
+		serviceToken.setDisplayOrder(3);
+		serviceToken.setRequired(false);
+		optionTypes.add(serviceToken);
 
 		return optionTypes;
 	}

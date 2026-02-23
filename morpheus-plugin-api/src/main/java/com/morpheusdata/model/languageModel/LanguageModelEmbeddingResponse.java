@@ -14,29 +14,21 @@
  * limitations under the License.
  */
 
-package com.morpheusdata.model.llmEngine;
+package com.morpheusdata.model.languageModel;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
- * Normalized chat completion response.
+ * Normalized embedding response payload.
  */
-public class LLMEngineChatResponse {
-	protected String id;
+public class LanguageModelEmbeddingResponse {
 	protected String model;
-	protected String finishReason;
-	protected LLMEngineChatMessage message;
-	protected LLMEngineTokenUsage tokenUsage;
+	protected List<List<Double>> embeddings = new ArrayList<>();
+	protected LanguageModelTokenUsage tokenUsage;
 	protected Map<String, Object> metadata = new HashMap<>();
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
 
 	public String getModel() {
 		return model;
@@ -46,27 +38,19 @@ public class LLMEngineChatResponse {
 		this.model = model;
 	}
 
-	public String getFinishReason() {
-		return finishReason;
+	public List<List<Double>> getEmbeddings() {
+		return embeddings;
 	}
 
-	public void setFinishReason(String finishReason) {
-		this.finishReason = finishReason;
+	public void setEmbeddings(List<List<Double>> embeddings) {
+		this.embeddings = embeddings;
 	}
 
-	public LLMEngineChatMessage getMessage() {
-		return message;
-	}
-
-	public void setMessage(LLMEngineChatMessage message) {
-		this.message = message;
-	}
-
-	public LLMEngineTokenUsage getTokenUsage() {
+	public LanguageModelTokenUsage getTokenUsage() {
 		return tokenUsage;
 	}
 
-	public void setTokenUsage(LLMEngineTokenUsage tokenUsage) {
+	public void setTokenUsage(LanguageModelTokenUsage tokenUsage) {
 		this.tokenUsage = tokenUsage;
 	}
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.morpheusdata.model.llmEngine;
+package com.morpheusdata.model.languageModel;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +22,7 @@ import java.util.Map;
 /**
  * Normalized chat message payload used for request/response exchange.
  */
-public class LLMEngineChatMessage {
+public class LanguageModelChatMessage {
 	protected String role;
 	protected String content;
 	protected String name;

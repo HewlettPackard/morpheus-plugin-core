@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package com.morpheusdata.model.llmEngine;
+package com.morpheusdata.model.languageModel;
 
 import com.morpheusdata.model.MorpheusModel;
 
 /**
- * Represents the plugin supplied LLMEngine provider type.
+ * Represents the plugin supplied LanguageModel provider type.
  */
-public class LLMEngineIntegrationType extends MorpheusModel {
+public class LanguageModelIntegrationType extends MorpheusModel {
 	protected String code;
 	protected String name;
 	protected String description;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.morpheusdata.model.llmEngine;
+package com.morpheusdata.model.languageModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,7 +24,7 @@ import java.util.Map;
 /**
  * Normalized embedding request payload.
  */
-public class LLMEngineEmbeddingRequest {
+public class LanguageModelEmbeddingRequest {
 	protected List<String> input = new ArrayList<>();
 	protected String model;
 	protected String inputType;

@@ -4,18 +4,18 @@ import com.morpheusdata.core.MorpheusContext
 import com.morpheusdata.core.Plugin
 import com.morpheusdata.model.AccountIntegration
 import com.morpheusdata.model.Icon
-import com.morpheusdata.model.llmEngine.LLMEngineCapabilities
-import com.morpheusdata.model.llmEngine.LLMEngineChatRequest
-import com.morpheusdata.model.llmEngine.LLMEngineChatResponse
-import com.morpheusdata.model.llmEngine.LLMEngineIntegrationType
+import com.morpheusdata.model.languageModel.LanguageModelCapabilities
+import com.morpheusdata.model.languageModel.LanguageModelChatRequest
+import com.morpheusdata.model.languageModel.LanguageModelChatResponse
+import com.morpheusdata.model.languageModel.LanguageModelIntegrationType
 import com.morpheusdata.response.ServiceResponse
 import spock.lang.Specification
 
-class LLMEngineIntegrationProviderSpec extends Specification {
+class LanguageModelIntegrationProviderSpec extends Specification {
 
 	void "default capabilities inherit from integration type flags"() {
 		given:
-		def provider = new TypedLLMEngineProvider()
+		def provider = new TypedLanguageModelProvider()
 
 		when:
 		def response = provider.getCapabilities(new AccountIntegration(), [:])
@@ -29,7 +29,7 @@ class LLMEngineIntegrationProviderSpec extends Specification {
 
 	void "listModels maps supported model ids into model objects"() {
 		given:
-		def provider = new SupportedModelsLLMEngineProvider()
+		def provider = new SupportedModelsLanguageModelProvider()
 
 		when:
 		def response = provider.listModels(new AccountIntegration(), [:])
@@ -40,7 +40,7 @@ class LLMEngineIntegrationProviderSpec extends Specification {
 		response.data*.name == ['gpt-4o', 'claude-sonnet']
 	}
 
-	private static class BaseLLMEngineProvider implements LLMEngineIntegrationProvider {
+	private static class BaseLanguageModelProvider implements LanguageModelIntegrationProvider {
 		@Override
 		MorpheusContext getMorpheus() {
 			return null
@@ -53,12 +53,12 @@ class LLMEngineIntegrationProviderSpec extends Specification {
 
 		@Override
 		String getCode() {
-			return 'llmEngine.test'
+			return 'languageModel.test'
 		}
 
 		@Override
 		String getName() {
-			return 'LLMEngine Test'
+			return 'LanguageModel Test'
 		}
 
 		@Override
@@ -71,15 +71,15 @@ class LLMEngineIntegrationProviderSpec extends Specification {
 		}
 
 		@Override
-		ServiceResponse<LLMEngineChatResponse> chatCompletion(AccountIntegration accountIntegration, LLMEngineChatRequest request, Map opts) {
-			return ServiceResponse.success(new LLMEngineChatResponse())
+		ServiceResponse<LanguageModelChatResponse> chatCompletion(AccountIntegration accountIntegration, LanguageModelChatRequest request, Map opts) {
+			return ServiceResponse.success(new LanguageModelChatResponse())
 		}
 	}
 
-	private static class TypedLLMEngineProvider extends BaseLLMEngineProvider {
+	private static class TypedLanguageModelProvider extends BaseLanguageModelProvider {
 		@Override
-		LLMEngineIntegrationType getLLMEngineIntegrationType() {
-			def type = new LLMEngineIntegrationType()
+		LanguageModelIntegrationType getLanguageModelIntegrationType() {
+			def type = new LanguageModelIntegrationType()
 			type.chatSupported = true
 			type.streamingChatSupported = true
 			type.embeddingSupported = true
@@ -87,10 +87,10 @@ class LLMEngineIntegrationProviderSpec extends Specification {
 		}
 	}
 
-	private static class SupportedModelsLLMEngineProvider extends BaseLLMEngineProvider {
+	private static class SupportedModelsLanguageModelProvider extends BaseLanguageModelProvider {
 		@Override
-		ServiceResponse<LLMEngineCapabilities> getCapabilities(AccountIntegration accountIntegration, Map opts) {
-			def capabilities = new LLMEngineCapabilities()
+		ServiceResponse<LanguageModelCapabilities> getCapabilities(AccountIntegration accountIntegration, Map opts) {
+			def capabilities = new LanguageModelCapabilities()
 			capabilities.supportedModels = ['gpt-4o', 'claude-sonnet']
 			return ServiceResponse.success(capabilities)
 		}
