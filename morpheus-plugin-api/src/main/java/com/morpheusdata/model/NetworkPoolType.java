@@ -59,6 +59,8 @@ public class NetworkPoolType extends MorpheusModel{
 
 	protected Boolean loadBalancerCompatible = false;
 
+	protected Boolean floatingIpPool = false;
+
 
 	/**
 	 * Fetches the unique code pertaining to this particular network pool type. Morpheus uses codes for easier reference instead
@@ -187,6 +189,15 @@ public class NetworkPoolType extends MorpheusModel{
 	public void setPoolService(String poolService) {
 		this.poolService = poolService;
 		markDirty("poolService", poolService);
+	}
+
+	public Boolean getFloatingIpPool() {
+		return floatingIpPool;
+	}
+
+	public void setFloatingIpPool(Boolean floatingIpPool) {
+		this.floatingIpPool = floatingIpPool;
+		markDirty("floatingIpPool", floatingIpPool);
 	}
 
 }

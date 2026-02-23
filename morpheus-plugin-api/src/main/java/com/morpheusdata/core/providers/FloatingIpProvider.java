@@ -68,4 +68,12 @@ public interface FloatingIpProvider extends PluginProvider{
 	default Collection<OptionType> getFloatingIpTypes() {
 		return new ArrayList<>();
 	}
+
+	/**
+	 * Indicates whether this provider supports creating floating ip pools. If true, the UI will show the option to create floating ip pools and call the createFloatingIpPool method on this provider.
+	 * @return true if this provider supports creating floating ip pools, false otherwise
+	 */
+	default Boolean floatingPoolsCreatable() {
+		return false;
+	}
 }

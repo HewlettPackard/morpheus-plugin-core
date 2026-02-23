@@ -5,6 +5,7 @@ public class NetworkFloatingIpPoolType extends MorpheusModel {
 	protected String name;
 	protected Boolean isPlugin;
 	protected Boolean isEmbedded;
+	protected Boolean creatable;
 
 	public String getCode() {
 		return code;
@@ -40,5 +41,14 @@ public class NetworkFloatingIpPoolType extends MorpheusModel {
 	public void setIsEmbedded(Boolean isEmbedded) {
 		this.isEmbedded = isEmbedded;
 		markDirty("isEmbedded", isEmbedded);
+	}
+
+	public Boolean getCreatable() {
+		return creatable;
+	}
+
+	public void setCreatable(Boolean creatable) {
+		this.creatable = creatable;
+		markDirty("creatable", creatable);
 	}
 }
