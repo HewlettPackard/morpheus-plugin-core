@@ -97,6 +97,9 @@ public class BackupResult extends MorpheusModel {
 	protected Date dateCreated;
 	protected Date lastUpdated;
 
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
+	protected BackupResult linkedBackupResult;
+
 	protected String source;
 	protected Boolean deletable = true;
 
@@ -695,6 +698,15 @@ public class BackupResult extends MorpheusModel {
 	public void setInternalProcessId(Long internalProcessId) {
 		this.internalProcessId = internalProcessId;
 		markDirty("internalProcessId", internalProcessId, this.internalProcessId);
+	}
+
+	public BackupResult getLinkedBackupResult() {
+		return linkedBackupResult;
+	}
+
+	public void setLinkedBackupResult(BackupResult linkedBackupResult) {
+		markDirty("linkedBackupResult", linkedBackupResult, this.linkedBackupResult);
+		this.linkedBackupResult = linkedBackupResult;
 	}
 
 	public String getLocation() {
