@@ -87,6 +87,8 @@ public class VirtualImage extends VirtualImageIdentityProjection {
 	protected String interfaceName = "eth0";
 	protected String blockDeviceConfig;
 	protected String productCode;
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
+	protected StorageBucket storageProvider;
 	protected VirtualImageType virtualImageType;
 	@JsonIgnore
 	protected List<VirtualImageLocation> imageLocations = new ArrayList<>();
@@ -267,6 +269,13 @@ public class VirtualImage extends VirtualImageIdentityProjection {
 	public void setVirtualImageType(VirtualImageType virtualImageType) {
 		this.virtualImageType = virtualImageType;
 		markDirty("virtualImageType", virtualImageType, this.virtualImageType);
+	}
+
+	public StorageBucket getStorageProvider() { return storageProvider; }
+
+	public void setStorageProvider(StorageBucket storageProvider) {
+		this.storageProvider = storageProvider;
+		markDirty("storageProvider", storageProvider);
 	}
 
 	/**
