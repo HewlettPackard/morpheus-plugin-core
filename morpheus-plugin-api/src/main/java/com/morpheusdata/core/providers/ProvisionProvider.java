@@ -481,6 +481,14 @@ public interface ProvisionProvider extends PluginProvider {
 	}
 
 	/**
+	 * Indicates if the provision provider supports syncing max memory stats for workloads provisioned with this provider.  Should be set to false if the instance memory reported byt the OS differs from the provisioned memory.
+	 * @return Boolean
+	 */
+	default Boolean canSyncMaxMemoryStats() {
+		return true;
+	}
+
+	/**
 	 * Provides methods for interacting with provisioned vms to manage associated snapshots
 	 * @author Alex Clement
 	 * @since 0.15.3
