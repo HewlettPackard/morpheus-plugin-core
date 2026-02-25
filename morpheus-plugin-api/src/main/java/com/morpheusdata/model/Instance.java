@@ -95,6 +95,10 @@ public class Instance extends InstanceIdentityProjection {
 	@JsonSerialize(using= ModelCollectionAsIdsOnlySerializer.class)
 	protected List<SnapshotIdentityProjection> snapshots = new ArrayList<>();
 
+	public String volumeConfig;
+	public String controllers;
+	public String interfaces;
+
 	public User getCreatedBy() {
 		return createdBy;
 	}
@@ -102,6 +106,33 @@ public class Instance extends InstanceIdentityProjection {
 	public void setCreatedBy(User createdBy) {
 		this.createdBy = createdBy;
 		markDirty("createdBy", createdBy);
+	}
+
+	public String getVolumeConfig() {
+		return volumeConfig;
+	}
+
+	public void setVolumeConfig(String volumeConfig) {
+		this.volumeConfig = volumeConfig;
+		markDirty("volumeConfig", volumeConfig);
+	}
+
+	public String getControllers() {
+		return controllers;
+	}
+
+	public void setControllers(String controllers) {
+		this.controllers = controllers;
+		markDirty("controllers", controllers);
+	}
+
+	public String getInterfaces() {
+		return interfaces;
+	}
+
+	public void setInterfaces(String interfaces) {
+		this.interfaces = interfaces;
+		markDirty("interfaces", interfaces);
 	}
 
 	public String getUuid() {
