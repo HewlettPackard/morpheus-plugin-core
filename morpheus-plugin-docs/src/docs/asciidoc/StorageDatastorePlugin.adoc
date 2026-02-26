@@ -42,6 +42,8 @@ Key characteristics:
 * Snapshots are typically array-native (e.g., thin clones, crash-consistent snapshots)
 * Requires host preparation after volume creation: LUN mapping/export, SCSI rescan, multipath device discovery
 
+*NOTE:* **Block devices (vDISKs) must be accessible from ALL hypervisor hosts in the cluster at all times.** The HVM high-availability failover code does not invoke any plugin hooks to restore, transfer, or re-map a LUN to a different host during a failover event. When a hypervisor fails and its VMs are restarted on a surviving host, the HA controller simply redefines and starts the VM on the new host using the existing libvirt XML. If the block device referenced in that XML is not already visible on the new host, the VM will fail to start. For SAN/block-based storage this means all LUNs must be exported/mapped to every hypervisor in the cluster (not just the host currently running the VM). For network-attached block storage (e.g., Ceph RBD), this is inherently satisfied because all hosts connect to the same Ceph cluster. For FC/iSCSI storage, your plugin's `createDatastore()` and `ADD_WORKER` event handler must ensure that every host's initiators are registered with the storage array and that all volumes are accessible from every host.
+
 ===== Why You Need Both
 
 **A block-based storage plugin should also provide a companion directory-based datastore (or use an existing one) for storing shared image files.** Virtual images in Morpheus are typically cached as QCOW2 files before being cloned to their target storage. When using block storage, the provisioning flow needs a place to store and read these source images for the initial `qemu-img convert` from QCOW2 into the raw block device.
@@ -681,7 +683,80 @@ This method automatically routes through the correct communication channel -- wh
 
 ==== Snapshots
 
-For storage arrays with native snapshot capabilities, implement `SnapshotFacet.SnapshotServerFacet` to provide server-level snapshots. This is the recommended facet for HVM since snapshots typically span all volumes on a server.
+Storage arrays with native snapshot capabilities can provide significantly faster and more efficient snapshot operations than the default QCOW2-based snapshots used by directory datastores. This section covers how to implement snapshot support in your storage datastore plugin.
+
+===== Snapshot Facets
+
+The `DatastoreTypeProvider` defines three snapshot facets. Choose the one that matches your use case:
+
+* **`SnapshotFacet`** -- Volume-level snapshots. Operates on individual `StorageVolume` records. This is the lowest-level facet and is not commonly used directly for HVM.
+* **`SnapshotFacet.SnapshotServerFacet`** -- Server-level snapshots. Operates on a `ComputeServer` and snapshots all of its volumes together. **This is the recommended facet for HVM/MVM block storage** because snapshots typically need to be crash-consistent across all volumes on a VM.
+* **`SnapshotFacet.SnapshotInstanceFacet`** -- Instance-level snapshots. Operates on an `Instance` and its associated `CreateSnapshotRequest`. Use this if your storage array supports application-consistent snapshots at the instance level, or if you need to coordinate snapshots across multiple servers in an instance.
+
+For a block-based SDS plugin targeting HVM, implement `SnapshotServerFacet` on your `DatastoreTypeProvider` class. If you do not intend to support instance-level snapshots, you can also implement `SnapshotInstanceFacet` with stub methods that return an error -- this prevents fallback to default behavior and gives users a clear message:
+
+[source,groovy]
+----
+class MySdsDatastoreProvider implements
+        DatastoreTypeProvider,
+        DatastoreTypeProvider.MvmProvisionFacet,
+        DatastoreTypeProvider.SnapshotFacet.SnapshotServerFacet,
+        DatastoreTypeProvider.SnapshotFacet.SnapshotInstanceFacet,
+        PluginProvider.EventSubscriberFacet {
+
+    // ... other methods ...
+
+    // SnapshotInstanceFacet stubs (not supported)
+    @Override
+    ServiceResponse<Snapshot> createSnapshot(
+            Instance instance, CreateSnapshotRequest request) {
+        return ServiceResponse.error(
+            'Instance-level snapshots are not supported'
+        )
+    }
+
+    @Override
+    ServiceResponse<Snapshot> revertSnapshot(
+            Instance instance, Snapshot snapshot) {
+        return ServiceResponse.error(
+            'Instance-level snapshots are not supported'
+        )
+    }
+
+    @Override
+    ServiceResponse removeSnapshot(
+            Instance instance, Snapshot snapshot) {
+        return ServiceResponse.error(
+            'Instance-level snapshots are not supported'
+        )
+    }
+}
+----
+
+===== Division of Responsibility: UI vs Plugin
+
+Understanding what the Morpheus UI creates versus what your plugin creates is critical for correct snapshot implementation.
+
+When a snapshot is requested:
+
+1. The **UI** creates a parent `Snapshot` domain record in the database (with status `creating`, linked to the server and account).
+2. The **UI** calls your plugin's `createSnapshot()` method.
+3. Your **plugin** creates a `Snapshot` model object and populates it with `SnapshotFile` entries -- one per volume that was snapshotted. These are model objects, not yet persisted.
+4. Your **plugin** returns the `Snapshot` in the `ServiceResponse`.
+5. The **UI** takes the returned `SnapshotFile` entries from your response, enriches them with additional metadata, and attaches them to the parent domain record it created in step 1. It then marks the snapshot as `complete` and `currentlyActive`.
+
+The key takeaway: your plugin does **not** need to persist snapshots or snapshot files to the database. Build the model objects, populate them with the right data, and return them. The UI handles persistence.
+
+If a VM has volumes spanning multiple datastore types (e.g., some on your block datastore and some on a directory datastore), the UI will call each datastore type's snapshot provider separately and aggregate the results into a single parent snapshot. Your plugin only needs to handle volumes that belong to your datastore type.
+
+===== Creating a Snapshot
+
+The `createSnapshot()` method receives the server (VM), and two flags indicating the purpose of the snapshot. Your implementation should:
+
+1. Iterate the server's volumes and filter to only those on your datastore type
+2. Create snapshot(s) on the storage array for those volumes
+3. Build a `Snapshot` model with `SnapshotFile` entries for each snapshotted volume
+4. If `forExport` is true, export the snapshot volumes to the hypervisor so the backup agent can read the data
 
 [source,groovy]
 ----
@@ -689,32 +764,401 @@ For storage arrays with native snapshot capabilities, implement `SnapshotFacet.S
 ServiceResponse<Snapshot> createSnapshot(
         ComputeServer server,
         Boolean forBackup, Boolean forExport) {
-    // 1. Iterate over the server's volumes
-    // 2. For each block volume on your datastore, create a
-    //    snapshot via the SDS API
-    // 3. Create Snapshot and SnapshotFile records in Morpheus
-    // 4. If forExport is true, set exportPath on SnapshotFile
-    //    so the morphd agent can fetch the snapshot data
+
+    // 1. Get the server's volumes on our datastore
+    List<StorageVolume> volumes = server.volumes?.findAll { vol ->
+        vol.type?.category != 'cd' &&
+        vol.datastore?.type?.code == getCode()
+    }
+    if (!volumes) {
+        return ServiceResponse.error(
+            'No eligible volumes found for snapshot'
+        )
+    }
+
+    // 2. Create snapshot(s) on the storage array
+    //    For arrays that support volume-set snapshots,
+    //    snapshot all volumes together for crash consistency
+    def arraySnapshotResult = sdsClient.createSnapshotSet(
+        volumes.collect { getArrayVolumeId(it) }
+    )
+    if (!arraySnapshotResult.success) {
+        return ServiceResponse.error(
+            "Failed to create snapshot: ${arraySnapshotResult.error}"
+        )
+    }
+
+    // 3. Build the Morpheus Snapshot model
+    Snapshot snapshot = new Snapshot(
+        name: arraySnapshotResult.snapshotSetName,
+        externalId: arraySnapshotResult.snapshotSetUid
+    )
+
+    volumes.eachWithIndex { vol, idx ->
+        def snapVolInfo = arraySnapshotResult
+            .snapshotVolumes[idx]
+
+        SnapshotFile snapshotFile = new SnapshotFile(
+            name: snapVolInfo.name,
+            externalId: snapVolInfo.uid,
+            type: 'block',
+            volume: vol,
+            snapshot: snapshot,
+            diskIndex: vol.displayOrder ?: idx
+        )
+
+        // 4. If forExport, map the snapshot volume to the
+        //    hypervisor and set exportPath so the morphd backup
+        //    agent can read the snapshot data
+        if (forExport) {
+            ComputeServer hypervisor =
+                morpheusContext.services.computeServer.get(
+                    server.parentServer.id
+                )
+            String devicePath = exportSnapshotToHost(
+                hypervisor, snapVolInfo
+            )
+            snapshotFile.exportPath = devicePath
+        }
+
+        snapshot.addToSnapshotFiles(snapshotFile)
+    }
+
     return ServiceResponse.success(snapshot)
 }
+----
 
+*NOTE:* The `snapshot.externalId` you return is stored by the UI on each `SnapshotFile` record's config (under a `snapshot` key). When `revertSnapshot()` or `removeSnapshot()` is called later, the `Snapshot` object passed back to your plugin will have this `externalId` populated from that stored config. This is how the UI tracks which array-side snapshot set corresponds to which Morpheus snapshot across multiple datastore types.
+
+*NOTE:* When `forExport` is true, the `exportPath` on each `SnapshotFile` should be a device path or file path accessible on the hypervisor that the Morpheus agent (morphd) can read to stream the snapshot data to a backup target. For block storage, this typically means mapping/exporting the snapshot volume to the hypervisor and discovering its multipath device, similar to what `prepareHostForVolume()` does during provisioning.
+
+===== Reverting a Snapshot
+
+When a user reverts a snapshot, the HVM provisioner automatically powers off the VM before calling your `revertSnapshot()` method and powers it back on afterward. Your implementation only needs to handle the storage-side revert.
+
+The `Snapshot` passed to this method will have its `externalId` populated (the array-side snapshot set ID you returned during creation) and its `snapshotFiles` list populated with the `SnapshotFile` entries your plugin created.
+
+[source,groovy]
+----
 @Override
 ServiceResponse<Snapshot> revertSnapshot(
         ComputeServer server, Snapshot snapshot) {
-    // HVM will automatically power off the VM before calling
-    // this method and power it back on after completion
-    // 1. Revert each volume to its snapshot on the storage array
+
+    if (!snapshot.externalId) {
+        return ServiceResponse.error(
+            'Snapshot has no external reference for revert'
+        )
+    }
+
+    // 1. Revert the snapshot set on the storage array
+    def revertResult = sdsClient.revertSnapshotSet(
+        snapshot.externalId
+    )
+    if (!revertResult.success) {
+        return ServiceResponse.error(
+            "Failed to revert snapshot: ${revertResult.error}"
+        )
+    }
+
+    // 2. After revert, the underlying block devices may have
+    //    changed (e.g., new multipath device paths). Re-discover
+    //    the device paths and update the volume records.
+    server.volumes?.each { vol ->
+        if (vol.datastore?.type?.code == getCode()) {
+            ComputeServer hypervisor =
+                morpheusContext.services.computeServer.get(
+                    server.parentServer.id
+                )
+            String devicePath = discoverMultipathDevice(
+                hypervisor, vol
+            )
+            vol.externalId = devicePath
+            vol.setConfigProperty('source.dev', devicePath)
+            morpheusContext.services.storageVolume.save(vol)
+        }
+    }
+
     return ServiceResponse.success(snapshot)
 }
+----
 
+*NOTE:* After a revert, many storage arrays reassign device identifiers or refresh multipath mappings. It is important to re-discover the device paths for each volume and update both `externalId` and the `source.dev` config property so that the VM can be restarted with correct libvirt XML. The HVM provisioner will call `applyDiskConfig()` and redefine the VM after your revert completes.
+
+===== Removing a Snapshot
+
+Snapshot removal should delete the snapshot on the storage array. If the snapshot was previously exported for backup (i.e., `forExport` was true during creation), you should also clean up any exported multipath devices on the cluster hosts.
+
+[source,groovy]
+----
 @Override
 ServiceResponse removeSnapshot(
         ComputeServer server, Snapshot snapshot) {
-    // 1. Delete the snapshot on the storage array
-    // 2. Clean up Morpheus snapshot records
+
+    if (!snapshot.externalId) {
+        return ServiceResponse.error(
+            'Snapshot has no external reference for removal'
+        )
+    }
+
+    // 1. Check if any snapshot files were exported (have
+    //    exportPath set) and clean up host-side devices
+    snapshot.snapshotFiles?.each { snapshotFile ->
+        if (snapshotFile.exportPath) {
+            cleanupExportedDevice(server, snapshotFile)
+        }
+    }
+
+    // 2. Delete the snapshot set on the storage array
+    def deleteResult = sdsClient.deleteSnapshotSet(
+        snapshot.externalId
+    )
+    if (!deleteResult.success) {
+        return ServiceResponse.error(
+            "Failed to delete snapshot: ${deleteResult.error}"
+        )
+    }
+
     return ServiceResponse.success()
 }
 ----
+
+*NOTE:* The UI handles removing the `Snapshot` and `SnapshotFile` domain records from the database after your plugin returns success. You do not need to call `morpheusContext.services.snapshot.remove()` yourself during `removeSnapshot()`.
+
+===== Snapshot Lifecycle Summary
+
+The following table summarizes the division of work between the Morpheus UI and your plugin for each snapshot operation:
+
+[cols="1,2,2",options="header"]
+|===
+| Operation | UI Responsibility | Plugin Responsibility
+
+| Create
+| Creates parent `Snapshot` domain record, persists returned `SnapshotFile` entries, marks snapshot `complete`
+| Creates snapshots on storage array, builds `Snapshot` model with `SnapshotFile` entries, optionally exports for backup
+
+| Revert
+| Powers off VM, calls plugin, re-applies disk config, redefines VM, powers on
+| Reverts snapshot set on storage array, re-discovers device paths, updates volume records
+
+| Remove
+| Deletes `Snapshot` and `SnapshotFile` domain records after plugin returns success
+| Cleans up exported devices (if any), deletes snapshot set on storage array
+|===
+
+==== Delegating to Built-in QCOW2 Datastore Operations
+
+If your custom datastore type wraps a filesystem-based mount (e.g., an SDS solution that exposes a POSIX filesystem or an NFS pool backed by your storage array), you do not need to reimplement the standard QCOW2 volume operations (create, clone, resize, remove). Morpheus provides the `MorpheusVmeQcow2DatastoreService` that exposes the same directory-based volume logic used by the built-in `libvirt-dir` and `libvirt-netfs-nfs` datastore types.
+
+Access this service via:
+
+[source,groovy]
+----
+MorpheusVmeQcow2DatastoreService qcowService =
+    morpheusContext.services.storage.vmeQcow2DatastoreService
+----
+
+The service provides the following operations:
+
+* `createVolume(StorageVolume volume, ComputeServer server)` -- Creates a QCOW2 file on the datastore's `externalPath`
+* `cloneVolume(StorageVolume volume, ComputeServer server, StorageVolume sourceVolume)` -- Clones a source QCOW2 to a new volume using `cp` or `qemu-img`
+* `cloneVolume(StorageVolume volume, ComputeServer server, VirtualImage virtualImage, CloudFileInterface cloudFile)` -- Streams a virtual image file directly to the datastore
+* `resizeVolume(StorageVolume volume, ComputeServer server, Long newSize)` -- Resizes a QCOW2 file via `qemu-img resize`
+* `removeVolume(StorageVolume volume, ComputeServer server, boolean removeSnapshots, boolean force)` -- Deletes the QCOW2 file and its directory
+
+This is useful when your `DatastoreTypeProvider` needs to handle the datastore lifecycle itself (create/remove datastore, register hosts, manage mounts) but wants the standard QCOW2 behavior for individual volume operations. For example, an SDS plugin that provides a shared filesystem datastore can delegate all volume methods:
+
+[source,groovy]
+----
+class MySdsFilesystemDatastoreProvider implements
+        DatastoreTypeProvider {
+
+    // Datastore lifecycle -- custom (mount the filesystem,
+    // register hosts, etc.)
+    @Override
+    ServiceResponse<Datastore> createDatastore(Datastore ds) {
+        // Mount the SDS filesystem on each cluster host
+        // Set ds.externalPath to the mount point
+    }
+
+    // Volume operations -- delegate to built-in QCOW2 service
+    @Override
+    ServiceResponse<StorageVolume> createVolume(
+            StorageVolume volume, ComputeServer server) {
+        return morpheusContext.services.storage
+            .vmeQcow2DatastoreService
+            .createVolume(volume, server)
+    }
+
+    @Override
+    ServiceResponse<StorageVolume> cloneVolume(
+            StorageVolume volume, ComputeServer server,
+            StorageVolume sourceVolume) {
+        return morpheusContext.services.storage
+            .vmeQcow2DatastoreService
+            .cloneVolume(volume, server, sourceVolume)
+    }
+
+    @Override
+    ServiceResponse<StorageVolume> cloneVolume(
+            StorageVolume volume, ComputeServer server,
+            VirtualImage virtualImage,
+            CloudFileInterface cloudFile) {
+        return morpheusContext.services.storage
+            .vmeQcow2DatastoreService
+            .cloneVolume(volume, server,
+                virtualImage, cloudFile)
+    }
+
+    @Override
+    ServiceResponse<StorageVolume> resizeVolume(
+            StorageVolume volume, ComputeServer server,
+            Long newSize) {
+        return morpheusContext.services.storage
+            .vmeQcow2DatastoreService
+            .resizeVolume(volume, server, newSize)
+    }
+
+    @Override
+    ServiceResponse removeVolume(
+            StorageVolume volume, ComputeServer server,
+            boolean removeSnapshots, boolean force) {
+        return morpheusContext.services.storage
+            .vmeQcow2DatastoreService
+            .removeVolume(volume, server,
+                removeSnapshots, force)
+    }
+
+    // ... datastore lifecycle methods ...
+}
+----
+
+*NOTE:* The `MorpheusVmeQcow2DatastoreService` operates on the volume's `datastore.externalPath` and expects a standard directory layout. Ensure your datastore's `externalPath` is set to the mount point of your filesystem before delegating volume operations.
+
+Additionally, `morpheusContext.services.storage.datastoreType` provides `MorpheusDatastoreTypeService` -- a routing service that dispatches volume and snapshot operations to the correct datastore provider based on the volume's associated datastore type. This is useful when your plugin needs to invoke operations on volumes that may reside on a *different* datastore type (e.g., triggering a clone on a directory-based datastore that holds the source image cache for your block-based datastore).
+
+==== Cluster Packages for Host Software
+
+Storage plugins often require specific software to be installed on hypervisor hosts -- for example, iSCSI initiator utilities, multipath tools, or a custom SDS client agent. Morpheus provides a cluster-level package system through the `ComputeTypePackageProvider` interface that allows plugins to define installable packages for HVM clusters.
+
+A `ComputeTypePackageProvider` registers a `ComputeTypePackage` that appears as an addon package available for HVM clusters. When installed, Morpheus calls your provider's `installPackage()` method with the cluster, where you can execute the necessary installation commands on each host.
+
+[source,groovy]
+----
+class MySdsHostPackageProvider implements
+        ComputeTypePackageProvider {
+
+    MorpheusContext morpheusContext
+    Plugin plugin
+
+    MySdsHostPackageProvider(Plugin plugin,
+            MorpheusContext morpheusContext) {
+        this.morpheusContext = morpheusContext
+        this.plugin = plugin
+    }
+
+    @Override
+    String getCode() { return 'my-sds-host-package' }
+
+    @Override
+    String getName() { return 'My SDS Host Agent' }
+
+    @Override
+    String getDescription() {
+        return 'Installs SDS client tools on cluster hosts'
+    }
+
+    @Override
+    String getType() { return 'my-sds-agent' }
+
+    @Override
+    String getPackageType() { return 'storage' }
+
+    @Override
+    String getProviderType() { return 'mvm' }
+
+    @Override
+    String getPackageVersion() { return '1.0.0' }
+
+    @Override
+    Icon getCircularIcon() {
+        return new Icon(path: 'my-sds-icon.svg',
+            darkPath: 'my-sds-icon-dark.svg')
+    }
+
+    @Override
+    List<OptionType> getOptionTypes() {
+        // Optional: configuration options for the package
+        // (e.g., SDS cluster endpoint, auth token)
+        return []
+    }
+
+    @Override
+    ServiceResponse<ComputeServerGroupPackage> installPackage(
+            ComputeServerGroup serverGroup,
+            ComputeServerGroupPackage pkg,
+            PackageInstallRequest request) {
+        // Get all hosts in the cluster
+        List<ComputeServer> hosts =
+            morpheusContext.services.computeServer.list(
+                new DataQuery().withFilter(
+                    'serverGroup.id', serverGroup.id
+                ).withFilter(
+                    'computeServerType.nodeType', 'morpheus-kvm-node'
+                )
+            )
+
+        // Install the SDS client on each host
+        hosts.each { host ->
+            def result =
+                morpheusContext.executeCommandOnServer(
+                    host,
+                    'apt-get install -y my-sds-client ' +
+                    'multipath-tools open-iscsi'
+                ).blockingGet()
+            if (!result.success) {
+                return ServiceResponse.error(
+                    "Install failed on ${host.name}: " +
+                    "${result.data}"
+                )
+            }
+        }
+
+        pkg.installed = true
+        pkg.status = 'ok'
+        return ServiceResponse.success(pkg)
+    }
+
+    @Override
+    ServiceResponse deletePackage(
+            ComputeServerGroup serverGroup,
+            ComputeServerGroupPackage pkg,
+            PackageDeleteRequest request) {
+        // Uninstall the SDS client from each host
+        return ServiceResponse.success()
+    }
+}
+----
+
+Register the package provider in your plugin class alongside your other providers:
+
+[source,groovy]
+----
+class MyStoragePlugin extends Plugin {
+    @Override
+    void initialize() {
+        // ... other providers ...
+        this.registerProvider(
+            new MySdsHostPackageProvider(this, this.morpheus)
+        )
+    }
+}
+----
+
+The `ComputeTypePackage.ProviderType` enum includes `MVM` for HVM clusters. Once registered, the package appears in the cluster's addon packages UI, where administrators can install, upgrade, or remove it. The package tracks its state via `ComputeServerGroupPackage` (with fields for `installed`, `status`, `packageVersion`, `errorMessage`).
+
+*NOTE:* The package system operates at the cluster level, not the individual host level. Your `installPackage()` implementation should iterate over all hosts in the cluster. When new workers are added to the cluster, you can handle software installation via the `EventSubscriberFacet` `ADD_WORKER` event on your `DatastoreTypeProvider` as well, ensuring new hosts are configured correctly.
+
+*NOTE:* For simpler cases where you just need to ensure a few OS packages are present on a host, you can also handle this imperatively in your `createDatastore()` or `prepareHostForVolume()` methods using `morpheusContext.executeCommandOnServer()` without implementing a full `ComputeTypePackageProvider`. The package provider approach is better suited for complex installations that benefit from explicit lifecycle management (install, upgrade, remove) and visibility in the UI.
 
 ==== Key Model Objects
 
@@ -726,6 +1170,381 @@ Understanding the key Morpheus model objects is essential:
 * **`StorageVolume`** -- A virtual disk. Has `maxStorage` (size in bytes), `externalId` (device path or file path), `volumeName`, `datastore` reference, `configMap` for volume metadata (WWN, UID, host mappings). The `configMap` can include `source.dev` for the block device path used in libvirt XML.
 * **`StorageVolumeType`** -- Defines a type of volume your plugin offers (e.g., "SDS Block Volume", "SDS Replicated Volume").
 * **`ComputeServer`** -- The VM/workload server. Use `server.parentServer` to get the hypervisor host. Use `server.serverGroup` or the datastore's `refId` to get the cluster.
+* **`Snapshot`** -- Represents a point-in-time snapshot. Has `name`, `externalId` (your array-side snapshot set ID), `snapshotFiles` (list of `SnapshotFile`), `server`, `currentlyActive`, `parentSnapshot` (for snapshot chains). Your plugin builds this as a model object and returns it; the UI persists it.
+* **`SnapshotFile`** -- Represents a single volume's snapshot within a `Snapshot`. Has `name`, `externalId` (per-volume snapshot ID), `type` (e.g., `block`), `volume` (the `StorageVolume` it was snapshotted from), `exportPath` (device path for backup agent access), `diskIndex`, and `snapshot` (parent reference).
+
+==== Concrete Example: Ceph RBD Storage for HVM
+
+This section uses the built-in Ceph RBD implementation in Morpheus as a concrete reference for how the patterns described in this guide are applied in a real-world SDS solution. Ceph is a distributed storage system that provides both a POSIX filesystem (CephFS) and block storage (RBD). Its built-in implementation in Morpheus is not a plugin (it is part of the core HVM cloud code), but the architecture maps directly to what a plugin developer would build. Understanding this example will help you design your own SDS storage plugin.
+
+===== Storage Architecture: CephFS + RBD
+
+A Ceph-backed HVM cluster uses two complementary datastore types:
+
+1. **CephFS directory datastore** (`libvirt-dir`) -- A CephFS mount on each hypervisor (e.g., `/mnt/cephfs/morpheus-images`) appears as a standard directory-based datastore. This stores the shared QCOW2 virtual image cache. CephFS does not have a dedicated datastore type in Morpheus -- it is simply discovered as a `libvirt-dir` datastore because it presents a POSIX directory path.
+
+2. **RBD pool datastore** (`libvirt-ceph-rdb`) -- An RBD pool (e.g., `morpheus-kvm`) registered as a libvirt storage pool on each hypervisor. This is where VM block volumes are created as RBD images. The datastore type code is `libvirt-ceph-rdb` (note the historical `rdb` typo that persists for backward compatibility).
+
+Additionally, a special **`mvm-image-cache`** RBD pool is used as an intermediate cache for raw-format images. Virtual images are first downloaded as QCOW2 to the CephFS directory datastore, then converted to raw format in the `mvm-image-cache` RBD pool. VM volumes are then instant-cloned from protected snapshots in this cache pool.
+
+This three-tier architecture (CephFS for QCOW2 store -> RBD cache for raw images -> RBD pool for VM volumes) demonstrates the "Why You Need Both" principle from earlier in this guide.
+
+===== Image Caching Flow
+
+When a VM is provisioned from a virtual image on an RBD datastore, the following flow occurs:
+
+[source,text]
+----
+1. QCOW2 source image exists on CephFS directory datastore
+   e.g., /mnt/cephfs/morpheus-images/morpheus-{imageId}
+
+2. Check if raw cached image exists in mvm-image-cache RBD pool:
+   rbd info mvm-image-cache/morpheus-{imageId}
+
+3. If NOT cached, convert and cache:
+   a. Get source image size:
+      qemu-img info /mnt/cephfs/.../morpheus-{imageId}
+   b. Create RBD image at source size:
+      rbd create --size {sizeMB} mvm-image-cache/morpheus-{imageId}
+   c. Convert QCOW2 to raw into the RBD image:
+      qemu-img convert -O raw -f qcow2 \
+        /mnt/cephfs/.../morpheus-{imageId} \
+        rbd:mvm-image-cache/morpheus-{imageId} \
+        --target-is-zero -n -W -m16
+   d. Create and protect a snapshot for COW cloning:
+      rbd snap create mvm-image-cache/morpheus-{imageId}@image
+      rbd snap protect mvm-image-cache/morpheus-{imageId}@image
+
+4. Clone from the cached snapshot (instant COW clone):
+   rbd clone mvm-image-cache/morpheus-{imageId}@image \
+     {vmPool}/{volumeName}
+
+5. Refresh the libvirt pool and resize to requested size:
+   virsh pool-refresh {vmPool}
+   virsh vol-resize {volumeName} --pool {vmPool} \
+     --capacity {requestedBytes}
+----
+
+This caching strategy means that only the first VM provisioned from a given image incurs the QCOW2-to-raw conversion cost. Subsequent provisions from the same image are near-instantaneous COW clones.
+
+The corresponding code from the built-in `CephDatastoreService.cloneVolume()` method illustrates the pattern:
+
+[source,groovy]
+----
+// Simplified from CephDatastoreService.cloneVolume()
+String sourceVolume = "morpheus-${volume.sourceImage}"
+String imagesPath = kvmProvisionService.getImagesPath(
+    hypervisor.serverGroup
+)
+
+String command = """
+    sudo rbd info "mvm-image-cache/${sourceVolume}"
+    EXISTS=\$?
+    if [ "\$EXISTS" != "0" ] ; then
+        SIZE="\$(sudo qemu-img info \
+            "${imagesPath}/${sourceVolume}" \
+            | awk 'NR==3' | cut -d "(" -f2 \
+            | cut -d ")" -f1 | awk '{print \$1}')"
+        SIZEMB=`expr \$SIZE / 1048567`
+        sudo rbd create --size \$SIZEMB \
+            "mvm-image-cache/${sourceVolume}"
+        sudo qemu-img convert -O raw -f qcow2 \
+            "${imagesPath}/${sourceVolume}" \
+            "rbd:mvm-image-cache/${sourceVolume}" \
+            --target-is-zero -n -W -m16
+        sudo rbd snap create \
+            "mvm-image-cache/${sourceVolume}@image"
+        sudo rbd snap protect \
+            "mvm-image-cache/${sourceVolume}@image"
+    fi
+    sudo rbd clone \
+        "mvm-image-cache/${sourceVolume}@image" \
+        "${volume.datastore.externalId}/${volume.volumeName}"
+    sudo virsh pool-refresh \
+        "${volume.datastore.externalId}"
+    sudo virsh vol-resize "${volume.volumeName}" \
+        --pool "${volume.datastore.externalId}" \
+        --capacity ${volume.maxStorage}
+"""
+----
+
+*NOTE:* The `qemu-img convert` flags are significant: `-W` enables out-of-order writes for parallelism, `-m16` uses 16 coroutines, `--target-is-zero` skips writing zeroes (the RBD image was just created), and `-n` skips target creation (already created via `rbd create`). These flags are critical for performance when converting large images.
+
+===== Volume-to-Volume Cloning (RBD to RBD)
+
+When cloning from a source volume that is already on an RBD datastore (e.g., cloning a VM), the code avoids the QCOW2 conversion entirely and uses RBD-native snapshot and clone operations:
+
+[source,groovy]
+----
+// Simplified from CephDatastoreService.cloneVolume()
+// when source is already an RBD volume
+String snapName = "${sourceVolume.datastore.externalId}/" +
+    "${sourceVolume.externalId}@clone-${new Date().time}"
+
+String command = """
+    sudo rbd snap create "${snapName}"
+    sudo rbd snap protect "${snapName}"
+    sudo rbd clone "${snapName}" \
+        "${volume.datastore.externalId}/${volume.volumeName}"
+    sudo rbd flatten \
+        "${volume.datastore.externalId}/${volume.volumeName}"
+    sudo rbd snap unprotect "${snapName}"
+    sudo rbd snap rm "${snapName}"
+    sudo virsh pool-refresh \
+        "${volume.datastore.externalId}"
+    sudo virsh vol-resize "${volume.volumeName}" \
+        --pool "${volume.datastore.externalId}" \
+        --capacity ${volume.maxStorage}
+"""
+----
+
+The sequence creates a temporary snapshot, clones from it, flattens the clone (making it independent), then removes the temporary snapshot. The flatten step ensures the new volume has no dependency on the source -- important for VM independence. If the source volume already has a user snapshot, that snapshot is used directly instead of creating a temporary one.
+
+===== Libvirt XML for RBD Volumes
+
+RBD volumes use `<disk type="network">` in the libvirt domain XML, which tells QEMU to connect directly to the Ceph cluster via the `librbd` library -- no kernel RBD map is needed for VM disk I/O:
+
+[source,xml]
+----
+<disk type="network" device="disk">
+  <driver name="qemu" type="raw"
+          cache="writeback" discard="unmap"/>
+  <source protocol="rbd"
+          name="morpheus-kvm/vm-volume-001">
+    <auth username="admin">
+      <secret type="ceph"
+              uuid="a1b2c3d4-e5f6-7890-abcd-ef1234567890"/>
+    </auth>
+    <host name="ceph-mon-1.example.com" port="6789"/>
+    <host name="ceph-mon-2.example.com" port="6789"/>
+    <host name="ceph-mon-3.example.com" port="6789"/>
+  </source>
+  <target dev="vda" bus="virtio"/>
+</disk>
+----
+
+Key differences from block and file disk types:
+
+* **`type="network"`** instead of `type="block"` or `type="file"` -- QEMU connects over the network via `librbd`
+* **`protocol="rbd"`** -- identifies the Ceph RBD protocol
+* **`cache="writeback"`** instead of `cache="none"` -- RBD benefits from writeback caching because the Ceph cluster provides its own data safety guarantees
+* **No `io="io_uring"`** -- the `librbd` driver handles I/O internally
+* **`<auth>` with `<secret type="ceph">`** -- Ceph authentication is embedded in the XML, referencing a libvirt secret UUID that holds the CephX key
+* **Multiple `<host>` entries** -- lists all Ceph monitor hosts for redundancy
+
+The `source name` is formatted as `{pool}/{volumeName}`. The auth secret UUID and monitor hosts are pulled from the datastore's per-host config (`datastore.configMap.hostConfig["{serverId}"]`).
+
+===== Per-Host Configuration for HA
+
+Each hypervisor in the cluster may have its own Ceph connection configuration. The Ceph implementation stores per-host config in the datastore's `configMap` under `hostConfig["{serverId}"]`:
+
+[source,groovy]
+----
+// Structure of datastore.configMap.hostConfig
+// (populated during Ceph pool discovery/sync)
+[
+    hostConfig: [
+        "42": [  // serverId of hypervisor A
+            source: [
+                name: "morpheus-kvm",  // RBD pool name
+                host: [
+                    [name: "ceph-mon-1.local", port: "6789"],
+                    [name: "ceph-mon-2.local", port: "6789"]
+                ],
+                auth: [
+                    username: "admin",
+                    secret: [
+                        uuid: "a1b2c3d4-..."
+                    ]
+                ]
+            ]
+        ],
+        "43": [  // serverId of hypervisor B
+            source: [
+                name: "morpheus-kvm",
+                host: [
+                    [name: "ceph-mon-1.local", port: "6789"],
+                    [name: "ceph-mon-3.local", port: "6789"]
+                ],
+                auth: [
+                    username: "admin",
+                    secret: [
+                        uuid: "b2c3d4e5-..."
+                    ]
+                ]
+            ]
+        ]
+    ]
+]
+----
+
+When building the libvirt XML, the code reads the current hypervisor's config from this map for the `<source>` attributes and auth, but collects monitor `<host>` entries from **all** hypervisors and deduplicates them. This ensures every VM has a complete list of Ceph monitors regardless of which host it is running on -- critical for HA failover.
+
+*NOTE:* This per-host config pattern is important for any storage plugin where different hosts may have different connection parameters (different auth secrets, different paths to the storage network, etc.). Store per-host config in `datastore.configMap.hostConfig["{serverId}"]` and aggregate cluster-wide settings when building libvirt XML.
+
+===== Snapshots with RBD
+
+Ceph RBD provides native snapshot support via `rbd snap` commands. The built-in implementation handles snapshots as follows:
+
+**Creating a snapshot:**
+
+[source,groovy]
+----
+// Simplified from CephDatastoreService.createSnapshot()
+Snapshot snapshot = new Snapshot(
+    externalId: "snap-${new Date().time}"
+)
+
+for (volume in volumes) {
+    String command = "sudo rbd snap create " +
+        "${volume.datastore.externalId}/" +
+        "${volume.externalId}@${snapshot.externalId}"
+
+    // For running VMs, freeze the guest filesystem first
+    if (isRunning) {
+        command = "sudo virsh domfsfreeze " +
+            "\"${server.externalId}\"; " +
+            "${command}; " +
+            "sudo virsh domfsthaw " +
+            "\"${server.externalId}\""
+    }
+
+    def results = executeHypervisorCommand(
+        server.parentServer, command
+    )
+    if (results.success) {
+        snapshot.addToSnapshotFiles(
+            new SnapshotFile(
+                name: volume.deviceDisplayName,
+                type: 'rbd',
+                volume: volume,
+                path: "rbd:${volume.datastore.externalId}/" +
+                    "${volume.externalId}" +
+                    "@${snapshot.externalId}",
+                externalId: "${volume.datastore.externalId}/" +
+                    "${volume.externalId}" +
+                    "@${snapshot.externalId}",
+                diskIndex: volume.displayOrder
+            )
+        )
+    }
+}
+return ServiceResponse.success(snapshot)
+----
+
+Key points:
+
+* Running VM snapshots use `virsh domfsfreeze` / `domfsthaw` (via the QEMU guest agent) to quiesce the filesystem before snapshotting. Without the guest agent, the snapshot of a running VM is crash-consistent only, and the Ceph implementation returns a user-friendly error recommending the VM be powered off.
+* The `SnapshotFile.externalId` is the full RBD snapshot path (`pool/image@snapname`), which is self-contained and used directly by `revertSnapshot()` and `removeSnapshot()`.
+* The `SnapshotFile.type` is set to `rbd` (matching the volume's `diskType`).
+
+**Reverting a snapshot:**
+
+[source,groovy]
+----
+// Simplified from CephDatastoreService.revertSnapshot()
+for (snapshotFile in snapshot.snapshotFiles) {
+    String command = "sudo rbd snap rollback " +
+        "${snapshotFile.externalId}"
+    executeHypervisorCommand(
+        server.parentServer, command
+    )
+}
+return ServiceResponse.success(snapshot)
+----
+
+RBD `snap rollback` atomically reverts the image to the snapshot state. The HVM provisioner handles powering off the VM before calling this method and powering it back on afterward.
+
+**Removing a snapshot:**
+
+[source,groovy]
+----
+// Simplified from CephDatastoreService.removeSnapshot()
+for (snapshotFile in snapshot.snapshotFiles) {
+    String command = "sudo rbd snap rm " +
+        "${snapshotFile.externalId}"
+    executeHypervisorCommand(
+        server.parentServer, command
+    )
+}
+return ServiceResponse.success(snapshot)
+----
+
+===== Volume Removal
+
+Ceph volume removal illustrates the cleanup sequence for an RBD-based volume:
+
+[source,groovy]
+----
+// Simplified from CephDatastoreService.removeVolume()
+String command = """
+    sudo rbd snap purge \
+        "${volume.datastore.externalId}/${volume.externalId}"
+    sudo virsh pool-refresh \
+        "${volume.datastore.externalId}"
+    sudo rbd device list --format json \
+        | jq -r '.[].device' \
+        | while read -r DEVICE; do \
+            sudo rbd device unmap "\$DEVICE"; done
+    sudo virsh vol-delete "${volume.externalId}" \
+        --pool "${volume.datastore.externalId}"
+"""
+----
+
+The sequence is: purge all snapshots on the volume -> refresh the libvirt pool -> unmap any kernel-mapped RBD devices -> delete the volume via virsh. The `rbd device unmap` step handles cleanup of any kernel RBD mappings that may exist from cross-datastore copy operations (kernel mappings are not used for normal VM I/O, which goes through QEMU's `librbd`).
+
+*NOTE:* When the VM's `parentServer` (hypervisor) is not available (e.g., the hypervisor was already removed), the Ceph implementation falls back to executing the removal command on any available online hypervisor in the cluster. This is possible because RBD is a shared-nothing distributed system -- any client with Ceph credentials can manage any volume. Your plugin should implement similar fallback logic if your storage array supports management from any host.
+
+===== Applying Ceph Patterns to a Plugin
+
+If you are building a plugin for a Ceph-like distributed block storage system, the built-in Ceph implementation maps to the plugin interfaces as follows:
+
+[cols="2,3",options="header"]
+|===
+| Built-in Ceph Code | Plugin Equivalent
+
+| `CephDatastoreService.cloneVolume()`
+| `DatastoreTypeProvider.cloneVolume()` -- implement the image caching and RBD clone flow
+
+| `CephDatastoreService.createSnapshot()`
+| `SnapshotFacet.SnapshotServerFacet.createSnapshot()` -- use `rbd snap create` with `domfsfreeze/thaw`
+
+| `CephDatastoreService.revertSnapshot()`
+| `SnapshotFacet.SnapshotServerFacet.revertSnapshot()` -- use `rbd snap rollback`
+
+| `CephDatastoreService.removeVolume()`
+| `DatastoreTypeProvider.removeVolume()` -- purge snapshots, unmap devices, delete volume
+
+| `KvmComputeUtility.buildKvmFileDiskSegment()` (RBD branch)
+| `MvmProvisionFacet.buildDiskConfig()` -- return `diskType='rbd'` and populate per-host config in `datastore.configMap`
+
+| CephFS directory mount
+| Use built-in `libvirt-dir` datastore or delegate to `MorpheusVmeQcow2DatastoreService` for a custom directory datastore
+
+| `KvmBaseHostService` pool discovery/sync
+| `DatastoreTypeProvider.refreshDatastore()` -- sync RBD pool state from your storage cluster
+
+| Per-host `hostConfig` in datastore configMap
+| Set up during `createDatastore()` and `ADD_WORKER` events, read in `buildDiskConfig()`
+|===
+
+For the `diskType='rbd'` case, your `buildDiskConfig()` should return:
+
+[source,groovy]
+----
+@Override
+ServiceResponse<MvmDiskConfig> buildDiskConfig(
+        ComputeServerGroup cluster, ComputeServer server,
+        StorageVolume volume) {
+    MvmDiskConfig config = new MvmDiskConfig()
+    config.deviceType = MvmDiskConfig.DeviceType.DISK
+    config.diskMode = MvmDiskConfig.DiskMode.VIRTIO
+    config.diskType = 'rbd'
+    return ServiceResponse.success(config)
+}
+----
+
+The HVM provisioner will then use the `datastore.configMap.hostConfig` to build the full `<disk type="network">` XML with Ceph auth and monitor hosts automatically.
 
 ==== Best Practices
 
