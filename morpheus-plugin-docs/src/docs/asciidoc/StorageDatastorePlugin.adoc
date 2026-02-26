@@ -1,0 +1,739 @@
+[#storagedatastoreplugin]
+=== Storage Datastore Plugin for HVM
+
+Building a storage plugin for the Morpheus HVM (KVM-based) hypervisor involves two primary provider types working together: a `StorageProvider` that manages the external storage integration (e.g., a SAN or SDS array), and a `DatastoreTypeProvider` that integrates that storage into the HVM provisioning lifecycle. This guide walks through the design and implementation of a block-based storage datastore plugin targeting Software Defined Storage (SDS) solutions such as StorPool, HPE Alletra, or similar platforms.
+
+==== Architecture Overview
+
+A storage plugin for HVM typically consists of the following components registered within a single `Plugin` class:
+
+* **StorageProvider** -- Manages the external storage integration (the "Storage Server"). Handles connectivity, authentication, periodic sync/refresh, volume CRUD for the storage management UI, and custom option types.
+* **DatastoreTypeProvider** -- Defines how the storage server participates in the HVM provisioning lifecycle. Handles datastore creation on clusters, volume creation/clone/resize/remove during VM provisioning, host preparation (LUN mapping, device discovery), and libvirt disk configuration.
+* **DatasetProviders** -- Supply dynamic dropdown data for option types in the UI (e.g., lists of storage pools, protocol types, available arrays).
+* **BackupProvider** (optional) -- Provides snapshot-based backup and restore using the storage array's native capabilities.
+
+The relationship between these providers is important. The `DatastoreTypeProvider` references the `StorageProvider` via its `getStorageProviderCode()` method. This allows a user to first register the storage array as a Storage Integration (via the `StorageProvider`), then create Datastores on HVM clusters that use that array (via the `DatastoreTypeProvider`).
+
+==== Directory-Based vs Block-Based Storage
+
+HVM supports multiple storage paradigms. Understanding the distinction between directory-based and block-based storage is critical when designing your plugin.
+
+===== Directory-Based (File) Storage
+
+Directory-based datastores (e.g., local directory, NFS, CIFS, GFS2, OCFS2) store virtual machine disks as files -- typically in QCOW2 format -- within a directory path on the hypervisor host. The libvirt XML references these as `<disk type="file">` or `<disk type="volume">` entries.
+
+Key characteristics:
+
+* Disk format is usually `qcow2`, supporting thin provisioning and snapshot chains (backing files)
+* Files live under a `datastore.externalPath` directory (e.g., `/var/morpheus/kvm/images`)
+* QCOW2 images can be cloned via `qemu-img convert` or `cp`
+* Snapshots can leverage QCOW2 backing chains with `virsh snapshot-create-as --disk-only`
+* Each VM gets a subdirectory under the datastore path: `{externalPath}/{serverExternalId}/{volumeName}`
+
+===== Block-Based Storage
+
+Block-based datastores present raw block devices (LUNs/volumes) directly to hypervisor hosts. Each virtual disk maps to a dedicated block device on the storage array. The libvirt XML references these as `<disk type="block">` entries.
+
+Key characteristics:
+
+* Disk format is `raw` (no QCOW2 overhead)
+* Each volume maps to a device on the hypervisor (e.g., `/dev/dm-X` for multipath or `/dev/disk/by-id/...`)
+* Cloning is typically performed by the storage array itself (array-side clone) or by creating a new volume and copying data via `qemu-img convert`
+* Snapshots are typically array-native (e.g., thin clones, crash-consistent snapshots)
+* Requires host preparation after volume creation: LUN mapping/export, SCSI rescan, multipath device discovery
+
+===== Why You Need Both
+
+**A block-based storage plugin should also provide a companion directory-based datastore (or use an existing one) for storing shared image files.** Virtual images in Morpheus are typically cached as QCOW2 files before being cloned to their target storage. When using block storage, the provisioning flow needs a place to store and read these source images for the initial `qemu-img convert` from QCOW2 into the raw block device.
+
+For example, if you are implementing a block storage plugin for a solution like StorPool:
+
+* The **directory-based datastore** (NFS, GFS2, or a shared filesystem) stores the QCOW2 image cache shared across the cluster
+* The **block-based datastore** (your plugin) creates raw volumes on the SDS array and maps them to hosts for VM provisioning
+* During clone operations, your plugin reads the source QCOW2 from the directory datastore and writes it to the new block device using `qemu-img convert`
+
+If your SDS solution also supports a POSIX filesystem mode (as many SDS platforms do), you can implement a single plugin that provides both a directory-based datastore type and a block-based datastore type, each backed by the same storage cluster.
+
+==== Project Setup
+
+A storage plugin project follows the standard Morpheus plugin structure. Your `build.gradle` should include the `morpheus-plugin-api` dependency and any client libraries needed to communicate with your storage array.
+
+[source,groovy]
+----
+plugins {
+    id "com.github.johnrengelman.shadow" version "8.1.1"
+}
+
+apply plugin: 'java'
+apply plugin: 'groovy'
+
+group = 'com.example.storage'
+version = '1.0.0'
+
+sourceCompatibility = '11'
+targetCompatibility = '11'
+
+dependencies {
+    compileOnly 'com.morpheusdata:morpheus-plugin-api:1.3.0'
+    compileOnly 'org.codehaus.groovy:groovy-all:3.0.21'
+
+    // Your SDS client library
+    implementation 'com.example:storpool-client:1.0.0'
+}
+
+jar {
+    manifest {
+        attributes(
+            'Plugin-Class': 'com.example.storage.MyStoragePlugin',
+            'Plugin-Version': archiveVersion.get(),
+            'Morpheus-Name': 'My SDS Storage',
+            'Morpheus-Organization': 'My Organization',
+            'Morpheus-Code': 'my-sds-storage-plugin',
+            'Morpheus-Description': 'SDS Storage Integration for HVM',
+            'Morpheus-Min-Appliance-Version': '8.0.0'
+        )
+    }
+}
+
+tasks.assemble.dependsOn tasks.shadowJar
+----
+
+==== Plugin Class
+
+The plugin class registers all providers. The order of registration does not matter, but the relationship between the `StorageProvider` code and `DatastoreTypeProvider.getStorageProviderCode()` must match.
+
+[source,groovy]
+----
+class MyStoragePlugin extends Plugin {
+
+    @Override
+    String getCode() {
+        return 'my-sds-storage-plugin'
+    }
+
+    @Override
+    void initialize() {
+        this.name = 'My SDS Storage'
+        this.description = 'SDS Storage Integration for HVM'
+
+        // Register the storage server integration provider
+        this.registerProvider(new MySdsStorageProvider(this, this.morpheus))
+
+        // Register the HVM datastore type provider
+        this.registerProvider(new MySdsDatastoreProvider(this, this.morpheus))
+
+        // Register any dataset providers for dynamic UI dropdowns
+        this.registerProvider(new StoragePoolDatasetProvider(this, this.morpheus))
+    }
+
+    @Override
+    void onDestroy() {
+        // Cleanup resources
+    }
+}
+----
+
+==== Implementing the StorageProvider
+
+The `StorageProvider` manages the storage server integration lifecycle. It defines how the storage array appears under *Infrastructure > Storage* and handles connectivity, authentication, and periodic data sync.
+
+[source,groovy]
+----
+class MySdsStorageProvider extends AbstractStorageProvider
+        implements StorageProviderVolumes {
+
+    MorpheusContext morpheusContext
+    Plugin plugin
+
+    MySdsStorageProvider(Plugin plugin, MorpheusContext morpheusContext) {
+        super(plugin, morpheusContext)
+        this.morpheusContext = morpheusContext
+        this.plugin = plugin
+    }
+
+    @Override
+    String getCode() {
+        return 'my-sds-storage'
+    }
+
+    @Override
+    String getName() {
+        return 'My SDS Storage'
+    }
+
+    @Override
+    String getDescription() {
+        return 'SDS Storage Array Integration'
+    }
+
+    @Override
+    Icon getIcon() {
+        return new Icon(path: 'my-sds-logo.svg', darkPath: 'my-sds-logo-dark.svg')
+    }
+
+    @Override
+    StorageServerType getStorageServerType() {
+        return new StorageServerType(
+            code: 'my-sds-storage',
+            name: 'My SDS Storage',
+            description: 'SDS Storage Array',
+            hasBlock: true,
+            hasObject: false,
+            hasFile: false,
+            hasDisk: true,
+            optionTypes: getStorageServerOptionTypes(),
+            volumeTypes: getStorageVolumeTypes()
+        )
+    }
+
+    @Override
+    ServiceResponse verifyStorageServer(StorageServer storageServer, Map opts) {
+        // Validate connectivity and credentials against the SDS API
+        // Return ServiceResponse.error() with field-level errors if validation fails
+    }
+
+    @Override
+    ServiceResponse initializeStorageServer(StorageServer storageServer, Map opts) {
+        // Called on first save. Perform initial sync of pools, volumes, etc.
+        return refreshStorageServer(storageServer, opts)
+    }
+
+    @Override
+    ServiceResponse refreshStorageServer(StorageServer storageServer, Map opts) {
+        // Periodic sync: update capacity, discover volumes, sync pools
+        // Use SyncTask for efficient delta sync of large datasets
+    }
+
+    // StorageProviderVolumes methods for managing volumes from the Storage UI
+    @Override
+    Collection<StorageVolumeType> getStorageVolumeTypes() {
+        return [
+            new StorageVolumeType(
+                code: 'my-sds-block-volume',
+                name: 'SDS Block Volume',
+                displayOrder: 0
+            )
+        ]
+    }
+
+    // ... implement createVolume, deleteVolume, resizeVolume, updateVolume ...
+}
+----
+
+*NOTE:* The `StorageServerType.code` must match what `DatastoreTypeProvider.getStorageProviderCode()` returns. This is how Morpheus links a datastore to its backing storage integration.
+
+==== Implementing the DatastoreTypeProvider
+
+The `DatastoreTypeProvider` is where the real provisioning integration happens. This provider defines how your storage participates in the HVM VM lifecycle -- from datastore creation on a cluster, through volume provisioning, to teardown.
+
+For block-based SDS, you will typically implement the following interfaces:
+
+* `DatastoreTypeProvider` -- Core datastore lifecycle (create, update, remove datastores; create, clone, resize, remove volumes)
+* `DatastoreTypeProvider.MvmProvisionFacet` -- HVM-specific hooks for host preparation and libvirt disk configuration
+* `DatastoreTypeProvider.SnapshotFacet.SnapshotServerFacet` -- Server-level snapshot operations (recommended for HVM)
+* `PluginProvider.EventSubscriberFacet` -- React to cluster events (worker add/remove, volume attach/detach)
+
+[source,groovy]
+----
+class MySdsDatastoreProvider implements
+        DatastoreTypeProvider,
+        DatastoreTypeProvider.MvmProvisionFacet,
+        DatastoreTypeProvider.SnapshotFacet.SnapshotServerFacet,
+        PluginProvider.EventSubscriberFacet {
+
+    MorpheusContext morpheusContext
+    Plugin plugin
+
+    MySdsDatastoreProvider(Plugin plugin, MorpheusContext morpheusContext) {
+        this.morpheusContext = morpheusContext
+        this.plugin = plugin
+    }
+
+    @Override
+    MorpheusContext getMorpheus() { return morpheusContext }
+
+    @Override
+    Plugin getPlugin() { return plugin }
+
+    @Override
+    String getCode() { return 'my-sds-hvm-block' }
+
+    @Override
+    String getName() { return 'My SDS Block Storage HVM' }
+
+    @Override
+    String getProvisionTypeCode() { return 'kvm' }
+
+    @Override
+    String getStorageProviderCode() { return 'my-sds-storage' }
+
+    @Override
+    boolean getCreatable() { return true }
+
+    @Override
+    boolean getEditable() { return true }
+
+    @Override
+    boolean getRemovable() { return true }
+
+    @Override
+    List<OptionType> getOptionTypes() {
+        // Return option types for the datastore creation dialog
+        // e.g., storage server selector, pool selector, protocol type
+    }
+
+    @Override
+    List<StorageVolumeType> getVolumeTypes() {
+        // Return the volume types available for this datastore
+    }
+
+    // ... lifecycle methods follow ...
+}
+----
+
+==== Datastore Lifecycle
+
+===== Creating a Datastore
+
+When a user creates a new datastore on an HVM cluster, Morpheus calls `validateDatastore()` followed by `createDatastore()`. For block storage, the create operation typically involves:
+
+1. Validating the selected storage server and configuration options
+2. Iterating over all hypervisor hosts in the cluster
+3. Registering each host with the storage array (e.g., creating a host set or initiator group with the hosts' iSCSI IQNs or FC WWPNs)
+4. Tracking per-host status using `DatastoreLocation` entries
+
+[source,groovy]
+----
+@Override
+ServiceResponse validateDatastore(Datastore datastore) {
+    ServiceResponse rtn = ServiceResponse.success()
+
+    if (!datastore.name) {
+        return ServiceResponse.error('Datastore name is required')
+    }
+    if (!datastore.storageServer) {
+        rtn.errors['storageServerId'] = 'Storage server is required'
+    }
+    // Validate protocol type, pool selection, etc.
+
+    if (rtn.errors) {
+        rtn.success = false
+    }
+    return rtn
+}
+
+@Override
+ServiceResponse<Datastore> createDatastore(Datastore datastore) {
+    // Fetch the cluster and its hosts
+    ComputeServerGroup cluster = morpheusContext.services.cluster.get(
+        datastore.refId
+    )
+    List<ComputeServer> hosts = morpheusContext.services.computeServer.list(
+        new DataQuery().withFilter('serverGroup.id', datastore.refId)
+    )
+
+    // For each host, gather path information (IQNs, WWPNs)
+    // and register them with the storage array
+    // (host set / initiator group)
+
+    // Update the datastore with storage-side metadata
+    // (e.g., host set name, array serial number)
+
+    return ServiceResponse.success(datastore)
+}
+----
+
+*NOTE:* The `Datastore.refId` for HVM datastores points to the cluster (`ComputeServerGroup`) ID. Use `morpheusContext.services.cluster.get(datastore.refId)` to retrieve the cluster.
+
+===== Refreshing a Datastore
+
+The `refreshDatastore()` method is called periodically to sync the datastore state. Use this to update capacity metrics, verify host registrations, and clean up stale resources.
+
+===== Removing a Datastore
+
+When removing a datastore, verify no volumes are still attached before allowing removal. Clean up any host registrations on the storage array.
+
+[source,groovy]
+----
+@Override
+ServiceResponse removeDatastore(Datastore datastore) {
+    // Check for attached volumes
+    Long volumeCount = morpheusContext.services.storage.volume.count(
+        new DataQuery().withFilter('datastore.id', datastore.id)
+    )
+    if (volumeCount > 0) {
+        return ServiceResponse.error(
+            'Cannot remove datastore: volumes are still attached'
+        )
+    }
+    // Clean up host set / initiator group on storage array
+    return ServiceResponse.success()
+}
+----
+
+==== Volume Lifecycle During Provisioning
+
+The volume lifecycle is the heart of the integration. When Morpheus provisions a VM on an HVM cluster, it calls your provider's volume methods in a specific order.
+
+===== Provisioning Flow (Create/Clone VM)
+
+1. **`createVolume()`** or **`cloneVolume()`** -- Called for each disk on the VM. For the root disk, `cloneVolume()` is called with a source volume (the cached QCOW2 image). For additional data disks, `createVolume()` is called.
+2. **`prepareHostForVolume()`** (MvmProvisionFacet) -- After all volumes are created, this is called for each volume to prepare the hypervisor host. For block storage, this is where you map/export the LUN to the host and discover the block device.
+3. **`buildDiskConfig()`** (MvmProvisionFacet) -- Called to generate the libvirt XML disk specification. Your provider returns the disk type (`block`), device type, and disk mode.
+4. VM is defined and started via libvirt.
+
+===== Teardown Flow (Destroy VM)
+
+1. VM is stopped via libvirt.
+2. **`removeVolume()`** -- Called for each volume. Unexport/unmap the LUN from the host and delete the volume on the storage array.
+3. **`releaseVolumeFromHost()`** (MvmProvisionFacet) -- Called after volume removal to perform any host-side cleanup (e.g., multipath device removal, SCSI rescan).
+
+===== Creating a Volume
+
+For block storage, `createVolume()` provisions a new LUN/volume on the storage array.
+
+[source,groovy]
+----
+@Override
+ServiceResponse<StorageVolume> createVolume(
+        StorageVolume storageVolume, ComputeServer computeServer) {
+    // 1. Determine volume size, name, and storage pool
+    //    from the datastore config
+    // 2. Call the SDS API to create a new volume/LUN
+    // 3. Store the volume's external identifier (WWN, UID, etc.)
+    //    on the StorageVolume record for later use
+    // 4. Save the volume
+    return ServiceResponse.success(storageVolume)
+}
+----
+
+===== Cloning a Volume
+
+Clone operations are central to HVM provisioning. When a VM is provisioned from a virtual image, the source QCOW2 file must be written to the new block device. There are two common approaches:
+
+**Approach 1: qemu-img convert (QCOW2 to block device)**
+
+This is the most common approach when the source image is a QCOW2 file stored on a directory-based datastore. Create the destination volume on the array, map it to the hypervisor, then use `qemu-img convert` to copy the data.
+
+[source,groovy]
+----
+@Override
+ServiceResponse<StorageVolume> cloneVolume(
+        StorageVolume volume, ComputeServer server,
+        StorageVolume sourceVolume) {
+    // 1. Create a new volume on the storage array
+    // 2. Map/export the volume to the hypervisor host
+    // 3. Discover the multipath/block device on the host
+    // 4. Run qemu-img convert on the hypervisor:
+    //    qemu-img convert -f qcow2 -O raw \
+    //        {source_qcow2_path} {block_device}
+    //    Use morpheusContext.executeCommandOnServer(host, command)
+    // 5. Update the StorageVolume with the block device path
+    return ServiceResponse.success(volume)
+}
+----
+
+**Approach 2: Array-side clone (block to block)**
+
+If the source volume is already a block device on the same storage array (e.g., a previously cached image or another block volume), you can use the array's native clone/snapshot capability for a faster copy.
+
+[source,groovy]
+----
+@Override
+ServiceResponse<StorageVolume> cloneVolume(
+        StorageVolume volume, ComputeServer server,
+        StorageVolume sourceVolume) {
+    // Check if source is on the same array (has a WWN/UID)
+    if (isBlockVolumeOnSameArray(sourceVolume)) {
+        // Use array-side clone API for fast copy
+        // Update volume metadata with the clone's identifiers
+    } else {
+        // Fall back to qemu-img convert approach
+    }
+    return ServiceResponse.success(volume)
+}
+----
+
+*NOTE:* The `cloneVolume(StorageVolume volume, ComputeServer server, VirtualImage virtualImage, CloudFileInterface cloudFile)` overload is called when there is no local image cache and the image must be streamed directly. For block storage, you would typically create the volume, then stream the image data using the `MorpheusFileCopyService`.
+
+===== Resizing a Volume
+
+Volume resize for block storage involves:
+
+1. Calling the storage array API to expand the LUN
+2. Rescanning/resizing the multipath device on all cluster hosts
+3. Notifying the guest VM of the new size via `virsh blockresize`
+
+[source,groovy]
+----
+@Override
+ServiceResponse<StorageVolume> resizeVolume(
+        StorageVolume storageVolume,
+        ComputeServer computeServer, Long newSize) {
+    // 1. Validate: block storage typically cannot shrink
+    if (storageVolume.maxStorage > newSize) {
+        return ServiceResponse.error(
+            'Volume shrinking is not supported'
+        )
+    }
+    // 2. Resize on the storage array
+    // 3. Rescan multipath devices on cluster hosts
+    // 4. virsh blockresize to notify the guest VM
+    // 5. Update storageVolume.maxStorage
+    return ServiceResponse.success(storageVolume)
+}
+----
+
+===== Removing a Volume
+
+Volume removal should unmap the LUN from all hosts, remove multipath devices, and delete the volume on the array.
+
+[source,groovy]
+----
+@Override
+ServiceResponse removeVolume(
+        StorageVolume storageVolume,
+        ComputeServer computeServer,
+        boolean removeSnapshots, boolean force) {
+    // 1. Unmap/unexport the volume from the host(s)
+    // 2. Remove multipath devices on the hypervisor
+    // 3. Delete the volume on the storage array
+    //    (optionally remove snapshots based on the flag)
+    return ServiceResponse.success()
+}
+----
+
+==== MvmProvisionFacet: Host Preparation and Disk Configuration
+
+The `MvmProvisionFacet` provides critical hooks for block-based storage. Without these, the HVM provisioner would not know how to present your block devices to VMs.
+
+===== prepareHostForVolume
+
+This method is called after volume creation and before VM definition. For block storage, this is where you:
+
+1. Map/export the LUN to the hypervisor host (if not already done during createVolume)
+2. Trigger a SCSI rescan or iSCSI session refresh on the host
+3. Discover the multipath device path
+4. Set the `StorageVolume.externalId` to the device path for use in libvirt XML
+
+[source,groovy]
+----
+@Override
+ServiceResponse<StorageVolume> prepareHostForVolume(
+        ComputeServerGroup cluster, ComputeServer server,
+        StorageVolume volume) {
+    // The 'server' here is the workload/VM, not the hypervisor.
+    // Get the hypervisor via server.parentServer
+    ComputeServer hypervisor =
+        morpheusContext.services.computeServer.get(
+            server.parentServer.id
+        )
+
+    // 1. Rescan for new LUNs on the hypervisor
+    //    e.g., echo "1" > /sys/class/fc_host/hostX/issue_lip
+    //    or iscsiadm session rescan
+    morpheusContext.executeCommandOnServer(
+        hypervisor, rescanCommand
+    )
+
+    // 2. Discover the multipath device by WWN or volume UID
+    //    e.g., /dev/disk/by-id/dm-uuid-mpath-XXXX
+    //    or /dev/mapper/mpathX
+    String devicePath = discoverMultipathDevice(
+        hypervisor, volume
+    )
+
+    // 3. Set the external ID and device name on the volume
+    volume.externalId = devicePath
+    volume.setConfigProperty('source.dev', devicePath)
+
+    return ServiceResponse.success(volume)
+}
+----
+
+*NOTE:* For multi-host clusters, you should prepare the volume on **all** hypervisors in the cluster (not just the target host), since VMs may live-migrate between hosts. Run the host preparation in parallel across all cluster hosts, but ensure the provisioning host's result is returned.
+
+===== buildDiskConfig
+
+This method tells the HVM provisioner how to represent the volume in the libvirt domain XML. For block storage:
+
+[source,groovy]
+----
+@Override
+ServiceResponse<MvmDiskConfig> buildDiskConfig(
+        ComputeServerGroup cluster, ComputeServer server,
+        StorageVolume volume) {
+    MvmDiskConfig config = new MvmDiskConfig()
+
+    if (volume.type?.category == 'cd') {
+        config.deviceType = MvmDiskConfig.DeviceType.CDROM
+        config.diskMode = MvmDiskConfig.DiskMode.SATA
+    } else {
+        config.deviceType = MvmDiskConfig.DeviceType.DISK
+        config.diskMode = MvmDiskConfig.DiskMode.VIRTIO
+    }
+    config.diskType = 'block'
+
+    return ServiceResponse.success(config)
+}
+----
+
+When `diskType` is set to `block`, the HVM provisioner generates a libvirt XML disk element like:
+
+[source,xml]
+----
+<disk type="block" device="disk">
+  <driver name="qemu" type="raw" cache="none"
+          io="io_uring" discard="unmap"/>
+  <source dev="/dev/dm-uuid-mpath-XXXX"/>
+  <target dev="vda" bus="virtio"/>
+</disk>
+----
+
+The `source dev` value comes from the volume's config map (`configMap.source.dev`) or falls back to `externalId`. You can control this by setting properties on the volume during `prepareHostForVolume()`.
+
+For **directory-based** datastores, the libvirt XML uses `<disk type="file">` instead and the `source` element references a file path:
+
+[source,xml]
+----
+<disk type="file" device="disk">
+  <driver name="qemu" type="qcow2" cache="none"
+          io="io_uring" discard="unmap"/>
+  <source file="/mnt/shared-storage/vm-123/disk-0.qcow2"/>
+  <target dev="vda" bus="virtio"/>
+</disk>
+----
+
+This distinction in libvirt XML is entirely driven by what your `buildDiskConfig()` returns for `diskType`. The value `block` triggers `<disk type="block">` with `raw` format, while `file` triggers `<disk type="file">` with `qcow2` format.
+
+===== releaseVolumeFromHost
+
+Called when a VM is being moved off a host or during teardown. For block storage, you may choose to defer cleanup to `removeVolume()` instead, or perform host-side device cleanup here.
+
+[source,groovy]
+----
+@Override
+ServiceResponse<StorageVolume> releaseVolumeFromHost(
+        ComputeServerGroup cluster, ComputeServer server,
+        StorageVolume volume) {
+    // For block storage, actual volume deletion is handled
+    // by removeVolume(). This hook is for host-side cleanup
+    // only (optional).
+    return ServiceResponse.success(volume)
+}
+----
+
+==== Event Handling
+
+Implementing `PluginProvider.EventSubscriberFacet` (or `DatastoreTypeProvider.DatastoreEventFacet`) allows your plugin to react to cluster and datastore events. This is important for maintaining host registrations when cluster membership changes.
+
+[source,groovy]
+----
+@Override
+List<EventType> getSupportedEventTypes() {
+    return [
+        EventType.VOLUME_ATTACH,
+        EventType.VOLUME_DETACH,
+        EventType.ADD_WORKER,
+        EventType.REMOVE_WORKER
+    ]
+}
+
+@Override
+ServiceResponse onEvent(Event event) {
+    switch (event) {
+        case ClusterEvent:
+            // ADD_WORKER: Register new host with storage array
+            //   (add initiators to host set)
+            // REMOVE_WORKER: Unregister host from storage array
+            break
+        case DatastoreEvent:
+            // VOLUME_ATTACH: Ensure volume is mapped to host
+            // VOLUME_DETACH: Clean up volume mapping from host
+            break
+    }
+    return ServiceResponse.success()
+}
+----
+
+Worker add/remove events are particularly important for block storage. When a new hypervisor joins the cluster, you need to register its initiators (IQNs/WWPNs) with the storage array so that existing LUNs become accessible. When a hypervisor is removed, you should clean up its registration.
+
+==== Executing Commands on Hypervisors
+
+Throughout the plugin, you will frequently need to execute commands on hypervisor hosts for operations such as SCSI rescans, multipath device discovery, `qemu-img` operations, and `virsh` commands. Always use the `morpheusContext.executeCommandOnServer()` method rather than direct SSH.
+
+[source,groovy]
+----
+// Execute a command on the hypervisor host
+ComputeServer hypervisor = server.parentServer
+TaskResult result = morpheusContext.executeCommandOnServer(
+    hypervisor,
+    'multipathd show paths format "%w %d %s"'
+).blockingGet()
+
+if (result.success) {
+    String output = result.data
+    // Parse multipath output
+}
+----
+
+This method automatically routes through the correct communication channel -- whether that is the morpheus agent, an edge gateway worker, or direct SSH -- and handles authentication transparently.
+
+==== Snapshots
+
+For storage arrays with native snapshot capabilities, implement `SnapshotFacet.SnapshotServerFacet` to provide server-level snapshots. This is the recommended facet for HVM since snapshots typically span all volumes on a server.
+
+[source,groovy]
+----
+@Override
+ServiceResponse<Snapshot> createSnapshot(
+        ComputeServer server,
+        Boolean forBackup, Boolean forExport) {
+    // 1. Iterate over the server's volumes
+    // 2. For each block volume on your datastore, create a
+    //    snapshot via the SDS API
+    // 3. Create Snapshot and SnapshotFile records in Morpheus
+    // 4. If forExport is true, set exportPath on SnapshotFile
+    //    so the morphd agent can fetch the snapshot data
+    return ServiceResponse.success(snapshot)
+}
+
+@Override
+ServiceResponse<Snapshot> revertSnapshot(
+        ComputeServer server, Snapshot snapshot) {
+    // HVM will automatically power off the VM before calling
+    // this method and power it back on after completion
+    // 1. Revert each volume to its snapshot on the storage array
+    return ServiceResponse.success(snapshot)
+}
+
+@Override
+ServiceResponse removeSnapshot(
+        ComputeServer server, Snapshot snapshot) {
+    // 1. Delete the snapshot on the storage array
+    // 2. Clean up Morpheus snapshot records
+    return ServiceResponse.success()
+}
+----
+
+==== Key Model Objects
+
+Understanding the key Morpheus model objects is essential:
+
+* **`StorageServer`** -- Represents the storage array integration. Has a `configMap` for storing array-specific metadata (credentials endpoint, serial number, feature flags). Linked to a `StorageServerType` defined by your `StorageProvider`.
+* **`Datastore`** -- A storage target on an HVM cluster. Has `refId` pointing to the cluster, `storageServer` linking to the array, `configMap` for datastore-specific config (host set name, protocol type), and `externalPath` for directory-based datastores.
+* **`DatastoreLocation`** -- Tracks per-hypervisor status of a datastore in a cluster. One entry per hypervisor host, used for tracking provisioning status and host-specific configuration.
+* **`StorageVolume`** -- A virtual disk. Has `maxStorage` (size in bytes), `externalId` (device path or file path), `volumeName`, `datastore` reference, `configMap` for volume metadata (WWN, UID, host mappings). The `configMap` can include `source.dev` for the block device path used in libvirt XML.
+* **`StorageVolumeType`** -- Defines a type of volume your plugin offers (e.g., "SDS Block Volume", "SDS Replicated Volume").
+* **`ComputeServer`** -- The VM/workload server. Use `server.parentServer` to get the hypervisor host. Use `server.serverGroup` or the datastore's `refId` to get the cluster.
+
+==== Best Practices
+
+1. **Parallel host operations** -- When preparing volumes or rescanning hosts across a cluster, execute operations in parallel with a bounded thread pool and configurable timeouts.
+2. **Idempotent operations** -- Storage operations should be idempotent where possible. If a volume creation fails partway, retrying should not create duplicates.
+3. **Error handling with context** -- Always include relevant identifiers (volume name, host name, array serial) in error messages. Return `ServiceResponse.error()` with descriptive messages rather than throwing exceptions.
+4. **Volume metadata** -- Use `StorageVolume.configMap` and helper config classes to store array-specific metadata (WWN, UID, host set associations). This metadata is essential for subsequent operations like resize, snapshot, and removal.
+5. **Cleanup on failure** -- If a multi-step operation fails partway (e.g., volume created but host preparation failed), implement rollback logic to clean up partial state.
+6. **Minimum volume sizes** -- Some storage arrays enforce minimum volume sizes. Handle this in your `createVolume()` by enforcing a floor (e.g., 256 MiB) and adjusting the requested size accordingly.
+7. **Directory datastore for images** -- Ensure documentation and setup guides for your plugin instruct users to configure a shared directory-based datastore (NFS, GFS2, etc.) alongside your block-based datastore for QCOW2 image caching.
+8. **Config map for libvirt overrides** -- Set `source.dev`, `source.file`, or `source.pool` in the volume's `configMap` (serialized as the `config` JSON field) to control how the libvirt XML `<source>` element is generated, rather than relying solely on `externalId`.
