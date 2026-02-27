@@ -14,19 +14,18 @@
  * limitations under the License.
  */
 
-package com.morpheusdata.core.integration;
+package com.morpheusdata.core.synchronous.integration;
 
-import com.morpheusdata.core.MorpheusDataService;
-import com.morpheusdata.model.languageModel.LanguageModel;
+import com.morpheusdata.core.synchronous.MorpheusSynchronousDataQueryService;
+import com.morpheusdata.model.llm.LlmIntegration;
 
 /**
- * Provides async data access for {@link LanguageModel} objects.
- * Plugins can use this service to persist, update, and remove LLM models
- * associated with an LLM Engine integration.
+ * Provides synchronous data query access for {@link LlmIntegration} objects.
+ * Blocking wrapper around {@link com.morpheusdata.core.integration.MorpheusLlmIntegrationService}.
  *
  * @author Morpheus
  * @since 1.4.0
  */
-public interface MorpheusLanguageModelService extends MorpheusDataService<LanguageModel, LanguageModel> {
+public interface MorpheusSynchronousLlmIntegrationService extends MorpheusSynchronousDataQueryService<LlmIntegration> {
 
 }

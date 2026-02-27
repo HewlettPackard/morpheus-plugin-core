@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-package com.morpheusdata.core.synchronous.integration;
+package com.morpheusdata.core.integration;
 
-import com.morpheusdata.core.MorpheusSynchronousDataService;
-import com.morpheusdata.model.languageModel.LanguageModel;
+import com.morpheusdata.core.MorpheusDataQueryService;
+import com.morpheusdata.model.llm.LlmIntegration;
 
 /**
- * Provides synchronous data access for {@link LanguageModel} objects.
- * Blocking wrapper around {@link com.morpheusdata.core.integration.MorpheusLanguageModelService}.
+ * Provides async data query access for {@link LlmIntegration} objects.
  *
  * @author Morpheus
  * @since 1.4.0
  */
-public interface MorpheusSynchronousLanguageModelService extends MorpheusSynchronousDataService<LanguageModel, LanguageModel> {
+public interface MorpheusLlmIntegrationService extends MorpheusDataQueryService<LlmIntegration> {
 
 }

@@ -37,7 +37,7 @@ import java.util.Map;
  * its own {@link com.morpheusdata.model.AccountIntegrationType} and related
  * {@link McpIntegrationType} during plugin load.
  */
-public interface McpIntegrationProvider extends PluginProvider {
+public interface McpProvider extends PluginProvider {
 
 	/**
 	 * The integration category used for routing and grouping.

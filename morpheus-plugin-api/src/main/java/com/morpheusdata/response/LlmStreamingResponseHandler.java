@@ -16,12 +16,12 @@
 
 package com.morpheusdata.response;
 
-import com.morpheusdata.model.languageModel.LanguageModelChatResponse;
+import com.morpheusdata.model.llm.LlmChatResponse;
 
 /**
  * Callback handler for streamed LLM responses.
  */
-public interface LanguageModelStreamingResponseHandler {
+public interface LlmStreamingResponseHandler {
 	/**
 	 * Called for partial text output from a streaming response.
 	 * @param partialText partial output text
@@ -33,7 +33,7 @@ public interface LanguageModelStreamingResponseHandler {
 	 * Called when a streaming response completes successfully.
 	 * @param response completed chat response metadata and content
 	 */
-	default void onCompleteResponse(LanguageModelChatResponse response) {
+	default void onCompleteResponse(LlmChatResponse response) {
 	}
 
 	/**

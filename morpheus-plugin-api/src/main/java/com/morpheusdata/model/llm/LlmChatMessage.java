@@ -14,44 +14,42 @@
  * limitations under the License.
  */
 
-package com.morpheusdata.model.languageModel;
+package com.morpheusdata.model.llm;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
- * Normalized embedding response payload.
+ * Normalized chat message payload used for request/response exchange.
  */
-public class LanguageModelEmbeddingResponse {
-	protected String model;
-	protected List<List<Double>> embeddings = new ArrayList<>();
-	protected LanguageModelTokenUsage tokenUsage;
+public class LlmChatMessage {
+	protected String role;
+	protected String content;
+	protected String name;
 	protected Map<String, Object> metadata = new HashMap<>();
 
-	public String getModel() {
-		return model;
+	public String getRole() {
+		return role;
 	}
 
-	public void setModel(String model) {
-		this.model = model;
+	public void setRole(String role) {
+		this.role = role;
 	}
 
-	public List<List<Double>> getEmbeddings() {
-		return embeddings;
+	public String getContent() {
+		return content;
 	}
 
-	public void setEmbeddings(List<List<Double>> embeddings) {
-		this.embeddings = embeddings;
+	public void setContent(String content) {
+		this.content = content;
 	}
 
-	public LanguageModelTokenUsage getTokenUsage() {
-		return tokenUsage;
+	public String getName() {
+		return name;
 	}
 
-	public void setTokenUsage(LanguageModelTokenUsage tokenUsage) {
-		this.tokenUsage = tokenUsage;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public Map<String, Object> getMetadata() {

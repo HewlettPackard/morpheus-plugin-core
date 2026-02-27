@@ -11,7 +11,7 @@ import com.morpheusdata.model.mcp.McpToolCallResponse
 import com.morpheusdata.response.ServiceResponse
 import spock.lang.Specification
 
-class McpIntegrationProviderSpec extends Specification {
+class McpProviderSpec extends Specification {
 
 	void "default category and option types are MCP specific"() {
 		given:
@@ -50,7 +50,7 @@ class McpIntegrationProviderSpec extends Specification {
 		response.data*.name == ['list_instances', 'get_instance']
 	}
 
-	private static class BaseMcpProvider implements McpIntegrationProvider {
+	private static class BaseMcpProvider implements McpProvider {
 		@Override
 		MorpheusContext getMorpheus() {
 			return null

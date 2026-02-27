@@ -14,23 +14,58 @@
  * limitations under the License.
  */
 
-package com.morpheusdata.model.languageModel;
+package com.morpheusdata.model.llm;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.morpheusdata.model.MorpheusModel;
 
 /**
- * Capability metadata for an LLM provider integration.
+ * Represents the plugin supplied LlmModel provider type.
  */
-public class LanguageModelCapabilities {
+public class LlmIntegrationType extends MorpheusModel {
+	protected String code;
+	protected String name;
+	protected String description;
+	protected String providerService;
 	protected Boolean chatSupported = true;
 	protected Boolean streamingChatSupported = false;
 	protected Boolean embeddingSupported = false;
-	protected List<String> supportedModels = new ArrayList<>();
-	protected List<LanguageModel> models = new ArrayList<>();
-	protected Map<String, Object> metadata = new HashMap<>();
+	protected Boolean enabled = true;
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+		markDirty("code", code);
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+		markDirty("name", name);
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+		markDirty("description", description);
+	}
+
+	public String getProviderService() {
+		return providerService;
+	}
+
+	public void setProviderService(String providerService) {
+		this.providerService = providerService;
+		markDirty("providerService", providerService);
+	}
 
 	public Boolean getChatSupported() {
 		return chatSupported;
@@ -38,6 +73,7 @@ public class LanguageModelCapabilities {
 
 	public void setChatSupported(Boolean chatSupported) {
 		this.chatSupported = chatSupported;
+		markDirty("chatSupported", chatSupported);
 	}
 
 	public Boolean getStreamingChatSupported() {
@@ -46,6 +82,7 @@ public class LanguageModelCapabilities {
 
 	public void setStreamingChatSupported(Boolean streamingChatSupported) {
 		this.streamingChatSupported = streamingChatSupported;
+		markDirty("streamingChatSupported", streamingChatSupported);
 	}
 
 	public Boolean getEmbeddingSupported() {
@@ -54,37 +91,15 @@ public class LanguageModelCapabilities {
 
 	public void setEmbeddingSupported(Boolean embeddingSupported) {
 		this.embeddingSupported = embeddingSupported;
+		markDirty("embeddingSupported", embeddingSupported);
 	}
 
-	public List<String> getSupportedModels() {
-		return supportedModels;
+	public Boolean getEnabled() {
+		return enabled;
 	}
 
-	public void setSupportedModels(List<String> supportedModels) {
-		this.supportedModels = supportedModels;
-	}
-
-	public List<LanguageModel> getModels() {
-		return models;
-	}
-
-	public void setModels(List<LanguageModel> models) {
-		this.models = models;
-		this.supportedModels = new ArrayList<>();
-		if(models != null) {
-			for(LanguageModel model : models) {
-				if(model != null && model.getCode() != null) {
-					this.supportedModels.add(model.getCode());
-				}
-			}
-		}
-	}
-
-	public Map<String, Object> getMetadata() {
-		return metadata;
-	}
-
-	public void setMetadata(Map<String, Object> metadata) {
-		this.metadata = metadata;
+	public void setEnabled(Boolean enabled) {
+		this.enabled = enabled;
+		markDirty("enabled", enabled);
 	}
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.morpheusdata.model.languageModel;
+package com.morpheusdata.model.llm;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.morpheusdata.model.AccountIntegration;
@@ -27,17 +27,17 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Represents an LanguageModel integration instance backed by an AccountIntegration.
+ * Represents an LlmModel integration instance backed by an AccountIntegration.
  */
-public class LanguageModelIntegration extends MorpheusModel {
+public class LlmIntegration extends MorpheusModel {
 	@JsonSerialize(using = ModelAsIdOnlySerializer.class)
 	protected AccountIntegration accountIntegration;
 	@JsonSerialize(using = ModelAsIdOnlySerializer.class)
-	protected LanguageModelIntegrationType type;
+	protected LlmIntegrationType type;
 	protected String code;
 	protected String name;
 	protected Boolean enabled = true;
-	protected List<LanguageModel> models = new ArrayList<>();
+	protected List<LlmModel> models = new ArrayList<>();
 	protected Map<String, Object> metadata = new HashMap<>();
 
 	public AccountIntegration getAccountIntegration() {
@@ -49,11 +49,11 @@ public class LanguageModelIntegration extends MorpheusModel {
 		markDirty("accountIntegration", accountIntegration);
 	}
 
-	public LanguageModelIntegrationType getType() {
+	public LlmIntegrationType getType() {
 		return type;
 	}
 
-	public void setType(LanguageModelIntegrationType type) {
+	public void setType(LlmIntegrationType type) {
 		this.type = type;
 		markDirty("type", type);
 	}
@@ -85,11 +85,11 @@ public class LanguageModelIntegration extends MorpheusModel {
 		markDirty("enabled", enabled);
 	}
 
-	public List<LanguageModel> getModels() {
+	public List<LlmModel> getModels() {
 		return models;
 	}
 
-	public void setModels(List<LanguageModel> models) {
+	public void setModels(List<LlmModel> models) {
 		this.models = models;
 		markDirty("models", models);
 	}

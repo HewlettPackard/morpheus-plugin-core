@@ -14,42 +14,60 @@
  * limitations under the License.
  */
 
-package com.morpheusdata.model.languageModel;
+package com.morpheusdata.model.llm;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Normalized chat message payload used for request/response exchange.
+ * Normalized chat completion response.
  */
-public class LanguageModelChatMessage {
-	protected String role;
-	protected String content;
-	protected String name;
+public class LlmChatResponse {
+	protected String id;
+	protected String model;
+	protected String finishReason;
+	protected LlmChatMessage message;
+	protected LlmTokenUsage tokenUsage;
 	protected Map<String, Object> metadata = new HashMap<>();
 
-	public String getRole() {
-		return role;
+	public String getId() {
+		return id;
 	}
 
-	public void setRole(String role) {
-		this.role = role;
+	public void setId(String id) {
+		this.id = id;
 	}
 
-	public String getContent() {
-		return content;
+	public String getModel() {
+		return model;
 	}
 
-	public void setContent(String content) {
-		this.content = content;
+	public void setModel(String model) {
+		this.model = model;
 	}
 
-	public String getName() {
-		return name;
+	public String getFinishReason() {
+		return finishReason;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setFinishReason(String finishReason) {
+		this.finishReason = finishReason;
+	}
+
+	public LlmChatMessage getMessage() {
+		return message;
+	}
+
+	public void setMessage(LlmChatMessage message) {
+		this.message = message;
+	}
+
+	public LlmTokenUsage getTokenUsage() {
+		return tokenUsage;
+	}
+
+	public void setTokenUsage(LlmTokenUsage tokenUsage) {
+		this.tokenUsage = tokenUsage;
 	}
 
 	public Map<String, Object> getMetadata() {

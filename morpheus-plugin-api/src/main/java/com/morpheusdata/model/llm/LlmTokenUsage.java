@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package com.morpheusdata.model.languageModel;
+package com.morpheusdata.model.llm;
 
 /**
  * Normalized token usage metrics for LLM requests.
  */
-public class LanguageModelTokenUsage {
+public class LlmTokenUsage {
 	protected Integer inputTokens;
 	protected Integer outputTokens;
 	protected Integer totalTokens;

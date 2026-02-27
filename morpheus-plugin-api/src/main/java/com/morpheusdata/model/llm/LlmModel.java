@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.morpheusdata.model.languageModel;
+package com.morpheusdata.model.llm;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.morpheusdata.model.MorpheusModel;
@@ -28,11 +28,11 @@ import java.util.Map;
 /**
  * Represents a provider supplied LLM model and optional performance metadata.
  */
-public class LanguageModel extends MorpheusModel {
+public class LlmModel extends MorpheusModel {
 	@JsonSerialize(using = ModelAsIdOnlySerializer.class)
-	protected LanguageModelIntegration languageModelIntegration;
+	protected LlmIntegration llmIntegration;
 	@JsonSerialize(using = ModelAsIdOnlySerializer.class)
-	protected LanguageModel parentModel;
+	protected LlmModel parentModel;
 	protected String code;
 	protected String externalId;
 	protected String name;
@@ -48,23 +48,23 @@ public class LanguageModel extends MorpheusModel {
 	protected Integer outputTokensPerSecond;
 	protected Boolean defaultLevel;
 	protected Boolean enabled = true;
-	protected List<LanguageModel> subModels = new ArrayList<>();
+	protected List<LlmModel> subModels = new ArrayList<>();
 	protected Map<String, Object> metadata = new HashMap<>();
 
-	public LanguageModelIntegration getLanguageModelIntegration() {
-		return languageModelIntegration;
+	public LlmIntegration getLlmIntegration() {
+		return llmIntegration;
 	}
 
-	public void setLanguageModelIntegration(LanguageModelIntegration languageModelIntegration) {
-		this.languageModelIntegration = languageModelIntegration;
-		markDirty("languageModelIntegration", languageModelIntegration);
+	public void setLlmIntegration(LlmIntegration llmIntegration) {
+		this.llmIntegration = llmIntegration;
+		markDirty("llmIntegration", llmIntegration);
 	}
 
-	public LanguageModel getParentModel() {
+	public LlmModel getParentModel() {
 		return parentModel;
 	}
 
-	public void setParentModel(LanguageModel parentModel) {
+	public void setParentModel(LlmModel parentModel) {
 		this.parentModel = parentModel;
 		markDirty("parentModel", parentModel);
 	}
@@ -204,11 +204,11 @@ public class LanguageModel extends MorpheusModel {
 		markDirty("enabled", enabled);
 	}
 
-	public List<LanguageModel> getSubModels() {
+	public List<LlmModel> getSubModels() {
 		return subModels;
 	}
 
-	public void setSubModels(List<LanguageModel> subModels) {
+	public void setSubModels(List<LlmModel> subModels) {
 		this.subModels = subModels;
 		markDirty("subModels", subModels);
 	}

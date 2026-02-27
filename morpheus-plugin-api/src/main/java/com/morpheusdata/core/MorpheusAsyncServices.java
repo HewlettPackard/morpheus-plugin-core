@@ -27,7 +27,7 @@ import com.morpheusdata.core.dashboard.MorpheusDashboardService;
 import com.morpheusdata.core.guidance.MorpheusAccountDiscoveryService;
 import com.morpheusdata.core.integration.MorpheusAccountInventoryService;
 import com.morpheusdata.core.integration.MorpheusIntegrationService;
-import com.morpheusdata.core.integration.MorpheusLanguageModelService;
+import com.morpheusdata.core.integration.MorpheusLlmService;
 import com.morpheusdata.core.library.MorpheusLibraryService;
 import com.morpheusdata.core.library.MorpheusWorkloadTypeService;
 import com.morpheusdata.core.network.MorpheusNetworkService;
@@ -580,8 +580,8 @@ public interface MorpheusAsyncServices {
 	MorpheusSupportBundleService getSupportBundle();
 
 	/**
-	 * Returns the MorpheusLanguageModelService for managing LLM Engine models
-	 * @return an instance of the MorpheusLanguageModelService
+	 * Returns the MorpheusLlmService for managing LLM Engine model and integration contexts.
+	 * @return an instance of the MorpheusLlmService
 	 */
-	MorpheusLanguageModelService getLanguageModel();
+	MorpheusLlmService getLlm();
 }

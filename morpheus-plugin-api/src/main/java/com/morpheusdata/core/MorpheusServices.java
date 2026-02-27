@@ -31,7 +31,6 @@ import com.morpheusdata.core.synchronous.cypher.MorpheusSynchronousCypherService
 import com.morpheusdata.core.synchronous.dashboard.MorpheusSynchronousDashboardService;
 import com.morpheusdata.core.synchronous.integration.MorpheusSynchronousAccountInventoryService;
 import com.morpheusdata.core.synchronous.integration.MorpheusSynchronousIntegrationService;
-import com.morpheusdata.core.synchronous.integration.MorpheusSynchronousLanguageModelService;
 import com.morpheusdata.core.synchronous.library.MorpheusSynchronousLibraryService;
 import com.morpheusdata.core.synchronous.MorpheusSynchronousComputeTypeSetService;
 import com.morpheusdata.core.synchronous.MorpheusSynchronousComputeTypeLayoutService;
@@ -571,10 +570,4 @@ public interface MorpheusServices {
 	 * @return an instance of {@link MorpheusSynchronousSupportBundleService}
 	 */
 	MorpheusSynchronousSupportBundleService getSupportBundle();
-
-	/**
-	 * Returns the MorpheusSynchronousLanguageModelService for managing LLM Engine models
-	 * @return an instance of the MorpheusSynchronousLanguageModelService
-	 */
-	MorpheusSynchronousLanguageModelService getLanguageModel();
 }
