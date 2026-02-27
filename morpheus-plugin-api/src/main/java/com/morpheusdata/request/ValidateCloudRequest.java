@@ -42,10 +42,46 @@ public class ValidateCloudRequest {
 	 */
 	public Map opts;
 
+	/**
+	 * Full credential data map. Contains all fields for the credential type in use
+	 * (e.g. username, password, authToken, authPath, authKey, etc.).
+	 * Use {@link #getCredentialUsername()} and {@link #getCredentialPassword()} for
+	 * common fields, or access this map directly for type-specific fields.
+	 */
+	public Map credentialData;
+
 	public ValidateCloudRequest(String credentialUsername, String credentialPassword, String credentialType, Map opts){
 		this.credentialUsername = credentialUsername;
 		this.credentialPassword = credentialPassword;
 		this.credentialType = credentialType;
 		this.opts = opts;
+	}
+
+	public ValidateCloudRequest(Map credentialData, Map opts){
+		this.credentialData = credentialData;
+		this.credentialType = credentialData != null && credentialData.get("type") != null ? credentialData.get("type").toString() : null;
+		this.opts = opts;
+		this.credentialUsername = getCredentialUsername();
+		this.credentialPassword = getCredentialPassword();
+	}
+
+	/**
+	 * Returns the credential username. Falls back to {@link #credentialData} if {@link #credentialUsername} is null.
+	 */
+	public String getCredentialUsername() {
+		if (credentialUsername != null) return credentialUsername;
+		if (credentialData != null && credentialData.get("username") != null)
+			return credentialData.get("username").toString();
+		return null;
+	}
+
+	/**
+	 * Returns the credential password. Falls back to {@link #credentialData} if {@link #credentialPassword} is null.
+	 */
+	public String getCredentialPassword() {
+		if (credentialPassword != null) return credentialPassword;
+		if (credentialData != null && credentialData.get("password") != null)
+			return credentialData.get("password").toString();
+		return null;
 	}
 }
