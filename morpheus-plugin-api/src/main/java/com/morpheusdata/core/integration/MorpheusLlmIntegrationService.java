@@ -16,15 +16,15 @@
 
 package com.morpheusdata.core.integration;
 
-import com.morpheusdata.core.MorpheusDataQueryService;
+import com.morpheusdata.core.MorpheusDataService;
 import com.morpheusdata.model.llm.LlmIntegration;
 
 /**
- * Provides async data query access for {@link LlmIntegration} objects.
+ * Provides async data access for {@link LlmIntegration} objects.
  *
  * @author Morpheus
  * @since 1.4.0
  */
-public interface MorpheusLlmIntegrationService extends MorpheusDataQueryService<LlmIntegration> {
+public interface MorpheusLlmIntegrationService extends MorpheusDataService<LlmIntegration, LlmIntegration> {
 
 }

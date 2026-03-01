@@ -16,16 +16,16 @@
 
 package com.morpheusdata.core.synchronous.integration;
 
-import com.morpheusdata.core.synchronous.MorpheusSynchronousDataQueryService;
+import com.morpheusdata.core.MorpheusSynchronousDataService;
 import com.morpheusdata.model.llm.LlmIntegration;
 
 /**
- * Provides synchronous data query access for {@link LlmIntegration} objects.
+ * Provides synchronous data access for {@link LlmIntegration} objects.
  * Blocking wrapper around {@link com.morpheusdata.core.integration.MorpheusLlmIntegrationService}.
  *
  * @author Morpheus
  * @since 1.4.0
  */
-public interface MorpheusSynchronousLlmIntegrationService extends MorpheusSynchronousDataQueryService<LlmIntegration> {
+public interface MorpheusSynchronousLlmIntegrationService extends MorpheusSynchronousDataService<LlmIntegration, LlmIntegration> {
 
 }
