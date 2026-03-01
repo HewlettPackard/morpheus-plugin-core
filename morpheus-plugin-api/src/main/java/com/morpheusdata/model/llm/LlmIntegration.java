@@ -37,6 +37,16 @@ public class LlmIntegration extends MorpheusModel {
 	protected String code;
 	protected String name;
 	protected Boolean enabled = true;
+	protected Long tokenUsageUsed;
+	protected Long tokenUsageRemaining;
+	protected Long tokenUsageLimit;
+	protected String tokenUsagePeriod;
+	protected String tokenUsageResetAt;
+	protected Long requestUsageUsed;
+	protected Long requestUsageRemaining;
+	protected Long requestUsageLimit;
+	protected String requestUsagePeriod;
+	protected String requestUsageResetAt;
 	protected List<LlmModel> models = new ArrayList<>();
 	protected Map<String, Object> metadata = new HashMap<>();
 
@@ -83,6 +93,96 @@ public class LlmIntegration extends MorpheusModel {
 	public void setEnabled(Boolean enabled) {
 		this.enabled = enabled;
 		markDirty("enabled", enabled);
+	}
+
+	public Long getTokenUsageUsed() {
+		return tokenUsageUsed;
+	}
+
+	public void setTokenUsageUsed(Long tokenUsageUsed) {
+		this.tokenUsageUsed = tokenUsageUsed;
+		markDirty("tokenUsageUsed", tokenUsageUsed);
+	}
+
+	public Long getTokenUsageRemaining() {
+		return tokenUsageRemaining;
+	}
+
+	public void setTokenUsageRemaining(Long tokenUsageRemaining) {
+		this.tokenUsageRemaining = tokenUsageRemaining;
+		markDirty("tokenUsageRemaining", tokenUsageRemaining);
+	}
+
+	public Long getTokenUsageLimit() {
+		return tokenUsageLimit;
+	}
+
+	public void setTokenUsageLimit(Long tokenUsageLimit) {
+		this.tokenUsageLimit = tokenUsageLimit;
+		markDirty("tokenUsageLimit", tokenUsageLimit);
+	}
+
+	public String getTokenUsagePeriod() {
+		return tokenUsagePeriod;
+	}
+
+	public void setTokenUsagePeriod(String tokenUsagePeriod) {
+		this.tokenUsagePeriod = tokenUsagePeriod;
+		markDirty("tokenUsagePeriod", tokenUsagePeriod);
+	}
+
+	public String getTokenUsageResetAt() {
+		return tokenUsageResetAt;
+	}
+
+	public void setTokenUsageResetAt(String tokenUsageResetAt) {
+		this.tokenUsageResetAt = tokenUsageResetAt;
+		markDirty("tokenUsageResetAt", tokenUsageResetAt);
+	}
+
+	public Long getRequestUsageUsed() {
+		return requestUsageUsed;
+	}
+
+	public void setRequestUsageUsed(Long requestUsageUsed) {
+		this.requestUsageUsed = requestUsageUsed;
+		markDirty("requestUsageUsed", requestUsageUsed);
+	}
+
+	public Long getRequestUsageRemaining() {
+		return requestUsageRemaining;
+	}
+
+	public void setRequestUsageRemaining(Long requestUsageRemaining) {
+		this.requestUsageRemaining = requestUsageRemaining;
+		markDirty("requestUsageRemaining", requestUsageRemaining);
+	}
+
+	public Long getRequestUsageLimit() {
+		return requestUsageLimit;
+	}
+
+	public void setRequestUsageLimit(Long requestUsageLimit) {
+		this.requestUsageLimit = requestUsageLimit;
+		markDirty("requestUsageLimit", requestUsageLimit);
+	}
+
+	public String getRequestUsagePeriod() {
+		return requestUsagePeriod;
+	}
+
+	public void setRequestUsagePeriod(String requestUsagePeriod) {
+		this.requestUsagePeriod = requestUsagePeriod;
+		markDirty("requestUsagePeriod", requestUsagePeriod);
+	}
+
+	public String getRequestUsageResetAt() {
+		return requestUsageResetAt;
+	}
+
+	public void setRequestUsageResetAt(String requestUsageResetAt) {
+		this.requestUsageResetAt = requestUsageResetAt;
+		markDirty("requestUsageResetAt", requestUsageResetAt);
 	}
 
 	public List<LlmModel> getModels() {

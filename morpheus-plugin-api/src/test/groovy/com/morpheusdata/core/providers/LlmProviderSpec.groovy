@@ -21,18 +21,6 @@ class LlmProviderSpec extends Specification {
 		provider.embeddingSupported == false
 	}
 
-	void "listModels default returns empty list"() {
-		given:
-		def provider = new BaseLlmProvider()
-
-		when:
-		def response = provider.listModels(new LlmIntegration(), [:])
-
-		then:
-		response.success
-		response.data == []
-	}
-
 	private static class BaseLlmProvider implements LlmProvider {
 		@Override
 		MorpheusContext getMorpheus() {
@@ -66,11 +54,6 @@ class LlmProviderSpec extends Specification {
 		@Override
 		ServiceResponse<LlmChatResponse> generateResponse(LlmIntegration languageModelIntegration, LlmChatRequest request, Map opts) {
 			return ServiceResponse.success(new LlmChatResponse())
-		}
-
-		@Override
-		ServiceResponse<List<com.morpheusdata.model.llm.LlmModel>> listModels(LlmIntegration languageModelIntegration, Map opts) {
-			return ServiceResponse.success([])
 		}
 	}
 }

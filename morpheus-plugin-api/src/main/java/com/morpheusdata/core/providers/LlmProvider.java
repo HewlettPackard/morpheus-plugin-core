@@ -21,7 +21,6 @@ import com.morpheusdata.model.OptionType;
 import com.morpheusdata.model.llm.LlmChatRequest;
 import com.morpheusdata.model.llm.LlmChatResponse;
 import com.morpheusdata.model.llm.LlmIntegration;
-import com.morpheusdata.model.llm.LlmModel;
 import com.morpheusdata.response.LlmStreamingResponseHandler;
 import com.morpheusdata.response.ServiceResponse;
 
@@ -126,15 +125,6 @@ public interface LlmProvider extends PluginProvider {
 	 * @param languageModelIntegration the integration to refresh
 	 */
 	void refresh(LlmIntegration languageModelIntegration);
-
-	/**
-	 * Lists models supported by this provider for the integration.
-	 *
-	 * @param languageModelIntegration integration configuration
-	 * @param opts optional call options
-	 * @return response containing available models
-	 */
-	ServiceResponse<List<LlmModel>> listModels(LlmIntegration languageModelIntegration, Map opts);
 
 	/**
 	 * Performs a non-streaming response generation request.
