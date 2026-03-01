@@ -17,6 +17,7 @@ public class NetworkFloatingIpPoolRange extends MorpheusModel {
 	protected Boolean active = true;
 	protected Date dateCreated;
 	protected Date lastUpdated;
+	protected Boolean readOnly = false;
 
 	public NetworkFloatingIpPool getFloatingIpPool() {
 		return floatingIpPool;
@@ -106,5 +107,14 @@ public class NetworkFloatingIpPoolRange extends MorpheusModel {
 	public void setLastUpdated(Date lastUpdated) {
 		this.lastUpdated = lastUpdated;
 		markDirty("lastUpdated", lastUpdated);
+	}
+
+	public Boolean getReadOnly() {
+		return readOnly;
+	}
+
+	public void setReadOnly(Boolean readOnly) {
+		this.readOnly = readOnly;
+		markDirty("readOnly", readOnly);
 	}
 }

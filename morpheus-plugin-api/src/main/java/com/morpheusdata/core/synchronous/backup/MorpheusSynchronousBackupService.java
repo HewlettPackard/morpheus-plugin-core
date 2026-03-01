@@ -24,7 +24,10 @@ import com.morpheusdata.model.*;
 import com.morpheusdata.model.BackupProvider;
 import com.morpheusdata.model.projection.AccountIdentity;
 import com.morpheusdata.model.projection.BackupIdentityProjection;
+import com.morpheusdata.response.ServiceResponse;
+import com.morpheusdata.model.VirtualImage;
 import io.reactivex.rxjava3.core.Single;
+import java.util.Map;
 
 public interface MorpheusSynchronousBackupService extends MorpheusSynchronousDataService<Backup, BackupIdentityProjection>, MorpheusSynchronousIdentityService<BackupIdentityProjection> {
 
@@ -112,5 +115,30 @@ public interface MorpheusSynchronousBackupService extends MorpheusSynchronousDat
 	 * @return the working path for the backup result
 	 */
 	String getBackupWorkingPath(Long backupId, Long backupResultId);
-	
+
+	/**
+	 * Compresses the backup working directory into a zip archive and saves it to the configured backup storage provider.
+	 * This is typically called at the end of {@link BackupExecutionProvider#extractBackup} after the backup data has been
+	 * written to the working path. The result contains metadata needed to update the {@link BackupResult} (bucket,
+	 * directory, archive name, and archive size).
+	 * @param account the {@link AccountIdentity} that owns the backup
+	 * @param workingPath the local directory path containing the backup data to compress and upload
+	 * @param backupId the id of the {@link Backup} object
+	 * @return a {@link ServiceResponse} with result metadata: providerType, basePath, targetBucket, targetDirectory,
+	 *         targetArchive, archiveSize
+	 */
+	ServiceResponse saveBackupResults(AccountIdentity account, String workingPath, Long backupId);
+
+	/**
+	 * Transfers a backup archive from backup storage into a new {@link VirtualImage}, enabling restore-to-new-instance
+	 * workflows. Files are streamed from the backup storage provider into the default virtual image storage location.
+	 * The {@code sourceImage} parameter is optional and, when provided, is used to inherit cloudInit, installAgent,
+	 * and SSH credential settings onto the new image.
+	 * @param account the {@link AccountIdentity} that owns the backup
+	 * @param backupResult the {@link BackupResult} whose archive should be transferred
+	 * @param opts a map of options: {@code imageType} (e.g. 'vmdk'), {@code zoneTypeCode}, {@code osType}, {@code name}
+	 * @param sourceImage optional source {@link VirtualImage} to inherit settings from; may be null
+	 * @return a {@link ServiceResponse} whose data is the newly created {@link VirtualImage}
+	 */
+	ServiceResponse<VirtualImage> transferBackupToVirtualImage(AccountIdentity account, BackupResult backupResult, Map opts, VirtualImage sourceImage);
 }

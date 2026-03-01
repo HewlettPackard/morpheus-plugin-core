@@ -1,0 +1,102 @@
+package {{basePackage}}
+
+import com.morpheusdata.core.MorpheusContext
+import com.morpheusdata.core.Plugin
+import com.morpheusdata.core.providers.FloatingIpProvider
+import com.morpheusdata.model.ComputeServer
+import com.morpheusdata.response.ServiceResponse
+
+class {{pluginNameCamel}}FloatingIpProvider implements FloatingIpProvider {
+	public static final String FLOATING_IP_PROVIDER_CODE = '{{pluginCode}}.floatingIp'
+
+	protected MorpheusContext context
+	protected Plugin plugin
+
+	public {{pluginNameCamel}}FloatingIpProvider(Plugin plugin, MorpheusContext ctx) {
+		super()
+		this.@plugin = plugin
+		this.@context = ctx
+	}
+
+	/**
+	 * Attaches a floating ip to a server
+	 * @param server the server to attach the floating ip to
+	 * @param floatingIp the floating ip to attach
+	 * @return ServiceResponse
+	 */
+	@Override
+	ServiceResponse attachFloatingIp(ComputeServer server, NetworkFloatingIp floatingIp) {
+		return ServiceResponse.success()
+	}
+
+	/**
+	 * Detaches a floating ip from a server
+	 * @param server the server to detach the floating ip from
+	 * @param floatingIp the floating ip to detach
+	 * @return ServiceResponse
+	 */
+	@Override
+	ServiceResponse detachFloatingIp(ComputeServer server, NetworkFloatingIp floatingIp) {
+		return ServiceResponse.success()
+	}
+
+	/**
+	 * Releases a floating ip
+	 * @param floatingIp the floating ip to release
+	 * @return ServiceResponse
+	 */
+	@Override
+	ServiceResponse releaseFloatingIp(NetworkFloatingIp floatingIp) {
+		return ServiceResponse.success()
+	}
+
+	/**
+	 * Allocates a floating ip
+	 * @param networkServer the network server to allocate the floating ip from
+	 * @param pool the floating ip pool to allocate the floating ip from
+	 * @return ServiceResponse
+	*/
+	@Override
+	ServiceResponse allocateFloatingIp(NetworkServer networkServer, NetworkFloatingIpPool pool) {
+		return ServiceResponse.success()
+	}
+
+	/**
+	 * Returns the Morpheus Context for interacting with data stored in the Main Morpheus Application
+	 * @return an implementation of the MorpheusContext for running Future based rxJava queries
+	 */
+	@Override
+	MorpheusContext getMorpheus() {
+		return this.@context
+	}
+
+	/**
+	 * Returns the instance of the Plugin class that this provider is loaded from
+	 * @return Plugin class contains references to other providers
+	 */
+	@Override
+	Plugin getPlugin() {
+		return this.@plugin
+	}
+
+	/**
+	 * A unique shortcode used for referencing the provided provider. Make sure this is going to be unique as any data
+	 * that is seeded or generated related to this provider will reference it by this code.
+	 * @return short code string that should be unique across all other plugin implementations.
+	 */
+	@Override
+	String getCode() {
+		return FLOATING_IP_PROVIDER_CODE
+	}
+
+	/**
+	 * Provides the provider name for reference when adding to the Morpheus Orchestrator
+	 * NOTE: This may be useful to set as an i18n key for UI reference and localization support.
+	 *
+	 * @return either an English name of a Provider or an i18n based key that can be scanned for in a properties file.
+	 */
+	@Override
+	String getName() {
+		return '{{pluginName}} Floating Ip'
+	}
+}
