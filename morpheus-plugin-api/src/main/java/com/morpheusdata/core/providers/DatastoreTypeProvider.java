@@ -240,6 +240,13 @@ public interface DatastoreTypeProvider extends PluginProvider {
 	}
 
 	/**
+	 * Perform any validations necessary on the target prior to remove. The default returns success.
+	 * @param datastore the current datastore being validated for removal
+	 * @return the success state of the validation
+	 */
+	default ServiceResponse validateRemoveDatastore(Datastore datastore) { return ServiceResponse.success(); }
+
+	/**
 	 * Perform any operations necessary on the target to remove a datastore. this method should be implemented
 	 * if {@link DatastoreTypeProvider#getRemovable()} is true. otherwise return null or an error.
 	 * @param datastore the current datastore being removed
@@ -479,7 +486,7 @@ public interface DatastoreTypeProvider extends PluginProvider {
 	 * Filter storage volume types based on the datastore type capabilities.
 	 * This allows providers to restrict which storage volume types are compatible with their datastore.
 	 * For example, a datastore may only support certain disk types or configurations.
-	 * 
+	 *
 	 * @param datastoreType the datastore type to filter for
 	 * @param storageVolumeTypes the collection of storage volume types to filter
 	 * @return a ServiceResponse containing the filtered collection of storage volume types
