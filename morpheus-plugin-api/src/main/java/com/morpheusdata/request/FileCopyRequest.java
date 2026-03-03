@@ -28,21 +28,25 @@ public class FileCopyRequest {
 
 	/**
 	 * Name of the file for the file copy request URL.
+	 * Must not be {@code null}.
 	 */
 	public String fileName;
 
 	/**
 	 * The user initiating the request.
+	 * Must not be {@code null}.
 	 */
 	public User user;
 
 	/**
 	 * Source {@link InputStream} to copy.
+	 * Must not be {@code null}.
 	 */
 	public InputStream sourceStream;
 
 	/**
 	 * Size of the file to be copied.
+	 * Must not be {@code null}.
 	 */
 	public Long contentLength;
 
