@@ -23,6 +23,7 @@ import com.morpheusdata.core.cypher.MorpheusCypherService;
 import com.morpheusdata.core.dashboard.MorpheusDashboardService;
 import com.morpheusdata.core.integration.MorpheusIntegrationService;
 import com.morpheusdata.core.integration.MorpheusAccountInventoryService;
+import com.morpheusdata.core.integration.MorpheusLlmService;
 import com.morpheusdata.core.library.MorpheusWorkloadTypeService;
 import com.morpheusdata.core.network.MorpheusNetworkService;
 import com.morpheusdata.core.network.loadbalancer.MorpheusLoadBalancerService;
@@ -80,6 +81,14 @@ public interface MorpheusContext {
 	 * @return references to all the async morpheus data services.
 	 */
 	MorpheusAsyncServices getAsync();
+
+	/**
+	 * Returns the LLM context for model and integration data services.
+	 * @return an instance of the LLM context
+	 */
+	default MorpheusLlmService getLlm() {
+		return getAsync().getLlm();
+	}
 
 
 	/**
