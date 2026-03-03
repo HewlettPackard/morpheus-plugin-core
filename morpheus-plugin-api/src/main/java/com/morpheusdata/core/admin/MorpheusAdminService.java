@@ -36,4 +36,10 @@ public interface MorpheusAdminService {
 	 * @return an instance of the implementation of the {@link MorpheusApplianceService}
 	 */
 	MorpheusApplianceService getAppliance();
+
+	/**
+	 * Returns the Appliance License Service for querying and managing the appliance license asynchronously (reactive).
+	 * @return an instance of the implementation of the {@link MorpheusApplianceLicenseService}
+	 */
+	MorpheusApplianceLicenseService getLicense();
 }

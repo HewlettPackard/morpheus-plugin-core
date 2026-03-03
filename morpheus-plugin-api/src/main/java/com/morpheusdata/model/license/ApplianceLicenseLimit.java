@@ -14,17 +14,22 @@
  * limitations under the License.
  */
 
-package com.morpheusdata.core.synchronous.admin;
+package com.morpheusdata.model.license;
 
-public interface MorpheusSynchronousAdminService {
-
-	MorpheusSynchronousUserService getUser();
-
-	MorpheusSynchronousApplianceService getAppliance();
-
-	/**
-	 * Returns the Appliance License Service for querying and managing the appliance license synchronously.
-	 * @return an instance of the implementation of the {@link MorpheusSynchronousApplianceLicenseService}
-	 */
-	MorpheusSynchronousApplianceLicenseService getLicense();
+/**
+ * Represents the limit check result for a single license metric (e.g. maxManagedServers, maxSockets).
+ */
+public class ApplianceLicenseLimit {
+	/** Metric code, e.g. "maxManagedServers", "maxSockets", "maxMemory" */
+	public String code;
+	/** Maximum allowed value. Null means unlimited. */
+	public Long max;
+	public Long used;
+	public Double percentUsed;
+	/** True when usage is ≥ 85% of max */
+	public Boolean warning;
+	/** True when usage is ≥ 100% of max */
+	public Boolean limitReached;
+	/** Optional unit, e.g. "bytes" for memory/storage limits */
+	public String unit;
 }
