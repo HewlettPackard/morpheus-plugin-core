@@ -14,13 +14,20 @@
  * limitations under the License.
  */
 
-package com.morpheusdata.core.synchronous.admin;
+package com.morpheusdata.model.health;
 
-public interface MorpheusSynchronousAdminService {
+public class ApplianceHealthSlowQuery {
 
-	MorpheusSynchronousUserService getUser();
+	protected Long count;
+	protected Long time;
+	protected String query;
 
-	MorpheusSynchronousApplianceService getAppliance();
+	public Long getCount() { return count; }
+	public void setCount(Long count) { this.count = count; }
 
-	MorpheusSynchronousApplianceHealthService getHealth();
+	public Long getTime() { return time; }
+	public void setTime(Long time) { this.time = time; }
+
+	public String getQuery() { return query; }
+	public void setQuery(String query) { this.query = query; }
 }

@@ -14,13 +14,24 @@
  * limitations under the License.
  */
 
-package com.morpheusdata.core.synchronous.admin;
+package com.morpheusdata.model.health;
 
-public interface MorpheusSynchronousAdminService {
+public class ApplianceHealthElasticMaster {
 
-	MorpheusSynchronousUserService getUser();
+	protected String id;
+	protected String host;
+	protected String ip;
+	protected String node;
 
-	MorpheusSynchronousApplianceService getAppliance();
+	public String getId() { return id; }
+	public void setId(String id) { this.id = id; }
 
-	MorpheusSynchronousApplianceHealthService getHealth();
+	public String getHost() { return host; }
+	public void setHost(String host) { this.host = host; }
+
+	public String getIp() { return ip; }
+	public void setIp(String ip) { this.ip = ip; }
+
+	public String getNode() { return node; }
+	public void setNode(String node) { this.node = node; }
 }

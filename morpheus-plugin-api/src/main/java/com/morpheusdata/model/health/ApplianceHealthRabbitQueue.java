@@ -14,13 +14,20 @@
  * limitations under the License.
  */
 
-package com.morpheusdata.core.synchronous.admin;
+package com.morpheusdata.model.health;
 
-public interface MorpheusSynchronousAdminService {
+public class ApplianceHealthRabbitQueue {
 
-	MorpheusSynchronousUserService getUser();
+	protected String name;
+	protected Long count;
+	protected String status;
 
-	MorpheusSynchronousApplianceService getAppliance();
+	public String getName() { return name; }
+	public void setName(String name) { this.name = name; }
 
-	MorpheusSynchronousApplianceHealthService getHealth();
+	public Long getCount() { return count; }
+	public void setCount(Long count) { this.count = count; }
+
+	public String getStatus() { return status; }
+	public void setStatus(String status) { this.status = status; }
 }

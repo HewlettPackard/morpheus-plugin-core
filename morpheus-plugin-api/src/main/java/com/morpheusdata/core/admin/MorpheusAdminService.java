@@ -36,4 +36,10 @@ public interface MorpheusAdminService {
 	 * @return an instance of the implementation of the {@link MorpheusApplianceService}
 	 */
 	MorpheusApplianceService getAppliance();
+
+	/**
+	 * Returns the Appliance Health Service for querying appliance health statistics asynchronously (reactive).
+	 * @return an instance of the implementation of the {@link MorpheusApplianceHealthService}
+	 */
+	MorpheusApplianceHealthService getHealth();
 }
