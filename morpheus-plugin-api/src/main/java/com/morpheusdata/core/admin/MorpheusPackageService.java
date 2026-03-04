@@ -16,6 +16,7 @@
 
 package com.morpheusdata.core.admin;
 
+import com.morpheusdata.core.util.HttpApiClient;
 import com.morpheusdata.response.ServiceResponse;
 import io.reactivex.rxjava3.core.Single;
 
@@ -37,11 +38,12 @@ public interface MorpheusPackageService {
 	/**
 	 * Downloads a Morpheus package file from the given URL and installs it.
 	 *
-	 * @param url   the URL of the package file to download and install
-	 * @param force if {@code true}, reinstalls the package even if it is already installed
+	 * @param url     the URL of the package file to download and install
+	 * @param opts    optional {@link HttpApiClient.RequestOptions} for configuring the download request (e.g. auth token, headers); may be {@code null}
+	 * @param force   if {@code true}, reinstalls the package even if it is already installed
 	 * @return a Single wrapping a {@link ServiceResponse} indicating success or failure
 	 */
-	Single<ServiceResponse> downloadAndInstall(String url, Boolean force);
+	Single<ServiceResponse> downloadAndInstall(String url, HttpApiClient.RequestOptions opts, Boolean force);
 
 	/**
 	 * Installs a Morpheus package from an InputStream.
