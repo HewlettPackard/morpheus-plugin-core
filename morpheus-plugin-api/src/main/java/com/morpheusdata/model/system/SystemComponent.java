@@ -1,11 +1,10 @@
 package com.morpheusdata.model.system;
 
-import com.morpheusdata.model.MorpheusModel;
+import com.morpheusdata.model.projection.SystemComponentIdentityProjection;
 
 import java.util.Date;
 
-public class SystemComponent extends MorpheusModel {
-	protected String name;
+public class SystemComponent extends SystemComponentIdentityProjection {
 	protected String description;
 	protected String status = "ok";
 	protected String statusMessage;
@@ -13,18 +12,8 @@ public class SystemComponent extends MorpheusModel {
 	protected SystemComponentType type;
 	protected String refType;
 	protected String refId;
-	protected String externalId;
 	protected Date dateCreated;
 	protected Date lastUpdated;
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		markDirty("name", name);
-		this.name = name;
-	}
 
 	public String getDescription() {
 		return description;
@@ -87,15 +76,6 @@ public class SystemComponent extends MorpheusModel {
 	public void setRefId(String refId) {
 		markDirty("refId", refId);
 		this.refId = refId;
-	}
-
-	public String getExternalId() {
-		return externalId;
-	}
-
-	public void setExternalId(String externalId) {
-		markDirty("externalId", externalId);
-		this.externalId = externalId;
 	}
 
 	public Date getDateCreated() {
