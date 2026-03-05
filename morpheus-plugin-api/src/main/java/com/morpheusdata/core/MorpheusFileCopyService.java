@@ -51,7 +51,7 @@ public interface MorpheusFileCopyService {
 	 * Create a url to copy a file to the target server.
 	 * @param request {@link FileCopyRequest} containing the file copy parameters
 	 * @return {@link ServiceResponse} containing the success status of the generate operation and data property containing the url
-	 * @since 1.3.1
+	 * @since 1.3.2
 	 */
 	Single<ServiceResponse> generateUrl(FileCopyRequest request);
 
@@ -64,9 +64,9 @@ public interface MorpheusFileCopyService {
 	 * @param autoExpand automatically expand .tar.gz compressed files during upload
 	 * @param contentType override the application/octet-stream content type when serving the file
 	 * @return {@link ServiceResponse} containing the success status of the generate operation and data property containing the url
-	 * @deprecated As of 1.3.1, use {@link #generateUrl(FileCopyRequest)} instead.
+	 * @deprecated As of 1.3.2, use {@link #generateUrl(FileCopyRequest)} instead.
 	 */
-	@Deprecated(since = "1.3.1")
+	@Deprecated(since = "1.3.2")
 	Single<ServiceResponse> generateUrl(String fileName, User user, InputStream sourceStream, Long contentLength, Long timeout, Boolean autoExpand, String contentType);
 
 	/**
@@ -77,9 +77,9 @@ public interface MorpheusFileCopyService {
 	 * @param timeout max timeout to initialize the copy operation
 	 * @param autoExpand automatically expand .tar.gz compressed files during upload
 	 * @return {@link ServiceResponse} containing the success status of the generate operation and data property containing the url
-	 * @deprecated As of 1.3.1, use {@link #generateUrl(FileCopyRequest)} instead.
+	 * @deprecated As of 1.3.2, use {@link #generateUrl(FileCopyRequest)} instead.
 	 */
-	@Deprecated(since = "1.3.1")
+	@Deprecated(since = "1.3.2")
 	Single<ServiceResponse> generateUrl(String fileName, User user, InputStream sourceStream, Long contentLength, Long timeout, Boolean autoExpand);
 
 	/**
@@ -89,9 +89,9 @@ public interface MorpheusFileCopyService {
 	 * @param contentLength size of the file to be copied
 	 * @param timeout max timeout to initialize the copy operation
 	 * @return {@link ServiceResponse} containing the success status of the generate operation and data property containing the url
-	 * @deprecated As of 1.3.1, use {@link #generateUrl(FileCopyRequest)} instead.
+	 * @deprecated As of 1.3.2, use {@link #generateUrl(FileCopyRequest)} instead.
 	 */
-	@Deprecated(since = "1.3.1")
+	@Deprecated(since = "1.3.2")
 	Single<ServiceResponse> generateUrl(String fileName, User user, InputStream sourceStream, Long contentLength, Long timeout);
 
 	/**
@@ -100,9 +100,9 @@ public interface MorpheusFileCopyService {
 	 * @param sourceStream source {@link InputStream} to copy to the server
 	 * @param contentLength size of the file to be copied
 	 * @return {@link ServiceResponse} containing the success status of the generate operation and data property containing the url
-	 * @deprecated As of 1.3.1, use {@link #generateUrl(FileCopyRequest)} instead.
+	 * @deprecated As of 1.3.2, use {@link #generateUrl(FileCopyRequest)} instead.
 	 */
-	@Deprecated(since = "1.3.1")
+	@Deprecated(since = "1.3.2")
 	Single<ServiceResponse> generateUrl(String fileName, User user, InputStream sourceStream, Long contentLength);
 
 	/**
