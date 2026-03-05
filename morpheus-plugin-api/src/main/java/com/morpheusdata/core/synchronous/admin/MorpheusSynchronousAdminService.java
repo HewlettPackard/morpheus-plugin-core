@@ -21,4 +21,6 @@ public interface MorpheusSynchronousAdminService {
 	MorpheusSynchronousUserService getUser();
 
 	MorpheusSynchronousApplianceService getAppliance();
+
+	MorpheusSynchronousPluginService getPlugin();
 }

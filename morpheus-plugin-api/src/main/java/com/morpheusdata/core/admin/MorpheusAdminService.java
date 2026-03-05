@@ -36,4 +36,10 @@ public interface MorpheusAdminService {
 	 * @return an instance of the implementation of the {@link MorpheusApplianceService}
 	 */
 	MorpheusApplianceService getAppliance();
+
+	/**
+	 * Returns the Plugin Service for querying registered plugins and checking their health asynchronously (reactive).
+	 * @return an instance of the implementation of the {@link MorpheusPluginService}
+	 */
+	MorpheusPluginService getPlugin();
 }
