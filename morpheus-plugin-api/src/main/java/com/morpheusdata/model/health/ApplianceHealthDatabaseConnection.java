@@ -50,4 +50,18 @@ public class ApplianceHealthDatabaseConnection {
 
 	public String getInfo() { return info; }
 	public void setInfo(String info) { this.info = info; }
+
+	@Override
+	public String toString() {
+		return "ApplianceHealthDatabaseConnection{" +
+			"id=" + id +
+			", user='" + user + '\'' +
+			", host='" + host + '\'' +
+			", database='" + database + '\'' +
+			", command='" + command + '\'' +
+			", time=" + time +
+			", state='" + state + '\'' +
+			", info='" + info + '\'' +
+			'}';
+	}
 }

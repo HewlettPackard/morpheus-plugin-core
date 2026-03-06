@@ -81,4 +81,24 @@ public class ApplianceHealth {
 
 	public ApplianceHealthElasticStats getElastic() { return elastic; }
 	public void setElastic(ApplianceHealthElasticStats elastic) { this.elastic = elastic; }
+
+	@Override
+	public String toString() {
+		return "ApplianceHealth{" +
+			"success=" + success +
+			", applianceUrl='" + applianceUrl + '\'' +
+			", buildVersion='" + buildVersion + '\'' +
+			", uuid='" + uuid + '\'' +
+			", setupNeeded=" + setupNeeded +
+			", date=" + date +
+			", statusMessage='" + statusMessage + '\'' +
+			", cpu=" + cpu +
+			", memory=" + memory +
+			", storage=" + storage +
+			", threads=" + threads +
+			", database=" + database +
+			", rabbit=" + rabbit +
+			", elastic=" + elastic +
+			'}';
+	}
 }

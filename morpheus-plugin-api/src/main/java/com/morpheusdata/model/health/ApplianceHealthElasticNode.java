@@ -58,4 +58,20 @@ public class ApplianceHealthElasticNode {
 
 	public String getName() { return name; }
 	public void setName(String name) { this.name = name; }
+
+	@Override
+	public String toString() {
+		return "ApplianceHealthElasticNode{" +
+			"name='" + name + '\'' +
+			", ip='" + ip + '\'' +
+			", role='" + role + '\'' +
+			", master='" + master + '\'' +
+			", heapPercent='" + heapPercent + '\'' +
+			", ramPercent='" + ramPercent + '\'' +
+			", cpuCount='" + cpuCount + '\'' +
+			", loadOne='" + loadOne + '\'' +
+			", loadFive='" + loadFive + '\'' +
+			", loadFifteen='" + loadFifteen + '\'' +
+			'}';
+	}
 }

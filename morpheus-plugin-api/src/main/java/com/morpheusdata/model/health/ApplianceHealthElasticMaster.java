@@ -34,4 +34,14 @@ public class ApplianceHealthElasticMaster {
 
 	public String getNode() { return node; }
 	public void setNode(String node) { this.node = node; }
+
+	@Override
+	public String toString() {
+		return "ApplianceHealthElasticMaster{" +
+			"id='" + id + '\'' +
+			", host='" + host + '\'' +
+			", ip='" + ip + '\'' +
+			", node='" + node + '\'' +
+			'}';
+	}
 }

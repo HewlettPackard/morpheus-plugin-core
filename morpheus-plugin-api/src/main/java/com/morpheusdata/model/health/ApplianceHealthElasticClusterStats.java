@@ -62,4 +62,21 @@ public class ApplianceHealthElasticClusterStats {
 
 	public String getActivePercent() { return activePercent; }
 	public void setActivePercent(String activePercent) { this.activePercent = activePercent; }
+
+	@Override
+	public String toString() {
+		return "ApplianceHealthElasticClusterStats{" +
+			"status='" + status + '\'' +
+			", clusterName='" + clusterName + '\'' +
+			", nodeTotal='" + nodeTotal + '\'' +
+			", nodeData='" + nodeData + '\'' +
+			", shards='" + shards + '\'' +
+			", primary='" + primary + '\'' +
+			", relocating='" + relocating + '\'' +
+			", initializing='" + initializing + '\'' +
+			", unassigned='" + unassigned + '\'' +
+			", pendingTasks='" + pendingTasks + '\'' +
+			", activePercent='" + activePercent + '\'' +
+			'}';
+	}
 }

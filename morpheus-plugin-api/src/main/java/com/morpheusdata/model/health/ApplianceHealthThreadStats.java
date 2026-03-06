@@ -58,4 +58,17 @@ public class ApplianceHealthThreadStats {
 
 	public String getStatusMessage() { return statusMessage; }
 	public void setStatusMessage(String statusMessage) { this.statusMessage = statusMessage; }
+
+	@Override
+	public String toString() {
+		return "ApplianceHealthThreadStats{" +
+			"totalThreads=" + totalThreads +
+			", runningWebThreads=" + runningWebThreads +
+			", totalCpuTime=" + totalCpuTime +
+			", busyThreads=" + busyThreads.size() +
+			", blockedThreads=" + blockedThreads.size() +
+			", status='" + status + '\'' +
+			", statusMessage='" + statusMessage + '\'' +
+			'}';
+	}
 }

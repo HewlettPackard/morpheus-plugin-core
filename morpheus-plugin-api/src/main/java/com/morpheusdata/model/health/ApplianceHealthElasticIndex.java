@@ -58,4 +58,19 @@ public class ApplianceHealthElasticIndex {
 
 	public String getTotalSize() { return totalSize; }
 	public void setTotalSize(String totalSize) { this.totalSize = totalSize; }
+
+	@Override
+	public String toString() {
+		return "ApplianceHealthElasticIndex{" +
+			"index='" + index + '\'' +
+			", health='" + health + '\'' +
+			", status='" + status + '\'' +
+			", uuid='" + uuid + '\'' +
+			", primary='" + primary + '\'' +
+			", replicas='" + replicas + '\'' +
+			", count='" + count + '\'' +
+			", primarySize='" + primarySize + '\'' +
+			", totalSize='" + totalSize + '\'' +
+			'}';
+	}
 }

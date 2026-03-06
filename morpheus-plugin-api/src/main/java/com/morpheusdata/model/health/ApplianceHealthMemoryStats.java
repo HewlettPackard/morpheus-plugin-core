@@ -74,4 +74,21 @@ public class ApplianceHealthMemoryStats {
 
 	public String getStatusMessage() { return statusMessage; }
 	public void setStatusMessage(String statusMessage) { this.statusMessage = statusMessage; }
+
+	@Override
+	public String toString() {
+		return "ApplianceHealthMemoryStats{" +
+			"maxMemory=" + maxMemory +
+			", totalMemory=" + totalMemory +
+			", freeMemory=" + freeMemory +
+			", usedMemory=" + usedMemory +
+			", systemMemory=" + systemMemory +
+			", systemFreeMemory=" + systemFreeMemory +
+			", memoryPercent=" + memoryPercent +
+			", systemMemoryPercent=" + systemMemoryPercent +
+			", swapPercent=" + swapPercent +
+			", status='" + status + '\'' +
+			", statusMessage='" + statusMessage + '\'' +
+			'}';
+	}
 }

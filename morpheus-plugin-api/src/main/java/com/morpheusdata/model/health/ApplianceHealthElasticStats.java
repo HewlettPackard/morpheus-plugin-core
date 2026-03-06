@@ -49,4 +49,17 @@ public class ApplianceHealthElasticStats {
 
 	public ApplianceHealthElasticClusterStats getStats() { return stats; }
 	public void setStats(ApplianceHealthElasticClusterStats stats) { this.stats = stats; }
+
+	@Override
+	public String toString() {
+		return "ApplianceHealthElasticStats{" +
+			"status='" + status + '\'' +
+			", statusMessage='" + statusMessage + '\'' +
+			", master=" + master +
+			", nodes=" + nodes.size() +
+			", indices=" + indices.size() +
+			", badIndices=" + badIndices.size() +
+			", stats=" + stats +
+			'}';
+	}
 }

@@ -41,4 +41,15 @@ public class ApplianceHealthRabbitStats {
 
 	public String getStatusMessage() { return statusMessage; }
 	public void setStatusMessage(String statusMessage) { this.statusMessage = statusMessage; }
+
+	@Override
+	public String toString() {
+		return "ApplianceHealthRabbitStats{" +
+			"queues=" + queues.size() +
+			", busyQueues=" + busyQueues.size() +
+			", errorQueues=" + errorQueues.size() +
+			", status='" + status + '\'' +
+			", statusMessage='" + statusMessage + '\'' +
+			'}';
+	}
 }

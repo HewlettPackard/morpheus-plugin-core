@@ -42,4 +42,16 @@ public class ApplianceHealthStorageFile {
 
 	public Double getPercent() { return percent; }
 	public void setPercent(Double percent) { this.percent = percent; }
+
+	@Override
+	public String toString() {
+		return "ApplianceHealthStorageFile{" +
+			"name='" + name + '\'' +
+			", path='" + path + '\'' +
+			", used=" + used +
+			", available=" + available +
+			", total=" + total +
+			", percent=" + percent +
+			'}';
+	}
 }

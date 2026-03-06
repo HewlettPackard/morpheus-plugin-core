@@ -49,4 +49,17 @@ public class ApplianceHealthStorageStats {
 
 	public String getStatusMessage() { return statusMessage; }
 	public void setStatusMessage(String statusMessage) { this.statusMessage = statusMessage; }
+
+	@Override
+	public String toString() {
+		return "ApplianceHealthStorageStats{" +
+			"used=" + used +
+			", available=" + available +
+			", total=" + total +
+			", percent=" + percent +
+			", files=" + files.size() +
+			", status='" + status + '\'' +
+			", statusMessage='" + statusMessage + '\'' +
+			'}';
+	}
 }

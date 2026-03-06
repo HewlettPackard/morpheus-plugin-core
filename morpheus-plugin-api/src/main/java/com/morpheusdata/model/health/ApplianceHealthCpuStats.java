@@ -46,4 +46,17 @@ public class ApplianceHealthCpuStats {
 
 	public String getStatusMessage() { return statusMessage; }
 	public void setStatusMessage(String statusMessage) { this.statusMessage = statusMessage; }
+
+	@Override
+	public String toString() {
+		return "ApplianceHealthCpuStats{" +
+			"cpuLoad=" + cpuLoad +
+			", cpuTotalLoad=" + cpuTotalLoad +
+			", processorCount=" + processorCount +
+			", processTime=" + processTime +
+			", systemLoad=" + systemLoad +
+			", status='" + status + '\'' +
+			", statusMessage='" + statusMessage + '\'' +
+			'}';
+	}
 }

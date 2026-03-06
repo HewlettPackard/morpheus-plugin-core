@@ -71,4 +71,19 @@ public class ApplianceHealthDatabaseStats {
 
 	public String getStatusMessage() { return statusMessage; }
 	public void setStatusMessage(String statusMessage) { this.statusMessage = statusMessage; }
+
+	@Override
+	public String toString() {
+		return "ApplianceHealthDatabaseStats{" +
+			"maxConnections=" + maxConnections +
+			", maxUsedConnections=" + maxUsedConnections +
+			", usedConnections=" + usedConnections +
+			", abortedConnections=" + abortedConnections +
+			", scanPercent=" + scanPercent +
+			", busyConnections=" + busyConnections.size() +
+			", slowQueries=" + slowQueries.size() +
+			", status='" + status + '\'' +
+			", statusMessage='" + statusMessage + '\'' +
+			'}';
+	}
 }
