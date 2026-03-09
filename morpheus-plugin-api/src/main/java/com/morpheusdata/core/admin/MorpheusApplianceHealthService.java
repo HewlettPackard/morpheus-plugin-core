@@ -29,8 +29,9 @@ import io.reactivex.rxjava3.core.Single;
 public interface MorpheusApplianceHealthService {
 
 	/**
-	 * Returns the most recently cached appliance health data. This is efficient
-	 * as it reads from stored health snapshots rather than querying live systems.
+	 * Returns the most recently cached appliance health data (updated every 5 minutes). Use this method
+	 * unless you need real-time health data, as it is more efficient than {@link #getLiveHealth()}.
+	 * It reads from stored health snapshots rather than querying live systems.
 	 * @return an {@link ApplianceHealth} containing all health metric sections
 	 */
 	Single<ApplianceHealth> getHealth();
