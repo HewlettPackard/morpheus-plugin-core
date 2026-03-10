@@ -28,7 +28,11 @@ public class ApplianceLicenseUsage {
 	@Deprecated
 	public Long mvm;
 	public Long mvmSockets;
+	public Long mvmVirtualMachines;
 	public Long sockets;
+	public Long hypervisorSocketCount;
+	public Long publicVirtualMachineCount;
+	public Long publicVirtualMachineSocketCount;
 	public Long iac;
 	public Long xaas;
 	public Long executions;
