@@ -75,6 +75,8 @@ include::IPAMPlugins.adoc[]
 
 include::ReportsPlugin.adoc[]
 
+include::StorageDatastorePlugin.adoc[]
+
 include::TaskPlugin.adoc[]
 
 include::TabsPlugin.adoc[]
