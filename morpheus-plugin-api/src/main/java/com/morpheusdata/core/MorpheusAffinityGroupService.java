@@ -3,10 +3,10 @@ package com.morpheusdata.core;
 import com.morpheusdata.model.AffinityGroup;
 
 /**
- * A data query service for AffinityGroups
+ * A data service for AffinityGroups
  * @author aclement
  * @since 1.3.0
  */
-public interface MorpheusAffinityGroupService extends MorpheusDataQueryService<AffinityGroup> {
+public interface MorpheusAffinityGroupService extends MorpheusDataService<AffinityGroup, AffinityGroup> {
 
 }

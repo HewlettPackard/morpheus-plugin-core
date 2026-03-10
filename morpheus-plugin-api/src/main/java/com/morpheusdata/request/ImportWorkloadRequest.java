@@ -1,5 +1,6 @@
 package com.morpheusdata.request;
 
+import com.bertramlabs.plugins.karman.StorageProvider;
 import com.morpheusdata.model.StorageBucket;
 import com.morpheusdata.model.VirtualImage;
 import com.morpheusdata.model.Workload;
@@ -31,6 +32,17 @@ public class ImportWorkloadRequest {
 	 * bucket using {@link com.morpheusdata.core.MorpheusStorageBucketService#getBucketStorageProvider(Long)}.
 	 */
 	public StorageBucket storageBucket;
+
+
+	/**
+	 * The storage bucket name for the default virtual image provider
+	 */
+	public String defaultBucketName;
+
+	/**
+	 * the storage provider for the default virtual image provider
+	 */
+	public StorageProvider defaultStorageProvider;
 
 	public Workload getWorkload() {
 		return workload;
@@ -70,5 +82,21 @@ public class ImportWorkloadRequest {
 
 	public void setStorageBucket(StorageBucket storageBucket) {
 		this.storageBucket = storageBucket;
+	}
+
+	public String getDefaultBucketName() {
+		return defaultBucketName;
+	}
+
+	public void setDefaultBucketName(String defaultBucketName) {
+		this.defaultBucketName = defaultBucketName;
+	}
+
+	public StorageProvider getDefaultStorageProvider() {
+		return defaultStorageProvider;
+	}
+
+	public void setDefaultStorageProvider(StorageProvider defaultStorageProvider) {
+		this.defaultStorageProvider = defaultStorageProvider;
 	}
 }
