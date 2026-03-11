@@ -27,8 +27,8 @@ import io.reactivex.rxjava3.core.Single;
  * This is a read-only service intended for use in system precheck scenarios — for example,
  * verifying that required plugins are present and healthy before initiating an operation.
  *
- * <p>Use {@link #health(String)} to invoke the {@link com.morpheusdata.core.providers.PluginProvider#health()}
- * method on a live provider at runtime.</p>
+ * <p>Use {@link #health(String)} to invoke the {@link com.morpheusdata.core.Plugin#health()}
+ * method on a live plugin at runtime.</p>
  *
  * @author David Estes
  * @since 1.4.0
@@ -37,8 +37,8 @@ import io.reactivex.rxjava3.core.Single;
 public interface MorpheusPluginService extends MorpheusDataQueryService<PluginInfo> {
 
 	/**
-	 * Calls the {@link com.morpheusdata.core.providers.PluginProvider#health()} method on the live provider
-	 * identified by the given provider code. If no provider with the given code is currently loaded,
+	 * Calls the {@link com.morpheusdata.core.Plugin#health()} method on the live plugin
+	 * identified by the given plugin code. If no plugin with the given code is currently loaded,
 	 * an error {@link ServiceResponse} is returned.
 	 *
 	 * <p><strong>Note:</strong> This is a reactive method and will not perform any operation until subscribed or blockingGet() is called on it.</p>

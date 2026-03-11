@@ -69,16 +69,7 @@ public interface PluginProvider {
 	 */
 	String getName();
 
-	/**
-	 * Returns the health status of this provider. Plugins may override this to report operational status,
-	 * connectivity state, or other diagnostic information useful for system prechecks.
-	 * The default implementation returns a success response indicating the provider is available.
-	 * @return a {@link ServiceResponse} indicating the health of this provider
-	 * @since 1.4.0
-	 */
-	default ServiceResponse health() {
-		return ServiceResponse.success();
-	}
+
 
 
 

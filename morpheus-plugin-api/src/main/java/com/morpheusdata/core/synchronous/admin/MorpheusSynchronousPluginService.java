@@ -31,7 +31,7 @@ import com.morpheusdata.response.ServiceResponse;
 public interface MorpheusSynchronousPluginService extends MorpheusSynchronousDataQueryService<PluginInfo> {
 
 	/**
-	 * Calls the {@link com.morpheusdata.core.providers.PluginProvider#health()} method on the live provider
+	 * Calls the {@link com.morpheusdata.core.Plugin#health()} method on the live plugin
 	 * identified by the given provider code. If no provider with the given code is currently loaded,
 	 * an error {@link ServiceResponse} is returned.
 	 *
