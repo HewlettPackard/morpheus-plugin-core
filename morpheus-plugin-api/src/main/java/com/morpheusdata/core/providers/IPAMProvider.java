@@ -129,16 +129,6 @@ public interface IPAMProvider extends PluginProvider {
 	List<OptionType> getIntegrationOptionTypes();
 
 	/**
-	 * Provide custom configuration options when creating or editing a {@link NetworkPool} for
-	 * one of this provider's registered {@link NetworkPoolType} records.
-	 * @return a List of OptionType
-	 * @since 1.3.2
-	 */
-	default List<OptionType> getNetworkPoolOptionTypes() {
-		return List.of();
-	}
-
-	/**
 	 * Returns the IPAM Integration logo for display when a user needs to view or add this integration
 	 * @since 0.12.3
 	 * @return Icon representation of assets stored in the src/assets of the project.
