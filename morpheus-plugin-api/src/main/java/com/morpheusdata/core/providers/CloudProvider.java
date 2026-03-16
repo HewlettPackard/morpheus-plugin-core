@@ -572,6 +572,23 @@ public interface CloudProvider extends PluginProvider {
 		ServiceResponse<AffinityGroup> removeAffinityGroup(Cloud cloud, AffinityGroup affinityGroup);
 	}
 
+
+	/**
+	 * Adds support to a {@link CloudProvider} for managing Host / VM Groups. Some clouds, like vmware, may support
+	 * setting these rules on a set of compute servers to either ensure they run on separate hosts, or run on the same host.
+	 * @since 1.4.0
+	 * @see HostVmGroup
+	 * @see CloudProvider
+	 * @author David Estes
+	 */
+	public interface HostVmGroupFacet {
+		ServiceResponse<HostVmGroup> createHostVmGroup(Cloud cloud, HostVmGroup hostVmGroup);
+
+		ServiceResponse<HostVmGroup> updateHostVmGroup(Cloud cloud, HostVmGroup hostVmGroup);
+
+		ServiceResponse<HostVmGroup> removeHostVmGroup(Cloud cloud, HostVmGroup hostVmGroup);
+	}
+
 	/**
 	 * Facet for generating support bundle contents for Cloud integrations.
 	 * Implement this facet to provide support bundle generation capabilities for cloud providers.
