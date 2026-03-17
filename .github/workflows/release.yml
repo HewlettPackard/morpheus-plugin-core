@@ -60,7 +60,6 @@ jobs:
           closeSonatypeStagingRepository
   release:
     name: "Release Staging Repository"
-    environment: release
     needs: [publish]
     runs-on: ubuntu-latest
     permissions:
