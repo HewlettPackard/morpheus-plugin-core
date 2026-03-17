@@ -44,12 +44,11 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
       - name: "Publish to Sonatype"
         env:
-          SIGNING_KEY_ARMOR: ${{ secrets.SIGNING_KEY_ARMOR }}
+          SIGNING_IN_MEMORY_KEY: ${{ secrets.SIGNING_KEY_ARMOR }}
+          SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY }}
+          SIGNING_PASSWORD: ${{ secrets.SECRING_PASSPHRASE }}
         run: >
-          ./gradlew --stacktrace
-          -PsigningInMemoryKey="$SIGNING_KEY_ARMOR"
-          -PsigningKeyId=${{ secrets.SIGNING_KEY }}
-          -PsigningPassword=${{ secrets.SECRING_PASSPHRASE }}
+          ./gradlew --stacktrace --info
           -PmavenMorpheusUser=${{ secrets.MAVEN_USERNAME }}
           -PmavenMorpheusPassword=${{ secrets.MAVEN_PASSWORD }}
           morpheus-plugin-api:publishMavenPublicationToSonatypeRepository
