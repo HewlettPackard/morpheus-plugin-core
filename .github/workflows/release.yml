@@ -46,7 +46,7 @@ jobs:
         env:
           SIGNING_KEY_ARMOR: ${{ secrets.SIGNING_KEY_ARMOR }}
         run: >
-          ./gradlew
+          ./gradlew --stacktrace
           -PsigningInMemoryKey="$SIGNING_KEY_ARMOR"
           -PsigningKeyId=${{ secrets.SIGNING_KEY }}
           -PsigningPassword=${{ secrets.SECRING_PASSPHRASE }}
