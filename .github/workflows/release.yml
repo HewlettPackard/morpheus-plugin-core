@@ -35,10 +35,6 @@ jobs:
       - name: "Ensure source files use common date"
         run: |
           find . -depth \( -type f -o -type d \) -exec touch -d "@${SOURCE_DATE_EPOCH}" {} +
-      - name: "Generate key file for artifact signing"
-        env:
-          SECRING_FILE: ${{ secrets.SECRING_FILE }}
-        run: echo $SECRING_FILE | base64 -d > ${{ github.workspace }}/secring.gpg
       - name: "Setup JDK"
         uses: actions/setup-java@v4
         with:
@@ -47,9 +43,11 @@ jobs:
       - name: "Setup Gradle"
         uses: gradle/actions/setup-gradle@v4
       - name: "Publish to Sonatype"
+        env:
+          SIGNING_KEY_ARMOR: ${{ secrets.SIGNING_KEY_ARMOR }}
         run: >
           ./gradlew
-          -Psigning.secretKeyRingFile=${{ github.workspace }}/secring.gpg
+          -PsigningInMemoryKey="$SIGNING_KEY_ARMOR"
           -Psigning.keyId=${{ secrets.SIGNING_KEY }}
           -Psigning.password=${{ secrets.SECRING_PASSPHRASE }}
           -PmavenMorpheusUser=${{ secrets.MAVEN_USERNAME }}

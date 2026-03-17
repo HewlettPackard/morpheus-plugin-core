@@ -75,6 +75,9 @@ subprojects { project ->
         afterEvaluate {
             signing {
                 required { isReleaseVersion && gradle.taskGraph.hasTask("publish") }
+                if(project.hasProperty('signingInMemoryKey')) {
+                    useInMemoryPgpKeys(project.findProperty('signing.keyId'), project.property('signingInMemoryKey'), project.findProperty('signing.password'))
+                }
                 if(project.name == 'morpheus-plugin-gradle') {
                     def publications = publishing.publications
                     publications.matching({ it.name == 'pluginMaven' }).all {
@@ -83,7 +86,6 @@ subprojects { project ->
                 } else {
                     sign publishing.publications.maven
                 }
-                
             }
         }
 
