@@ -1,0 +1,87 @@
+name: "Release"
+on:
+  release:
+    types: [published]
+permissions:
+  contents: write
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  JAVA_VERSION: '17.0.15' # this must be a specific version for reproducible builds
+  RELEASE_TAG_PREFIX: 'rel-'
+jobs:
+  publish:
+    name: "Publish to Sonatype"
+    permissions:
+      packages: read
+      contents: write
+    runs-on: ubuntu-24.04
+    outputs:
+      release_version: ${{ steps.release_version.outputs.value }}
+    steps:
+      - name: "Store the current release version"
+        id: release_version
+        run: |
+          export RELEASE_VERSION="${{ github.ref_name }}"
+          export RELEASE_VERSION=${RELEASE_VERSION:${#RELEASE_TAG_PREFIX}}
+          echo "Found Release Version: ${RELEASE_VERSION}"
+          echo "value=${RELEASE_VERSION}" >> $GITHUB_OUTPUT
+      - name: "Checkout repository"
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: rel-${{ steps.release_version.outputs.value }}
+      - name: "Ensure Common Build Date"
+        run: echo "SOURCE_DATE_EPOCH=$(git log -1 --pretty=%ct)" >> "$GITHUB_ENV"
+      - name: "Ensure source files use common date"
+        run: |
+          find . -depth \( -type f -o -type d \) -exec touch -d "@${SOURCE_DATE_EPOCH}" {} +
+      - name: "Generate key file for artifact signing"
+        env:
+          SECRING_FILE: ${{ secrets.SECRING_FILE }}
+        run: echo $SECRING_FILE | base64 -d > ${{ github.workspace }}/secring.gpg
+      - name: "Setup JDK"
+        uses: actions/setup-java@v4
+        with:
+          distribution: liberica
+          java-version: ${{ env.JAVA_VERSION }}
+      - name: "Setup Gradle"
+        uses: gradle/actions/setup-gradle@v4
+      - name: "Publish to Sonatype"
+        env:
+          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+          SIGNING_PASSPHRASE: ${{ secrets.SECRING_PASSPHRASE }}
+        run: >
+          ./gradlew
+          -Psigning.secretKeyRingFile=${{ github.workspace }}/secring.gpg
+          -PmavenMorpheusUser=${{ secrets.MAVEN_USERNAME }}
+          -PmavenMorpheusPassword=${{ secrets.MAVEN_PASSWORD }}
+          morpheus-plugin-api:publishMavenPublicationToSonatypeRepository
+          morpheus-plugin-gradle:publishPluginMavenPublicationToSonatypeRepository
+          closeSonatypeStagingRepository
+  release:
+    name: "Release Staging Repository"
+    environment: release
+    needs: [publish]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: "Checkout repository"
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: rel-${{ needs.publish.outputs.release_version }}
+      - name: "Setup JDK"
+        uses: actions/setup-java@v4
+        with:
+          distribution: liberica
+          java-version: ${{ env.JAVA_VERSION }}
+      - name: "Setup Gradle"
+        uses: gradle/actions/setup-gradle@v4
+      - name: "Release staging repository"
+        run: >
+          ./gradlew
+          -PmavenMorpheusUser=${{ secrets.MAVEN_USERNAME }}
+          -PmavenMorpheusPassword=${{ secrets.MAVEN_PASSWORD }}
+          findSonatypeStagingRepository
+          releaseSonatypeStagingRepository

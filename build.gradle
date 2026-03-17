@@ -76,6 +76,7 @@ subprojects { project ->
             signing {
                 required { isReleaseVersion && gradle.taskGraph.hasTask("publish") }
                 if(project.name == 'morpheus-plugin-gradle') {
+                    sign publishing.publications.pluginMaven
                 } else {
                     sign publishing.publications.maven
                 }
