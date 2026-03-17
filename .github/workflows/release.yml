@@ -48,8 +48,8 @@ jobs:
         run: >
           ./gradlew
           -PsigningInMemoryKey="$SIGNING_KEY_ARMOR"
-          -Psigning.keyId=${{ secrets.SIGNING_KEY }}
-          -Psigning.password=${{ secrets.SECRING_PASSPHRASE }}
+          -PsigningKeyId=${{ secrets.SIGNING_KEY }}
+          -PsigningPassword=${{ secrets.SECRING_PASSPHRASE }}
           -PmavenMorpheusUser=${{ secrets.MAVEN_USERNAME }}
           -PmavenMorpheusPassword=${{ secrets.MAVEN_PASSWORD }}
           morpheus-plugin-api:publishMavenPublicationToSonatypeRepository
