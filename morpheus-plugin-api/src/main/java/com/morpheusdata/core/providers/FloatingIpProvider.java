@@ -16,7 +16,7 @@ import java.util.Collection;
  * @since 1.2.6
  */
 // add type
-public interface FloatingIpProvider extends PluginProvider{
+public interface FloatingIpProvider extends PluginProvider {
 	/**
 	 * Attaches a floating ip to a server
 	 * @param server the server to attach the floating ip to
@@ -62,10 +62,19 @@ public interface FloatingIpProvider extends PluginProvider{
 	ServiceResponse<NetworkFloatingIp> allocateFloatingIp(NetworkServer networkServer, NetworkFloatingIpPool pool);
 
 	/**
+	 * Deprecated. Use {@link #getOptionTypes()} instead.
+	 * @return a collection of {@link OptionType} objects representing the supported floating ip option types
+	 */
+	@Deprecated(since="1.3.2")
+	default Collection<OptionType> getFloatingIpTypes() {
+		return getOptionTypes();
+	}
+
+	/**
 	 * Get the list of floating ip option types. The option types are used when adding Floating IPs to a provisioned server
 	 * @return a collection of {@link OptionType} objects representing the supported floating ip option types
 	 */
-	default Collection<OptionType> getFloatingIpTypes() {
+	default Collection<OptionType> getOptionTypes() {
 		return new ArrayList<>();
 	}
 
