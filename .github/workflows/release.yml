@@ -48,11 +48,12 @@ jobs:
           SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY }}
           SIGNING_PASSWORD: ${{ secrets.SECRING_PASSPHRASE }}
         run: >
-          ./gradlew --stacktrace --info
+          ./gradlew
           -PmavenMorpheusUser=${{ secrets.MAVEN_USERNAME }}
           -PmavenMorpheusPassword=${{ secrets.MAVEN_PASSWORD }}
           morpheus-plugin-api:publishMavenPublicationToSonatypeRepository
           morpheus-plugin-gradle:publishPluginMavenPublicationToSonatypeRepository
+          morpheus-plugin-gradle:publishMorpheusPluginPluginMarkerMavenPublicationToSonatypeRepository
           closeSonatypeStagingRepository
   release:
     name: "Release Staging Repository"
