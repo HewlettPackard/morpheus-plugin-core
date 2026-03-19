@@ -2,6 +2,23 @@
 
 **Note:** Morpheus Plugin API is now 1.0! This means calls that are used will be supported for a longer period of time and given appropriate deprecation warnings when necessary. Morpheus Plugin API `1.3.x` requires a minimum Morpheus version of `8.1.x`. Morpheus Plugin API `1.2.x` requires Morpheus `8.0.x`, and Morpheus `7.0.x` runs on Core version `1.1.x`.
 
+* **1.3.1**
+** *Cloud and Credential Validation*
+*** Improved `ValidateCloudRequest` to support all credential types (MORPH-760).
+** *Storage and Volume Enhancements*
+*** Added `filterStorageVolumeTypes` method to provider interfaces for volume type filtering (MORPH-4070).
+*** Added `storageProvider` field to `VirtualImage` model class.
+*** Added `defaultBucketName` and `defaultStorageProvider` to `ImportWorkloadRequest`.
+*** Added storage provider documentation.
+** *Backup and vCenter Support*
+*** Added missing model fields and backup service methods for vCenter plugin support (MORPH-757).
+** *Affinity Group and Resource Management*
+*** Updated `AffinityGroups` to support full CRUD operations.
+** *Network Improvements*
+*** Minor model changes for floating IP pool support.
+** *Provider Versioning*
+*** Updated `@since` annotations to `1.3.1` for `DatastoreTypeProvider` and `ClusterProvider`.
+
 * **1.3.0**
 ** *Morpheus 8.1.x Compatibility and Generator Updates*
 *** Added project template generation support for Morpheus `8.1.x`.
