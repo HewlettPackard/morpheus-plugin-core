@@ -1,11 +1,15 @@
 package com.morpheusdata.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class NetworkFloatingIpPoolType extends MorpheusModel {
 	protected String code;
 	protected String name;
 	protected Boolean isPlugin;
 	protected Boolean isEmbedded;
 	protected Boolean creatable;
+	protected List<OptionType> optionTypes = new ArrayList<>();
 
 	public String getCode() {
 		return code;
@@ -50,5 +54,14 @@ public class NetworkFloatingIpPoolType extends MorpheusModel {
 	public void setCreatable(Boolean creatable) {
 		this.creatable = creatable;
 		markDirty("creatable", creatable);
+	}
+
+	public List<OptionType> getOptionTypes() {
+		return optionTypes;
+	}
+
+	public void setOptionTypes(List<OptionType> optionTypes) {
+		this.optionTypes = optionTypes;
+		markDirty("optionTypes", optionTypes);
 	}
 }

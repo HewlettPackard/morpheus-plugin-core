@@ -136,6 +136,45 @@ public interface IPAMProvider extends PluginProvider {
 	Icon getIcon();
 
 	/**
+	 * Called when a {@link NetworkPool} is created in Morpheus. Override to perform any corresponding
+	 * operations on the external IPAM system (e.g. creating a subnet).
+	 * @param poolServer The Integration Object contains all the saved information regarding configuration of the IPAM Provider.
+	 * @param networkPool the NetworkPool that was created.
+	 * @param opts any custom payload submission options may exist here
+	 * @return a ServiceResponse containing the success state of the operation
+	 * @since 1.3.2
+	 */
+	default ServiceResponse createNetworkPool(NetworkPoolServer poolServer, NetworkPool networkPool, Map opts) {
+		return ServiceResponse.success();
+	}
+
+	/**
+	 * Called when a {@link NetworkPool} is updated in Morpheus. Override to perform any corresponding
+	 * operations on the external IPAM system.
+	 * @param poolServer The Integration Object contains all the saved information regarding configuration of the IPAM Provider.
+	 * @param networkPool the NetworkPool that was updated.
+	 * @param opts any custom payload submission options may exist here
+	 * @return a ServiceResponse containing the success state of the operation
+	 * @since 1.3.2
+	 */
+	default ServiceResponse updateNetworkPool(NetworkPoolServer poolServer, NetworkPool networkPool, Map opts) {
+		return ServiceResponse.success();
+	}
+
+	/**
+	 * Called when a {@link NetworkPool} is deleted from Morpheus. Override to perform any corresponding
+	 * cleanup on the external IPAM system.
+	 * @param poolServer The Integration Object contains all the saved information regarding configuration of the IPAM Provider.
+	 * @param networkPool the NetworkPool that was deleted.
+	 * @param opts any custom payload submission options may exist here
+	 * @return a ServiceResponse containing the success state of the operation
+	 * @since 1.3.2
+	 */
+	default ServiceResponse deleteNetworkPool(NetworkPoolServer poolServer, NetworkPool networkPool, Map opts) {
+		return ServiceResponse.success();
+	}
+
+	/**
 	 * Flags if this IPAMProvider can be created by the user. Some IPAMProviders are system injected
 	 * and cannot be created by the user
 	 * @since 1.2.4
