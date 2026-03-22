@@ -26,13 +26,6 @@ import com.morpheusdata.response.ServiceResponse;
  * to a support bundle — for example, appliance logs, health snapshots, or any other diagnostic
  * data that is not tied to a specific cloud, cluster, or other resource type.
  *
- * <p>When registered, Morpheus creates a {@code SupportBundleContentType} row (standalone kind,
- * {@code refType=null}, {@code refId=null}) keyed by {@link #getCode()} with the category from
- * {@link #getCategory()}, name from {@link #getSupportBundleName()}, and description from
- * {@link #getSupportBundleDescription()}. The row's {@code serviceBean} is set to
- * {@code "pluginSupportBundleContentsService"}, the single Morpheus-internal dispatcher that
- * routes generate requests to the correct registered provider by code.
- *
  * <p>To include this provider's content in a bundle, the API caller includes a content entry
  * with {@code "type": "&lt;your-code&gt;"} in the generate request.
  *
