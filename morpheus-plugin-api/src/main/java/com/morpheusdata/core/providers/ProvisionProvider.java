@@ -655,10 +655,92 @@ public interface ProvisionProvider extends PluginProvider {
 	}
 
 	/**
+	 * Provides a typed hypervisor console contract for browser-based VM consoles.
+	 *
+	 * Implement this facet for new development. The returned
+	 * {@link HypervisorConsoleConnection#getProtocols()} value controls WebSocket sub-protocol handling:
+	 *
+	 * <ul>
+	 *     <li>{@code null}: no override specified, preserve Morpheus defaults</li>
+	 *     <li>empty list: send no {@code Sec-WebSocket-Protocol} header</li>
+	 *     <li>non-empty list: send the provided values in order</li>
+	 * </ul>
+	 *
+	 * @author Dustin DeYoung
+	 * @since 1.3.4
+	 */
+	public interface HypervisorConsoleFacetV2 {
+
+		/**
+		 * Builds the connection details required to connect to the target server using xvpVnc.
+		 * @since 1.3.4
+		 * @param server server to connect to
+		 * @return Connection details for an xvpVnc console connection to the server
+		 */
+		default ServiceResponse<HypervisorConsoleConnection> getXvpVNCConsoleConnection(ComputeServer server) {
+			return null;
+		}
+
+		/**
+		 * Builds the connection details required to connect to the target server using noVNC.
+		 * @since 1.3.4
+		 * @param server server to connect to
+		 * @return Connection details for a noVNC console connection to the server
+		 */
+		default ServiceResponse<HypervisorConsoleConnection> getNoVNCConsoleConnection(ComputeServer server) {
+			return null;
+		}
+
+		/**
+		 * Builds the connection details required to connect to the target server using WMKS.
+		 * @since 1.3.4
+		 * @param server server to connect to
+		 * @return Connection details for a WMKS console connection to the server
+		 */
+		default ServiceResponse<HypervisorConsoleConnection> getWMKSConsoleConnection(ComputeServer server) {
+			return null;
+		}
+
+		/**
+		 * Method called before using the console host to ensure it is accurate.
+		 * @since 1.3.4
+		 * @param server server to connect to
+		 * @return Success or failure
+		 */
+		default ServiceResponse updateServerHost(ComputeServer server){
+			return null;
+		}
+
+		/**
+		 * Method called before making a hypervisor console connection to a server to ensure that the server settings are correct.
+		 * @since 1.3.4
+		 * @param server server to connect to
+		 * @return Success or failure
+		 */
+		default ServiceResponse enableConsoleAccess(ComputeServer server){
+			return null;
+		}
+	}
+
+	/**
 	 * Provides methods for interacting with provisioned vms through a hypervisor console
+	 *
+	 * Console connection data is returned as a generic map for backward compatibility.
+	 * Legacy implementations may optionally include a {@code protocols} key to override
+	 * WebSocket sub-protocol handling:
+	 *
+	 * <ul>
+	 *     <li>omit {@code protocols}: preserve Morpheus defaults</li>
+	 *     <li>{@code protocols: []}: send no {@code Sec-WebSocket-Protocol} header</li>
+	 *     <li>{@code protocols: ['plain.kubevirt.io']}: send the provided values in order</li>
+	 * </ul>
+	 *
 	 * @author Alex Clement
 	 * @since 0.15.3
+	 * @deprecated Since 1.3.4. Use {@link HypervisorConsoleFacetV2}. This legacy map-based
+	 * console contract will be removed in a future release.
 	 */
+	@Deprecated(since = "1.3.4", forRemoval = false)
 	public interface HypervisorConsoleFacet {
 
 		/**
