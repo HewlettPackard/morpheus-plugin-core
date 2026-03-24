@@ -16,6 +16,8 @@
 
 package com.morpheusdata.model;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,13 +40,7 @@ public class HypervisorConsoleConnection {
 	protected String token;
 	protected String host;
 	protected Integer port;
-	protected Map<String,String> headers;
 	protected List<String> protocols;
-	protected String keyExtension;
-	protected String keymap;
-	protected Boolean fakePasswordVNC;
-	protected String vmxHandshakePath;
-	protected String httpVersion;
 
 	public String getUrl() {
 		return url;
@@ -78,14 +74,6 @@ public class HypervisorConsoleConnection {
 		this.port = port;
 	}
 
-	public Map<String, String> getHeaders() {
-		return headers;
-	}
-
-	public void setHeaders(Map<String, String> headers) {
-		this.headers = headers;
-	}
-
 	public List<String> getProtocols() {
 		return protocols;
 	}
@@ -94,43 +82,18 @@ public class HypervisorConsoleConnection {
 		this.protocols = protocols;
 	}
 
-	public String getKeyExtension() {
-		return keyExtension;
-	}
-
-	public void setKeyExtension(String keyExtension) {
-		this.keyExtension = keyExtension;
-	}
-
-	public String getKeymap() {
-		return keymap;
-	}
-
-	public void setKeymap(String keymap) {
-		this.keymap = keymap;
-	}
-
-	public Boolean getFakePasswordVNC() {
-		return fakePasswordVNC;
-	}
-
-	public void setFakePasswordVNC(Boolean fakePasswordVNC) {
-		this.fakePasswordVNC = fakePasswordVNC;
-	}
-
-	public String getVmxHandshakePath() {
-		return vmxHandshakePath;
-	}
-
-	public void setVmxHandshakePath(String vmxHandshakePath) {
-		this.vmxHandshakePath = vmxHandshakePath;
-	}
-
-	public String getHttpVersion() {
-		return httpVersion;
-	}
-
-	public void setHttpVersion(String httpVersion) {
-		this.httpVersion = httpVersion;
+	public Map<String, Object> toMap() {
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		if(url != null)
+			rtn.put("url", url);
+		if(token != null)
+			rtn.put("token", token);
+		if(host != null)
+			rtn.put("host", host);
+		if(port != null)
+			rtn.put("port", port);
+		if(protocols != null)
+			rtn.put("protocols", new ArrayList<>(protocols));
+		return rtn;
 	}
 }
