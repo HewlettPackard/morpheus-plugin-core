@@ -28,7 +28,7 @@ class ProvisionProviderHypervisorConsoleFacetSpec extends Specification {
 		response.success
 		response.data.url == 'wss://console.example/vnc'
 		response.data.protocols == ['plain.kubevirt.io']
-		response.data.headers == ['Authorization': 'Bearer token']
+		response.data.toMap() == [url: 'wss://console.example/vnc', protocols: ['plain.kubevirt.io']]
 	}
 
 	static class TestHypervisorConsoleFacetV2Provider implements ProvisionProvider.HypervisorConsoleFacetV2 {
@@ -37,7 +37,6 @@ class ProvisionProviderHypervisorConsoleFacetSpec extends Specification {
 			def connection = new HypervisorConsoleConnection()
 			connection.url = 'wss://console.example/vnc'
 			connection.protocols = ['plain.kubevirt.io']
-			connection.headers = ['Authorization': 'Bearer token']
 			return ServiceResponse.success(connection)
 		}
 	}
