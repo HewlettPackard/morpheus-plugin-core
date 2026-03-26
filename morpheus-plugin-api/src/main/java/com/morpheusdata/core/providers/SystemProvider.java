@@ -103,6 +103,16 @@ public interface SystemProvider extends PluginProvider {
 	default ServiceResponse addSystemComponent(System system, SystemRequest systemRequest, SystemComponentType componentType) { return ServiceResponse.success(); }
 
 	/**
+	 * This method is called when updating an existing component on a system (e.g. reconfiguring a host, storage array,
+	 * etc. that was previously added to the system)
+	 * @param system
+	 * @param systemRequest
+	 * @param componentType
+	 * @return
+	 */
+	default ServiceResponse updateSystemComponent(System system, SystemRequest systemRequest, SystemComponentType componentType) { return ServiceResponse.success(); }
+
+	/**
 	 * Facet for generating support bundle contents for System components.
 	 * Implement this facet to provide support bundle generation capabilities for systems.
 	 *
