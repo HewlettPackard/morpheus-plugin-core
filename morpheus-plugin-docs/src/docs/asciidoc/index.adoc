@@ -52,8 +52,6 @@ include::Seeding.adoc[]
 
 include::ProcessService.adoc[]
 
-include::SupportBundleContents.adoc[]
-
 
 == Examples
 

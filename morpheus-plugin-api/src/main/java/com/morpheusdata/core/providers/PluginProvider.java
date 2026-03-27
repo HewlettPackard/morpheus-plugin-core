@@ -21,8 +21,6 @@ import com.morpheusdata.core.MorpheusContext;
 import com.morpheusdata.core.Plugin;
 import com.morpheusdata.model.AccountIntegration;
 import com.morpheusdata.model.CheckLevel;
-import com.morpheusdata.model.GenerateSupportBundleContentsRequest;
-import com.morpheusdata.model.GenerateSupportBundleContentsResponse;
 import com.morpheusdata.model.UpdateOperation;
 import com.morpheusdata.model.UpdateDefinition;
 import com.morpheusdata.model.event.*;
@@ -188,51 +186,4 @@ public interface PluginProvider {
 		}
 	}
 
-	/**
-	 * Applying this Facet to a provider will allow it to generate support bundle contents for target devices.
-	 * This is useful for collecting logs, configuration files, and other relevant information for
-	 * troubleshooting and analysis.
-	 *
-	 * @param <T> the type of target device this facet operates on
-	 * @since 1.4.0
-	 * @author Mike Carlin
-	 */
-	public interface SupportBundleFacet<T> {
-
-		/**
-		 * Returns the human-readable display name for this support bundle content type as shown in
-		 * the CLI, API, and UI pickers. Defaults to the provider's own {@link PluginProvider#getName()}
-		 * if not overridden, but implementations should override this to give the bundle entry a more
-		 * descriptive label (e.g. "VMware vSphere Logs" rather than "VMware vSphere").
-		 *
-		 * @return the display name; must not be null
-		 */
-		default String getSupportBundleName() {
-			return ((PluginProvider) this).getName();
-		}
-
-		/**
-		 * Returns an optional description of what this content type contributes to the support bundle
-		 * (e.g. "Includes vCenter event logs, cluster configuration, and host diagnostics"). Shown in
-		 * tooltips and detail views in the CLI and UI. Returns {@code null} by default.
-		 *
-		 * @return the description string, or null if none
-		 */
-		default String getSupportBundleDescription() {
-			return null;
-		}
-
-		/**
-		 * Generate support bundle contents for the target device. This is useful for collecting logs,
-		 * configuration files, and other relevant information for troubleshooting.
-		 *
-		 * @param target the target device to generate the support bundle contents for
-		 * @param request request containing the bundle and directory for placing support bundle files
-		 * @return a ServiceResponse indicating the success or failure of the support bundle contents generation
-		 */
-		default ServiceResponse<GenerateSupportBundleContentsResponse> generateSupportBundleContents(T target, GenerateSupportBundleContentsRequest request) {
-			return ServiceResponse.success(new GenerateSupportBundleContentsResponse());
-		}
-
-	}
 }

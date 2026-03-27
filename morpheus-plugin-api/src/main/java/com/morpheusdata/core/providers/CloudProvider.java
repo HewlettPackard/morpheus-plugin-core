@@ -19,7 +19,6 @@ package com.morpheusdata.core.providers;
 import com.morpheusdata.core.NetworkProvider;
 import com.morpheusdata.core.network.loadbalancer.LoadBalancerProvider;
 import com.morpheusdata.core.Plugin;
-import com.morpheusdata.core.providers.PluginProvider.SupportBundleFacet;
 import com.morpheusdata.model.*;
 import com.morpheusdata.request.FilterServicePlansCriteria;
 import com.morpheusdata.request.ValidateCloudRequest;
@@ -588,15 +587,6 @@ public interface CloudProvider extends PluginProvider {
 
 		ServiceResponse<HostVmGroup> removeHostVmGroup(Cloud cloud, HostVmGroup hostVmGroup);
 	}
-
-	/**
-	 * Facet for generating support bundle contents for Cloud integrations.
-	 * Implement this facet to provide support bundle generation capabilities for cloud providers.
-	 *
-	 * @since 1.4.0
-	 * @author Mike Carlin
-	 */
-	interface CloudSupportBundleFacet extends SupportBundleFacet<Cloud> {}
 
 	/**
 	 * Classification for a cloud (e.g., public, private).

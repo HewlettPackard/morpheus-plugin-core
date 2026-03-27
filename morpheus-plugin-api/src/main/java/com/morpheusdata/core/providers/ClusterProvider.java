@@ -325,14 +325,6 @@ public interface ClusterProvider extends PluginProvider {
 		return new ClusterTabList();
 	}
 
-	/**
-	 * Facet for generating support bundle contents for Cluster integrations.
-	 *
-	 * @since 1.4.0
-	 * @author Mike Carlin
-	 */
-	interface ClusterSupportBundleFacet extends SupportBundleFacet<ComputeServerGroup> {}
-
 	public interface ServerPowerFacet {
 
 		/**
