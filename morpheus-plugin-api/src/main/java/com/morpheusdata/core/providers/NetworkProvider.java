@@ -16,7 +16,6 @@
 
 package com.morpheusdata.core.providers;
 
-import com.morpheusdata.core.providers.PluginProvider.SupportBundleFacet;
 import com.morpheusdata.model.*;
 import com.morpheusdata.model.event.Event;
 import com.morpheusdata.model.provisioning.NetworkConfiguration;
@@ -923,13 +922,4 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 		 */
 		ServiceResponse<DriftState> getConfigurationDriftDetails(NetworkServer networkServer, DriftState driftState);
 	}
-
-	/**
-	 * Facet for generating support bundle contents for Network Server integrations.
-	 * Implement this facet to provide support bundle generation capabilities for network providers.
-	 *
-	 * @since 1.4.0
-	 * @author Mike Carlin
-	 */
-	interface NetworkServerSupportBundleFacet extends SupportBundleFacet<NetworkServer> {}
 }

@@ -574,12 +574,6 @@ public interface MorpheusAsyncServices {
 	MorpheusAffinityGroupService getAffinityGroup();
 
 	/**
-	 * Returns the {@link MorpheusSupportBundleService} which allows access to support bundle services
-	 * @return an instance of {@link MorpheusSupportBundleService}
-	 */
-	MorpheusSupportBundleService getSupportBundle();
-
-	/**
 	 * Returns the MorpheusLlmService for managing LLM Engine model and integration contexts.
 	 * @return an instance of the MorpheusLlmService
 	 */

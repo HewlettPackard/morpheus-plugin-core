@@ -42,7 +42,6 @@ import com.morpheusdata.core.synchronous.MorpheusSynchronousVirtualImageService;
 import com.morpheusdata.core.synchronous.network.loadbalancer.MorpheusSynchronousLoadBalancerPartitionService;
 import com.morpheusdata.core.synchronous.policy.MorpheusSynchronousPolicyService;
 import com.morpheusdata.core.synchronous.MorpheusSynchronousHypervisorService;
-import com.morpheusdata.core.synchronous.MorpheusSynchronousSupportBundleService;
 import com.morpheusdata.core.providers.CloudProvider;
 import com.morpheusdata.core.providers.DNSProvider;
 import com.morpheusdata.core.providers.IPAMProvider;
@@ -564,10 +563,4 @@ public interface MorpheusServices {
 	MorpheusSynchronousProcessService getProcess();
 
 	MorpheusSynchronousAffinityGroupService getAffinityGroup();
-
-	/**
-	 * Returns the {@link MorpheusSynchronousSupportBundleService} which allows access to support bundle services
-	 * @return an instance of {@link MorpheusSynchronousSupportBundleService}
-	 */
-	MorpheusSynchronousSupportBundleService getSupportBundle();
 }
