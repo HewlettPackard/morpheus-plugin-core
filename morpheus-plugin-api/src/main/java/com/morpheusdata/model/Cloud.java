@@ -39,6 +39,7 @@ public class Cloud extends CloudIdentityProjection {
 	protected String visibility = "private"; //['public', 'private']
 	protected String location;
 	protected String timezone;
+	protected String managedBy;
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	public CloudType cloudType;
 	protected Boolean hasNativeSecurityGroups;
@@ -164,6 +165,8 @@ public class Cloud extends CloudIdentityProjection {
 	public String getTimezone() {
 		return timezone;
 	}
+
+	public String getManagedBy() { return managedBy; }
 
 	public CloudType getCloudType() {
 		return cloudType;
@@ -566,6 +569,11 @@ public class Cloud extends CloudIdentityProjection {
 	public void setTimezone(String timezone) {
 		this.timezone = timezone;
 		markDirty("timezone", timezone);
+	}
+
+	public void setManagedBy(String managedBy) {
+		this.managedBy = managedBy;
+		markDirty("managedBy", managedBy);
 	}
 
 	public void setCloudType(CloudType cloudType) {
