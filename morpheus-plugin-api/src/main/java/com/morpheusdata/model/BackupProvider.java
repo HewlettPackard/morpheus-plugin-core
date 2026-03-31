@@ -40,6 +40,8 @@ public class BackupProvider extends MorpheusModel {
 	protected String name;
 	protected String typeName;
 	protected String lastUpdated;
+	protected Date nextRunDate;
+	protected Integer refreshIntervalHours;
 
 	protected Boolean credentialLoaded = false;
 	protected Map credentialData;
@@ -231,5 +233,23 @@ public class BackupProvider extends MorpheusModel {
 
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
+	}
+
+	public Date getNextRunDate() {
+		return nextRunDate;
+	}
+
+	public void setNextRunDate(Date nextRunDate) {
+		markDirty("nextRunDate", nextRunDate, this.nextRunDate);
+		this.nextRunDate = nextRunDate;
+	}
+
+	public Integer getRefreshIntervalHours() {
+		return refreshIntervalHours;
+	}
+
+	public void setRefreshIntervalHours(Integer refreshIntervalHours) {
+		markDirty("refreshIntervalHours", refreshIntervalHours, this.refreshIntervalHours);
+		this.refreshIntervalHours = refreshIntervalHours;
 	}
 }
