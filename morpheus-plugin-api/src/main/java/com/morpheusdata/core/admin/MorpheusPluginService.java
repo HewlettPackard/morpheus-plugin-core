@@ -18,7 +18,6 @@ package com.morpheusdata.core.admin;
 
 import com.morpheusdata.core.MorpheusDataQueryService;
 import com.morpheusdata.model.PluginInfo;
-import com.morpheusdata.model.projection.PluginInfoIdentityProjection;
 import com.morpheusdata.response.ServiceResponse;
 import io.reactivex.rxjava3.core.Single;
 
