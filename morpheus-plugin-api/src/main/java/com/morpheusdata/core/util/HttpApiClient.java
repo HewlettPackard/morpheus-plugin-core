@@ -1,5 +1,5 @@
 /*
- *  Copyright 2024 Morpheus Data, LLC.
+ *  Copyright 2024-2025 Morpheus Data, LLC.
  *
  * Licensed under the PLUGIN CORE SOURCE LICENSE (the "License");
  * you may not use this file except in compliance with the License.
@@ -76,6 +76,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.*;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
@@ -528,6 +529,37 @@ public class HttpApiClient {
 	}
 
 	/**
+	 * Executes an HTTP request with streaming capabilities to a specified URL and path with JSON response data. This method is intended for
+	 * scenarios where large amounts of data need to be transferred, such as uploading or downloading files, without
+	 * fully loading the data into memory. The method handles authentication and custom request options, and returns
+	 * the raw HTTP response for further processing.
+	 *
+	 * @param url The base URL of the server to which the request is sent. This should include the protocol (e.g., "https://"). Any path or query params
+	 *            included in the URL will be maintained when appending the path and query params supplied in other arguments in this method.
+	 * @param path The specific path or endpoint on the server to which the request is made. This path is appended to the base URL.
+	 * @param username The username used for basic authentication with the server. This can be null if authentication is not required.
+	 * @param password The password used for basic authentication with the server. This should match the provided username. Can be null if authentication is not required.
+	 * @param opts The {@link RequestOptions} object containing various options for the request, such as headers, query parameters, and the request body. The Request body
+	 *             can be one of {@link Map}, {@link String}, byte[], or {@link InputStream}.
+	 * @param method The HTTP method to be used for the request, one of "HEAD", "GET", "POST", "PUT", "PATCH", or "DELETE".
+	 * @return A {@link ServiceResponse} containing the {@link CloseableHttpResponse} from the server. This response
+	 *         can be used to read the server's response, including status codes, headers, and content.
+	 * @throws URISyntaxException If the provided URL or path is invalid or cannot be correctly parsed into a URI.
+	 * @throws Exception If an error occurs during the execution of the request, such as an I/O error, authentication failure, or invalid response.
+	 */
+	public ServiceResponse callStreamJsonApi(
+			String url,
+			final String path,
+			String username,
+			String password,
+			RequestOptions opts,
+			String method
+	) throws URISyntaxException, Exception {
+		ServiceResponse rtn = callStreamApi(url, path, username, password, opts, method);
+		return parseJsonResponse(rtn);
+	}
+
+	/**
 	 * Executes an HTTP request with streaming capabilities to a specified URL and path. This method is intended for
 	 * scenarios where large amounts of data need to be transferred, such as uploading or downloading files, without
 	 * fully loading the data into memory. The method handles authentication and custom request options, and returns
@@ -615,9 +647,11 @@ public class HttpApiClient {
 				OauthUtility.signOAuthRequestPlainText(request, opts.oauth.consumerKey, opts.oauth.consumerSecret, opts.oauth.apiKey, opts.oauth.apiSecret, opts);
 			}
 
-			// Headers
-			if (opts.headers == null || opts.headers.isEmpty() || !opts.headers.containsKey("Content-Type")) {
-				request.addHeader("Content-Type", "application/json");
+			// Headers (Setting Content-Type here not needed for File uploads; handled in body section)
+			if (!(opts.body instanceof File)) {
+				if (opts.headers == null || opts.headers.isEmpty() || !opts.headers.containsKey("Content-Type")) {
+					request.addHeader("Content-Type", "application/json");
+				}
 			}
 
 			if (opts.headers != null && !opts.headers.isEmpty()) {
@@ -689,6 +723,16 @@ public class HttpApiClient {
 					postRequest.setEntity(new ByteArrayEntity((byte[]) opts.body));
 				} else if (opts.body instanceof InputStream) {
 					postRequest.setEntity(new InputStreamEntity((InputStream) (opts.body), opts.contentLength != null ? opts.contentLength : -1));
+				} else if (opts.body instanceof File) {
+					File file = (File) opts.body;
+					MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+					builder.addBinaryBody(
+							"file",
+							file,
+							ContentType.DEFAULT_BINARY,
+							file.getName()
+					);
+					postRequest.setEntity(builder.build());
 				} else {
 					postRequest.setEntity(new StringEntity(opts.body.toString()));
 				}
@@ -713,6 +757,7 @@ public class HttpApiClient {
 
 						if (entity != null) {
 							rtn.setData(response);
+							rtn.setContent(EntityUtils.toString(entity));
 							if (!opts.suppressLog) {
 								log.debug("results of SUCCESSFUL call to {}/{}, results: {}", url, path, rtn.getContent());
 							}
@@ -722,9 +767,11 @@ public class HttpApiClient {
 
 
 						rtn.setSuccess(true);
+						rtn.setStatusCode(Integer.toString(response.getStatusLine().getStatusCode()));
 					} else {
 						if (response.getEntity() != null) {
 							rtn.setData(response);
+							rtn.setContent(EntityUtils.toString(response.getEntity()));
 						}
 						rtn.setSuccess(false);
 						rtn.setErrorCode(Integer.toString(response.getStatusLine().getStatusCode()));
@@ -857,6 +904,18 @@ public class HttpApiClient {
 
 		//execute
 		com.morpheusdata.response.ServiceResponse rtn = callApi(url, path, username, password, opts, method);
+		return parseJsonResponse(rtn);
+	}
+
+	/**
+	 * Parse the JSON response from the API and populate the data field of the
+	 * ServiceResponse.
+	 * 
+	 * @param rtn The ServiceResponse object containing the raw content from the
+	 *            API response.
+	 * @return The updated ServiceResponse object with the parsed data.
+	 */
+	private ServiceResponse parseJsonResponse(ServiceResponse rtn) {
 		rtn.setData(new LinkedHashMap());
 
 		if (rtn.getContent() != null && rtn.getContent().length() > 0) {
