@@ -160,7 +160,6 @@ task customizeJavadoc {
                 if (headCloseIndex > -1) {
                     def externalJs = '''
 <!-- Custom Morpheus Javadoc JavaScript -->
-<script src="https://h50007.www5.hpe.com/hfws-static/js/framework/jquery/v-3-6-0/jquery.js"></script>
 <script src="https://h50007.www5.hpe.com/hfws/us/en/hpe/latest.r/root?contentType=js"></script>
 '''
                     content = content.substring(0, headCloseIndex) + externalJs + content.substring(headCloseIndex)
