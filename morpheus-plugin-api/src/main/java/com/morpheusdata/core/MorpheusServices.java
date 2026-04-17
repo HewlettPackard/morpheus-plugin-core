@@ -49,6 +49,7 @@ import com.morpheusdata.core.providers.TaskProvider;
 import com.morpheusdata.core.synchronous.provisioning.MorpheusSynchronousProvisionService;
 import com.morpheusdata.core.web.MorpheusWebRequestService;
 import com.morpheusdata.core.localization.MorpheusLocalizationService;
+import com.morpheusdata.core.synchronous.MorpheusSynchronousUpdateDefinitionService;
 import com.morpheusdata.model.BackupProvider;
 
 public interface MorpheusServices {
@@ -563,4 +564,10 @@ public interface MorpheusServices {
 	MorpheusSynchronousProcessService getProcess();
 
 	MorpheusSynchronousAffinityGroupService getAffinityGroup();
+
+	/**
+	 * Returns the {@link MorpheusSynchronousUpdateDefinitionService} for synchronous CRUD access to {@link com.morpheusdata.model.UpdateDefinition} objects.
+	 * @return an instance of {@link MorpheusSynchronousUpdateDefinitionService}
+	 */
+	MorpheusSynchronousUpdateDefinitionService getUpdateDefinition();
 }
