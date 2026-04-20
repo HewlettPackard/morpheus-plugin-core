@@ -35,6 +35,7 @@ public class BackupResult extends MorpheusModel {
 	@JsonSerialize(using = ModelAsIdOnlySerializer.class)
 	protected User createdBy;
 	protected String initiatedBy;
+	protected String executionType;
 	// protected StorageBucket storageProvider;
 	// executor
 	protected Long executeServerId;
@@ -195,6 +196,16 @@ public class BackupResult extends MorpheusModel {
 		markDirty("initiatedBy", initiatedBy, this.initiatedBy);
 		this.initiatedBy = initiatedBy;
 	}
+
+	public String getExecutionType() {
+		return executionType;
+	}
+
+	public void setExecutionType(String executionType) {
+		markDirty("executionType", executionType, this.executionType);
+		this.executionType = executionType;
+	}
+
 
 	// public StorageBucket getStorageProvider() {
 	// return storageProvider;
