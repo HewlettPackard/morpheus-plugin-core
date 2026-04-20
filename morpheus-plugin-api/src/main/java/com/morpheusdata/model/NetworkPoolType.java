@@ -18,6 +18,9 @@ package com.morpheusdata.model;
 
 import com.morpheusdata.core.providers.IPAMProvider;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Each implementation of IPAM Typically define a pool type for human readable reference. This enables the user to correctly
  * select the pool of the appropriate type. It is also possible for some {@link IPAMProvider} implementations to provide
@@ -60,6 +63,8 @@ public class NetworkPoolType extends MorpheusModel{
 	protected Boolean loadBalancerCompatible = false;
 
 	protected Boolean floatingIpPool = false;
+
+	protected List<OptionType> optionTypes = new ArrayList<>();
 
 
 	/**
@@ -198,6 +203,15 @@ public class NetworkPoolType extends MorpheusModel{
 	public void setFloatingIpPool(Boolean floatingIpPool) {
 		this.floatingIpPool = floatingIpPool;
 		markDirty("floatingIpPool", floatingIpPool);
+	}
+
+	public List<OptionType> getOptionTypes() {
+		return optionTypes;
+	}
+
+	public void setOptionTypes(List<OptionType> optionTypes) {
+		this.optionTypes = optionTypes;
+		markDirty("optionTypes", optionTypes);
 	}
 
 }

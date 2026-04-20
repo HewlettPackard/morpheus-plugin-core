@@ -1,6 +1,8 @@
 package com.morpheusdata.model.system;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.morpheusdata.model.MorpheusModel;
+import com.morpheusdata.model.serializers.ModelAsIdOnlySerializer;
 
 import java.util.Date;
 
@@ -16,6 +18,8 @@ public class SystemComponent extends MorpheusModel {
 	protected String externalId;
 	protected Date dateCreated;
 	protected Date lastUpdated;
+	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	protected System system;
 
 	public String getName() {
 		return name;
@@ -112,5 +116,13 @@ public class SystemComponent extends MorpheusModel {
 
 	public void setLastUpdated(Date lastUpdated) {
 		this.lastUpdated = lastUpdated;
+	}
+
+	public System getSystem() {
+		return system;
+	}
+	public void setSystem(System system) {
+		markDirty("system", system);
+		this.system = system;
 	}
 }

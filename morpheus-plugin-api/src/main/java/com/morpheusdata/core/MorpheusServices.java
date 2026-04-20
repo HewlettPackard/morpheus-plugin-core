@@ -42,7 +42,6 @@ import com.morpheusdata.core.synchronous.MorpheusSynchronousVirtualImageService;
 import com.morpheusdata.core.synchronous.network.loadbalancer.MorpheusSynchronousLoadBalancerPartitionService;
 import com.morpheusdata.core.synchronous.policy.MorpheusSynchronousPolicyService;
 import com.morpheusdata.core.synchronous.MorpheusSynchronousHypervisorService;
-import com.morpheusdata.core.synchronous.MorpheusSynchronousSupportBundleService;
 import com.morpheusdata.core.providers.CloudProvider;
 import com.morpheusdata.core.providers.DNSProvider;
 import com.morpheusdata.core.providers.IPAMProvider;
@@ -50,6 +49,7 @@ import com.morpheusdata.core.providers.TaskProvider;
 import com.morpheusdata.core.synchronous.provisioning.MorpheusSynchronousProvisionService;
 import com.morpheusdata.core.web.MorpheusWebRequestService;
 import com.morpheusdata.core.localization.MorpheusLocalizationService;
+import com.morpheusdata.core.synchronous.MorpheusSynchronousUpdateDefinitionService;
 import com.morpheusdata.model.BackupProvider;
 
 public interface MorpheusServices {
@@ -566,8 +566,8 @@ public interface MorpheusServices {
 	MorpheusSynchronousAffinityGroupService getAffinityGroup();
 
 	/**
-	 * Returns the {@link MorpheusSynchronousSupportBundleService} which allows access to support bundle services
-	 * @return an instance of {@link MorpheusSynchronousSupportBundleService}
+	 * Returns the {@link MorpheusSynchronousUpdateDefinitionService} for synchronous CRUD access to {@link com.morpheusdata.model.UpdateDefinition} objects.
+	 * @return an instance of {@link MorpheusSynchronousUpdateDefinitionService}
 	 */
-	MorpheusSynchronousSupportBundleService getSupportBundle();
+	MorpheusSynchronousUpdateDefinitionService getUpdateDefinition();
 }
