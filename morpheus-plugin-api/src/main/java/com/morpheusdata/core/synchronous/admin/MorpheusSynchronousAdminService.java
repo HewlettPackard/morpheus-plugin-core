@@ -22,5 +22,7 @@ public interface MorpheusSynchronousAdminService {
 
 	MorpheusSynchronousApplianceService getAppliance();
 
+	MorpheusSynchronousAuditLogService getAuditLog();
+
 	MorpheusSynchronousApplianceHealthService getHealth();
 }

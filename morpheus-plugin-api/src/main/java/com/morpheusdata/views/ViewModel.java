@@ -16,8 +16,8 @@
 
 package com.morpheusdata.views;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import com.morpheusdata.model.User;
 import java.util.Map;
 
@@ -27,8 +27,8 @@ import java.util.Map;
  */
 public class ViewModel<T> {
 	public T object;
-	public ServletRequest request;
-	public ServletResponse response;
+	public HttpServletRequest request;
+	public HttpServletResponse response;
 	public Integer status = 200;
 	public User user;
 	public Map<String, Object> opts;

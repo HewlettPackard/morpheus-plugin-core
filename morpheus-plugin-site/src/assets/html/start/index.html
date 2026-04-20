@@ -105,6 +105,7 @@
 							<label for="morpheusVersion">Morpheus Version</label>
 							<div>
 								<select name="morpheusVersion" id="morpheusVersion">
+									<option value="9.1.x">9.1.x</option>
 									<option value="8.1.x">8.1.x</option>
 									<option value="8.0.x">8.0.x</option>
 									<option value="7.0.x">7.0.x</option>
@@ -363,6 +364,17 @@
 											<span>Server</span></label
 										>
 									</li>
+									<li id="provider-volume-tab-row">
+										<label for="providers-volume-tab"
+											><input
+												type="checkbox"
+												name="providers"
+												id="providers-volume-tab"
+												value="volumeTab"
+											/>
+											<span>Volume</span></label
+										>
+									</li>
 								</ul>
 							</div>
 						</div>
@@ -376,5 +388,33 @@
 		<div id="footer" class="footer">
 			<!-- HFWS will insert its footer here -->
 		</div>
+		<script>
+			(function () {
+				const versionSelect = document.getElementById("morpheusVersion");
+				const volumeRow = document.getElementById("provider-volume-tab-row");
+				const volumeCheckbox = document.getElementById("providers-volume-tab");
+
+				function parseMajorMinor(value) {
+					const match = /^(\d+)\.(\d+)/.exec(value || "");
+					if (!match) return null;
+					return { major: parseInt(match[1], 10), minor: parseInt(match[2], 10) };
+				}
+
+				function isAtLeast91(versionValue) {
+					const parsed = parseMajorMinor(versionValue);
+					if (!parsed) return false;
+					return parsed.major > 9 || (parsed.major === 9 && parsed.minor >= 1);
+				}
+
+				function toggleVolumeTabProvider() {
+					const show = isAtLeast91(versionSelect.value);
+					volumeRow.style.display = show ? "" : "none";
+					if (!show) volumeCheckbox.checked = false;
+				}
+
+				versionSelect.addEventListener("change", toggleVolumeTabProvider);
+				toggleVolumeTabProvider();
+			})();
+		</script>
 	</body>
 </html>

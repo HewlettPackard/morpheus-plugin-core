@@ -38,6 +38,13 @@ public interface MorpheusAdminService {
 	MorpheusApplianceService getAppliance();
 
 	/**
+	 * Returns the AuditLog Service for inserting and querying audit log entries asynchronously (reactive).
+	 * Plugins may insert entries but cannot modify or delete existing ones.
+	 * @return an instance of the implementation of the {@link MorpheusAuditLogService}
+	 */
+	MorpheusAuditLogService getAuditLog();
+
+	/**
 	 * Returns the Appliance Health Service for querying appliance health statistics asynchronously (reactive).
 	 * @return an instance of the implementation of the {@link MorpheusApplianceHealthService}
 	 */
