@@ -20,6 +20,7 @@ import com.morpheusdata.core.synchronous.backup.MorpheusSynchronousBackupReposit
 import com.morpheusdata.core.guidance.MorpheusSynchronousAccountDiscoveryService;
 import com.morpheusdata.core.synchronous.*;
 import com.morpheusdata.core.synchronous.admin.MorpheusSynchronousAdminService;
+import com.morpheusdata.core.synchronous.system.MorpheusSynchronousSystemService;
 import com.morpheusdata.core.synchronous.backup.MorpheusSynchronousBackupJobService;
 import com.morpheusdata.core.synchronous.backup.MorpheusSynchronousBackupProviderService;
 import com.morpheusdata.core.synchronous.backup.MorpheusSynchronousBackupService;
@@ -42,7 +43,6 @@ import com.morpheusdata.core.synchronous.MorpheusSynchronousVirtualImageService;
 import com.morpheusdata.core.synchronous.network.loadbalancer.MorpheusSynchronousLoadBalancerPartitionService;
 import com.morpheusdata.core.synchronous.policy.MorpheusSynchronousPolicyService;
 import com.morpheusdata.core.synchronous.MorpheusSynchronousHypervisorService;
-import com.morpheusdata.core.synchronous.MorpheusSynchronousSupportBundleService;
 import com.morpheusdata.core.providers.CloudProvider;
 import com.morpheusdata.core.providers.DNSProvider;
 import com.morpheusdata.core.providers.IPAMProvider;
@@ -50,6 +50,7 @@ import com.morpheusdata.core.providers.TaskProvider;
 import com.morpheusdata.core.synchronous.provisioning.MorpheusSynchronousProvisionService;
 import com.morpheusdata.core.web.MorpheusWebRequestService;
 import com.morpheusdata.core.localization.MorpheusLocalizationService;
+import com.morpheusdata.core.synchronous.MorpheusSynchronousUpdateDefinitionService;
 import com.morpheusdata.model.BackupProvider;
 
 public interface MorpheusServices {
@@ -436,6 +437,14 @@ public interface MorpheusServices {
 	MorpheusSynchronousAdminService getAdmin();
 
 	/**
+	 * Returns the {@link MorpheusSynchronousSystemService} which allows synchronous access to System objects.
+	 * Sub-services for SystemType and SystemComponent are accessible via
+	 * {@link MorpheusSynchronousSystemService#getType()} and {@link MorpheusSynchronousSystemService#getComponent()}.
+	 * @return an instance of MorpheusSynchronousSystemService
+	 */
+	MorpheusSynchronousSystemService getSystem();
+
+	/**
 	 * return the {@link MorpheusSynchronousAccountCertificateService} which allows access to {@link com.morpheusdata.model.AccountCertificate}
 	 * data operations such as create/update/query operations
 	 * @return an instance {@link MorpheusSynchronousAccountCertificateService}
@@ -566,8 +575,8 @@ public interface MorpheusServices {
 	MorpheusSynchronousAffinityGroupService getAffinityGroup();
 
 	/**
-	 * Returns the {@link MorpheusSynchronousSupportBundleService} which allows access to support bundle services
-	 * @return an instance of {@link MorpheusSynchronousSupportBundleService}
+	 * Returns the {@link MorpheusSynchronousUpdateDefinitionService} for synchronous CRUD access to {@link com.morpheusdata.model.UpdateDefinition} objects.
+	 * @return an instance of {@link MorpheusSynchronousUpdateDefinitionService}
 	 */
-	MorpheusSynchronousSupportBundleService getSupportBundle();
+	MorpheusSynchronousUpdateDefinitionService getUpdateDefinition();
 }

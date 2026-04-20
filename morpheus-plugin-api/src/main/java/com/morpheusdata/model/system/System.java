@@ -2,7 +2,7 @@ package com.morpheusdata.model.system;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.morpheusdata.model.Account;
-import com.morpheusdata.model.MorpheusModel;
+import com.morpheusdata.model.projection.SystemIdentityProjection;
 import com.morpheusdata.model.serializers.ModelAsIdOnlySerializer;
 
 import java.util.ArrayList;
@@ -17,8 +17,7 @@ import java.util.stream.Collectors;
  * (hosts, storage arrays, network devices, etc) units that make up a managed
  * system.
  */
-public class System extends MorpheusModel {
-	protected String name;
+public class System extends SystemIdentityProjection {
 	protected String description;
 	protected String status = "ok";
 	protected Boolean enabled = true;
@@ -26,7 +25,6 @@ public class System extends MorpheusModel {
 	protected Date statusMessageDate;
 	protected SystemType type;
 	protected SystemTypeLayout layout;
-	protected String externalId;
 	protected Date dateCreated;
 	protected Date lastUpdated;
 	@JsonSerialize(using = ModelAsIdOnlySerializer.class)
@@ -35,15 +33,6 @@ public class System extends MorpheusModel {
 
 	// Configuration workflow state stored as JSON
 	protected String configurationWorkflowState;
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		markDirty("name", name);
-		this.name = name;
-	}
 
 	public String getDescription() {
 		return description;
@@ -106,15 +95,6 @@ public class System extends MorpheusModel {
 	public void setLayout(SystemTypeLayout layout) {
 		markDirty("layout", layout);
 		this.layout = layout;
-	}
-
-	public String getExternalId() {
-		return externalId;
-	}
-
-	public void setExternalId(String externalId) {
-		markDirty("externalId", externalId);
-		this.externalId = externalId;
 	}
 
 	public Date getDateCreated() {

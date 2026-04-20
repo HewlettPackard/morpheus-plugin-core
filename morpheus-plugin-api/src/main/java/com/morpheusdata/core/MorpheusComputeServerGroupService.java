@@ -17,7 +17,14 @@
 package com.morpheusdata.core;
 
 
+import com.morpheusdata.model.ComputeServer;
 import com.morpheusdata.model.ComputeServerGroup;
+import com.morpheusdata.model.ComputeTypeLayout;
+import com.morpheusdata.request.AddServerGroupServersRequest;
+import com.morpheusdata.response.ServiceResponse;
+import io.reactivex.rxjava3.core.Single;
+
+import java.util.List;
 
 public interface MorpheusComputeServerGroupService extends MorpheusDataService<ComputeServerGroup, ComputeServerGroup>, MorpheusIdentityService<ComputeServerGroup> {
 	/**
@@ -26,4 +33,17 @@ public interface MorpheusComputeServerGroupService extends MorpheusDataService<C
 	 * @return An instance of the Compute Server Group Type Service
 	 */
 	MorpheusComputeServerGroupTypeService getType();
+
+	/**
+	 * Add one or more servers to an existing cluster. Follows the same flow as the
+	 * {@code POST /api/clusters/:id/servers} REST API endpoint, including license checks,
+	 * policy enforcement, and async provisioning.
+	 *
+	 * @param cluster the target cluster (server group)
+	 * @param layout  the ComputeTypeLayout to use for provisioning
+	 * @param request the request object describing the server(s) to add
+	 * @return a {@link ServiceResponse} containing the list of provisioned {@link ComputeServer} objects on success
+	 * @since 1.4.0
+	 */
+	Single<ServiceResponse<List<ComputeServer>>> addServerGroupServers(ComputeServerGroup cluster, ComputeTypeLayout layout, AddServerGroupServersRequest request);
 }

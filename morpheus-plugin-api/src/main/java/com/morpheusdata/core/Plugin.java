@@ -20,6 +20,7 @@ import com.morpheusdata.core.providers.PluginProvider;
 import com.morpheusdata.core.providers.UIExtensionProvider;
 import com.morpheusdata.model.OptionType;
 import com.morpheusdata.model.Permission;
+import com.morpheusdata.response.ServiceResponse;
 import com.morpheusdata.views.Renderer;
 import com.morpheusdata.web.PluginController;
 
@@ -469,6 +470,17 @@ public abstract class Plugin implements PluginInterface {
 		} catch (Exception e) {
 			System.out.println("Error checking for provider conflict: " + e.getMessage());
 		}
+	}
+
+	/**
+	 * Returns the health status of this plugin. Plugins may override this to report operational status,
+	 * connectivity state, or other diagnostic information useful for system prechecks.
+	 * The default implementation returns a success response indicating the plugin is available.
+	 * @return a {@link ServiceResponse} indicating the health of this plugin
+	 * @since 1.4.0
+	 */
+	public ServiceResponse health() {
+		return ServiceResponse.success();
 	}
 
 }
