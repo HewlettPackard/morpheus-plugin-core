@@ -41,6 +41,7 @@ import com.morpheusdata.core.providers.TaskProvider;
 import com.morpheusdata.core.provisioning.MorpheusProvisionService;
 import com.morpheusdata.model.BackupProvider;
 import com.morpheusdata.core.admin.MorpheusAdminService;
+import com.morpheusdata.core.MorpheusUpdateDefinitionService;
 
 public interface MorpheusAsyncServices {
 	/**
@@ -578,4 +579,10 @@ public interface MorpheusAsyncServices {
 	 * @return an instance of the MorpheusLlmService
 	 */
 	MorpheusLlmService getLlm();
+
+	/**
+	 * Returns the {@link MorpheusUpdateDefinitionService} for async CRUD access to {@link com.morpheusdata.model.UpdateDefinition} objects.
+	 * @return an instance of {@link MorpheusUpdateDefinitionService}
+	 */
+	MorpheusUpdateDefinitionService getUpdateDefinition();
 }
