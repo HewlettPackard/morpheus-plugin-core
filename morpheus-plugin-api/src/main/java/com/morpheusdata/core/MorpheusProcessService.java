@@ -18,6 +18,10 @@ package com.morpheusdata.core;
 
 import com.morpheusdata.model.*;
 import com.morpheusdata.model.Process;
+import com.morpheusdata.model.process.InsertProcessStepRequest;
+import com.morpheusdata.model.process.InsertProcessStepResponse;
+import com.morpheusdata.model.process.RunProcessStepRequest;
+import com.morpheusdata.model.process.RunProcessStepResponse;
 import io.reactivex.rxjava3.core.Single;
 
 /**
@@ -191,4 +195,21 @@ public interface MorpheusProcessService extends MorpheusDataService<Process, Pro
 	 * @return Boolean indicating success
 	 */
 	Single<Boolean> endProcess(Process process, String processStatus, String output);
+
+	/**
+	 * Insert a new process step (ProcessEvent) into an existing Process without dispatching it.
+	 * The step is created in a 'queued' state and can be dispatched later via {@link #runProcessStep}.
+	 * @param request The request containing the Process and ProcessEvent to insert
+	 * @return An InsertProcessStepResponse containing the id of the created ProcessEvent
+	 */
+	Single<InsertProcessStepResponse> insertProcessStep(InsertProcessStepRequest request);
+
+	/**
+	 * Dispatch a previously inserted process step for execution via the background job system.
+	 * The ProcessEvent's jobName is used as the dispatch key to route execution to the correct
+	 * ProcessJobProvider or service.
+	 * @param request The request containing the Process and ProcessEvent to dispatch
+	 * @return A RunProcessStepResponse indicating whether the dispatch was successful
+	 */
+	Single<RunProcessStepResponse> runProcessStep(RunProcessStepRequest request);
 }
