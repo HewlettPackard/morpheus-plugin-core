@@ -69,6 +69,8 @@ public interface PluginProvider {
 
 
 
+
+
 	/**
 	 *	Applying this Facet to an integration will allow it to subscribe to events and perform operations based on the event
 	 * @since 1.2.6

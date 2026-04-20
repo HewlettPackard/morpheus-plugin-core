@@ -31,4 +31,6 @@ public interface MorpheusSynchronousAdminService {
 	 * @return an instance of the implementation of the {@link MorpheusSynchronousApplianceLicenseService}
 	 */
 	MorpheusSynchronousApplianceLicenseService getLicense();
+
+	MorpheusSynchronousPluginService getPlugin();
 }
