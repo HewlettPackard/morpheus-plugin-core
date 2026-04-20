@@ -2,6 +2,44 @@
 
 **Note:** Morpheus Plugin API is now 1.0! This means calls that are used will be supported for a longer period of time and given appropriate deprecation warnings when necessary. Morpheus Plugin API `1.3.x` requires a minimum Morpheus version of `8.1.x`. Morpheus Plugin API `1.2.x` requires Morpheus `8.0.x`, and Morpheus `7.0.x` runs on Core version `1.1.x`.
 
+* **1.3.4**
+** *File Copy Enhancements*
+*** Added `FileCopyRequest` support and new `generateUrl` overloads for file copy operations with Cloud context.
+** *Network Pool and Floating IP Enhancements*
+*** Added network pool lifecycle hooks to `IPAMProvider` for create, update, delete, and validation workflows.
+*** Added `optionTypes` support to `NetworkPoolType` and `NetworkFloatingIpPoolType`, plus `FloatingIpProvider#getOptionTypes()` for custom configuration fields.
+*** Added floating IP pool CRUD and validation methods to `FloatingIpProvider`, and added `description` to `NetworkFloatingIpPool`.
+** *Backup, Console, and Localization Improvements*
+*** Added synchronous `updateStatus` support to `MorpheusSynchronousBackupProviderService`.
+*** Added `executionType` to `BackupResult`.
+*** Added typed hypervisor console support with `ProvisionProvider.HypervisorConsoleFacetV2` and `HypervisorConsoleConnection`, while deprecating the legacy map-based console contract.
+*** Added `MorpheusLocalizationService` overloads with default value support.
+
+* **1.3.3**
+** *Datastore Provider Validation*
+*** Added `validateRemoveDatastore` to `DatastoreTypeProvider` so plugins can validate datastore removal requests before delete operations (MORPH-6732).
+
+* **1.3.2**
+** *Release and Publication Updates*
+*** Streamlined release workflow configuration.
+
+* **1.3.1**
+** *Cloud and Credential Validation*
+*** Improved `ValidateCloudRequest` to support all credential types (MORPH-760).
+** *Storage and Volume Enhancements*
+*** Added `filterStorageVolumeTypes` method to provider interfaces for volume type filtering (MORPH-4070).
+*** Added `storageProvider` field to `VirtualImage` model class.
+*** Added `defaultBucketName` and `defaultStorageProvider` to `ImportWorkloadRequest`.
+*** Added storage provider documentation.
+** *Backup and vCenter Support*
+*** Added missing model fields and backup service methods for vCenter plugin support (MORPH-757).
+** *Affinity Group and Resource Management*
+*** Updated `AffinityGroups` to support full CRUD operations.
+** *Network Improvements*
+*** Minor model changes for floating IP pool support.
+** *Provider Versioning*
+*** Updated `@since` annotations to `1.3.1` for `DatastoreTypeProvider` and `ClusterProvider`.
+
 * **1.3.0**
 ** *Morpheus 8.1.x Compatibility and Generator Updates*
 *** Added project template generation support for Morpheus `8.1.x`.
@@ -467,4 +505,3 @@
 
 * **0.6.0**
 ** Primary Plugin target base version for 5.2.x Morpheus Releases
-

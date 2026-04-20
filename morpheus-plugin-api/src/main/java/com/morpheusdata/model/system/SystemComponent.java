@@ -1,6 +1,8 @@
 package com.morpheusdata.model.system;
 
 import com.morpheusdata.model.projection.SystemComponentIdentityProjection;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.morpheusdata.model.serializers.ModelAsIdOnlySerializer;
 
 import java.util.Date;
 
@@ -14,6 +16,8 @@ public class SystemComponent extends SystemComponentIdentityProjection {
 	protected String refId;
 	protected Date dateCreated;
 	protected Date lastUpdated;
+	@JsonSerialize(using=ModelAsIdOnlySerializer.class)
+	protected System system;
 
 	public String getDescription() {
 		return description;
@@ -92,5 +96,13 @@ public class SystemComponent extends SystemComponentIdentityProjection {
 
 	public void setLastUpdated(Date lastUpdated) {
 		this.lastUpdated = lastUpdated;
+	}
+
+	public System getSystem() {
+		return system;
+	}
+	public void setSystem(System system) {
+		markDirty("system", system);
+		this.system = system;
 	}
 }
