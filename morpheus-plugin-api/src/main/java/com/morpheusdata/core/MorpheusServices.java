@@ -20,6 +20,7 @@ import com.morpheusdata.core.synchronous.backup.MorpheusSynchronousBackupReposit
 import com.morpheusdata.core.guidance.MorpheusSynchronousAccountDiscoveryService;
 import com.morpheusdata.core.synchronous.*;
 import com.morpheusdata.core.synchronous.admin.MorpheusSynchronousAdminService;
+import com.morpheusdata.core.synchronous.system.MorpheusSynchronousSystemService;
 import com.morpheusdata.core.synchronous.backup.MorpheusSynchronousBackupJobService;
 import com.morpheusdata.core.synchronous.backup.MorpheusSynchronousBackupProviderService;
 import com.morpheusdata.core.synchronous.backup.MorpheusSynchronousBackupService;
@@ -434,6 +435,14 @@ public interface MorpheusServices {
 	 * @return an instance of MorpheusSynchronousAdminService
 	 */
 	MorpheusSynchronousAdminService getAdmin();
+
+	/**
+	 * Returns the {@link MorpheusSynchronousSystemService} which allows synchronous access to System objects.
+	 * Sub-services for SystemType and SystemComponent are accessible via
+	 * {@link MorpheusSynchronousSystemService#getType()} and {@link MorpheusSynchronousSystemService#getComponent()}.
+	 * @return an instance of MorpheusSynchronousSystemService
+	 */
+	MorpheusSynchronousSystemService getSystem();
 
 	/**
 	 * return the {@link MorpheusSynchronousAccountCertificateService} which allows access to {@link com.morpheusdata.model.AccountCertificate}
