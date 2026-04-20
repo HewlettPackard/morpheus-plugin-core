@@ -33,4 +33,6 @@ public interface MorpheusSynchronousAdminService {
 	MorpheusSynchronousApplianceLicenseService getLicense();
 
 	MorpheusSynchronousPluginService getPlugin();
+
+	MorpheusSynchronousPackageService getPackage();
 }

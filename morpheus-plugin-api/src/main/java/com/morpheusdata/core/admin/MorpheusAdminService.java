@@ -61,4 +61,10 @@ public interface MorpheusAdminService {
 	 * @return an instance of the implementation of the {@link MorpheusPluginService}
 	 */
 	MorpheusPluginService getPlugin();
+
+	/**
+	 * Returns the Package Service for downloading and installing Morpheus package files asynchronously (reactive).
+	 * @return an instance of the implementation of the {@link MorpheusPackageService}
+	 */
+	MorpheusPackageService getPackage();
 }
