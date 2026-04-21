@@ -19,6 +19,7 @@ public class UpdateDefinition extends UpdateIdentityProjection {
     protected ImagePathType imagePathType; // vme_archive_http_path, local_fs_path, external_http_path, vme_image_lib_path
 
     protected Boolean peerPersistence = false;            // true/false, true to indicate peer persistence enabled configuration.
+    protected Boolean requiresReboot = false;             // does this require a reboot.
     protected Boolean requiresMaintenanceMode = false;    // does this require maintenance mode to be enabled.
     protected Boolean requiresRestart = false;            // does this require a service restart.
     protected Boolean supportsRollback = false;           // can this update be rolled back. place holder.
@@ -75,6 +76,9 @@ public class UpdateDefinition extends UpdateIdentityProjection {
 
     public Boolean getPeerPersistence() { return peerPersistence; }
     public void setPeerPersistence(Boolean peerPersistence) { this.peerPersistence = peerPersistence; }
+
+    public Boolean getRequiresReboot() { return requiresReboot; }
+    public void setRequiresReboot(Boolean requiresReboot) { this.requiresReboot = requiresReboot; }
 
     public Boolean getRequiresMaintenanceMode() { return requiresMaintenanceMode; }
     public void setRequiresMaintenanceMode(Boolean requiresMaintenanceMode) { this.requiresMaintenanceMode = requiresMaintenanceMode; }
