@@ -711,4 +711,10 @@ public interface MorpheusContext {
 	 * @return the unique lock key id to control concurrent release attempts. send this to releaseLocks opts.lock key
 	 */
 	Maybe<String> checkLock(String name, Map<String,Object> opts);
+
+	/**
+	 * Returns the license tier from the applied license on the appliance
+	 * @return the tier value in the license applied to this appliance
+	 */
+	Single<String> getLicenseTier();
 }
