@@ -42,6 +42,7 @@ import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.core.Maybe;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Provides a means to interact or query data from the main Morpheus application back into the various provider extensions
@@ -714,7 +715,7 @@ public interface MorpheusContext {
 
 	/**
 	 * Returns the license tier from the applied license on the appliance
-	 * @return the tier value in the license applied to this appliance
+	 * @return the tier value in the license applied to this appliance. If no license is applied this could be null
 	 */
-	Single<String> getLicenseTier();
+	Single<Optional<String>> getLicenseTier();
 }
