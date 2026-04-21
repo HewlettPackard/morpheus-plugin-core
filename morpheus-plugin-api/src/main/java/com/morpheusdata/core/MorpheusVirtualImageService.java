@@ -179,10 +179,11 @@ public interface MorpheusVirtualImageService extends MorpheusDataService<Virtual
 	 * Create new VirtualImage in Morpheus
 	 * NOTE: Any additions of VirtualImageLocations related to the VirtualImage should be
 	 * performed via the VirtualImageLocationService
-	 * @param virtualImage new VirtualImage to persist
+	 * @param item new VirtualImage to persist
 	 * @return the VirtualImage
 	 */
-	Single<VirtualImage> create(VirtualImage virtualImage);
+	@Override
+	Single<VirtualImage> create(VirtualImage item);
 
 	/**
 	 * Create new VirtualImage in Morpheus
@@ -191,7 +192,7 @@ public interface MorpheusVirtualImageService extends MorpheusDataService<Virtual
 	 * @param virtualImage new VirtualImage to persist
 	 * @param cloud the Cloud instance
 	 * @return the VirtualImage
-	 * @deprecated use create(VirtualImage) instead
+	 * @deprecated use {@link create(VirtualImage)} instead
 	 */
 	@Deprecated(since="1.4.0")
 	Single<VirtualImage> create(VirtualImage virtualImage, Cloud cloud);
