@@ -1,5 +1,5 @@
 /*
- *  Copyright 2025 Morpheus Data, LLC.
+ *  Copyright 2026 Morpheus Data, LLC.
  *
  * Licensed under the PLUGIN CORE SOURCE LICENSE (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ import com.morpheusdata.response.ServiceResponse;
  *   }
  * }</pre>
  *
- * @author Morpheus
+ * @author Fred Gagne
  * @since 1.4.0
  */
 public interface MorpheusGfs2DatastoreService {
