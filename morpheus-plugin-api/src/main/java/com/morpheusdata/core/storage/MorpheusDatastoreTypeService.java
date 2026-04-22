@@ -106,7 +106,7 @@ public interface MorpheusDatastoreTypeService {
 	 * @return a {@link ServiceResponse} object indicating success or failure.
 	 * @since 1.4.0
 	 */
-	ServiceResponse<Datastore> removeDatastore(Datastore datastore);
+	ServiceResponse removeDatastore(Datastore datastore);
 
 	/**
 	 * Creates volume snapshots of all volumes associated with a server.
