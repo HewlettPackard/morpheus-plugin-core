@@ -16,7 +16,6 @@
 
 package com.morpheusdata.core.storage;
 
-import com.morpheusdata.model.ComputeServer;
 import com.morpheusdata.model.Datastore;
 import com.morpheusdata.response.ServiceResponse;
 import io.reactivex.rxjava3.core.Single;
@@ -61,28 +60,10 @@ public interface MorpheusAsyncGfs2DatastoreService {
 	Single<ServiceResponse> removeGfs2Datastore(Datastore datastore);
 
 	/**
-	 * Prepares the GFS2 filesystem on the block device without creating storage pools.
+	 * Updates a GFS2 datastore on the cluster.
 	 *
-	 * @param datastore the datastore containing block device configuration
+	 * @param datastore the datastore to update
 	 * @return a {@link Single} emitting a {@link ServiceResponse} indicating success or failure
 	 */
-	Single<ServiceResponse> prepareGfs2Filesystem(Datastore datastore);
-
-	/**
-	 * Creates a GFS2 libvirt storage pool on a specific hypervisor.
-	 *
-	 * @param hypervisor the hypervisor to create the storage pool on
-	 * @param datastore the GFS2 datastore
-	 * @return a {@link Single} emitting a {@link ServiceResponse} indicating success or failure
-	 */
-	Single<ServiceResponse> createGfs2StoragePool(ComputeServer hypervisor, Datastore datastore);
-
-	/**
-	 * Removes a GFS2 libvirt storage pool from a specific hypervisor.
-	 *
-	 * @param hypervisor the hypervisor to remove the storage pool from
-	 * @param datastore the GFS2 datastore
-	 * @return a {@link Single} emitting a {@link ServiceResponse} indicating success or failure
-	 */
-	Single<ServiceResponse> removeGfs2StoragePool(ComputeServer hypervisor, Datastore datastore);
+	Single<ServiceResponse<Datastore>> updateGfs2Datastore(Datastore datastore);
 }
