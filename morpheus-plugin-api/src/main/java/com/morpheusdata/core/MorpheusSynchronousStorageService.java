@@ -17,6 +17,7 @@
 package com.morpheusdata.core;
 
 import com.morpheusdata.core.storage.MorpheusDatastoreTypeService;
+import com.morpheusdata.core.storage.MorpheusGfs2DatastoreService;
 import com.morpheusdata.core.storage.MorpheusVmeQcow2DatastoreService;
 import com.morpheusdata.core.synchronous.*;
 import com.morpheusdata.model.CheckLevel;
@@ -55,6 +56,15 @@ public interface MorpheusSynchronousStorageService {
 	MorpheusSynchronousStorageBucketService getBucket();
 
 	MorpheusVmeQcow2DatastoreService getVmeQcow2DatastoreService();
+
+	/**
+	 * Returns the GFS2 Datastore Service for performing GFS2 filesystem and storage pool operations
+	 * on HPE VME/MVM cluster datastores.
+	 *
+	 * @return An instance of the GFS2 Datastore Service
+	 * @since 1.4.0
+	 */
+	MorpheusGfs2DatastoreService getGfs2DatastoreService();
 
 	/**
 	 * Returns the StorageGroup Service
