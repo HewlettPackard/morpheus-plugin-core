@@ -154,7 +154,7 @@ public interface MorpheusVirtualImageService extends MorpheusDataService<Virtual
 	/**
 	 * Save updates to existing VirtualImages
 	 * NOTE: Any additions or removals of VirtualImageLocations related to the VirtualImage should be
-	 * performed via the VirtualImageLocationService
+	 * performed via the {@link MorpheusVirtualImageLocationService}
 	 * @param virtualImages updated VirtualImages
 	 * @param cloud the Cloud instance
 	 * @return success
@@ -166,7 +166,7 @@ public interface MorpheusVirtualImageService extends MorpheusDataService<Virtual
 	/**
 	 * Save updates to existing VirtualImages
 	 * NOTE: Any additions or removals of VirtualImageLocations related to the VirtualImage should be
-	 * performed via the VirtualImageLocationService
+	 * performed via the {@link MorpheusVirtualImageLocationService}
 	 * @param virtualImages updated VirtualImages
 	 * @return a {@link BulkSaveResult} containing the successfully saved VirtualImages and any failure details; inspect the result for per-item success/failure information
 	 */
@@ -175,9 +175,9 @@ public interface MorpheusVirtualImageService extends MorpheusDataService<Virtual
 	/**
 	 * Save updates to an existing VirtualImage
 	 * NOTE: Any additions or removals of VirtualImageLocations related to the VirtualImage should be
-	 * performed via the VirtualImageLocationService
-	 * @param virtualImage updated VirtualImage
-	 * @return the saved VirtualImage
+	 * performed via the {@link MorpheusVirtualImageLocationService}
+	 * @param virtualImage updated VirtualImages
+	 * @return success
 	 */
 	Single<VirtualImage> save(VirtualImage virtualImage);
 
@@ -185,7 +185,7 @@ public interface MorpheusVirtualImageService extends MorpheusDataService<Virtual
 	/**
 	 * Create new VirtualImages in Morpheus
 	 * NOTE: Any additions of VirtualImageLocations related to the VirtualImage should be
-	 * performed via the VirtualImageLocationService
+	 * performed via the {@link MorpheusVirtualImageLocationService}
 	 * @param virtualImages new VirtualImages to persist
 	 * @param cloud the Cloud instance
 	 * @return success
@@ -197,7 +197,7 @@ public interface MorpheusVirtualImageService extends MorpheusDataService<Virtual
 	/**
 	 * Create new VirtualImage in Morpheus
 	 * NOTE: Any additions of VirtualImageLocations related to the VirtualImage should be
-	 * performed via the VirtualImageLocationService
+	 * performed via the MorpheusVirtualImageLocationService
 	 * @param virtualImage new VirtualImage to persist
 	 * @param cloud the Cloud instance
 	 * @return the VirtualImage
@@ -209,7 +209,7 @@ public interface MorpheusVirtualImageService extends MorpheusDataService<Virtual
 	/**
 	 * Create new VirtualImage in Morpheus
 	 * NOTE: Any additions of VirtualImageLocations related to the VirtualImage should be
-	 * performed via the VirtualImageLocationService
+	 * performed via the MorpheusVirtualImageLocationService
 	 * @param virtualImage new VirtualImage to persist
 	 * @return the VirtualImage
 	 */
