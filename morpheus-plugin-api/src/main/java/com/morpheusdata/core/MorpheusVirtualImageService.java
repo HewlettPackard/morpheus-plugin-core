@@ -154,7 +154,7 @@ public interface MorpheusVirtualImageService extends MorpheusDataService<Virtual
 	/**
 	 * Save updates to existing VirtualImages
 	 * NOTE: Any additions or removals of VirtualImageLocations related to the VirtualImage should be
-	 * performed via the VirtualImageLocationService
+	 * performed via the {@link MorpheusVirtualImageLocationService}
 	 * @param virtualImages updated VirtualImages
 	 * @param cloud the Cloud instance
 	 * @return success
@@ -164,9 +164,28 @@ public interface MorpheusVirtualImageService extends MorpheusDataService<Virtual
 	Single<Boolean> save(List<VirtualImage> virtualImages, Cloud cloud);
 
 	/**
+	 * Save updates to existing VirtualImages
+	 * NOTE: Any additions or removals of VirtualImageLocations related to the VirtualImage should be
+	 * performed via the {@link MorpheusVirtualImageLocationService}
+	 * @param virtualImages updated VirtualImages
+	 * @return a {@link BulkSaveResult} containing the successfully saved VirtualImages and any failure details; inspect the result for per-item success/failure information
+	 */
+	Single<BulkSaveResult<VirtualImage>> bulkSave(List<VirtualImage> virtualImages);
+
+	/**
+	 * Save updates to an existing VirtualImage
+	 * NOTE: Any additions or removals of VirtualImageLocations related to the VirtualImage should be
+	 * performed via the {@link MorpheusVirtualImageLocationService}
+	 * @param virtualImage updated VirtualImages
+	 * @return success
+	 */
+	Single<VirtualImage> save(VirtualImage virtualImage);
+
+
+	/**
 	 * Create new VirtualImages in Morpheus
 	 * NOTE: Any additions of VirtualImageLocations related to the VirtualImage should be
-	 * performed via the VirtualImageLocationService
+	 * performed via the {@link MorpheusVirtualImageLocationService}
 	 * @param virtualImages new VirtualImages to persist
 	 * @param cloud the Cloud instance
 	 * @return success
@@ -178,14 +197,23 @@ public interface MorpheusVirtualImageService extends MorpheusDataService<Virtual
 	/**
 	 * Create new VirtualImage in Morpheus
 	 * NOTE: Any additions of VirtualImageLocations related to the VirtualImage should be
-	 * performed via the VirtualImageLocationService
+	 * performed via the MorpheusVirtualImageLocationService
 	 * @param virtualImage new VirtualImage to persist
 	 * @param cloud the Cloud instance
 	 * @return the VirtualImage
-	 * @deprecated use create(VirtualImage) instead
+	 * @deprecated use {@link #create(VirtualImage)} instead
 	 */
 	@Deprecated(since="1.4.0")
 	Single<VirtualImage> create(VirtualImage virtualImage, Cloud cloud);
+
+	/**
+	 * Create new VirtualImage in Morpheus
+	 * NOTE: Any additions of VirtualImageLocations related to the VirtualImage should be
+	 * performed via the MorpheusVirtualImageLocationService
+	 * @param virtualImage new VirtualImage to persist
+	 * @return the VirtualImage
+	 */
+	Single<VirtualImage> create(VirtualImage virtualImage);
 
 	/**
 	 * Remove persisted VirtualImages from Morpheus. Typically called during sync operations for the cloud
