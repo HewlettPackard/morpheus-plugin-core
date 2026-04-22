@@ -168,7 +168,7 @@ public interface MorpheusVirtualImageService extends MorpheusDataService<Virtual
 	 * NOTE: Any additions or removals of VirtualImageLocations related to the VirtualImage should be
 	 * performed via the VirtualImageLocationService
 	 * @param virtualImages updated VirtualImages
-	 * @return success
+	 * @return a {@link BulkSaveResult} containing the successfully saved VirtualImages and any failure details; inspect the result for per-item success/failure information
 	 */
 	Single<BulkSaveResult<VirtualImage>> bulkSave(List<VirtualImage> virtualImages);
 
@@ -176,8 +176,8 @@ public interface MorpheusVirtualImageService extends MorpheusDataService<Virtual
 	 * Save updates to an existing VirtualImage
 	 * NOTE: Any additions or removals of VirtualImageLocations related to the VirtualImage should be
 	 * performed via the VirtualImageLocationService
-	 * @param virtualImage updated VirtualImages
-	 * @return success
+	 * @param virtualImage updated VirtualImage
+	 * @return the saved VirtualImage
 	 */
 	Single<VirtualImage> save(VirtualImage virtualImage);
 
