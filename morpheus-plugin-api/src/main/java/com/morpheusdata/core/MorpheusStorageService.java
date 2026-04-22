@@ -17,6 +17,7 @@
 package com.morpheusdata.core;
 
 import com.morpheusdata.core.network.MorpheusNetworkServerService;
+import com.morpheusdata.core.storage.MorpheusAsyncGfs2DatastoreService;
 import com.morpheusdata.model.CheckLevel;
 import com.morpheusdata.model.NetworkServer;
 import com.morpheusdata.model.StorageServer;
@@ -72,6 +73,15 @@ public interface MorpheusStorageService {
 	 * @since 1.3.0
 	 */
 	MorpheusStorageAggregateService getAggregate();
+
+	/**
+	 * Returns the GFS2 Datastore Service for performing async GFS2 filesystem and storage pool operations
+	 * on HPE VME/MVM cluster datastores.
+	 *
+	 * @return An instance of the async GFS2 Datastore Service
+	 * @since 1.4.0
+	 */
+	MorpheusAsyncGfs2DatastoreService getGfs2DatastoreService();
 
 	/**
 	 * Validates an update on a {@link StorageServer} before executing the update.
