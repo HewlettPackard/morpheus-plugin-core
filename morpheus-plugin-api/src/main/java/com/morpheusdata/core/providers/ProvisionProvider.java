@@ -846,44 +846,65 @@ public interface ProvisionProvider extends PluginProvider {
 
 	public interface ComputeUpdateFacet extends UpdateFacet<ComputeServer> {
 		/**
-		 * Perform a validation of the update against the target devices.  This is useful for checking
+		 * Update lifecycle order: {@code validateUpdate} → {@code executeUpdate} → {@code postUpdate}.
+		 * If {@code executeUpdate} or {@code postUpdate} fail, call {@code rollbackUpdate}.
+		 * Use {@code refreshUpdate} only for polling the status of a long-running async operation —
+		 * it is <strong>not</strong> a rollback mechanism.
+		 *
+		 * <p><strong>Parameter ordering note:</strong> {@code ComputeUpdateFacet} takes
+		 * {@code (UpdateDefinition, ComputeServer...)} — the definition comes first, then the server(s).
+		 * {@code StorageUpdateFacet} and {@code NetworkUpdateFacet} use the opposite convention
+		 * {@code (Server, UpdateDefinition)}. Keep this in mind when implementing across resource types.</p>
+		 *
+		 * Perform a validation of the update against the target devices. This is useful for checking
 		 * prerequisites, compatibility, or other checks to ensure the update can be applied successfully.
 		 *
-		 * @param computeServer the target device to be updated
 		 * @param update the update definition containing the details of the update to be applied
+		 * @param computeServer the target device(s) to be updated
 		 * @return a ServiceResponse with any errors if validation failed or a success response if validation passed
 		 */
 		ServiceResponse<UpdateOperation> validateUpdate(UpdateDefinition update, ComputeServer... computeServer);
 
 		/**
-		 * Execute the update on the target devices.  This is where the actual update logic should be implemented.
+		 * Execute the update on the target devices. This is where the actual update logic should be implemented.
+		 * Called after {@code validateUpdate} succeeds. On failure, the appliance will call {@code rollbackUpdate}.
 		 *
-		 * @param computeServer the target device to be updated
 		 * @param update the update definition containing the details of the update to be applied
+		 * @param computeServer the target device(s) to be updated
 		 * @return a ServiceResponse indicating the success or failure of the update operation
 		 */
 		ServiceResponse<UpdateOperation> executeUpdate(UpdateDefinition update, ComputeServer... computeServer);
 
 		/**
-		 * Refresh the update status on the target devices.  This is useful for checking the status of the update
-		 * @param computeServer
-		 * @return
+		 * Poll the status of a long-running update operation. This is called by the appliance when an
+		 * {@code UpdateOperation} is in a pending/in-progress state and needs a status refresh.
+		 * This method is <strong>not</strong> called as part of the rollback path — use {@code rollbackUpdate}
+		 * for failure recovery.
+		 *
+		 * @param updateOperation the in-progress operation whose status should be refreshed
+		 * @param computeServer the target device(s) being updated
+		 * @return a ServiceResponse with the updated operation state
 		 */
 		ServiceResponse<UpdateOperation> refreshUpdate(UpdateOperation updateOperation, ComputeServer... computeServer);
 
 		/**
-		 * Post update operations can be performed here.  This is useful for cleanup, verification, or other
-		 * @param computeServer the target device to update
-		 * @param update the update operation details
-		 * @return a ServiceResponse indicating the success or failure of the update operation
+		 * Post-update operations: cleanup, verification, or other finalization steps.
+		 * Called after {@code executeUpdate} completes successfully. On failure, the appliance will
+		 * call {@code rollbackUpdate}.
+		 *
+		 * @param update the update definition
+		 * @param computeServer the target device(s) that were updated
+		 * @return a ServiceResponse indicating the success or failure of post-update steps
 		 */
 		ServiceResponse<UpdateOperation> postUpdate(UpdateDefinition update, ComputeServer... computeServer);
 
 		/**
-		 * Rollback update operations can be performed here.  This is useful for cleanup, verification, or other
-		 * @param computeServer the target device to update
-		 * @param update the update operation details
-		 * @return a ServiceResponse indicating the success or failure of the update operation
+		 * Roll back the update on the target devices. Called by the appliance when {@code executeUpdate}
+		 * or {@code postUpdate} returns a failure response. Implement idempotent cleanup here.
+		 *
+		 * @param update the update definition for the operation being rolled back
+		 * @param computeServer the target device(s) to roll back
+		 * @return a ServiceResponse indicating the success or failure of the rollback operation
 		 */
 		ServiceResponse<UpdateOperation> rollbackUpdate(UpdateDefinition update, ComputeServer... computeServer);
 	}
