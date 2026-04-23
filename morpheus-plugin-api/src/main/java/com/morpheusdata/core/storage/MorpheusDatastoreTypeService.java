@@ -82,6 +82,33 @@ public interface MorpheusDatastoreTypeService {
 	ServiceResponse<Datastore> refreshDatastore(Datastore datastore);
 
 	/**
+	 * Creates a datastore. The implementation will route to the appropriate datastore type service
+	 * based on the datastore's type configuration.
+	 * @param datastore The Datastore object to create.
+	 * @return a {@link ServiceResponse} object. On success, the created datastore data is returned.
+	 * @since 1.4.0
+	 */
+	ServiceResponse<Datastore> createDatastore(Datastore datastore);
+
+	/**
+	 * Updates a datastore. The implementation will route to the appropriate datastore type service
+	 * based on the datastore's type configuration.
+	 * @param datastore The Datastore object to update.
+	 * @return a {@link ServiceResponse} object. On success, the updated datastore data is returned.
+	 * @since 1.4.0
+	 */
+	ServiceResponse<Datastore> updateDatastore(Datastore datastore);
+
+	/**
+	 * Removes a datastore. The implementation will route to the appropriate datastore type service
+	 * based on the datastore's type configuration.
+	 * @param datastore The Datastore object to remove.
+	 * @return a {@link ServiceResponse} object indicating success or failure.
+	 * @since 1.4.0
+	 */
+	ServiceResponse removeDatastore(Datastore datastore);
+
+	/**
 	 * Creates volume snapshots of all volumes associated with a server.
 	 * @param server the server to create snapshots for
 	 * @param forBackup whether this snapshot is for backup purposes
