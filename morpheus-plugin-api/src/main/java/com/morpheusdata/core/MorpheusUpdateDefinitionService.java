@@ -62,7 +62,6 @@ import com.morpheusdata.model.projection.UpdateIdentityProjection;
  * morpheusContext.getAsync().getUpdateDefinition().bulkCreate(adds).blockingGet();
  * morpheusContext.getAsync().getUpdateDefinition().bulkSave(updates).blockingGet();
  * }</pre>
- * </p>
  *
  * @author alex.clement
  * @since 1.4.0
