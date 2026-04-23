@@ -94,12 +94,26 @@ public interface StorageProvider extends PluginProvider,UIExtensionProvider {
 		return null;
 	}
 	/**
-	 * This is a WIP interface for future functionality to allow for remote update operations of Storage Servers such as Storage Arrays
+	 * This interface enables remote update operations on Storage Servers such as Storage Arrays.
+	 *
+	 * <p><strong>Update lifecycle:</strong> {@code validateUpdate} → {@code executeUpdate} → {@code postUpdate}.
+	 * If {@code executeUpdate} or {@code postUpdate} fail, the appliance calls {@code rollbackUpdate}.
+	 * {@code refreshUpdate} is used only to poll the status of a long-running async operation — it is
+	 * <strong>not</strong> part of the rollback path.</p>
+	 *
+	 * <p><strong>Parameter ordering note:</strong> {@code StorageUpdateFacet} takes {@code (StorageServer, UpdateDefinition)}
+	 * — the server instance comes first. This is the opposite of {@code ComputeUpdateFacet}, which takes
+	 * {@code (UpdateDefinition, ComputeServer...)}. Keep this in mind when implementing across resource types.</p>
+	 *
+	 * <p>{@link com.morpheusdata.model.UpdateDefinition} describes the <em>available update</em> (what to apply),
+	 * scoped to a resource type via {@code refType}/{@code refId}. {@link com.morpheusdata.model.UpdateOperation}
+	 * describes the <em>in-progress execution</em> on a specific instance, and is what {@code refreshUpdate}
+	 * and {@code rollbackUpdate} operate against.</p>
 	 */
 	public interface StorageUpdateFacet extends UpdateFacet<StorageServer> {
 		/**
-		 * Perform a validation of the update against the target devices.  This is useful for checking
-		 * prerequisites, compatibility, or other checks to ensure the update can be applied successfully.
+		 * Perform a validation of the update against the target storage server. Check prerequisites,
+		 * compatibility, or other conditions to ensure the update can be applied successfully.
 		 *
 		 * @param storageServer the target device to be updated
 		 * @param update the update definition containing the details of the update to be applied
@@ -108,7 +122,9 @@ public interface StorageProvider extends PluginProvider,UIExtensionProvider {
 		ServiceResponse<UpdateOperation> validateUpdate(StorageServer storageServer, UpdateDefinition update);
 
 		/**
-		 * Execute the update on the target devices.  This is where the actual update logic should be implemented.
+		 * Execute the update on the target storage server. This is where the actual update logic should be
+		 * implemented. Called after {@code validateUpdate} succeeds. On failure, the appliance will call
+		 * {@code rollbackUpdate}.
 		 *
 		 * @param storageServer the target device to be updated
 		 * @param update the update definition containing the details of the update to be applied
@@ -117,25 +133,33 @@ public interface StorageProvider extends PluginProvider,UIExtensionProvider {
 		ServiceResponse<UpdateOperation> executeUpdate(StorageServer storageServer, UpdateDefinition update);
 
 		/**
-		 * Refresh the update status on the target devices.  This is useful for checking the status of the update
-		 * @param storageServer
-		 * @return
+		 * Poll the status of a long-running update operation. Called by the appliance when an
+		 * {@code UpdateOperation} is in a pending/in-progress state and needs a status refresh.
+		 * This method is <strong>not</strong> called as part of the rollback path — use {@code rollbackUpdate}
+		 * for failure recovery.
+		 *
+		 * @param storageServer the target device being updated
+		 * @param updateOperation the in-progress operation whose status should be refreshed
+		 * @return a ServiceResponse with the updated operation state
 		 */
 		ServiceResponse<UpdateOperation> refreshUpdate(StorageServer storageServer, UpdateOperation updateOperation);
 
 		/**
-		 * Post update operations can be performed here.  This is useful for cleanup, verification, or other
-		 * @param storageServer the target device to be updated
-		 * @param update the update operation details
-		 * @return a ServiceResponse indicating the success or failure of the post update operation
+		 * Post-update operations: cleanup, verification, or other finalization steps. Called after
+		 * {@code executeUpdate} completes successfully. On failure, the appliance will call {@code rollbackUpdate}.
+		 *
+		 * @param storageServer the target device that was updated
+		 * @param update the update definition
+		 * @return a ServiceResponse indicating the success or failure of post-update steps
 		 */
 		ServiceResponse<UpdateOperation> postUpdate(StorageServer storageServer, UpdateDefinition update);
 
 		/**
-		 * Rollback the update on the target devices.  This is where the actual rollback logic should be implemented.
+		 * Roll back the update on the target storage server. Called by the appliance when {@code executeUpdate}
+		 * or {@code postUpdate} returns a failure response. Implement idempotent cleanup here.
 		 *
-		 * @param storageServer the target device to be updated
-		 * @param update the update definition containing the details of the update to be rolled back
+		 * @param storageServer the target device to roll back
+		 * @param update the update definition for the operation being rolled back
 		 * @return a ServiceResponse indicating the success or failure of the rollback operation
 		 */
 		ServiceResponse<UpdateOperation> rollbackUpdate(StorageServer storageServer, UpdateDefinition update);

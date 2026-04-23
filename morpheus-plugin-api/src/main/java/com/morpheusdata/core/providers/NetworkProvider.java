@@ -865,39 +865,74 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 
 	}
 
+	/**
+	 * Enables remote update operations on Network Servers such as network switches or appliances.
+	 *
+	 * <p><strong>Update lifecycle:</strong> {@code validateUpdate} → {@code executeUpdate} → {@code postUpdate}.
+	 * If {@code executeUpdate} or {@code postUpdate} fail, the appliance calls {@code rollbackUpdate}.
+	 * {@code refreshUpdate} is used only to poll the status of a long-running async operation — it is
+	 * <strong>not</strong> part of the rollback path.</p>
+	 *
+	 * <p><strong>Parameter ordering note:</strong> {@code NetworkUpdateFacet} takes {@code (NetworkServer, UpdateDefinition)}
+	 * — the server instance comes first. This is the opposite of {@code ComputeUpdateFacet}, which takes
+	 * {@code (UpdateDefinition, ComputeServer...)}. Keep this in mind when implementing across resource types.</p>
+	 *
+	 * <p>{@link com.morpheusdata.model.UpdateDefinition} describes the <em>available update</em> (what to apply),
+	 * scoped to a resource type via {@code refType}/{@code refId}. {@link com.morpheusdata.model.UpdateOperation}
+	 * describes the <em>in-progress execution</em> on a specific instance, and is what {@code refreshUpdate}
+	 * and {@code rollbackUpdate} operate against.</p>
+	 */
 	public interface NetworkUpdateFacet extends UpdateFacet<NetworkServer> {
 
 		/**
-		 * Perform a validation of the update against the target switches.
-		 * @param networkServer
-		 * @param update
+		 * Perform a validation of the update against the target network server. Check prerequisites,
+		 * compatibility, or other conditions to ensure the update can be applied successfully.
+		 *
+		 * @param networkServer the target device to be updated
+		 * @param update the update definition containing the details of the update to be applied
+		 * @return a ServiceResponse with any errors if validation failed or a success response if validation passed
 		 */
 		ServiceResponse<UpdateOperation> validateUpdate(NetworkServer networkServer, UpdateDefinition update);
 
 		/**
-		 * Execute the update against the target switches.
-		 * @param networkServer
-		 * @param update
+		 * Execute the update on the target network server. Called after {@code validateUpdate} succeeds.
+		 * On failure, the appliance will call {@code rollbackUpdate}.
+		 *
+		 * @param networkServer the target device to be updated
+		 * @param update the update definition containing the details of the update to be applied
+		 * @return a ServiceResponse indicating the success or failure of the update operation
 		 */
 		ServiceResponse<UpdateOperation> executeUpdate(NetworkServer networkServer, UpdateDefinition update);
 
 		/**
-		 * Refresh the update operation status against the target switches.
-		 * @param networkServer
+		 * Poll the status of a long-running update operation. Called by the appliance when an
+		 * {@code UpdateOperation} is in a pending/in-progress state and needs a status refresh.
+		 * This method is <strong>not</strong> called as part of the rollback path — use {@code rollbackUpdate}
+		 * for failure recovery.
+		 *
+		 * @param networkServer the target device being updated
+		 * @param updateOperation the in-progress operation whose status should be refreshed
+		 * @return a ServiceResponse with the updated operation state
 		 */
 		ServiceResponse<UpdateOperation> refreshUpdate(NetworkServer networkServer, UpdateOperation updateOperation);
 
 		/**
-		 * Finalize the update operation status against the target switches.
-		 * @param networkServer
-		 * @param update
+		 * Post-update operations: cleanup, verification, or other finalization steps. Called after
+		 * {@code executeUpdate} completes successfully. On failure, the appliance will call {@code rollbackUpdate}.
+		 *
+		 * @param networkServer the target device that was updated
+		 * @param update the update definition
+		 * @return a ServiceResponse indicating the success or failure of post-update steps
 		 */
 		ServiceResponse<UpdateOperation> postUpdate(NetworkServer networkServer, UpdateDefinition update);
 
 		/**
-		 * Rollback the update operation status against the target switches.
-		 * @param networkServer
-		 * @param update
+		 * Roll back the update on the target network server. Called by the appliance when {@code executeUpdate}
+		 * or {@code postUpdate} returns a failure response. Implement idempotent cleanup here.
+		 *
+		 * @param networkServer the target device to roll back
+		 * @param update the update definition for the operation being rolled back
+		 * @return a ServiceResponse indicating the success or failure of the rollback operation
 		 */
 		ServiceResponse<UpdateOperation> rollbackUpdate(NetworkServer networkServer, UpdateDefinition update);
 	}

@@ -24,6 +24,13 @@ import com.morpheusdata.model.projection.UpdateIdentityProjection;
 /**
  * Provides synchronous CRUD access to {@link UpdateDefinition} objects within the Morpheus appliance.
  *
+ * <p>This is the blocking counterpart to {@link MorpheusUpdateDefinitionService}. Use this when
+ * writing synchronous plugin code or when blocking is acceptable. For non-blocking/reactive code,
+ * prefer {@link MorpheusUpdateDefinitionService}.</p>
+ *
+ * <p>See {@link MorpheusUpdateDefinitionService} for full documentation on sync patterns,
+ * {@code refType}/{@code refId} semantics, and expected usage.</p>
+ *
  * @author alex.clement
  * @since 1.4.0
  * @see MorpheusUpdateDefinitionService
