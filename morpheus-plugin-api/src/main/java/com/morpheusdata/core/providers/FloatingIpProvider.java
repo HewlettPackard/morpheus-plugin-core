@@ -3,6 +3,7 @@ package com.morpheusdata.core.providers;
 import com.morpheusdata.model.NetworkFloatingIpPool;
 import com.morpheusdata.model.NetworkServer;
 import com.morpheusdata.model.ComputeServer;
+import com.morpheusdata.model.ComputeServerInterface;
 import com.morpheusdata.model.NetworkFloatingIp;
 import com.morpheusdata.model.OptionType;
 import com.morpheusdata.response.ServiceResponse;
@@ -24,6 +25,17 @@ public interface FloatingIpProvider extends PluginProvider {
 	 * @return ServiceResponse
 	 */
 	ServiceResponse attachFloatingIp(ComputeServer server, NetworkFloatingIp floatingIp);
+
+	/**
+	 * Attaches a floating ip to a server with specific network interface target
+	 * @param server the server to attach the floating ip to
+	 * @param iface the network interface to target
+	 * @param floatingIp the floating ip to attach
+	 * @return {@link ServiceResponse}
+	 */
+	default ServiceResponse attachFloatingIp(ComputeServer server, ComputeServerInterface iface, NetworkFloatingIp floatingIp) {
+		return ServiceResponse.success();
+	}
 
 	/**
 	 * Detaches a floating ip from a server
