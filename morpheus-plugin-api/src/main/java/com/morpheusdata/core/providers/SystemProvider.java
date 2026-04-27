@@ -72,6 +72,35 @@ public interface SystemProvider extends PluginProvider {
 	default ServiceResponse updateSystem(System system, SystemRequest systemRequest) { return ServiceResponse.success(); }
 
 	/**
+	 * Applies system-level configuration properties (e.g. NTP servers, DNS resolvers,
+	 * hostname) to the managed system. This is intentionally distinct from
+	 * {@link #updateSystem}, which is reserved for software and firmware update workflows.
+	 *
+	 * <p>Configuration properties to apply are carried in
+	 * {@link SystemRequest#getConfigOptions()}. Plugins should read the keys they care
+	 * about and ignore unknown keys — the service layer performs no key validation.</p>
+	 *
+	 * <p>The Morpheus service layer will:
+	 * <ol>
+	 *   <li>Set {@code system.configurationWorkflowStatus = 'in-progress'} before calling.</li>
+	 *   <li>Merge non-null {@code configOptions} keys into {@code system.config} on success.</li>
+	 *   <li>Set {@code configurationWorkflowStatus} to {@code 'completed'} or {@code 'failed'}
+	 *       based on the returned {@link ServiceResponse}.</li>
+	 * </ol>
+	 * Plugins do not need to persist configuration changes themselves.</p>
+	 *
+	 * <p>The default implementation is a no-op returning {@code ServiceResponse.success()}.
+	 * Providers with no configuration to push may leave this default in place.</p>
+	 *
+	 * @param system  the fully populated plugin model for the target system
+	 * @param request carries the active process record and a {@code configOptions} map
+	 *                containing the configuration properties to apply
+	 * @return {@link ServiceResponse#success()} if configuration was applied;
+	 *         {@link ServiceResponse#error(String)} with a human-readable message otherwise
+	 */
+	default ServiceResponse updateSystemConfiguration(System system, SystemRequest request) { return ServiceResponse.success(); }
+
+	/**
 	 * Perform any cleanup/state reset operations required on removal of a system
 	 * @param system
 	 * @return
