@@ -22,6 +22,7 @@ import com.morpheusdata.model.AccountCredential;
 import com.morpheusdata.model.AccountIntegration;
 import com.morpheusdata.model.BackupProvider;
 import com.morpheusdata.model.Cloud;
+import com.morpheusdata.model.ComputeServer
 import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.core.Single;
 
@@ -44,4 +45,6 @@ public interface MorpheusSynchronousAccountCredentialService extends MorpheusSyn
 	AccountCredential loadCredentials(AccountIntegration accountIntegration);
 
 	AccountCredential loadCredentials(BackupProvider backupProvider);
+
+	AccountCredential loadCredentials(ComputeServer computeServer);
 }
