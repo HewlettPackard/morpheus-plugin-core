@@ -571,4 +571,6 @@ public interface MorpheusAsyncServices {
 	MorpheusCurrencyConversionService getCurrency();
 
 	MorpheusAffinityGroupService getAffinityGroup();
+
+	MorpheusSystemService getSystem();
 }
