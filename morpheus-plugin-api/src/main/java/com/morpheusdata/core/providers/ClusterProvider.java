@@ -358,4 +358,17 @@ public interface ClusterProvider extends PluginProvider {
 		return ServiceResponse.success(storageVolumeTypes);
 	}
 
+	/**
+	 * Facet interface for cluster update operations. Cluster providers that support system-scoped
+	 * update definitions should implement this facet to handle validate, execute, post-update, and
+	 * rollback lifecycle hooks.
+	 *
+	 * <p><strong>Parameter ordering note:</strong> {@code ClusterUpdateFacet} takes {@code (ComputeServerGroup, UpdateDefinition)}
+	 * to stay consistent with the other update facets.</p>
+	 *
+	 * @since 1.3.4
+	 */
+	public interface ClusterUpdateFacet extends UpdateFacet<ComputeServerGroup> {
+	}
+
 }
