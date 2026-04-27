@@ -366,7 +366,7 @@ public interface ClusterProvider extends PluginProvider {
 	 * <p><strong>Parameter ordering note:</strong> {@code ClusterUpdateFacet} takes {@code (ComputeServerGroup, UpdateDefinition)}
 	 * to stay consistent with the other update facets.</p>
 	 *
-	 * @since 1.3.4
+	 * @since 1.4.0
 	 */
 	public interface ClusterUpdateFacet extends UpdateFacet<ComputeServerGroup> {
 	}

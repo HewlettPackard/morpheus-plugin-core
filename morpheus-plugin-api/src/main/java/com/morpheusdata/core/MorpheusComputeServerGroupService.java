@@ -53,7 +53,7 @@ public interface MorpheusComputeServerGroupService extends MorpheusDataService<C
 	 * @param updateDefinition the update definition to validate
 	 * @param serverGroup the target cluster
 	 * @return a ServiceResponse indicating validation success or failure
-	 * @since 1.3.4
+	 * @since 1.4.0
 	 */
 	Single<ServiceResponse> validateUpdate(UpdateDefinition updateDefinition, ComputeServerGroup serverGroup);
 
@@ -62,7 +62,7 @@ public interface MorpheusComputeServerGroupService extends MorpheusDataService<C
 	 * @param updateDefinition the update definition to execute
 	 * @param serverGroup the target cluster
 	 * @return a ServiceResponse indicating execution success or failure
-	 * @since 1.3.4
+	 * @since 1.4.0
 	 */
 	Single<ServiceResponse> executeUpdate(UpdateDefinition updateDefinition, ComputeServerGroup serverGroup);
 
@@ -71,7 +71,7 @@ public interface MorpheusComputeServerGroupService extends MorpheusDataService<C
 	 * @param updateDefinition the update definition
 	 * @param serverGroup the target cluster
 	 * @return a ServiceResponse indicating success or failure
-	 * @since 1.3.4
+	 * @since 1.4.0
 	 */
 	Single<ServiceResponse> postUpdate(UpdateDefinition updateDefinition, ComputeServerGroup serverGroup);
 
@@ -80,7 +80,7 @@ public interface MorpheusComputeServerGroupService extends MorpheusDataService<C
 	 * @param updateDefinition the update definition to rollback
 	 * @param serverGroup the target cluster
 	 * @return a ServiceResponse indicating success or failure
-	 * @since 1.3.4
+	 * @since 1.4.0
 	 */
 	Single<ServiceResponse> rollbackUpdate(UpdateDefinition updateDefinition, ComputeServerGroup serverGroup);
 
@@ -88,7 +88,7 @@ public interface MorpheusComputeServerGroupService extends MorpheusDataService<C
 	 * Refreshes update status on the target cluster via the plugin's {@code ClusterUpdateFacet}.
 	 * @param serverGroup the target cluster
 	 * @return a ServiceResponse indicating success or failure
-	 * @since 1.3.4
+	 * @since 1.4.0
 	 */
 	Single<ServiceResponse> refreshUpdate(ComputeServerGroup serverGroup);
 }
