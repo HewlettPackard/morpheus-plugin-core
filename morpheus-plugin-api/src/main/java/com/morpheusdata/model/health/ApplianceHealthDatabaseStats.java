@@ -32,7 +32,6 @@ public class ApplianceHealthDatabaseStats {
 	protected List<ApplianceHealthSlowQuery> slowQueries = new ArrayList<>();
 	protected Map<String,Object> stats = new HashMap<>();
 	protected Map<String,Object> innodbStats = new HashMap<>();
-	protected Map<String,Long> scans = new HashMap<>();
 	protected Double scanPercent;
 	protected String status;
 	protected String statusMessage;
@@ -64,9 +63,6 @@ public class ApplianceHealthDatabaseStats {
 	public Map<String,Object> getInnodbStats() { return innodbStats; }
 	public void setInnodbStats(Map<String,Object> innodbStats) { this.innodbStats = innodbStats; }
 
-	public Map<String,Long> getScans() { return scans; }
-	public void setScans(Map<String,Long> scans) { this.scans = scans; }
-
 	public Double getScanPercent() { return scanPercent; }
 	public void setScanPercent(Double scanPercent) { this.scanPercent = scanPercent; }
 
@@ -84,7 +80,6 @@ public class ApplianceHealthDatabaseStats {
 			", usedConnections=" + usedConnections +
 			", abortedConnections=" + abortedConnections +
 			", scanPercent=" + scanPercent +
-			", scans=" + scans +
 			", busyConnections=" + busyConnections.size() +
 			", slowQueries=" + slowQueries.size() +
 			", status='" + status + '\'' +
