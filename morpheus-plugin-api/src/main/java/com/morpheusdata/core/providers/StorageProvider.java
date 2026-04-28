@@ -185,34 +185,4 @@ public interface StorageProvider extends PluginProvider,UIExtensionProvider {
 		 */
 		ServiceResponse<DriftState> getConfigurationDriftDetails(StorageServer storageServer, DriftState driftState);
 	}
-
-	/**
-	 * Facet that enables a storage plugin to validate volume name and size before provisioning
-	 * or reconfiguration (resize).
-	 *
-	 * The facet is only invoked when the storage server type is plugin-backed. Volumes with no associated storage
-	 * server, and non-block volume types are not passed to this method.
-	 */
-	interface StorageVolumeProvisioningFacet {
-
-		/**
-		 * Validate a volume configuration before provisioning or reconfiguration.
-		 *
-		 * <p>Implementations should validate at minimum:
-		 * <ul>
-		 *   <li>Volume name against the storage system's naming rules</li>
-		 *   <li>Volume size against the storage system's minimum/maximum bounds</li>
-		 * </ul>
-		 *
-		 * @return a ServiceResponse containing field-keyed errors
-		 *
-		 * @param storageServer the storage server that will back this volume
-		 * @param volumeConfig  raw volume configuration map as submitted by the user;
-		 *                      contains at minimum: name (String), size (numeric, GiB),
-		 *                      datastoreId (Long), storageType (Long, StorageVolumeType id)
-		 * @param opts          additional context from the provision or reconfigure request
-		 * @return a ServiceResponse containing field-keyed errors
-		 */
-		ServiceResponse validateVolumeConfig(StorageServer storageServer, Map volumeConfig, Map opts);
-	}
 }

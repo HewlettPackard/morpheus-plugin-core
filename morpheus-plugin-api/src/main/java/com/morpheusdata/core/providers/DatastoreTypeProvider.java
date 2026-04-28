@@ -21,12 +21,14 @@ import com.morpheusdata.core.MorpheusContext;
 import com.morpheusdata.model.*;
 import com.morpheusdata.model.event.DatastoreEvent;
 import com.morpheusdata.model.event.EventType;
+import com.morpheusdata.request.ValidateVolumeConfigRequest;
 import com.morpheusdata.response.ServiceResponse;
 import com.morpheusdata.request.CreateSnapshotRequest;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Represents a DatastoreType and how a {@link StorageServer} interacts with various provisioners
@@ -515,7 +517,29 @@ public interface DatastoreTypeProvider extends PluginProvider {
 
 	}
 
+   /**
+	* Facet that enables a storage plugin to validate volume name and size before provisioning
+	* or reconfiguration (resize).
+	* The facet is only invoked when the storage server type is plugin-backed. Volumes with no associated storage
+	* server, and non-block volume types are not passed to this method.
+	*/
+   interface VolumeConfigValidationFacet {
 
-
+	   /**
+		* Validate a volume configuration before provisioning or reconfiguration.
+		*
+		* <p>Implementations should validate at minimum:
+		* <ul>
+		*   <li>Volume name against the storage system's naming rules</li>
+		*   <li>Volume size against the storage system's minimum/maximum bounds</li>
+		* </ul>
+		*
+		* @param datastore     the datastore of the volume being validated
+		* @param volumeConfig  the volume configuration as submitted by the user
+		* @param opts          additional context from the provision or reconfigure request
+		* @return a ServiceResponse containing field-keyed errors
+		*/
+	   ServiceResponse validateVolumeConfig(Datastore datastore, ValidateVolumeConfigRequest volumeConfig, Map opts);
+   }
 
 }
