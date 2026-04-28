@@ -21,4 +21,18 @@ public interface MorpheusSynchronousAdminService {
 	MorpheusSynchronousUserService getUser();
 
 	MorpheusSynchronousApplianceService getAppliance();
+
+	MorpheusSynchronousAuditLogService getAuditLog();
+
+	MorpheusSynchronousApplianceHealthService getHealth();
+
+	/**
+	 * Returns the Appliance License Service for querying and managing the appliance license synchronously.
+	 * @return an instance of the implementation of the {@link MorpheusSynchronousApplianceLicenseService}
+	 */
+	MorpheusSynchronousApplianceLicenseService getLicense();
+
+	MorpheusSynchronousPluginService getPlugin();
+
+	MorpheusSynchronousPackageService getPackage();
 }

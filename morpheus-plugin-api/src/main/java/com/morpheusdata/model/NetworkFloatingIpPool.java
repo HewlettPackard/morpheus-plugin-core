@@ -18,6 +18,7 @@ public class NetworkFloatingIpPool extends NetworkFloatingIpPoolIdentityProjecti
 	protected String code;
 	protected String name;
 	protected String displayName;
+	protected String description;
 	protected List<String> dnsServers;
 	protected List<String> dnsSuffixList;
 	protected String cidr;
@@ -112,6 +113,15 @@ public class NetworkFloatingIpPool extends NetworkFloatingIpPoolIdentityProjecti
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
 		markDirty("displayName", displayName);
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+		markDirty("description", description);
 	}
 
 	public List<String> getDnsServers() {

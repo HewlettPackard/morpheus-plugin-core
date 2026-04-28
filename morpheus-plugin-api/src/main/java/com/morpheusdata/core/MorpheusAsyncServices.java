@@ -41,6 +41,8 @@ import com.morpheusdata.core.providers.TaskProvider;
 import com.morpheusdata.core.provisioning.MorpheusProvisionService;
 import com.morpheusdata.model.BackupProvider;
 import com.morpheusdata.core.admin.MorpheusAdminService;
+import com.morpheusdata.core.MorpheusUpdateDefinitionService;
+import com.morpheusdata.core.system.MorpheusSystemService;
 
 public interface MorpheusAsyncServices {
 	/**
@@ -464,6 +466,14 @@ public interface MorpheusAsyncServices {
 	MorpheusAdminService getAdmin();
 
 	/**
+	 * Returns the {@link MorpheusSystemService} which allows access to {@link MorpheusDataService} related services
+	 * for System objects. Sub-services for SystemType and SystemComponent are accessible via
+	 * {@link MorpheusSystemService#getType()} and {@link MorpheusSystemService#getComponent()}.
+	 * @return an instance of MorpheusSystemService
+	 */
+	MorpheusSystemService getSystem();
+
+	/**
 	 * return the {@link MorpheusAccountCertificateService} which allows access to {@link com.morpheusdata.model.AccountCertificate}
 	 * data operations such as create/update/query operations
 	 * @return an instance {@link MorpheusAccountCertificateService}
@@ -574,14 +584,14 @@ public interface MorpheusAsyncServices {
 	MorpheusAffinityGroupService getAffinityGroup();
 
 	/**
-	 * Returns the {@link MorpheusSupportBundleService} which allows access to support bundle services
-	 * @return an instance of {@link MorpheusSupportBundleService}
-	 */
-	MorpheusSupportBundleService getSupportBundle();
-
-	/**
 	 * Returns the MorpheusLlmService for managing LLM Engine model and integration contexts.
 	 * @return an instance of the MorpheusLlmService
 	 */
 	MorpheusLlmService getLlm();
+
+	/**
+	 * Returns the {@link MorpheusUpdateDefinitionService} for async CRUD access to {@link com.morpheusdata.model.UpdateDefinition} objects.
+	 * @return an instance of {@link MorpheusUpdateDefinitionService}
+	 */
+	MorpheusUpdateDefinitionService getUpdateDefinition();
 }

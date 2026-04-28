@@ -3,6 +3,7 @@ package com.morpheusdata.core.providers;
 import com.morpheusdata.model.NetworkFloatingIpPool;
 import com.morpheusdata.model.NetworkServer;
 import com.morpheusdata.model.ComputeServer;
+import com.morpheusdata.model.ComputeServerInterface;
 import com.morpheusdata.model.NetworkFloatingIp;
 import com.morpheusdata.model.OptionType;
 import com.morpheusdata.response.ServiceResponse;
@@ -24,6 +25,17 @@ public interface FloatingIpProvider extends PluginProvider {
 	 * @return ServiceResponse
 	 */
 	ServiceResponse attachFloatingIp(ComputeServer server, NetworkFloatingIp floatingIp);
+
+	/**
+	 * Attaches a floating ip to a server with specific network interface target
+	 * @param server the server to attach the floating ip to
+	 * @param iface the network interface to target
+	 * @param floatingIp the floating ip to attach
+	 * @return {@link ServiceResponse}
+	 */
+	default ServiceResponse attachFloatingIp(ComputeServer server, ComputeServerInterface iface, NetworkFloatingIp floatingIp) {
+		return ServiceResponse.success();
+	}
 
 	/**
 	 * Detaches a floating ip from a server
@@ -60,6 +72,42 @@ public interface FloatingIpProvider extends PluginProvider {
 	 * @return ServiceResponse containing the resulting {@link NetworkFloatingIp }
 	 */
 	ServiceResponse<NetworkFloatingIp> allocateFloatingIp(NetworkServer networkServer, NetworkFloatingIpPool pool);
+
+	/**
+	 * Called when a NetworkFloatingIpPool is created in Morpheus
+	 * @param pool the {@link NetworkFloatingIpPool} that was created
+	 * @return ServiceResponse containing the resulting {@link NetworkFloatingIp }. The resulting NetworkFloatingIp should contain the external system object
+	 */
+	default ServiceResponse<NetworkFloatingIpPool> createFloatingIpPool(NetworkFloatingIpPool pool) {
+		return ServiceResponse.success(pool);
+	}
+
+	/**
+	 * Called when a NetworkFloatingIpPool is updated in Morpheus
+	 * @param pool the {@link NetworkFloatingIpPool} that was updated
+	 * @return ServiceResponse containing the resulting {@link NetworkFloatingIp }. The resulting NetworkFloatingIp should contain the external system object
+	 */
+	default ServiceResponse<NetworkFloatingIpPool> updateFloatingIpPool(NetworkFloatingIpPool pool) {
+		return ServiceResponse.success(pool);
+	}
+
+	/**
+	 * Called when a NetworkFloatingIpPool is deleted in Morpheus
+	 * @param pool the {@link NetworkFloatingIpPool} that was deleted
+	 * @return ServiceResponse containing the resulting {@link NetworkFloatingIp }. The resulting NetworkFloatingIp should contain the external system object
+	 */
+	default ServiceResponse<NetworkFloatingIpPool> deleteFloatingIpPool(NetworkFloatingIpPool pool) {
+		return ServiceResponse.success(pool);
+	}
+
+	/**
+	 * Called when a NetworkFloatingIpPool is validated in Morpheus. This is called before a NetworkFloatingIpPool is created or updated in Morpheus, and can be used to validate the pool against the external system.
+	 * @param pool the {@link NetworkFloatingIpPool} to validate
+	 * @return ServiceResponse containing the resulting {@link NetworkFloatingIp }. The resulting NetworkFloatingIp should contain the external system object if validation is successful, or an error message if validation fails.
+	 */
+	default ServiceResponse<NetworkFloatingIpPool> validateFloatingIpPool(NetworkFloatingIpPool pool) {
+		return ServiceResponse.success(pool);
+	}
 
 	/**
 	 * Deprecated. Use {@link #getOptionTypes()} instead.

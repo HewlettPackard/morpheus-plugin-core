@@ -1,7 +1,7 @@
 package com.morpheusdata.core.providers;
 
-import com.morpheusdata.core.providers.PluginProvider.SupportBundleFacet;
 import com.morpheusdata.model.Icon;
+import com.morpheusdata.model.SystemCatalogItemUpdate;
 import com.morpheusdata.model.system.*;
 import com.morpheusdata.model.system.System;
 import com.morpheusdata.response.ServiceResponse;
@@ -113,11 +113,23 @@ public interface SystemProvider extends PluginProvider {
 	default ServiceResponse updateSystemComponent(System system, SystemRequest systemRequest, SystemComponentType componentType) { return ServiceResponse.success(); }
 
 	/**
-	 * Facet for generating support bundle contents for System components.
-	 * Implement this facet to provide support bundle generation capabilities for systems.
+	 * Applying this facet to a {@link SystemProvider} registers it as a consumer of Central Services
+	 * catalog item updates. Morpheus polls the CS catalog for changes (via hash comparison) and calls
+	 * {@link #onCatalogItemUpdate} for each changed item, allowing the system plugin to process the
+	 * new catalog payload as needed.
 	 *
-	 * @since 1.4.0
-	 * @author Mike Carlin
+	 * @since 1.4.x
 	 */
-	interface SystemSupportBundleFacet extends SupportBundleFacet<System> {}
+	interface CatalogItemFacet {
+
+		/**
+		 * Called when a CS catalog item has changed (new hash detected).
+		 * The system plugin is responsible for determining how to handle the updated payload
+		 * (e.g. downloading packages, updating configuration, triggering workflows).
+		 *
+		 * @param item the catalog item update containing the name, code, hash, payload, and optional version
+		 * @return ServiceResponse indicating success or failure of processing the update
+		 */
+		ServiceResponse onCatalogItemUpdate(SystemCatalogItemUpdate item);
+	}
 }

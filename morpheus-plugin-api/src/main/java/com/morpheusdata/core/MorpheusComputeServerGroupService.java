@@ -17,7 +17,15 @@
 package com.morpheusdata.core;
 
 
+import com.morpheusdata.model.ComputeServer;
 import com.morpheusdata.model.ComputeServerGroup;
+import com.morpheusdata.model.ComputeTypeLayout;
+import com.morpheusdata.model.UpdateDefinition;
+import com.morpheusdata.request.AddServerGroupServersRequest;
+import com.morpheusdata.response.ServiceResponse;
+import io.reactivex.rxjava3.core.Single;
+
+import java.util.List;
 
 public interface MorpheusComputeServerGroupService extends MorpheusDataService<ComputeServerGroup, ComputeServerGroup>, MorpheusIdentityService<ComputeServerGroup> {
 	/**
@@ -26,4 +34,61 @@ public interface MorpheusComputeServerGroupService extends MorpheusDataService<C
 	 * @return An instance of the Compute Server Group Type Service
 	 */
 	MorpheusComputeServerGroupTypeService getType();
+
+	/**
+	 * Add one or more servers to an existing cluster. Follows the same flow as the
+	 * {@code POST /api/clusters/:id/servers} REST API endpoint, including license checks,
+	 * policy enforcement, and async provisioning.
+	 *
+	 * @param cluster the target cluster (server group)
+	 * @param layout  the ComputeTypeLayout to use for provisioning
+	 * @param request the request object describing the server(s) to add
+	 * @return a {@link ServiceResponse} containing the list of provisioned {@link ComputeServer} objects on success
+	 * @since 1.4.0
+	 */
+	Single<ServiceResponse<List<ComputeServer>>> addServerGroupServers(ComputeServerGroup cluster, ComputeTypeLayout layout, AddServerGroupServersRequest request);
+
+	/**
+	 * Validates an update definition against the target cluster via the plugin's {@code ClusterUpdateFacet}.
+	 * @param updateDefinition the update definition to validate
+	 * @param serverGroup the target cluster
+	 * @return a ServiceResponse indicating validation success or failure
+	 * @since 1.4.0
+	 */
+	Single<ServiceResponse> validateUpdate(UpdateDefinition updateDefinition, ComputeServerGroup serverGroup);
+
+	/**
+	 * Executes an update definition against the target cluster via the plugin's {@code ClusterUpdateFacet}.
+	 * @param updateDefinition the update definition to execute
+	 * @param serverGroup the target cluster
+	 * @return a ServiceResponse indicating execution success or failure
+	 * @since 1.4.0
+	 */
+	Single<ServiceResponse> executeUpdate(UpdateDefinition updateDefinition, ComputeServerGroup serverGroup);
+
+	/**
+	 * Runs post-update logic for the target cluster via the plugin's {@code ClusterUpdateFacet}.
+	 * @param updateDefinition the update definition
+	 * @param serverGroup the target cluster
+	 * @return a ServiceResponse indicating success or failure
+	 * @since 1.4.0
+	 */
+	Single<ServiceResponse> postUpdate(UpdateDefinition updateDefinition, ComputeServerGroup serverGroup);
+
+	/**
+	 * Rolls back an update on the target cluster via the plugin's {@code ClusterUpdateFacet}.
+	 * @param updateDefinition the update definition to rollback
+	 * @param serverGroup the target cluster
+	 * @return a ServiceResponse indicating success or failure
+	 * @since 1.4.0
+	 */
+	Single<ServiceResponse> rollbackUpdate(UpdateDefinition updateDefinition, ComputeServerGroup serverGroup);
+
+	/**
+	 * Refreshes update status on the target cluster via the plugin's {@code ClusterUpdateFacet}.
+	 * @param serverGroup the target cluster
+	 * @return a ServiceResponse indicating success or failure
+	 * @since 1.4.0
+	 */
+	Single<ServiceResponse> refreshUpdate(ComputeServerGroup serverGroup);
 }

@@ -1,0 +1,17 @@
+<h2>Sample Volume Tab Plugin</h2>
+
+<p>This sample tab is rendered by a custom <code>VolumeTabProvider</code>.</p>
+
+{{#if name}}
+<div>
+  <p><strong>Volume:</strong> {{name}}</p>
+  <p><strong>ID:</strong> {{id}}</p>
+	<p><strong>Description:</strong> {{description}}</p>
+	<p><strong>Display Name:</strong> {{deviceDisplayName}}</p>
+</div>
+{{else}}
+<p>No volume details were provided to the renderer.</p>
+{{/if}}
+
+<p>Use this sample as a starting point for displaying capacity, replication, performance, or storage-system metadata.</p>
+

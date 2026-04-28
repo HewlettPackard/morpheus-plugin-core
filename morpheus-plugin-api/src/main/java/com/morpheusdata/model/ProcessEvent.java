@@ -28,6 +28,7 @@ public class ProcessEvent {
 	 */
 	public ProcessType type;
 	public ProcessStepType stepType;
+	public String eventTitle;
 	public String jobName;
 	public Map jobConfig;
 
@@ -65,6 +66,14 @@ public class ProcessEvent {
 	 */
 	public void setStepType(ProcessStepType stepType) {
 		this.stepType = stepType;
+	}
+
+	public String getEventTitle() {
+		return eventTitle;
+	}
+
+	public void setEventTitle(String eventTitle) {
+		this.eventTitle = eventTitle;
 	}
 
 	public String getJobName() {
