@@ -42,7 +42,7 @@ public interface SystemProvider extends PluginProvider {
 	Collection<SystemTypeLayout> getSystemTypeLayouts();
 
 	/**
-	 * This phase is run prior to exeucting the system initialization workflows.  In this phase you can perform
+	 * This phase is run prior to executing the system initialization workflows.  In this phase you can perform
 	 * any form up pre initialization checks, additional input validations, etc.
 	 * @param system
 	 * @return
@@ -80,14 +80,14 @@ public interface SystemProvider extends PluginProvider {
 	 * {@link SystemRequest#getConfigOptions()}. Plugins should read the keys they care
 	 * about and ignore unknown keys — the service layer performs no key validation.</p>
 	 *
-	 * <p>The Morpheus service layer will:
+	 * <p>The Morpheus service layer will:</p>
 	 * <ol>
 	 *   <li>Set {@code system.configurationWorkflowStatus = 'in-progress'} before calling.</li>
 	 *   <li>Merge non-null {@code configOptions} keys into {@code system.config} on success.</li>
 	 *   <li>Set {@code configurationWorkflowStatus} to {@code 'completed'} or {@code 'failed'}
 	 *       based on the returned {@link ServiceResponse}.</li>
 	 * </ol>
-	 * Plugins do not need to persist configuration changes themselves.</p>
+	 * Plugins do not need to persist configuration changes themselves.
 	 *
 	 * <p>The default implementation is a no-op returning {@code ServiceResponse.success()}.
 	 * Providers with no configuration to push may leave this default in place.</p>
@@ -115,7 +115,7 @@ public interface SystemProvider extends PluginProvider {
 	default ServiceResponse refreshSystem(System system) { return ServiceResponse.success(); }
 
 	/**
-	 * Executed once a day, perform any desireable action on a daily interval
+	 * Executed once a day, perform any desirable action on a daily interval
 	 * @param system
 	 * @return
 	 */
