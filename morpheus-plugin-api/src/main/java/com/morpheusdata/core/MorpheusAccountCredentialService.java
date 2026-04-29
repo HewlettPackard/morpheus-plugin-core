@@ -47,5 +47,14 @@ public interface MorpheusAccountCredentialService extends MorpheusDataService<Ac
 
 	Maybe<AccountCredential> loadCredentials(BackupProvider backupProvider);
 
+	/**
+	 * Loads the credential for a ComputeServer based on its AccountCredentialLink.
+	 * For cypher-backed credentials, the credential data is populated from the per-link applied cypher key
+	 * specific to this server, falling back to the base credential key if no link-specific value exists.
+	 * This allows each device to carry its own unique credential value (e.g. a rotated password)
+	 * while sharing the same AccountCredential.
+	 * @param computeServer the server whose linked credential should be loaded
+	 * @return Maybe emitting the AccountCredential with data populated, or empty if no link exists
+	 */
 	Maybe<AccountCredential> loadCredentials(ComputeServer computeServer);
 }
