@@ -25,6 +25,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+
 /**
  * A class for generating QCOW2 format disk images in a streaming manner.
  * This class constructs the QCOW2 header, refcount tables, and mapping tables
@@ -47,6 +48,9 @@ public class StreamingQcow2Writer {
 	public List<Long> dataClusters;
 	Long dataClusterSize = 0L;
 	public DataClusterIterable dataClusterIterable;
+
+	private final TreeMap<Long, Long> pendingL2Writes = new TreeMap<>();
+	private static final int L2_FLUSH_THRESHOLD = 256;
 
 	/**
 	 * Constructs a StreamingQcow2Writer for generating QCOW2 format disk images.
@@ -588,11 +592,7 @@ public class StreamingQcow2Writer {
 			if (streamEnded) {
 				// Stream ended, mark all remaining clusters as empty
 				long l2TableOffset = calculateL2EntryOffset(cluster);
-				long currentPosition = writer.getFilePointer();
-
-				writer.seek(l2TableOffset);
-				writeLong(writer, 0L);
-				writer.seek(currentPosition);
+				bufferL2Write(writer, l2TableOffset, 0L);
 
 				if ((written + CLUSTER_SIZE) / REPORT_INTERVAL_BYTES != written / REPORT_INTERVAL_BYTES) {
 					System.err.printf("%d/%d bytes written%n", written + CLUSTER_SIZE, fileSize());
@@ -610,11 +610,7 @@ public class StreamingQcow2Writer {
 					// Could not skip, stream likely ended
 					streamEnded = true;
 					long l2TableOffset = calculateL2EntryOffset(cluster);
-					long currentPosition = writer.getFilePointer();
-
-					writer.seek(l2TableOffset);
-					writeLong(writer, 0L);
-					writer.seek(currentPosition);
+					bufferL2Write(writer, l2TableOffset, 0L);
 
 					if ((written + CLUSTER_SIZE) / REPORT_INTERVAL_BYTES != written / REPORT_INTERVAL_BYTES) {
 						System.err.printf("%d/%d bytes written%n", written + CLUSTER_SIZE, fileSize());
@@ -636,11 +632,7 @@ public class StreamingQcow2Writer {
 					if (totalBytesRead == 0) {
 						// No data read for this cluster at all, mark as empty
 						long l2TableOffset = calculateL2EntryOffset(cluster);
-						long currentPosition = writer.getFilePointer();
-
-						writer.seek(l2TableOffset);
-						writeLong(writer, 0L);
-						writer.seek(currentPosition);
+						bufferL2Write(writer, l2TableOffset, 0L);
 
 						if ((written + CLUSTER_SIZE) / REPORT_INTERVAL_BYTES != written / REPORT_INTERVAL_BYTES) {
 							System.err.printf("%d/%d bytes written%n", written + CLUSTER_SIZE, fileSize());
@@ -672,29 +664,16 @@ public class StreamingQcow2Writer {
 			if (isZeroFilled) {
 					// Mark this cluster as empty in the L2 table
 					long l2TableOffset = calculateL2EntryOffset(cluster);
-					long currentPosition = writer.getFilePointer();
-
-					// Seek to the L2 entry and write 0 to mark it as empty
-					writer.seek(l2TableOffset);
-					writeLong(writer, 0L);
-
-					// Seek back to continue writing data
-					writer.seek(currentPosition);
+					bufferL2Write(writer, l2TableOffset, 0L);
 				} else {
 					// Write the data and update the L2 table to point to it
 					long dataPosition = writer.getFilePointer();
 					writer.write(buffer, 0, (int) CLUSTER_SIZE);
 
-					// Update the L2 table entry to point to the actual data location
+					// Buffer the L2 table entry update
 					long l2TableOffset = calculateL2EntryOffset(cluster);
-					long currentPosition = writer.getFilePointer();
-
-					writer.seek(l2TableOffset);
 					long offset = dataPosition | (0L << 62) | (1L << 63);
-					writeLong(writer, offset);
-
-					// Seek back to continue writing data
-					writer.seek(currentPosition);
+					bufferL2Write(writer, l2TableOffset, offset);
 				}
 
 				position += totalBytesRead;
@@ -706,6 +685,9 @@ public class StreamingQcow2Writer {
 			written += CLUSTER_SIZE;
 			dataClusterIndex++;
 		}
+
+		// Flush any remaining buffered L2 table writes
+		flushL2Writes(writer);
 	}
 
 //	public void copyData(InputStream reader, OutputStream writer) throws IOException {
@@ -722,6 +704,75 @@ public class StreamingQcow2Writer {
 //			written += CLUSTER_SIZE;
 //		}
 //	}
+
+	/**
+	 * Buffers an L2 table write to reduce random seeks on NFS-mounted filesystems.
+	 * When the buffer reaches {@link #L2_FLUSH_THRESHOLD} entries, it is automatically
+	 * flushed with coalesced sequential writes.
+	 *
+	 * @param writer the random access file to eventually write to
+	 * @param l2Offset the file offset of the L2 table entry
+	 * @param value the L2 entry value to write
+	 * @throws IOException if an I/O error occurs during flushing
+	 */
+	private void bufferL2Write(RandomAccessFile writer, long l2Offset, long value) throws IOException {
+		pendingL2Writes.put(l2Offset, value);
+		if (pendingL2Writes.size() >= L2_FLUSH_THRESHOLD) {
+			flushL2Writes(writer);
+		}
+	}
+
+	/**
+	 * Flushes all pending L2 table writes, coalescing contiguous entries into single
+	 * bulk writes to minimize seek operations. Entries that are adjacent (8 bytes apart)
+	 * are merged into a single sequential write.
+	 *
+	 * @param writer the random access file to write to
+	 * @throws IOException if an I/O error occurs during writing
+	 */
+	private void flushL2Writes(RandomAccessFile writer) throws IOException {
+		if (pendingL2Writes.isEmpty()) {
+			return;
+		}
+
+		long savedPosition = writer.getFilePointer();
+
+		long runStart = -1;
+		long runNextExpected = -1;
+		ByteBuffer runBuffer = null;
+
+		for (Map.Entry<Long, Long> entry : pendingL2Writes.entrySet()) {
+			long offset = entry.getKey();
+			long value = entry.getValue();
+
+			if (runStart == -1 || offset != runNextExpected) {
+				// Flush the previous run if any
+				if (runBuffer != null) {
+					writer.seek(runStart);
+					runBuffer.flip();
+					writer.write(runBuffer.array(), 0, runBuffer.limit());
+				}
+				// Start a new run
+				runStart = offset;
+				runBuffer = ByteBuffer.allocate(L2_FLUSH_THRESHOLD * 8).order(ByteOrder.BIG_ENDIAN);
+				runBuffer.putLong(value);
+			} else {
+				// Contiguous entry, append to current run
+				runBuffer.putLong(value);
+			}
+			runNextExpected = offset + 8;
+		}
+
+		// Flush the last run
+		if (runBuffer != null) {
+			writer.seek(runStart);
+			runBuffer.flip();
+			writer.write(runBuffer.array(), 0, runBuffer.limit());
+		}
+
+		pendingL2Writes.clear();
+		writer.seek(savedPosition);
+	}
 
 	/**
 	 * Calculates the file offset of the L2 table entry for a given guest cluster.
