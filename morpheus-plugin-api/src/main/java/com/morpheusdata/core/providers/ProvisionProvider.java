@@ -21,8 +21,10 @@ import com.morpheusdata.model.*;
 import com.morpheusdata.request.AfterConvertToManagedRequest;
 import com.morpheusdata.request.BeforeConvertToManagedRequest;
 import com.morpheusdata.request.BuildResizeChangelistRequest;
+import com.morpheusdata.request.ValidateConvertToManagedRequest;
 import com.morpheusdata.response.BeforeConvertToManagedResponse;
 import com.morpheusdata.response.AfterConvertToManagedResponse;
+import com.morpheusdata.response.ValidateConvertToManagedResponse;
 import com.morpheusdata.response.BuildResizeControllerChangelistResponse;
 import com.morpheusdata.response.BuildResizeInterfaceChangelistResponse;
 import com.morpheusdata.response.BuildResizeVolumeChangelistResponse;
@@ -840,6 +842,22 @@ public interface ProvisionProvider extends PluginProvider {
 	 * @since 1.2.13
 	 */
 	interface ConvertToManagedFacet {
+		/**
+		 * Validates that a pre-provisioned server is eligible to be converted to managed (or added as a node
+		 * to an existing instance). Called synchronously before the async conversion job is queued, so a
+		 * failure response causes the endpoint to return an immediate HTTP error.
+		 *
+		 * <p>The default implementation always returns success and is a no-op for providers that do not
+		 * require pre-validation.</p>
+		 *
+		 * @param request contains the {@link com.morpheusdata.model.ComputeServer} to be validated
+		 * @return a {@link ServiceResponse} whose {@code success} flag indicates whether the conversion may
+		 *         proceed. On failure, populate {@code msg} and/or {@code errors} with human-readable details.
+		 */
+		default ServiceResponse<ValidateConvertToManagedResponse> validateConvertToManaged(ValidateConvertToManagedRequest request) {
+			return ServiceResponse.success(new ValidateConvertToManagedResponse());
+		}
+
 		ServiceResponse<BeforeConvertToManagedResponse> beforeConvertToManaged(BeforeConvertToManagedRequest beforeConvertToManagedRequest);
 		ServiceResponse<AfterConvertToManagedResponse> afterConvertToManaged(AfterConvertToManagedRequest afterConvertToManagedRequest);
 	}
