@@ -20,6 +20,9 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.morpheusdata.model.projection.NetworkLocationIdentityProjection;
 import com.morpheusdata.model.serializers.ModelAsIdOnlySerializer;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Represents a Network Location, which defines geographic or logical locations associated with networks and cloud resources.
  * Network Locations can be used to organize networks by region, datacenter, or other logical groupings.
@@ -32,8 +35,13 @@ public class NetworkLocation extends NetworkLocationIdentityProjection {
 	protected String refType;
 	protected Long refId;
 	protected String refUUID;
+	protected String internalId;
+	protected String uniqueId;
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Network network;
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
+	protected CloudPool cloudPool;
+	protected List<CloudPool> assignedZonePools = new ArrayList<>();
 
 	public Account getAccount() {
 		return account;
@@ -78,6 +86,74 @@ public class NetworkLocation extends NetworkLocationIdentityProjection {
 	public void setNetwork(Network network) {
 		this.network = network;
 		markDirty("network", network);
+	}
+
+	/**
+	 * Gets the internal id of the NetworkLocation
+	 * @return the internalId
+	 */
+	public String getInternalId() {
+		return internalId;
+	}
+
+	/**
+	 * Sets the internal id of the NetworkLocation
+	 * @param internalId the internal id
+	 */
+	public void setInternalId(String internalId) {
+		this.internalId = internalId;
+		markDirty("internalId", internalId);
+	}
+
+	/**
+	 * Gets the unique id of the NetworkLocation
+	 * @return the uniqueId
+	 */
+	public String getUniqueId() {
+		return uniqueId;
+	}
+
+	/**
+	 * Sets the unique id of the NetworkLocation
+	 * @param uniqueId the unique id
+	 */
+	public void setUniqueId(String uniqueId) {
+		this.uniqueId = uniqueId;
+		markDirty("uniqueId", uniqueId);
+	}
+
+	/**
+	 * Gets the primary {@link CloudPool} (zone pool) associated with this NetworkLocation
+	 * @return the cloudPool
+	 */
+	public CloudPool getCloudPool() {
+		return cloudPool;
+	}
+
+	/**
+	 * Sets the primary {@link CloudPool} (zone pool) associated with this NetworkLocation
+	 * @param cloudPool the zone pool
+	 */
+	public void setCloudPool(CloudPool cloudPool) {
+		this.cloudPool = cloudPool;
+		markDirty("cloudPool", cloudPool);
+	}
+
+	/**
+	 * Gets the list of {@link CloudPool} zone pools assigned to this NetworkLocation
+	 * @return the assignedZonePools
+	 */
+	public List<CloudPool> getAssignedZonePools() {
+		return assignedZonePools;
+	}
+
+	/**
+	 * Sets the list of {@link CloudPool} zone pools assigned to this NetworkLocation
+	 * @param assignedZonePools the list of assigned zone pools
+	 */
+	public void setAssignedZonePools(List<CloudPool> assignedZonePools) {
+		this.assignedZonePools = assignedZonePools;
+		markDirty("assignedZonePools", assignedZonePools);
 	}
 }
 
