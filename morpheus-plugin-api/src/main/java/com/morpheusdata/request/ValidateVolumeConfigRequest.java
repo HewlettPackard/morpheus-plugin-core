@@ -19,6 +19,7 @@ package com.morpheusdata.request;
 /**
  * Request object for {@link com.morpheusdata.core.providers.DatastoreTypeProvider.VolumeConfigValidationFacet#validateVolumeConfig}.
  * Encapsulates the volume configuration submitted by the user during provisioning or reconfiguration.
+ * Properties can be null. Plugins are responsible for validating their own requirements.
  */
 public class ValidateVolumeConfigRequest {
 
@@ -33,7 +34,7 @@ public class ValidateVolumeConfigRequest {
        public String name;
 
        /**
-        * The requested volume size in GiB.
+        * The requested volume size in bytes.
         */
        public Long size;
 
