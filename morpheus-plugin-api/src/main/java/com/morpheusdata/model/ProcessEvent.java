@@ -19,9 +19,15 @@ package com.morpheusdata.model;
 import java.util.Map;
 
 /**
- * Represents an event (or step) within a {@link Process}
+ * Represents an event (or step) within a {@link Process}.
+ * <p>
+ * Extends {@link MorpheusModel} to inherit the {@code id} field. When used as a parameter
+ * for {@link com.morpheusdata.core.MorpheusProcessService#runProcessStep}, the {@code id}
+ * should be set to the value returned by
+ * {@link com.morpheusdata.model.process.InsertProcessStepResponse#getProcessEventId()} so the
+ * platform can locate the persisted event to dispatch.
  */
-public class ProcessEvent {
+public class ProcessEvent extends MorpheusModel {
 
 	/**
 	 * @deprecated Use {@link #stepType} instead.
