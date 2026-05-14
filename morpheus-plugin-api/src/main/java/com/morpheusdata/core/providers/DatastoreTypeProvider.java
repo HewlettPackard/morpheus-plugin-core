@@ -21,12 +21,14 @@ import com.morpheusdata.core.MorpheusContext;
 import com.morpheusdata.model.*;
 import com.morpheusdata.model.event.DatastoreEvent;
 import com.morpheusdata.model.event.EventType;
+import com.morpheusdata.request.ValidateVolumeConfigRequest;
 import com.morpheusdata.response.ServiceResponse;
 import com.morpheusdata.request.CreateSnapshotRequest;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Represents a DatastoreType and how a {@link StorageServer} interacts with various provisioners
@@ -515,7 +517,36 @@ public interface DatastoreTypeProvider extends PluginProvider {
 
 	}
 
+   /**
+	* Facet that enables a storage plugin to validate volume fields before provisioning
+	* or reconfiguration (resize).
+	* The facet is only invoked when the storage server type is plugin-backed. Volumes
+	* with no associated storage server, and non-block volume types are not passed to this method.
+	*/
+   interface VolumeConfigValidationFacet {
 
-
+	   /**
+		* Validate a volume configuration before provisioning or reconfiguration.
+		*
+		* <p>Implementations should validate at minimum:
+		* <ul>
+		*   <li>Volume name against the storage system's naming rules</li>
+		*   <li>Volume size against the storage system's minimum/maximum bounds</li>
+		* </ul>
+		*
+		* <p><strong>Error map structure:</strong> The errors map must use {@code "volume"} as the key.
+		* The value is a list of error strings, where each string identifies the offending field and
+		* describes the problem. Include the volume name in the message so the user can identify
+		* which volume failed.
+		*
+		* @param datastore     the datastore of the volume being validated
+		* @param volumeConfig  the volume configuration as submitted by the user;
+		*                      properties may be null — plugins are responsible for validating their own requirements
+		* @param opts          additional context from the provision or reconfigure request
+		* @return a {@link ServiceResponse} with {@code success: false} and an errors map on failure where the key
+		*         is {@code "volume"} and the value is a list of error strings, or {@code success: true} if validation passes
+		*/
+	   ServiceResponse validateVolumeConfig(Datastore datastore, ValidateVolumeConfigRequest volumeConfig, Map opts);
+   }
 
 }
