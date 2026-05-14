@@ -54,11 +54,6 @@ public class ValidateVolumeConfigRequest {
        public Long maxIOPS;
 
        /**
-        * The {@code Datastore} ID that identifies the backing storage server.
-        */
-       public Long datastoreId;
-
-       /**
         * Whether the volume supports resizing.
         */
        public Boolean resizeable;
@@ -122,14 +117,6 @@ public class ValidateVolumeConfigRequest {
 
        public void setMaxIOPS(Long maxIOPS) {
                this.maxIOPS = maxIOPS;
-       }
-
-       public Long getDatastoreId() {
-               return datastoreId;
-       }
-
-       public void setDatastoreId(Long datastoreId) {
-               this.datastoreId = datastoreId;
        }
 
        public Boolean getResizeable() {
