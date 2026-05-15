@@ -11,13 +11,11 @@ public class ValidateConvertToManagedRequest {
 	/** The persisted server — use for read-only context (e.g. {@code preProvisioned}, {@code computeServerType}). */
 	public ComputeServer server;
 
-	/**
-	 * The submitted parameters to validate (e.g. {@code sshHost}, {@code sshUsername}, {@code sshPassword},
-	 * {@code sshKeyPairId}). These may differ from the persisted server values when the caller is supplying
-	 * credentials as part of the request. Validate against these values, falling back to the server fields
-	 * when a key is absent.
-	 */
 	public Map<String, Object> opts;
+	public String sshHost;
+	public String sshUsername;
+	public String sshPassword;
+	public Long sshKeyPairId;
 
 	public ComputeServer getServer() {
 		return server;
@@ -33,5 +31,37 @@ public class ValidateConvertToManagedRequest {
 
 	public void setOpts(Map<String, Object> opts) {
 		this.opts = opts;
+	}
+
+	public String getSshHost() {
+		return sshHost;
+	}
+
+	public void setSshHost(String sshHost) {
+		this.sshHost = sshHost;
+	}
+
+	public String getSshUsername() {
+		return sshUsername;
+	}
+
+	public void setSshUsername(String sshUsername) {
+		this.sshUsername = sshUsername;
+	}
+
+	public String getSshPassword() {
+		return sshPassword;
+	}
+
+	public void setSshPassword(String sshPassword) {
+		this.sshPassword = sshPassword;
+	}
+
+	public Long getSshKeyPairId() {
+		return sshKeyPairId;
+	}
+
+	public void setSshKeyPairId(Long sshKeyPairId) {
+		this.sshKeyPairId = sshKeyPairId;
 	}
 }

@@ -12,6 +12,10 @@ class ValidateConvertToManagedRequestSpec extends Specification {
 		then:
 		request.server == null
 		request.opts == null
+		request.sshHost == null
+		request.sshUsername == null
+		request.sshPassword == null
+		request.sshKeyPairId == null
 	}
 
 	void "setServer / getServer roundtrip"() {
@@ -52,5 +56,34 @@ class ValidateConvertToManagedRequestSpec extends Specification {
 		then:
 		request.getServer().is(server)
 		request.getOpts() == opts
+	}
+
+	void "typed ssh getters and setters use class properties"() {
+		given:
+		def request = new ValidateConvertToManagedRequest()
+
+		when:
+		request.setSshHost('10.0.0.1')
+		request.setSshUsername('admin')
+		request.setSshPassword('secret')
+		request.setSshKeyPairId(42L)
+
+		then:
+		request.getSshHost() == '10.0.0.1'
+		request.getSshUsername() == 'admin'
+		request.getSshPassword() == 'secret'
+		request.getSshKeyPairId() == 42L
+		request.sshHost == '10.0.0.1'
+		request.sshUsername == 'admin'
+		request.sshPassword == 'secret'
+		request.sshKeyPairId == 42L
+	}
+
+	void "sshKeyPairId getter returns property value"() {
+		given:
+		def request = new ValidateConvertToManagedRequest(sshKeyPairId: 101L)
+
+		expect:
+		request.getSshKeyPairId() == 101L
 	}
 }
