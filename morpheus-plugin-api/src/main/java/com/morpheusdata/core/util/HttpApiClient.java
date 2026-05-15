@@ -922,7 +922,7 @@ public class HttpApiClient {
 		rtn.setData(new LinkedHashMap());
 		if (rtn.getContent() != null && rtn.getContent().length() > 0) {
 			try {
-				Class<?> xmlSlurperClass = Class.forName("groovy.util.XmlSlurper");
+				Class<?> xmlSlurperClass = Class.forName("groovy.xml.XmlSlurper");
 				Object xmlSlurper = xmlSlurperClass.getDeclaredConstructor(boolean.class,boolean.class).newInstance(false, true);
 				rtn.setData(xmlSlurperClass.getMethod("parseText", String.class).invoke(xmlSlurper, rtn.getContent()));
 			} catch (Exception e) {
