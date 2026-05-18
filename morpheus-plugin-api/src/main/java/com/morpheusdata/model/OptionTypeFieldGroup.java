@@ -14,6 +14,7 @@ public class OptionTypeFieldGroup extends MorpheusModel {
 	protected Boolean collapsible;
 	protected Boolean defaultCollapsed;
 	protected String visibleOnCode;
+	protected Integer displayOrder;
 
 	protected List<OptionType> options;
 
@@ -87,5 +88,27 @@ public class OptionTypeFieldGroup extends MorpheusModel {
 	public void setOptions(List<OptionType> options) {
 		this.options = options;
 		markDirty("optionTypes", options);
+	}
+
+	/**
+	 * Gets the display order position of the following OptionTypeFieldGroup. The Display
+	 * order is sorted ascending numerically
+	 * 
+	 * @return the Numerical display order (typically starting at 0)
+	 */
+	public Integer getDisplayOrder() {
+		return displayOrder;
+	}
+
+	/**
+	 * Sets the display order position of the following Option Type. The Display
+	 * order is sorted ascending numerically.
+	 * 
+	 * @param displayOrder (typically starting at 0)
+	 *                     
+	 */
+	public void setDisplayOrder(Integer displayOrder) {
+		this.displayOrder = displayOrder;
+		markDirty("displayOrder", displayOrder);
 	}
 }

@@ -56,6 +56,7 @@ public class AddServerGroupServersRequest {
 	/**
 	 * Additional configuration options passed to the provisioner.
 	 * May include provider-specific settings such as {@code resourcePoolId}, {@code customOptions}, etc.
+	 * May also include a {@code server} map to set additional params directly on the server object in the config
 	 */
 	public Map<String, Object> config;
 
