@@ -43,7 +43,7 @@ public interface MorpheusComputeServerGroupService extends MorpheusDataService<C
 	 * @param cluster the target cluster (server group)
 	 * @param layout  the ComputeTypeLayout to use for provisioning
 	 * @param request the request object describing the server(s) to add
-	 * @return a {@link ServiceResponse} containing the list of provisioned {@link ComputeServer} objects on success
+	 * @return a {@link ServiceResponse} indicating success. If the servers are created synchronously, the response data will include the list of added servers. If the servers are provisioned asynchronously, the response data will be empty
 	 * @since 1.4.0
 	 */
 	Single<ServiceResponse<List<ComputeServer>>> addServerGroupServers(ComputeServerGroup cluster, ComputeTypeLayout layout, AddServerGroupServersRequest request);
