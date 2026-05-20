@@ -15,7 +15,6 @@ public class ValidateConvertToManagedRequest {
 	public String sshHost;
 	public String sshUsername;
 	public String sshPassword;
-	public Long sshKeyPairId;
 
 	public ComputeServer getServer() {
 		return server;
@@ -55,13 +54,5 @@ public class ValidateConvertToManagedRequest {
 
 	public void setSshPassword(String sshPassword) {
 		this.sshPassword = sshPassword;
-	}
-
-	public Long getSshKeyPairId() {
-		return sshKeyPairId;
-	}
-
-	public void setSshKeyPairId(Long sshKeyPairId) {
-		this.sshKeyPairId = sshKeyPairId;
 	}
 }
