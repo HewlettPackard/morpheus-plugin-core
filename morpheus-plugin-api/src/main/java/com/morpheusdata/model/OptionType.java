@@ -42,6 +42,7 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	protected Boolean required = false;
 	protected Boolean editable = true;
 	protected Boolean enabled = true;
+	protected Boolean readOnly = false;
 	protected String uuid;
 	protected String noSelection;
 	protected Long minVal;
@@ -445,6 +446,31 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	public void setRequired(Boolean required) {
 		this.required = required;
 		markDirty("required", required);
+	}
+
+	/**
+	 * Gets the read only flag off of the option type. This determines if an input is
+	 * read only or not. The CLI and UI will use
+	 * this flag to determine if an input should be rendered as a read only field.
+	 *
+	 * @return the read only flag to determine if an input is read only or not
+	 */
+	public Boolean getReadOnly() {
+		return readOnly;
+	}
+
+	/**
+	 * Sets the read only flag off of the option type. This determines if an input is
+	 * user read only or not. The CLI and UI will use
+	 * this flag as an initial validation step to ensure a user has at least entered
+	 * a value.
+	 * 
+	 * @param readOnly the read only flag to determine if an input is read only
+	 *                 or not
+	 */
+	public void setReadOnly(Boolean readOnly) {
+		this.readOnly = readOnly;
+		markDirty("readOnly", readOnly);
 	}
 
 	/**
