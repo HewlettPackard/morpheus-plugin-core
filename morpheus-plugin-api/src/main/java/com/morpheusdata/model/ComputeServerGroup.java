@@ -73,6 +73,9 @@ public class ComputeServerGroup extends MorpheusModel {
 	protected String serviceCert;
 	protected String serviceConfig;
 	protected String serviceVersion;
+	protected String clusterIdentifier;
+	protected String cpuPlacementMode;
+	protected String excludedCores;
 	//networks
 	protected String searchDomains;
 	protected Boolean enableInternalDns;
@@ -496,6 +499,30 @@ public class ComputeServerGroup extends MorpheusModel {
 	public void setPackages(Collection<ComputeServerGroupPackage> packages) {
 		this.packages = packages;
 		markDirty("packages", packages);
+	}
+
+	public String getClusterIdentifier() {
+		return clusterIdentifier;
+	}
+
+	public void setClusterIdentifier(String clusterIdentifier) {
+		this.clusterIdentifier = clusterIdentifier;
+	}
+
+	public String getCpuPlacementMode() {
+		return cpuPlacementMode;
+	}
+
+	public void setCpuPlacementMode(String cpuPlacementMode) {
+		this.cpuPlacementMode = cpuPlacementMode;
+	}
+
+	public String getExcludedCores() {
+		return excludedCores;
+	}
+
+	public void setExcludedCores(String excludedCores) {
+		this.excludedCores = excludedCores;
 	}
 
 	public enum Status {
