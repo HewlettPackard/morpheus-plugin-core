@@ -20,10 +20,29 @@ import com.morpheusdata.core.MorpheusSynchronousDataService;
 import com.morpheusdata.core.MorpheusSynchronousIdentityService;
 import com.morpheusdata.model.system.SystemComponent;
 import com.morpheusdata.model.projection.SystemComponentIdentityProjection;
+import io.reactivex.rxjava3.core.Single;
 
 /**
  * Synchronous access to {@link SystemComponent} objects via the plugin context.
  * Accessible via {@code morpheusContext.services.system.getComponent()}.
  */
 public interface MorpheusSynchronousSystemComponentService extends MorpheusSynchronousDataService<SystemComponent, SystemComponentIdentityProjection>, MorpheusSynchronousIdentityService<SystemComponentIdentityProjection> {
+
+	/**
+	 * Trigger a refresh on the underlying integration referenced by this system component.
+	 * Resolves the component's refType/refId and dispatches to the appropriate service refresh.
+	 * Supported refTypes: ComputeZone (Cloud), StorageServer, NetworkServer.
+	 * @param component the system component to refresh
+	 * @return Boolean returns the result of the refresh request.
+	 */
+	Single<Boolean> refreshComponent(SystemComponent component);
+
+	/**
+	 * Trigger a daily (full) refresh on the underlying integration referenced by this system component.
+	 * Resolves the component's refType/refId and dispatches to the appropriate service refresh.
+	 * Supported refTypes: ComputeZone (Cloud), StorageServer, NetworkServer.
+	 * @param component the system component to refresh
+	 * @return Boolean returns the result of the refresh request.
+	 */
+	Single<Boolean> refreshComponentDaily(SystemComponent component);
 }

@@ -41,4 +41,20 @@ public interface MorpheusStorageServerService extends MorpheusDataService<Storag
 	Single<ServiceResponse> runConfigurationDriftCheck(CheckLevel checkLevel, StorageServer storageServer);
 
 	Single<ServiceResponse> getConfigurationDriftDetails(StorageServer storageServer);
+
+	/**
+	 * Trigger a short refresh on a storage server. This initiates a data sync/inventory refresh
+	 * of the storage server's resources.
+	 * @param storageServer storage server to refresh
+	 * @return Boolean returns the result of the storage server refresh request.
+	 */
+	Single<Boolean> refresh(StorageServer storageServer);
+
+	/**
+	 * Trigger a daily (full) refresh on a storage server. This initiates a full data sync
+	 * of the storage server's resources.
+	 * @param storageServer storage server to refresh
+	 * @return Boolean returns the result of the storage server refresh request.
+	 */
+	Single<Boolean> refreshDaily(StorageServer storageServer);
 }
