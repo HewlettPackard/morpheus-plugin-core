@@ -60,6 +60,7 @@ public class NetworkRouter extends NetworkRouterIdentityProjection {
 	protected String managementIp;
 	protected String internalId;
 	protected String externalId;
+	protected String uniqueId;
 	protected String providerId;
 	protected String updateId;
 	protected String availabilityZone;
@@ -339,6 +340,14 @@ public class NetworkRouter extends NetworkRouterIdentityProjection {
 	@Override
 	public void setExternalId(String externalId) {
 		this.externalId = externalId;
+	}
+
+	public String getUniqueId() {
+		return uniqueId;
+	}
+
+	public void setUniqueId(String uniqueId) {
+		this.uniqueId = uniqueId;
 	}
 
 	public String getProviderId() {
