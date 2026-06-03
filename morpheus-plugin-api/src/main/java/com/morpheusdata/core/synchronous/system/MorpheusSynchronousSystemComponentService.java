@@ -35,7 +35,7 @@ public interface MorpheusSynchronousSystemComponentService extends MorpheusSynch
 	 * @param component the system component to refresh
 	 * @return Boolean returns the result of the refresh request.
 	 */
-	Single<Boolean> refreshComponent(SystemComponent component);
+	Boolean refreshComponent(SystemComponent component);
 
 	/**
 	 * Trigger a daily (full) refresh on the underlying integration referenced by this system component.
@@ -44,5 +44,5 @@ public interface MorpheusSynchronousSystemComponentService extends MorpheusSynch
 	 * @param component the system component to refresh
 	 * @return Boolean returns the result of the refresh request.
 	 */
-	Single<Boolean> refreshComponentDaily(SystemComponent component);
+	Boolean refreshComponentDaily(SystemComponent component);
 }

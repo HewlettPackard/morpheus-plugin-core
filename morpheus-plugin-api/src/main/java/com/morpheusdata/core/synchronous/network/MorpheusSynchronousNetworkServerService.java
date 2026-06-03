@@ -53,7 +53,7 @@ public interface MorpheusSynchronousNetworkServerService extends MorpheusSynchro
 	 * @param networkServer network server to refresh
 	 * @return Boolean returns the result of the network server refresh request.
 	 */
-	Single<Boolean> refresh(NetworkServer networkServer);
+	Boolean refresh(NetworkServer networkServer);
 
 	/**
 	 * Trigger a daily (full) refresh on a network server. This initiates a full data sync
@@ -61,5 +61,5 @@ public interface MorpheusSynchronousNetworkServerService extends MorpheusSynchro
 	 * @param networkServer network server to refresh
 	 * @return Boolean returns the result of the network server refresh request.
 	 */
-	Single<Boolean> refreshDaily(NetworkServer networkServer);
+	Boolean refreshDaily(NetworkServer networkServer);
 }

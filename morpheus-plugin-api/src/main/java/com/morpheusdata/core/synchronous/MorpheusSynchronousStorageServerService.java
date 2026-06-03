@@ -47,7 +47,7 @@ public interface MorpheusSynchronousStorageServerService extends MorpheusSynchro
 	 * @param storageServer storage server to refresh
 	 * @return Boolean returns the result of the storage server refresh request.
 	 */
-	Single<Boolean> refresh(StorageServer storageServer);
+	Boolean refresh(StorageServer storageServer);
 
 	/**
 	 * Trigger a daily (full) refresh on a storage server. This initiates a full data sync
@@ -55,5 +55,5 @@ public interface MorpheusSynchronousStorageServerService extends MorpheusSynchro
 	 * @param storageServer storage server to refresh
 	 * @return Boolean returns the result of the storage server refresh request.
 	 */
-	Single<Boolean> refreshDaily(StorageServer storageServer);
+	Boolean refreshDaily(StorageServer storageServer);
 }
