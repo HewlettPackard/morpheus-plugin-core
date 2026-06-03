@@ -1,14 +1,12 @@
 package com.morpheusdata.model.system;
 
-import com.morpheusdata.model.MorpheusModel;
 import com.morpheusdata.model.OptionType;
+import com.morpheusdata.model.projection.SystemTypeIdentityProjection;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SystemType extends MorpheusModel {
-	protected String name;
-	protected String code;
+public class SystemType extends SystemTypeIdentityProjection {
 	protected String description;
 	protected String category;
 	protected Boolean active = true;
@@ -16,24 +14,6 @@ public class SystemType extends MorpheusModel {
 	protected List<SystemTypeLayout> layouts = new ArrayList<>();
 	protected Boolean creatable = true;
 	protected Boolean editable = true;
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		markDirty("name", name);
-		this.name = name;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		markDirty("code", code);
-		this.code = code;
-	}
 
 	public String getDescription() {
 		return description;

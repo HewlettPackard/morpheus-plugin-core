@@ -16,6 +16,9 @@
 
 package com.morpheusdata.model;
 
+import java.util.List;
+import java.util.ArrayList;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.morpheusdata.core.providers.WizardProvider;
@@ -203,5 +206,14 @@ public class ConfigurationWorkflowStep extends MorpheusModel {
 	@JsonIgnore
 	public void setWizardProvider(WizardProvider wizardProvider) {
 		this.wizardProvider = wizardProvider;
+	}
+
+	protected List<String> dependsOn = new ArrayList<>();
+
+	public List<String> getDependsOn() { return dependsOn; }
+	
+	public void setDependsOn(List<String> dependsOn) {
+		this.dependsOn = dependsOn;
+		markDirty("dependsOn", dependsOn);
 	}
 }

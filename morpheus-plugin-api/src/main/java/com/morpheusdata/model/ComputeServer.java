@@ -73,6 +73,8 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 	protected String serverType;
 	protected String consoleHost;
 	protected PowerState powerState;
+	protected Double reservedMemory;
+	protected Double provisionPercent = 1.0d;
 	protected Long maxStorage;
 	protected Long maxMemory;
 	protected Long maxCpu;
@@ -603,6 +605,22 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 
 	public void setTpm(Boolean tpm) {
 		this.tpm = tpm;
+	}
+
+	public Double getReservedMemory() {
+		return reservedMemory;
+	}
+
+	public void setReservedMemory(Double reservedMemory) {
+		this.reservedMemory = reservedMemory;
+	}
+
+	public Double getProvisionPercent() {
+		return provisionPercent;
+	}
+
+	public void setProvisionPercent(Double provisionPercent) {
+		this.provisionPercent = provisionPercent;
 	}
 
 	public enum PowerState {

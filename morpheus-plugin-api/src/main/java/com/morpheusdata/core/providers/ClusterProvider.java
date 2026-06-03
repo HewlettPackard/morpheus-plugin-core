@@ -325,14 +325,6 @@ public interface ClusterProvider extends PluginProvider {
 		return new ClusterTabList();
 	}
 
-	/**
-	 * Facet for generating support bundle contents for Cluster integrations.
-	 *
-	 * @since 1.4.0
-	 * @author Mike Carlin
-	 */
-	interface ClusterSupportBundleFacet extends SupportBundleFacet<ComputeServerGroup> {}
-
 	public interface ServerPowerFacet {
 
 		/**
@@ -364,6 +356,19 @@ public interface ClusterProvider extends PluginProvider {
 	 */
 	default ServiceResponse<Collection<StorageVolumeType>> filterStorageVolumeTypes(DatastoreType datastoreType, Collection<StorageVolumeType> storageVolumeTypes) {
 		return ServiceResponse.success(storageVolumeTypes);
+	}
+
+	/**
+	 * Facet interface for cluster update operations. Cluster providers that support system-scoped
+	 * update definitions should implement this facet to handle validate, execute, post-update, and
+	 * rollback lifecycle hooks.
+	 *
+	 * <p><strong>Parameter ordering note:</strong> {@code ClusterUpdateFacet} takes {@code (ComputeServerGroup, UpdateDefinition)}
+	 * to stay consistent with the other update facets.</p>
+	 *
+	 * @since 1.4.0
+	 */
+	public interface ClusterUpdateFacet extends UpdateFacet<ComputeServerGroup> {
 	}
 
 }

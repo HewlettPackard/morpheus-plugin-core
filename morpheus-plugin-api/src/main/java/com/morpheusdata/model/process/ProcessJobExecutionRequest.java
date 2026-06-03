@@ -1,0 +1,62 @@
+/*
+ *  Copyright 2026 Morpheus Data, LLC.
+ *
+ * Licensed under the PLUGIN CORE SOURCE LICENSE (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://raw.githubusercontent.com/gomorpheus/morpheus-plugin-core/v1.0.x/LICENSE
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.morpheusdata.model.process;
+
+import java.util.Map;
+
+/**
+ * Request model passed to {@link com.morpheusdata.core.providers.ProcessJobProvider#execute(ProcessJobExecutionRequest)}.
+ * Contains the process event ID and the current step's merged options.
+ *
+ * @since 1.4.0
+ * @author Sean Ridgley
+ */
+public class ProcessJobExecutionRequest {
+
+	/**
+	 * The ID of the {@code ProcessEvent} being executed.
+	 */
+	public Long processEventId;
+
+	/**
+	 * The current step's inputs — the event's {@code jobMsgConfig} after any {@code stepInputs} merge.
+	 */
+	public Map<String, Object> opts;
+
+	public ProcessJobExecutionRequest() {}
+
+	public ProcessJobExecutionRequest(Long processEventId, Map<String, Object> opts) {
+		this.processEventId = processEventId;
+		this.opts = opts;
+	}
+
+	public Long getProcessEventId() {
+		return processEventId;
+	}
+
+	public void setProcessEventId(Long processEventId) {
+		this.processEventId = processEventId;
+	}
+
+	public Map<String, Object> getOpts() {
+		return opts;
+	}
+
+	public void setOpts(Map<String, Object> opts) {
+		this.opts = opts;
+	}
+}

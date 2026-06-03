@@ -35,7 +35,7 @@ import java.util.Map;
  * process
  * that executes the
  * orchestrated workflow.
- * 
+ *
  * @author Andy Warner
  * @since 1.2.6
  */
@@ -43,14 +43,14 @@ public interface ConfigurationWorkflowProvider extends PluginProvider {
 
 	/**
 	 * Returns the display name for this configuration workflow
-	 * 
+	 *
 	 * @return configuration workflow display name
 	 */
 	String getWorkflowName();
 
 	/**
 	 * Returns a description of this configuration workflow's purpose
-	 * 
+	 *
 	 * @return configuration workflow description
 	 */
 	default String getWorkflowDescription() {
@@ -63,7 +63,7 @@ public interface ConfigurationWorkflowProvider extends PluginProvider {
 	 * This method constructs a ConfigurationWorkflow model from the provider's
 	 * configuration,
 	 * including the code, name, description, and steps.
-	 * 
+	 *
 	 * @return ConfigurationWorkflow object representing this configuration workflow
 	 */
 	default ConfigurationWorkflow getConfigurationWorkflow() {
@@ -80,7 +80,7 @@ public interface ConfigurationWorkflowProvider extends PluginProvider {
 	 * configuration workflow.
 	 * This method allows providers to implement custom authorization logic based on
 	 * user roles, permissions, or other criteria.
-	 * 
+	 *
 	 * @param user the user to check access for
 	 * @return true if the user can access this configuration workflow, false
 	 *         otherwise
@@ -93,7 +93,7 @@ public interface ConfigurationWorkflowProvider extends PluginProvider {
 	 * Returns the ordered list of configuration workflow steps that make up this
 	 * workflow.
 	 * The steps will be presented to the user in the order returned by this list.
-	 * 
+	 *
 	 * @return List of ConfigurationWorkflowStep objects defining the configuration
 	 *         workflow
 	 */
@@ -105,13 +105,32 @@ public interface ConfigurationWorkflowProvider extends PluginProvider {
 	 * This method is called after each step's wizard is successfully completed,
 	 * allowing the configuration workflow to accumulate configuration across all
 	 * steps.
-	 * 
+	 *
+	 * <p>The state map must use a <strong>flat</strong> structure: each step's data
+	 * is stored at the top level keyed by step code.
+	 *
+	 * <p>Example state after two steps complete:
+	 * <pre>
+	 * {
+	 *   "my-network-step":      { "managementIp": "10.0.0.1", ... },
+	 *   "my-credentials-step":  { "username": "admin", ... },
+	 *   "status":               "completed",
+	 *   "completed":            true,
+	 *   "lastCompletedStep":    "my-credentials-step"
+	 * }
+	 * </pre>
+	 *
+	 * <p>The ServiceResponse data map must contain a {@code workflowState} key
+	 * holding the updated state map:
+	 * {@code ServiceResponse.success([workflowState: newState])}.
+	 *
 	 * @param stepCode     the code of the step that was completed
 	 * @param stepData     the configuration data collected from the step's wizard
 	 * @param currentState the current configuration workflow state before this
 	 *                     update
 	 * @param opts         additional options or context
-	 * @return ServiceResponse containing the updated configuration workflow state
+	 * @return ServiceResponse whose data contains {@code workflowState} — the
+	 *         updated flat state map
 	 */
 	ServiceResponse<?> saveStepConfiguration(String stepCode, Map<String, Object> stepData,
 			Map<String, Object> currentState, Map<String, Object> opts);
@@ -120,7 +139,7 @@ public interface ConfigurationWorkflowProvider extends PluginProvider {
 	 * Updates the parent object with the current configuration workflow state.
 	 * This method is called after each step configuration is saved, allowing
 	 * the parent object to persist and track the configuration workflow progress.
-	 * 
+	 *
 	 * @param parentObject               the parent object that holds the
 	 *                                   configuration workflow
 	 *                                   state
@@ -136,13 +155,17 @@ public interface ConfigurationWorkflowProvider extends PluginProvider {
 	 * Validates the complete configuration workflow state before final submission.
 	 * This method performs cross-step validation and business rule checks that
 	 * span multiple configuration workflow steps.
-	 * 
-	 * @param configurationWorkflowState map containing all configuration data from
-	 *                                   all
-	 *                                   steps, keyed by step code
+	 *
+	 * <p>The {@code configurationWorkflowState} map uses a <strong>flat</strong>
+	 * structure: step data is stored at the top level keyed by step code (e.g.
+	 * {@code state["my-network-step"]}). Metadata keys {@code status},
+	 * {@code completed}, and {@code lastCompletedStep} are also present at the
+	 * top level.
+	 *
+	 * @param configurationWorkflowState flat map of all step data, keyed by step
+	 *                                   code, plus metadata keys
 	 * @param parentObject               the parent object that holds the
-	 *                                   configuration workflow
-	 *                                   state
+	 *                                   configuration workflow state
 	 * @param opts                       additional options or context
 	 * @return ServiceResponse containing validation results. If validation fails,
 	 *         the response should contain error messages explaining what went
@@ -155,17 +178,22 @@ public interface ConfigurationWorkflowProvider extends PluginProvider {
 	 * Submits and executes the configuration workflow.
 	 * This method is called after all steps are completed and validated.
 	 * It should initiate the actual execution of the configuration workflow.
-	 * 
-	 * Since this method typically triggers another long-running process or method,
+	 *
+	 * <p>The {@code configurationWorkflowState} map uses a <strong>flat</strong>
+	 * structure: step data is stored at the top level keyed by step code.
+	 *
+	 * <p><strong>Setting system status:</strong> Set {@code parentObject.status = "initialized"}
+	 * to signal that setup is complete.
+	 *
+	 * <p>Since this method typically triggers another long-running process or method,
 	 * it returns a synchronous ServiceResponse. The long-running execution should
 	 * be handled by the method this calls.
-	 * 
-	 * @param configurationWorkflowState map containing all configuration data from
-	 *                                   all
-	 *                                   steps
+	 *
+	 * @param configurationWorkflowState flat map of all step data, keyed by step
+	 *                                   code, plus metadata keys
 	 * @param parentObject               the parent object that holds the
-	 *                                   configuration workflow
-	 *                                   state
+	 * 	                                    configuration workflow
+	 * 	                                    state
 	 * @param opts                       additional options or context
 	 * @return ServiceResponse containing the result of the configuration workflow
 	 *         submission
@@ -180,7 +208,7 @@ public interface ConfigurationWorkflowProvider extends PluginProvider {
 	 * This is useful for resuming an configuration workflow or reviewing its
 	 * current
 	 * progress.
-	 * 
+	 *
 	 * @param parentObject the parent object that holds the configuration workflow
 	 *                     state
 	 * @param opts         additional options or context
@@ -195,7 +223,7 @@ public interface ConfigurationWorkflowProvider extends PluginProvider {
 	 * the current configuration workflow state. This allows for conditional
 	 * configuration workflow
 	 * flows.
-	 * 
+	 *
 	 * @param step                       the configuration workflow step to evaluate
 	 * @param configurationWorkflowState map containing the current state from all
 	 *                                   previously
@@ -212,7 +240,7 @@ public interface ConfigurationWorkflowProvider extends PluginProvider {
 	 * Optional method called after successful configuration workflow submission.
 	 * Useful for cleanup, notifications, or triggering dependent actions after the
 	 * configuration workflow process completes.
-	 * 
+	 *
 	 * @param configurationWorkflowState map containing all configuration data from
 	 *                                   all
 	 *                                   steps
@@ -231,7 +259,7 @@ public interface ConfigurationWorkflowProvider extends PluginProvider {
 
 	/**
 	 * Optional method to cancel or abort a running configuration workflow process.
-	 * 
+	 *
 	 * @param configurationWorkflowState map containing the current configuration
 	 *                                   workflow state
 	 * @param parentObject               the parent object that holds the

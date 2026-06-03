@@ -1,7 +1,7 @@
 package com.morpheusdata.core.providers;
 
-import com.morpheusdata.core.providers.PluginProvider.SupportBundleFacet;
 import com.morpheusdata.model.Icon;
+import com.morpheusdata.model.SystemCatalogItemUpdate;
 import com.morpheusdata.model.system.*;
 import com.morpheusdata.model.system.System;
 import com.morpheusdata.response.ServiceResponse;
@@ -42,7 +42,7 @@ public interface SystemProvider extends PluginProvider {
 	Collection<SystemTypeLayout> getSystemTypeLayouts();
 
 	/**
-	 * This phase is run prior to exeucting the system initialization workflows.  In this phase you can perform
+	 * This phase is run prior to executing the system initialization workflows.  In this phase you can perform
 	 * any form up pre initialization checks, additional input validations, etc.
 	 * @param system
 	 * @return
@@ -72,6 +72,35 @@ public interface SystemProvider extends PluginProvider {
 	default ServiceResponse updateSystem(System system, SystemRequest systemRequest) { return ServiceResponse.success(); }
 
 	/**
+	 * Applies system-level configuration properties (e.g. NTP servers, DNS resolvers,
+	 * hostname) to the managed system. This is intentionally distinct from
+	 * {@link #updateSystem}, which is reserved for software and firmware update workflows.
+	 *
+	 * <p>Configuration properties to apply are carried in
+	 * {@link SystemRequest#getConfigOptions()}. Plugins should read the keys they care
+	 * about and ignore unknown keys — the service layer performs no key validation.</p>
+	 *
+	 * <p>The Morpheus service layer will:</p>
+	 * <ol>
+	 *   <li>Set {@code system.configurationWorkflowStatus = 'in-progress'} before calling.</li>
+	 *   <li>Merge non-null {@code configOptions} keys into {@code system.config} on success.</li>
+	 *   <li>Set {@code configurationWorkflowStatus} to {@code 'completed'} or {@code 'failed'}
+	 *       based on the returned {@link ServiceResponse}.</li>
+	 * </ol>
+	 * Plugins do not need to persist configuration changes themselves.
+	 *
+	 * <p>The default implementation is a no-op returning {@code ServiceResponse.success()}.
+	 * Providers with no configuration to push may leave this default in place.</p>
+	 *
+	 * @param system  the fully populated plugin model for the target system
+	 * @param request carries the active process record and a {@code configOptions} map
+	 *                containing the configuration properties to apply
+	 * @return {@link ServiceResponse#success()} if configuration was applied;
+	 *         {@link ServiceResponse#error(String)} with a human-readable message otherwise
+	 */
+	default ServiceResponse updateSystemConfiguration(System system, SystemRequest request) { return ServiceResponse.success(); }
+
+	/**
 	 * Perform any cleanup/state reset operations required on removal of a system
 	 * @param system
 	 * @return
@@ -86,7 +115,7 @@ public interface SystemProvider extends PluginProvider {
 	default ServiceResponse refreshSystem(System system) { return ServiceResponse.success(); }
 
 	/**
-	 * Executed once a day, perform any desireable action on a daily interval
+	 * Executed once a day, perform any desirable action on a daily interval
 	 * @param system
 	 * @return
 	 */
@@ -103,11 +132,33 @@ public interface SystemProvider extends PluginProvider {
 	default ServiceResponse addSystemComponent(System system, SystemRequest systemRequest, SystemComponentType componentType) { return ServiceResponse.success(); }
 
 	/**
-	 * Facet for generating support bundle contents for System components.
-	 * Implement this facet to provide support bundle generation capabilities for systems.
-	 *
-	 * @since 1.4.0
-	 * @author Mike Carlin
+	 * This method is called when updating an existing component on a system (e.g. reconfiguring a host, storage array,
+	 * etc. that was previously added to the system)
+	 * @param system
+	 * @param systemRequest
+	 * @param componentType
+	 * @return
 	 */
-	interface SystemSupportBundleFacet extends SupportBundleFacet<System> {}
+	default ServiceResponse updateSystemComponent(System system, SystemRequest systemRequest, SystemComponentType componentType) { return ServiceResponse.success(); }
+
+	/**
+	 * Applying this facet to a {@link SystemProvider} registers it as a consumer of Central Services
+	 * catalog item updates. Morpheus polls the CS catalog for changes (via hash comparison) and calls
+	 * {@link #onCatalogItemUpdate} for each changed item, allowing the system plugin to process the
+	 * new catalog payload as needed.
+	 *
+	 * @since 1.4.x
+	 */
+	interface CatalogItemFacet {
+
+		/**
+		 * Called when a CS catalog item has changed (new hash detected).
+		 * The system plugin is responsible for determining how to handle the updated payload
+		 * (e.g. downloading packages, updating configuration, triggering workflows).
+		 *
+		 * @param item the catalog item update containing the name, code, hash, payload, and optional version
+		 * @return ServiceResponse indicating success or failure of processing the update
+		 */
+		ServiceResponse onCatalogItemUpdate(SystemCatalogItemUpdate item);
+	}
 }
