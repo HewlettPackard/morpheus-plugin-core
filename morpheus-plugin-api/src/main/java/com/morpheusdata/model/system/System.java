@@ -30,6 +30,7 @@ public class System extends SystemIdentityProjection {
 	@JsonSerialize(using = ModelAsIdOnlySerializer.class)
 	protected Account owner;
 	protected List<SystemComponent> components = new ArrayList<>();
+	protected String config;
 
 	// Configuration workflow state stored as JSON
 	protected String configurationWorkflowState;
@@ -131,6 +132,15 @@ public class System extends SystemIdentityProjection {
 	public void setComponents(List<SystemComponent> components) {
 		markDirty("components", components);
 		this.components = components;
+	}
+
+	public String getConfig() {
+		return config;
+	}
+
+	public void setConfig(String config) {
+		markDirty("config", config);
+		this.config = config;
 	}
 
 	public String getConfigurationWorkflowState() {

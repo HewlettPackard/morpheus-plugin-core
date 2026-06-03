@@ -371,7 +371,7 @@ public class RestApiUtil {
 		rtn.setData(new LinkedHashMap());
 		if(rtn.getContent() != null && rtn.getContent().length() > 0) {
 			try {
-				rtn.setData(new groovy.util.XmlSlurper(false,true).parseText(rtn.getContent()));
+				rtn.setData(new groovy.xml.XmlSlurper(false,true).parseText(rtn.getContent()));
 			}
 			catch (SAXParseException spe) {
 				log.debug("Response is NOT XML: ${rtn.content}");
