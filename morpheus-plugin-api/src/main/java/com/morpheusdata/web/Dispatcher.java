@@ -20,6 +20,7 @@ import com.morpheusdata.core.Plugin;
 import com.morpheusdata.web.PluginController;
 import com.morpheusdata.core.PluginManager;
 import com.morpheusdata.model.Permission;
+import com.morpheusdata.views.JsonResponse;
 import com.morpheusdata.views.ViewModel;
 
 import java.lang.reflect.Method;
@@ -95,7 +96,11 @@ public class Dispatcher {
 		try {
 			Class[] argsList = new Class[]{ViewModel.class};
 			Method m = controller.getClass().getMethod(methodName, argsList);
-			return m.invoke(controller, params) ;
+			Object result = m.invoke(controller, params);
+			if(result instanceof JsonResponse && params != null && params.response != null) {
+				params.response.setContentType(((JsonResponse<?>)result).contentType);
+			}
+			return result;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -23,6 +23,7 @@ package com.morpheusdata.views;
 public class JsonResponse<T> {
 	public T data;
 	public Integer status = 200;
+	public String contentType = "application/json";
 
 	/**
 	 * Helper method to create a successful JsonResponse of an object

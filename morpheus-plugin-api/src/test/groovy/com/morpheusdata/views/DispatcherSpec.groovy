@@ -9,6 +9,8 @@ import com.morpheusdata.web.PluginController
 import com.morpheusdata.web.Route
 import spock.lang.Specification
 
+import jakarta.servlet.http.HttpServletResponse
+
 class DispatcherSpec extends Specification {
 	void "Test dispatch template"() {
 		given:
@@ -31,11 +33,35 @@ class DispatcherSpec extends Specification {
 		def pm = Mock(PluginManager)
 		def plugin = Mock(Plugin)
 		def testController = new TestController(plugin, null)
+		def response = Mock(HttpServletResponse)
 		plugin.getControllers() >> [testController]
 		pm.getPlugins() >> [plugin]
 
 		def d = new Dispatcher(pm)
 		def map = [foo: "bar"]
+		def model = ViewModel.of(map)
+		model.response = response
+
+		when:
+		def result = d.doDispatch(testController, 'json', model)
+
+		then:
+		result.data.foo == "fizz"
+		result.contentType == "application/json"
+		1 * response.setContentType("application/json")
+	}
+
+	void "Test dispatch json without servlet response"() {
+		given:
+		def pm = Mock(PluginManager)
+		def plugin = Mock(Plugin)
+		def testController = new TestController(plugin, null)
+		plugin.getControllers() >> [testController]
+		pm.getPlugins() >> [plugin]
+
+		def d = new Dispatcher(pm)
+		def map = [foo: "bar"]
+
 		expect:
 		d.doDispatch(
 				testController,
