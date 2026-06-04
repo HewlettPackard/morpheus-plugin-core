@@ -55,6 +55,13 @@ public interface MorpheusNetworkRouterService extends MorpheusDataService<Networ
 	 */
 	MorpheusNetworkBgpService getBgp();
 
+	/**
+	 * Returns the {@link MorpheusNetworkRouterLocationService} used for performing updates/queries on
+	 * {@link com.morpheusdata.model.NetworkRouterLocation} related assets within Morpheus
+	 * @return An instance of the {@link MorpheusNetworkRouterLocationService}
+	 */
+	MorpheusNetworkRouterLocationService getLocation();
+
 	//Network Router ORM Object Methods
 	/**
 	 * Lists all network projection objects for a specified integration id.

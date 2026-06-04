@@ -60,6 +60,7 @@ public class NetworkRouter extends NetworkRouterIdentityProjection {
 	protected String managementIp;
 	protected String internalId;
 	protected String externalId;
+	protected String uniqueId;
 	protected String providerId;
 	protected String updateId;
 	protected String availabilityZone;
@@ -130,6 +131,7 @@ public class NetworkRouter extends NetworkRouterIdentityProjection {
 	protected String visibility = "private";
 	protected List<NetworkRoute> routes;
 	protected List<NetworkRouterNAT> nats;
+	protected List<NetworkRouterLocation> locations;
 
 	public Account getOwner() {
 		return owner;
@@ -339,6 +341,15 @@ public class NetworkRouter extends NetworkRouterIdentityProjection {
 	@Override
 	public void setExternalId(String externalId) {
 		this.externalId = externalId;
+	}
+
+	public String getUniqueId() {
+		return uniqueId;
+	}
+
+	public void setUniqueId(String uniqueId) {
+		this.uniqueId = uniqueId;
+		markDirty("uniqueId", uniqueId);
 	}
 
 	public String getProviderId() {
@@ -759,5 +770,14 @@ public class NetworkRouter extends NetworkRouterIdentityProjection {
 	public void setNats(List<NetworkRouterNAT> nats) {
 		this.nats = nats;
 		markDirty("nats", nats);
+	}
+
+	public List<NetworkRouterLocation> getLocations() {
+		return locations;
+	}
+
+	public void setLocations(List<NetworkRouterLocation> locations) {
+		this.locations = locations;
+		markDirty("locations", locations, this.locations);
 	}
 }

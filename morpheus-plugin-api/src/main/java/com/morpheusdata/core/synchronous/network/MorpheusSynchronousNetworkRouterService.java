@@ -38,5 +38,11 @@ public interface MorpheusSynchronousNetworkRouterService extends MorpheusSynchro
 	 * @return An instance of the {@link MorpheusSynchronousNetworkRouterNATService}
 	 */
 	MorpheusSynchronousNetworkRouterNATService getNat();
-	
+
+	/**
+	 * Returns the {@link MorpheusSynchronousNetworkRouterLocationService} used for performing updates/queries on {@link com.morpheusdata.model.NetworkRouterLocation} related assets
+	 * within Morpheus
+	 * @return An instance of the {@link MorpheusSynchronousNetworkRouterLocationService}
+	 */
+	MorpheusSynchronousNetworkRouterLocationService getLocation();
 }
