@@ -21,6 +21,7 @@ import com.morpheusdata.model.projection.NetworkIdentityProjection;
 import com.morpheusdata.model.projection.NetworkRouterIdentityProjection;
 import com.morpheusdata.model.serializers.ModelAsIdOnlySerializer;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -131,7 +132,7 @@ public class NetworkRouter extends NetworkRouterIdentityProjection {
 	protected String visibility = "private";
 	protected List<NetworkRoute> routes;
 	protected List<NetworkRouterNAT> nats;
-	protected List<NetworkRouterLocation> locations;
+	protected List<NetworkRouterLocation> locations = new ArrayList<>();
 
 	public Account getOwner() {
 		return owner;
