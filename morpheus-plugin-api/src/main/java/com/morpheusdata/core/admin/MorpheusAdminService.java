@@ -67,4 +67,18 @@ public interface MorpheusAdminService {
 	 * @return an instance of the implementation of the {@link MorpheusPackageService}
 	 */
 	MorpheusPackageService getPackage();
+
+	/**
+	 * Returns the Role Service for creating and managing roles.
+	 * @return an instance of the implementation of the {@link MorpheusRoleService}
+	 * @since 1.4.2
+	 */
+	MorpheusRoleService getRole();
+
+	/**
+	 * Returns the Account Service for creating and managing tenants/accounts.
+	 * @return an instance of the implementation of the {@link MorpheusAccountService}
+	 * @since 1.4.2
+	 */
+	MorpheusAccountService getAccount();
 }
