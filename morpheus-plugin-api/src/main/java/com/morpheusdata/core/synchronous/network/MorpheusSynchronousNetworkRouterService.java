@@ -21,6 +21,7 @@ import com.morpheusdata.core.MorpheusSynchronousDataService;
 import com.morpheusdata.core.synchronous.network.MorpheusSynchronousNetworkRouteService;
 import com.morpheusdata.model.NetworkRoute;
 import com.morpheusdata.model.NetworkRouter;
+import com.morpheusdata.model.NetworkRouterType;
 import com.morpheusdata.model.projection.NetworkRouterIdentityProjection;
 
 public interface MorpheusSynchronousNetworkRouterService extends MorpheusSynchronousDataService<NetworkRouter, NetworkRouterIdentityProjection>, MorpheusSynchronousIdentityService<NetworkRouterIdentityProjection> {
@@ -45,4 +46,11 @@ public interface MorpheusSynchronousNetworkRouterService extends MorpheusSynchro
 	 * @return An instance of the {@link MorpheusSynchronousNetworkRouterLocationService}
 	 */
 	MorpheusSynchronousNetworkRouterLocationService getLocation();
+
+	/**
+	 * Returns the {@link MorpheusSynchronousNetworkRouterTypeService} used for performing queries on {@link NetworkRouterType} related assets
+	 * within Morpheus
+	 * @return An instance of the {@link MorpheusSynchronousNetworkRouterTypeService}
+	 */
+	MorpheusSynchronousNetworkRouterTypeService getType();
 }
