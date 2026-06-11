@@ -21,6 +21,8 @@ import com.morpheusdata.model.AccountIntegration;
 import com.morpheusdata.model.BackupProvider;
 import com.morpheusdata.model.Cloud;
 import com.morpheusdata.model.ComputeServer;
+import com.morpheusdata.model.NetworkServer;
+import com.morpheusdata.model.StorageServer;
 import com.morpheusdata.model.projection.AccountCredentialIdentityProjection;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.core.Maybe;
@@ -57,4 +59,22 @@ public interface MorpheusAccountCredentialService extends MorpheusDataService<Ac
 	 * @return Maybe emitting the AccountCredential with data populated, or empty if no link exists
 	 */
 	Maybe<AccountCredential> loadCredentials(ComputeServer computeServer);
+
+	/**
+	 * Loads the credential for a StorageServer based on its AccountCredentialLink.
+	 * For cypher-backed credentials, the credential data is populated from the per-link applied cypher key
+	 * specific to this storage server, falling back to the base credential key if no link-specific value exists.
+	 * @param storageServer the storage server whose linked credential should be loaded
+	 * @return Maybe emitting the AccountCredential with data populated, or empty if no link exists
+	 */
+	Maybe<AccountCredential> loadCredentials(StorageServer storageServer);
+
+	/**
+	 * Loads the credential for a NetworkServer based on its AccountCredentialLink.
+	 * For cypher-backed credentials, the credential data is populated from the per-link applied cypher key
+	 * specific to this network server, falling back to the base credential key if no link-specific value exists.
+	 * @param networkServer the network server whose linked credential should be loaded
+	 * @return Maybe emitting the AccountCredential with data populated, or empty if no link exists
+	 */
+	Maybe<AccountCredential> loadCredentials(NetworkServer networkServer);
 }
