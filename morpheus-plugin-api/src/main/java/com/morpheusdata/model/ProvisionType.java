@@ -76,6 +76,7 @@ public class ProvisionType extends MorpheusModel implements IModelCodeName {
 	protected Boolean supportsConfigManagement = true;
 	protected Boolean hasSecurityGroupsOnNetworks = false;
 	protected Boolean supportsNetworkSelection = true;
+	protected Boolean supportsOverridingPrimaryInterface = false;
 	/**
 	 * Indicates whether a service plan can be changed when reconfiguring an instance of this provision type.
 	 * Default is true.
@@ -309,6 +310,10 @@ public class ProvisionType extends MorpheusModel implements IModelCodeName {
 
 	public Boolean getSupportsNetworkSelection() {
 		return supportsNetworkSelection;
+	}
+
+	public Boolean getSupportsOverridingPrimaryInterface() {
+		return supportsOverridingPrimaryInterface;
 	}
 
 	/**
@@ -599,6 +604,11 @@ public class ProvisionType extends MorpheusModel implements IModelCodeName {
 	public void setSupportsNetworkSelection(Boolean supportsNetworkSelection) {
 		this.supportsNetworkSelection = supportsNetworkSelection;
 		markDirty("supportsNetworkSelection", supportsNetworkSelection);
+	}
+
+	public void setSupportsOverridingPrimaryInterface(Boolean supportsOverridingPrimaryInterface) {
+		this.supportsOverridingPrimaryInterface = supportsOverridingPrimaryInterface;
+		markDirty("supportsOverridingPrimaryInterface", supportsOverridingPrimaryInterface);
 	}
 
 	/**
