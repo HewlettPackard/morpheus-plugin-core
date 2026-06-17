@@ -1,6 +1,7 @@
 package com.morpheusdata.request
 
 import com.morpheusdata.model.ComputeServer
+import com.morpheusdata.model.Instance
 import spock.lang.Specification
 
 class ValidateConvertToManagedRequestSpec extends Specification {
@@ -11,6 +12,8 @@ class ValidateConvertToManagedRequestSpec extends Specification {
 
 		then:
 		request.server == null
+		request.osTypeId == null
+		request.instance == null
 		request.opts == null
 		request.sshHost == null
 		request.sshUsername == null
@@ -28,6 +31,56 @@ class ValidateConvertToManagedRequestSpec extends Specification {
 		then:
 		request.getServer().is(server)
 		request.getServer().id == 7
+	}
+
+	void "setOsTypeId / getOsTypeId roundtrip"() {
+		given:
+		def request = new ValidateConvertToManagedRequest()
+
+		when:
+		request.setOsTypeId(42L)
+
+		then:
+		request.getOsTypeId() == 42L
+		request.osTypeId == 42L
+	}
+
+	void "osTypeId field access and setter are consistent"() {
+		given:
+		def request = new ValidateConvertToManagedRequest()
+
+		when:
+		request.osTypeId = 99L
+
+		then:
+		request.getOsTypeId() == 99L
+		request.osTypeId == 99L
+	}
+
+	void "setInstance / getInstance roundtrip"() {
+		given:
+		def request = new ValidateConvertToManagedRequest()
+		def instance = new Instance(id: 5)
+
+		when:
+		request.setInstance(instance)
+
+		then:
+		request.getInstance().is(instance)
+		request.getInstance().id == 5
+	}
+
+	void "instance field access and setter are consistent"() {
+		given:
+		def request = new ValidateConvertToManagedRequest()
+		def instance = new Instance(id: 10)
+
+		when:
+		request.instance = instance
+
+		then:
+		request.getInstance().is(instance)
+		request.instance.is(instance)
 	}
 
 	void "setOpts / getOpts roundtrip"() {
