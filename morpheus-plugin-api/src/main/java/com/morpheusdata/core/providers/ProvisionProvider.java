@@ -386,6 +386,15 @@ public interface ProvisionProvider extends PluginProvider {
 	}
 
 	/**
+	 * Indicates if the primary network interface can be overridden by the user.
+	 * When true, the Primary checkbox is shown in the edit network interface form.
+	 * @return Boolean
+	 */
+	default public Boolean supportsOverridingPrimaryInterface() {
+		return false;
+	}
+
+	/**
 	 * Indicates if the current service plan can be changed on a reconfigure operation
 	 * @since 1.2.13
 	 * @return Boolean
