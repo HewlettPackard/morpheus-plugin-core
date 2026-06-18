@@ -483,4 +483,33 @@ public abstract class Plugin implements PluginInterface {
 		return ServiceResponse.success();
 	}
 
+	/**
+	 * Returns a short build tag of the form {@code version-gitHash} loaded from the
+	 * {@code morpheus-plugin.properties} resource bundled into the plugin jar at build time
+	 * by the {@code com.morpheusdata.morpheus-plugin-gradle} Gradle plugin.
+	 * <p>
+	 * This is useful for logging the exact build that is running, e.g.:
+	 * <pre>{@code log.info("Starting {} plugin {}", getName(), getVersionTag());}</pre>
+	 * Returns {@code "unknown-build"} if the resource is missing (e.g. during local development
+	 * without a full build).
+	 *
+	 * @return a version+gitHash tag string identifying the running build
+	 * @since 1.4.2
+	 */
+	public String getVersionTag() {
+		try {
+			ClassLoader cl = classLoader != null ? classLoader : getClass().getClassLoader();
+			java.io.InputStream stream = cl.getResourceAsStream("morpheus-plugin.properties");
+			if (stream != null) {
+				java.util.Properties props = new java.util.Properties();
+				props.load(stream);
+				String v = props.getProperty("version", "unknown");
+				String h = props.getProperty("gitHash", "?????");
+				return v + "-" + h;
+			}
+		} catch (Exception ignored) {
+		}
+		return "unknown-build";
+	}
+
 }
