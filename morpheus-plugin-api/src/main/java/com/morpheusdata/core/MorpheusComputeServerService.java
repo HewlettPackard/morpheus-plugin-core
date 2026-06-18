@@ -19,9 +19,12 @@ package com.morpheusdata.core;
 import com.morpheusdata.core.compute.MorpheusComputeDeviceService;
 import com.morpheusdata.core.compute.MorpheusComputeServerAccessService;
 import com.morpheusdata.core.compute.MorpheusComputeServerNetworkInterfaceConfig;
+import com.morpheusdata.model.Cloud;
 import com.morpheusdata.model.*;
 import com.morpheusdata.model.projection.ComputeServerIdentityProjection;
 import com.morpheusdata.core.compute.MorpheusComputeServerInterfaceService;
+import com.morpheusdata.request.AddHostRequest;
+import com.morpheusdata.request.RemoveHostRequest;
 import com.morpheusdata.response.ServiceResponse;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
@@ -109,6 +112,26 @@ public interface MorpheusComputeServerService extends MorpheusDataService<Comput
 	 * @return success
 	 */
 	Single<Boolean> remove(List<ComputeServer> computeServers, InstanceScale instanceScale);
+
+	/**
+	 * Adds a host to the target {@link Cloud} using the supplied request details.
+	 *
+	 * @param cloud the target cloud that should receive the host
+	 * @param request the request object describing the host to add
+	 * @return a {@link ServiceResponse} containing the added {@link ComputeServer} on success
+	 * @since 1.4.2
+	 */
+	Single<ServiceResponse<ComputeServer>> addHost(Cloud cloud, AddHostRequest request);
+
+	/**
+	 * Removes the specified host using the supplied request details.
+	 *
+	 * @param server the {@link ComputeServer} host to remove
+	 * @param request the request object describing the host removal
+	 * @return a {@link ServiceResponse} indicating success or failure
+	 * @since 1.4.2
+	 */
+	Single<ServiceResponse> removeHost(ComputeServer server, RemoveHostRequest request);
 
 	/**
 	 * Stop a ComputeServer. This is an async operation and the server may not be stopped immediately.
