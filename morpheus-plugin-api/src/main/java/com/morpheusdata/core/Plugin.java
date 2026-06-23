@@ -25,6 +25,7 @@ import com.morpheusdata.views.Renderer;
 import com.morpheusdata.web.PluginController;
 
 import java.util.*;
+import org.slf4j.MDC;
 
 /**
  * This is the base class for all Plugins that are instantiated within the Morpheus Environment. It contains both
@@ -510,6 +511,24 @@ public abstract class Plugin implements PluginInterface {
 		} catch (Exception ignored) {
 		}
 		return "unknown-build";
+	}
+
+	/**
+	 * Injects the plugin's version tag into the SLF4J MDC under the key {@code "pluginVersion"}
+	 * so it appears in every log line emitted on the calling thread.
+	 * <p>
+	 * Call this at the start of any method that runs on a thread-pool or RxJava thread, e.g.:
+	 * <pre>{@code
+	 * public void someWorkerMethod() {
+	 *     setVersionMDC();
+	 *     // ... rest of method
+	 * }
+	 * }</pre>
+	 *
+	 * @since 1.4.2
+	 */
+	public void setVersionMDC() {
+		MDC.put("pluginVersion", getVersionTag());
 	}
 
 }
