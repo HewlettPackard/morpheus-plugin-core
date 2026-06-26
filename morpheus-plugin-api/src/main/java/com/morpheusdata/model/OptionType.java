@@ -69,6 +69,7 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 										// leave the type for backward compatibility
 	protected String fieldGroup; // goes under same heading
 	protected String fieldGroupI18nCode; // i18n code for field group heading
+	protected Boolean fieldGroupCollapsible = true; // whether or not the field group is collapsible in the ui
 
 	protected String labelClass; // goes on a label
 	protected String blockCLass; // goes on element holding input
@@ -893,6 +894,15 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	 */
 	public void setFieldGroupCode(String fieldGroupI18nCode) {
 		setFieldGroupI18nCode(fieldGroupI18nCode);
+	}
+
+	public Boolean getFieldGroupCollapsible() {
+		return fieldGroupCollapsible;
+	}
+
+	public void setFieldGroupCollapsible(Boolean fieldGroupCollapsible) {
+		markDirty("fieldGroupCollapsible", fieldGroupCollapsible, this.fieldGroupCollapsible);
+		this.fieldGroupCollapsible = fieldGroupCollapsible;
 	}
 
 	public String getLabelClass() {
