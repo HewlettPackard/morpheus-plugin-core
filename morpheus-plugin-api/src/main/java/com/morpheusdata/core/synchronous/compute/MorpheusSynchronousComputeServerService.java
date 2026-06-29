@@ -68,6 +68,8 @@ public interface MorpheusSynchronousComputeServerService extends MorpheusSynchro
 
 	ServiceResponse refreshUpdate(ComputeServer... computeServer);
 
+	ServiceResponse refreshUpdate(UpdateOperation updateOperation, ComputeServer... computeServer);
+
 	ServiceResponse runConfigurationDriftCheck(CheckLevel checkLevel, ComputeServer... computeServer);
 
 	ServiceResponse getConfigurationDriftDetails(ComputeServer... computeServer);
