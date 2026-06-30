@@ -46,4 +46,20 @@ public interface MorpheusSynchronousNetworkServerService extends MorpheusSynchro
 	Single<ServiceResponse> runConfigurationDriftCheck(CheckLevel checkLevel, NetworkServer networkServer);
 
 	Single<ServiceResponse> getConfigurationDriftDetails(NetworkServer networkServer);
+
+	/**
+	 * Trigger a short refresh on a network server. This initiates a data sync/inventory refresh
+	 * of the network server's resources.
+	 * @param networkServer network server to refresh
+	 * @return Boolean returns the result of the network server refresh request.
+	 */
+	Boolean refresh(NetworkServer networkServer);
+
+	/**
+	 * Trigger a daily (full) refresh on a network server. This initiates a full data sync
+	 * of the network server's resources.
+	 * @param networkServer network server to refresh
+	 * @return Boolean returns the result of the network server refresh request.
+	 */
+	Boolean refreshDaily(NetworkServer networkServer);
 }
