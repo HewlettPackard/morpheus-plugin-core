@@ -34,61 +34,78 @@ import java.util.Map;
 public class AddHostRequest {
 
 	/**
-	 * The type of server to add.
+	 * The type of host to provision. Resolved by {@code id} to a persisted
+	 * {@link ComputeServerType}; pass a reference carrying at least the id. Required.
 	 */
 	public ComputeServerType serverType;
 
 	/**
-	 * Optional display name for the server. If not provided, a name will be auto-generated.
+	 * Optional display name for the new host. If not provided, a name is auto-generated.
 	 */
 	public String serverName;
 
 	/**
-	 * Optional hostname for the server. Defaults to {@link #serverName} if not provided.
+	 * Optional hostname for the new host. Defaults to {@link #serverName} if not provided.
 	 */
 	public String hostname;
 
 	/**
-	 * The service plan (sizing) to use for the server.
+	 * The service plan (sizing) to provision the host with. Passed through by {@code id} as a
+	 * reference to a persisted {@link ServicePlan}.
 	 */
 	public ServicePlan plan;
 
 	/**
-	 * Additional configuration options passed to the provisioner.
-	 * May include provider-specific settings such as {@code resourcePoolId}, {@code customOptions}, etc.
-	 * May also include a {@code server} map to set additional params directly on the server object in the config.
+	 * Additional provider-specific configuration passed straight through to the provisioner.
+	 * May include settings such as {@code customOptions}, or a nested {@code server} map whose
+	 * entries are applied directly onto the server config. Free-form; not schema-validated.
 	 */
 	public Map<String, Object> config;
 
 	/**
-	 * ID of the group/site to provision into.
+	 * Optional id of the group/site to provision the host into. {@code null} lets the cloud
+	 * choose its default placement.
 	 */
 	public Long siteId;
 
 	/**
-	 * Storage volumes to attach to the server.
+	 * Storage volumes to provision and attach to the new host.
+	 * <p>
+	 * These are <em>typed configuration templates</em>, not references to persisted
+	 * {@link StorageVolume} rows: only the descriptive fields are read ({@code name},
+	 * {@code rootVolume}, {@code maxStorage}, and the {@code type}/{@code datastore} ids) to
+	 * describe the volumes the provisioner should create. No existing StorageVolume record is
+	 * looked up or required for the volume itself.
 	 */
 	public List<StorageVolume> volumes;
 
 	/**
-	 * Network interfaces to configure on the server.
+	 * Network interfaces to provision on the new host.
+	 * <p>
+	 * Like {@link #volumes}, these are <em>typed configuration templates</em> rather than persisted
+	 * {@link ComputeServerInterface} rows: only the descriptive fields are read ({@code name},
+	 * {@code ipMode}, any static {@code addresses}, and the {@code network}/{@code networkGroup}/
+	 * {@code networkPool} ids) to describe the NICs the provisioner should create. No existing
+	 * ComputeServerInterface record is looked up or required for the interface itself.
 	 */
 	public List<ComputeServerInterface> networkInterfaces;
 
 	/**
-	 * Security group IDs to apply to the server.
+	 * Ids of security groups to apply to the new host. Each id is passed through to the provisioner
+	 * as a reference to a persisted security group.
 	 */
 	public List<Long> securityGroupIds;
 
 	/**
-	 * Whether to perform license and connectivity checks before provisioning.
-	 * Set to {@code false} to skip these checks. Defaults to {@code true}.
+	 * Whether to perform license and connectivity checks before provisioning. Set to {@code false}
+	 * to skip these checks. Defaults to {@code true}.
 	 */
 	public boolean licenseCheck = true;
 
 	/**
-	 * Optional resource pool/cluster to provision into. {@code null} is valid for clouds that
-	 * do not scope hosts to a resource pool/cluster.
+	 * Optional resource pool/cluster to provision the host into. Passed through by {@code id} as a
+	 * reference to a persisted {@link CloudPool}. {@code null} is valid for clouds that do not scope
+	 * hosts to a resource pool/cluster.
 	 */
 	public CloudPool pool;
 }
