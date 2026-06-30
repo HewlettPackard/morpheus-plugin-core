@@ -25,27 +25,30 @@ package com.morpheusdata.request;
 public class RemoveHostRequest {
 
 	/**
-	 * Indicates if the remove should be forced and bypass other checks.
+	 * When {@code true}, force the removal and bypass safety checks (for example the
+	 * pre-flight/{@code canDeleteServer} validation). Use with care. Defaults to {@code false}.
 	 */
 	public boolean force = false;
 
 	/**
-	 * Indicates if associated resources should be removed.
+	 * When {@code true}, also delete the backing cloud resources (the underlying VM/disks) rather
+	 * than only removing the host record from Morpheus. Defaults to {@code false}.
 	 */
 	public boolean removeResources = false;
 
 	/**
-	 * Indicates if associated instances should be removed.
+	 * When {@code true}, also remove any instances associated with the host. Defaults to {@code false}.
 	 */
 	public boolean removeInstances = false;
 
 	/**
-	 * ID of the user requesting the removal.
+	 * Optional id of the user requesting the removal, recorded for auditing/attribution. Passed by
+	 * {@code id} as a reference to a persisted user; {@code null} attributes the action to the system.
 	 */
 	public Long userId;
 
 	/**
-	 * Indicates if policy checks should be skipped.
+	 * When {@code true}, skip enforcement of removal policies for this host. Defaults to {@code false}.
 	 */
 	public boolean skipPolicyCheck = false;
 }

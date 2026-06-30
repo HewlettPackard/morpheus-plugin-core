@@ -114,11 +114,16 @@ public interface MorpheusComputeServerService extends MorpheusDataService<Comput
 	Single<Boolean> remove(List<ComputeServer> computeServers, InstanceScale instanceScale);
 
 	/**
-	 * Adds a host to the target {@link Cloud} using the supplied request details.
+	 * Provisions a new host onto the target {@link Cloud} using the supplied request details.
+	 * <p>
+	 * <strong>This triggers host provisioning.</strong> A new {@link ComputeServer} is created and
+	 * queued for provisioning on the cloud; on success the returned server may still be in a
+	 * provisioning state. This is not a metadata-only registration of an existing machine — it
+	 * stands up a new compute host on the cloud.
 	 *
-	 * @param cloud the target cloud that should receive the host
-	 * @param request the request object describing the host to add
-	 * @return a {@link ServiceResponse} containing the added {@link ComputeServer} on success
+	 * @param cloud the target cloud that should receive the newly provisioned host
+	 * @param request the request object describing the host to provision
+	 * @return a {@link ServiceResponse} containing the newly provisioned {@link ComputeServer} on success
 	 * @since 1.4.2
 	 */
 	Single<ServiceResponse<ComputeServer>> addHost(Cloud cloud, AddHostRequest request);
