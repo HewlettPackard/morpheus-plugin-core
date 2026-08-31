@@ -24,6 +24,8 @@ import com.morpheusdata.model.UpdateDefinition;
 import com.morpheusdata.model.UpdateOperation;
 import com.morpheusdata.response.ServiceResponse;
 import io.reactivex.rxjava3.core.Single;
+import com.morpheusdata.core.MorpheusStorageReplicationGroupService;
+import com.morpheusdata.core.MorpheusStorageReplicationPartnerService;
 
 /**
  * Provides a top level interface for interacting with Storage related services in Morpheus
@@ -73,6 +75,31 @@ public interface MorpheusStorageService {
 	 * @since 1.3.0
 	 */
 	MorpheusStorageAggregateService getAggregate();
+
+	/**
+	 * Returns the StorageVolumeGroup Service for managing volume groups
+	 * used in consistent snapshot and replication operations.
+	 *
+	 * @return An instance of the StorageVolumeGroup Service
+	 * @since 1.4.0
+	 */
+	MorpheusStorageVolumeGroupService getVolumeGroup();
+
+	/**
+	 * Returns the StorageReplicationGroup Service
+	 *
+	 * @return An instance of the StorageReplicationGroup Service
+	 * @since 1.5.0
+	 */
+	MorpheusStorageReplicationGroupService getReplicationGroup();
+
+	/**
+	 * Returns the StorageReplicationPartner Service
+	 *
+	 * @return An instance of the StorageReplicationPartner Service
+	 * @since 1.5.0
+	 */
+	MorpheusStorageReplicationPartnerService getReplicationPartner();
 
 	/**
 	 * Validates an update on a {@link StorageServer} before executing the update.
