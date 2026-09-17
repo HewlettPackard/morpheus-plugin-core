@@ -8,61 +8,29 @@ package com.morpheusdata.core.providers;
 
 import com.morpheusdata.model.StorageReplicationGroup;
 import com.morpheusdata.model.StorageReplicationGroup.FailoverType;
-import com.morpheusdata.model.StorageReplicationPartner;
 import com.morpheusdata.model.StorageServer;
 import com.morpheusdata.response.ServiceResponse;
 
 import java.util.Map;
 
 /**
- * Optional facet for {@link StorageProvider} implementations whose arrays support
- * array-to-array replication. Paired with {@link StorageProvider} in the same way as
- * {@link StorageProviderVolumes}.
+ * Optional facet for {@link StorageProvider} implementations whose arrays support acting
+ * on an existing array-to-array replication relationship, i.e. failover, failback, pause
+ * and resume. Paired with {@link StorageProvider} the same way as
+ * {@link StorageProviderVolumeGroupsFacet}.
  *
- * <p>A provider that does not implement this facet contributes nothing to the
- * Replication tab. If no registered storage server implements it, the tab does not
- * appear in the UI.
+ * <p>CRUD and discovery of replication groups themselves live on
+ * {@link StorageProviderReplicationGroupFacet}; a provider may implement one facet
+ * without the other, e.g. an array that only reports replication state discovered via
+ * {@link StorageProvider#refreshStorageServer} without supporting operator-driven
+ * failover/failback from Morpheus.
  *
  * @since 1.5.0
  * @author HPE Storage Plugin Team
  * @see StorageProvider
+ * @see StorageProviderReplicationGroupFacet
  */
-public interface StorageProviderReplication {
-
-	/**
-	 * Create a replication relationship between two storage systems.
-	 *
-	 * @param storageServer the local {@link StorageServer}
-	 * @param group         the group to create, including partner and policy
-	 * @param opts          provider-specific options
-	 * @return ServiceResponse containing the persisted group on success
-	 */
-	ServiceResponse<StorageReplicationGroup> createReplicationGroup(
-			StorageServer storageServer, StorageReplicationGroup group, Map opts);
-
-	/**
-	 * Update the policy (mode, interval, RPO target) of an existing replication group.
-	 * The partner and volume group are fixed for the life of the relationship.
-	 *
-	 * @param storageServer the local {@link StorageServer}
-	 * @param group         the group with updated fields
-	 * @param opts          provider-specific options
-	 * @return ServiceResponse containing the updated group on success
-	 */
-	ServiceResponse<StorageReplicationGroup> updateReplicationGroup(
-			StorageServer storageServer, StorageReplicationGroup group, Map opts);
-
-	/**
-	 * Delete a replication relationship. The caller decides what happens to the
-	 * remote copy via {@code opts.deleteRemoteCopy}.
-	 *
-	 * @param storageServer the local {@link StorageServer}
-	 * @param group         the group to delete
-	 * @param opts          provider-specific options
-	 * @return ServiceResponse indicating success or failure
-	 */
-	ServiceResponse<StorageReplicationGroup> deleteReplicationGroup(
-			StorageServer storageServer, StorageReplicationGroup group, Map opts);
+public interface StorageReplicationProvider {
 
 	/**
 	 * Trigger a planned or unplanned failover. Planned flushes outstanding writes
