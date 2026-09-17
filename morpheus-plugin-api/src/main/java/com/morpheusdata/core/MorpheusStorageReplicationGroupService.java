@@ -7,8 +7,13 @@
 package com.morpheusdata.core;
 
 import com.morpheusdata.model.StorageReplicationGroup;
+import com.morpheusdata.model.StorageServer;
 import com.morpheusdata.model.projection.StorageReplicationGroupIdentityProjection;
+import com.morpheusdata.response.ServiceResponse;
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
+
+import java.util.Map;
 
 /**
  * Context methods for dealing with {@link StorageReplicationGroup} in Morpheus.
@@ -38,4 +43,48 @@ public interface MorpheusStorageReplicationGroupService extends
 	 * @return Observable stream of breaching groups
 	 */
 	Observable<StorageReplicationGroup> listRpoBreaches(Long storageServerId);
+
+	// ============================================================================
+	// CRUD Operations (with Provider Delegation)
+	// ============================================================================
+
+	/**
+	 * Create a new replication group on the storage server.
+	 * <p>
+	 * This operation delegates to the storage provider plugin via
+	 * {@link com.morpheusdata.core.providers.StorageProviderReplication#createReplicationGroup}
+	 * to create the relationship on the actual storage array.
+	 *
+	 * @param storageServer the storage server to create the group on
+	 * @param group the replication group to create
+	 * @param opts additional options
+	 * @return ServiceResponse with the created replication group
+	 */
+	Single<ServiceResponse<StorageReplicationGroup>> createReplicationGroup(StorageServer storageServer, StorageReplicationGroup group, Map<String, Object> opts);
+
+	/**
+	 * Update an existing replication group.
+	 * <p>
+	 * This operation delegates to the storage provider plugin via
+	 * {@link com.morpheusdata.core.providers.StorageProviderReplication#updateReplicationGroup}
+	 * before persisting the change.
+	 *
+	 * @param group the replication group to update
+	 * @param opts additional options
+	 * @return ServiceResponse with the updated replication group
+	 */
+	Single<ServiceResponse<StorageReplicationGroup>> updateReplicationGroup(StorageReplicationGroup group, Map<String, Object> opts);
+
+	/**
+	 * Delete a replication group.
+	 * <p>
+	 * This operation delegates to the storage provider plugin via
+	 * {@link com.morpheusdata.core.providers.StorageProviderReplication#deleteReplicationGroup}
+	 * before removing the domain record.
+	 *
+	 * @param group the replication group to delete
+	 * @param opts additional options (e.g. "deleteRemoteCopy")
+	 * @return ServiceResponse indicating success/failure
+	 */
+	Single<ServiceResponse> deleteReplicationGroup(StorageReplicationGroup group, Map<String, Object> opts);
 }
