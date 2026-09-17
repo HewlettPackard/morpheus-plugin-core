@@ -52,7 +52,7 @@ public interface MorpheusStorageReplicationGroupService extends
 	 * Create a new replication group on the storage server.
 	 * <p>
 	 * This operation delegates to the storage provider plugin via
-	 * {@link com.morpheusdata.core.providers.StorageProviderReplication#createReplicationGroup}
+	 * {@link com.morpheusdata.core.providers.StorageProviderReplicationGroupFacet#createReplicationGroup}
 	 * to create the relationship on the actual storage array.
 	 *
 	 * @param storageServer the storage server to create the group on
@@ -66,7 +66,7 @@ public interface MorpheusStorageReplicationGroupService extends
 	 * Update an existing replication group.
 	 * <p>
 	 * This operation delegates to the storage provider plugin via
-	 * {@link com.morpheusdata.core.providers.StorageProviderReplication#updateReplicationGroup}
+	 * {@link com.morpheusdata.core.providers.StorageProviderReplicationGroupFacet#updateReplicationGroup}
 	 * before persisting the change.
 	 *
 	 * @param group the replication group to update
@@ -79,7 +79,7 @@ public interface MorpheusStorageReplicationGroupService extends
 	 * Delete a replication group.
 	 * <p>
 	 * This operation delegates to the storage provider plugin via
-	 * {@link com.morpheusdata.core.providers.StorageProviderReplication#deleteReplicationGroup}
+	 * {@link com.morpheusdata.core.providers.StorageProviderReplicationGroupFacet#deleteReplicationGroup}
 	 * before removing the domain record.
 	 *
 	 * @param group the replication group to delete
