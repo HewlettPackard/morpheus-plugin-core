@@ -51,6 +51,14 @@ public interface MorpheusSynchronousStorageService {
 	MorpheusSynchronousStorageServerNodeService getServerNode();
 
 	/**
+	 * Returns the StorageServerNodeDisk Service
+	 *
+	 * @return An instance of the StorageServerNodeDisk Service
+	 * @since 1.5.1
+	 */
+	MorpheusSynchronousStorageServerNodeDiskService getServerNodeDisk();
+
+	/**
 	 * Returns the StorageController Service
 	 *
 	 * @return An instance of the StorageController Service
