@@ -102,6 +102,22 @@ public interface MorpheusStorageService {
 	MorpheusStorageReplicationPartnerService getReplicationPartner();
 
 	/**
+	 * Returns the StorageServerNode Service
+	 *
+	 * @return An instance of the StorageServerNode Service
+	 * @since 1.5.1
+	 */
+	MorpheusStorageServerNodeService getServerNode();
+
+	/**
+	 * Returns the StorageServerNodeDisk Service
+	 *
+	 * @return An instance of the StorageServerNodeDisk Service
+	 * @since 1.5.1
+	 */
+	MorpheusStorageServerNodeDiskService getServerNodeDisk();
+
+	/**
 	 * Validates an update on a {@link StorageServer} before executing the update.
 	 * @deprecated use {@link MorpheusStorageServerService#validateUpdate(UpdateDefinition, StorageServer)}  instead
 	 */
