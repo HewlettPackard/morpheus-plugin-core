@@ -8,8 +8,11 @@ package com.morpheusdata.core.synchronous;
 
 import com.morpheusdata.core.MorpheusSynchronousDataService;
 import com.morpheusdata.core.MorpheusSynchronousIdentityService;
+import com.morpheusdata.model.StorageServer;
 import com.morpheusdata.model.StorageServerNode;
 import com.morpheusdata.model.projection.StorageServerNodeIdentityProjection;
+
+import java.util.List;
 
 /**
  * Blocking counterpart to {@link com.morpheusdata.core.MorpheusStorageServerNodeService} for use in
@@ -22,4 +25,19 @@ import com.morpheusdata.model.projection.StorageServerNodeIdentityProjection;
 public interface MorpheusSynchronousStorageServerNodeService extends
 		MorpheusSynchronousDataService<StorageServerNode, StorageServerNodeIdentityProjection>,
 		MorpheusSynchronousIdentityService<StorageServerNodeIdentityProjection> {
+
+	/**
+	 * List all nodes belonging to a storage server.
+	 * @param storageServer the storage server
+	 * @return a List of nodes
+	 */
+	List<StorageServerNode> listByStorageServer(StorageServer storageServer);
+
+	/**
+	 * Find a node by its SDS-assigned {@code nodeId} within a storage server.
+	 * @param storageServerId the storage server ID
+	 * @param nodeId the SDS-assigned node identifier
+	 * @return the node if found, otherwise null
+	 */
+	StorageServerNode findByNodeId(Long storageServerId, String nodeId);
 }
