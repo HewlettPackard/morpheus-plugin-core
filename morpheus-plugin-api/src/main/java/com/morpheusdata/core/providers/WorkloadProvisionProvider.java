@@ -277,6 +277,30 @@ public interface WorkloadProvisionProvider extends ComputeProvisionProvider {
 			return ServiceResponse.success(new PrepareResizeV2WorkloadResponse());
 		}
 
+		/**
+		 * Whether the submitted resize/reconfigure options contain a provider-specific configuration change
+		 * (distinct from the plan/memory/cores/volume/network changes core already detects on its own) that
+		 * requires {@link #resizeWorkload} to be invoked even though none of those other values changed.
+		 * <p>
+		 * Core only calls {@code resizeWorkload} when it detects a memory/core/socket/volume/controller/network
+		 * change; a resize/reconfigure request that only changes a provider-specific config value (with no other
+		 * change) would otherwise be silently dropped before ever reaching the plugin. Providers that have such a
+		 * config value should override this method to compare the submitted value
+		 * in {@code opts} against the workload's currently configured value and return {@code true} when they
+		 * differ.
+		 * <p>
+		 * Defaults to {@code false}, so providers that don't override this method see no change in behavior.
+		 * @param instance to resize
+		 * @param workload to resize
+		 * @param resizeRequest the resize requested parameters
+		 * @param opts raw + additional options
+		 * @return true if the plugin has detected a provider-specific configuration change that requires
+		 * resizeWorkload to run
+		 * @since 1.5.1
+		 */
+		default boolean hasConfigChanges(Instance instance, Workload workload, ResizeV2Request resizeRequest, Map opts) {
+			return false;
+		}
 
 		/**
 		 * Request to scale the size of the Workload.
