@@ -9,16 +9,19 @@ package com.morpheusdata.core;
 import com.morpheusdata.model.StorageServerNode;
 import com.morpheusdata.model.StorageServerNodeDisk;
 import com.morpheusdata.model.projection.StorageServerNodeDiskIdentityProjection;
+import com.morpheusdata.response.ServiceResponse;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
+
+import java.util.Map;
 
 /**
  * Context methods for dealing with {@link StorageServerNodeDisk} in Morpheus.
  * A node disk is a physical drive already claimed by a {@link StorageServerNode}.
  * <p>
- * These records are written by plugin refresh (e.g. reporting a failed drive or
- * a resynchronization state change), not created directly by a tenant through
- * a REST API — there is no user-facing CRUD surface for this model.
+ * Most of these records are written by plugin refresh (e.g. reporting a failed drive
+ * or a resynchronization state change), but a tenant with sufficient permission may
+ * also manage them directly through the REST API's CRUD operations below.
  *
  * @since 1.5.1
  * @author HPE Storage Plugin Team
@@ -49,4 +52,36 @@ public interface MorpheusStorageServerNodeDiskService extends
 	 * @return Single containing the disk if found
 	 */
 	Single<StorageServerNodeDisk> findByUniqueId(Long nodeId, String uniqueId);
+
+	// ============================================================================
+	// CRUD Operations
+	// ============================================================================
+
+	/**
+	 * Create a new disk record claimed by the given node.
+	 *
+	 * @param node the {@link StorageServerNode} the disk belongs to
+	 * @param disk the disk to create
+	 * @param opts additional options
+	 * @return ServiceResponse with the created disk
+	 */
+	Single<ServiceResponse<StorageServerNodeDisk>> createNodeDisk(StorageServerNode node, StorageServerNodeDisk disk, Map<String, Object> opts);
+
+	/**
+	 * Update an existing node disk.
+	 *
+	 * @param disk the disk to update
+	 * @param opts additional options
+	 * @return ServiceResponse with the updated disk
+	 */
+	Single<ServiceResponse<StorageServerNodeDisk>> updateNodeDisk(StorageServerNodeDisk disk, Map<String, Object> opts);
+
+	/**
+	 * Delete a node disk.
+	 *
+	 * @param disk the disk to delete
+	 * @param opts additional options
+	 * @return ServiceResponse indicating success/failure
+	 */
+	Single<ServiceResponse> deleteNodeDisk(StorageServerNodeDisk disk, Map<String, Object> opts);
 }
