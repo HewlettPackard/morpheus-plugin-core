@@ -69,9 +69,15 @@ public interface MorpheusStorageServerNodeDiskService extends
 
 	/**
 	 * Update an existing node disk.
+	 * <p>
+	 * This is a partial update: only fields the caller actually intends to change should be
+	 * bound onto {@code disk} before calling. Since a plain model object can't distinguish
+	 * "not sent" from "explicitly null," pass {@code opts.excludeFields} (a
+	 * {@code List<String>} of property names) for any updatable field the caller did not
+	 * submit, so the implementation can skip binding them and avoid clobbering existing values.
 	 *
 	 * @param disk the disk to update
-	 * @param opts additional options
+	 * @param opts additional options; supports {@code excludeFields} (List&lt;String&gt;)
 	 * @return ServiceResponse with the updated disk
 	 */
 	Single<ServiceResponse<StorageServerNodeDisk>> updateNodeDisk(StorageServerNodeDisk disk, Map<String, Object> opts);
