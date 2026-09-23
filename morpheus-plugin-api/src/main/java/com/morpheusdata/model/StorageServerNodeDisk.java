@@ -19,21 +19,27 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.morpheusdata.model.serializers.ModelAsIdOnlySerializer;
 
 /**
- * A physical drive already claimed by a {@link StorageServerNode}.
+ * A physical drive already claimed by (or a candidate for) a {@link StorageServerNode}.
  * <p>
  * This is the post-claim record: once a drive belongs to a node, its identity
  * is tracked here by a durable {@code uniqueId} rather than by the transient
  * {@code deviceName}/{@code pciAddress} the OS assigns it, since those can
  * change across reboots or hardware moves.
  * <p>
- * Pre-claim candidacy/eligibility across a host's raw drives is a distinct,
- * host-level concern tracked by {@code HostDrive} via
- * {@code MorpheusComputeServerService#listHostDrives}, not by this model.
+ * What makes a drive safe to claim — boot/root exclusion, filesystem/partition
+ * signatures, media type limits, minimum/maximum drive counts, etc. — is
+ * Storage-team policy, implemented and enforced by the array/provider, not
+ * Morpheus. This model only records the resulting verdict ({@code candidacy})
+ * and the reason ({@code candidacyReason}); it does not evaluate candidacy
+ * itself.
  *
  * @since 1.5.1
  * @author HPE Storage Plugin Team
  */
 public class StorageServerNodeDisk extends MorpheusModel {
+
+	/** The verdict on whether a drive is safe to claim; see {@code candidacyReason} for why. */
+	public enum Candidacy { eligible, ineligible, claimed, excluded }
 
 	@JsonSerialize(using = ModelAsIdOnlySerializer.class)
 	protected StorageServerNode node;
@@ -53,6 +59,10 @@ public class StorageServerNodeDisk extends MorpheusModel {
 	protected Boolean claimed;
 	/** healthy | predicted-failure | failed | rebuilding */
 	protected String status;
+	/** The verdict on whether this drive is safe to claim, per Storage-team policy. */
+	protected Candidacy candidacy;
+	/** Why the drive is eligible/ineligible/excluded, e.g. an exclusion reason to show inline in the UI. */
+	protected String candidacyReason;
 
 	public StorageServerNode getNode() { return node; }
 	public void setNode(StorageServerNode node) { this.node = node; markDirty("node", node); }
@@ -83,4 +93,10 @@ public class StorageServerNodeDisk extends MorpheusModel {
 
 	public String getStatus() { return status; }
 	public void setStatus(String status) { this.status = status; markDirty("status", status); }
+
+	public Candidacy getCandidacy() { return candidacy; }
+	public void setCandidacy(Candidacy candidacy) { this.candidacy = candidacy; markDirty("candidacy", candidacy); }
+
+	public String getCandidacyReason() { return candidacyReason; }
+	public void setCandidacyReason(String candidacyReason) { this.candidacyReason = candidacyReason; markDirty("candidacyReason", candidacyReason); }
 }
