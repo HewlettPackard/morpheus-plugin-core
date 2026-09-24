@@ -83,6 +83,11 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 	protected Long usedStorage;
 	protected Float usedCpu;
 	protected Long coresPerSocket;
+	/**
+	 * The number of physical CPU sockets on this ComputeServer.
+	 * @since 1.5.1
+	 */
+	protected Long maxSockets;
 	protected Boolean managed;
 	protected Boolean singleTenant = false;
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
@@ -390,6 +395,10 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 	}
 
 	public Long getCoresPerSocket() { return coresPerSocket; }
+
+	public Long getMaxSockets() {
+		return maxSockets;
+	}
 
 	public Boolean getManaged() {
 		return managed;
@@ -728,6 +737,11 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 	public void setCoresPerSocket(Long coresPerSocket) {
 		this.coresPerSocket = coresPerSocket;
 		markDirty("coresPerSocket", coresPerSocket);
+	}
+
+	public void setMaxSockets(Long maxSockets) {
+		this.maxSockets = maxSockets;
+		markDirty("maxSockets", maxSockets);
 	}
 
 	public void setManaged(Boolean managed) {
