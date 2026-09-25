@@ -86,6 +86,15 @@ public interface MorpheusStorageService {
 	MorpheusStorageVolumeGroupService getVolumeGroup();
 
 	/**
+	 * Returns the StorageVolumeGroupSnapshot Service for managing consistent
+	 * group snapshots taken against a volume group.
+	 *
+	 * @return An instance of the StorageVolumeGroupSnapshot Service
+	 * @since 1.5.0
+	 */
+	MorpheusStorageVolumeGroupSnapshotService getVolumeGroupSnapshot();
+
+	/**
 	 * Returns the StorageReplicationGroup Service
 	 *
 	 * @return An instance of the StorageReplicationGroup Service

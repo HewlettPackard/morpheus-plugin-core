@@ -43,6 +43,14 @@ public interface MorpheusSynchronousStorageService {
 	MorpheusSynchronousStorageVolumeGroupService getVolumeGroup();
 
 	/**
+	 * Returns the StorageVolumeGroupSnapshot Service
+	 *
+	 * @return An instance of the StorageVolumeGroupSnapshot Service
+	 * @since 1.5.0
+	 */
+	MorpheusSynchronousStorageVolumeGroupSnapshotService getVolumeGroupSnapshot();
+
+	/**
 	 * Returns the StorageController Service
 	 *
 	 * @return An instance of the StorageController Service
