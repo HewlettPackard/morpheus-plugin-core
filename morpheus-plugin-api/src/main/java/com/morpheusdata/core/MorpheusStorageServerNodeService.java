@@ -92,7 +92,7 @@ public interface MorpheusStorageServerNodeService extends MorpheusDataService<St
 	 * Find a node by its storage-system-assigned identifier within a storage server.
 	 * @param storageServerId the storage server id
 	 * @param nodeId the node identifier assigned by the storage system
-	 * @return Single of the matching node, or empty if not found
+	 * @return Single of the matching node. Emits an error (NoSuchElementException) when no node matches; callers wanting optional semantics should use {@code onErrorComplete()} or a Maybe
 	 */
 	Single<StorageServerNode> findByNodeId(Long storageServerId, String nodeId);
 
@@ -100,7 +100,7 @@ public interface MorpheusStorageServerNodeService extends MorpheusDataService<St
 	 * Find a node by its external id within a storage server.
 	 * @param storageServerId the storage server id
 	 * @param externalId the external id to search for
-	 * @return Single of the matching node, or empty if not found
+	 * @return Single of the matching node. Emits an error (NoSuchElementException) when no node matches; callers wanting optional semantics should use {@code onErrorComplete()} or a Maybe
 	 */
 	Single<StorageServerNode> findByExternalId(Long storageServerId, String externalId);
 
