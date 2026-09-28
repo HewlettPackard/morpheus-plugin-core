@@ -17,6 +17,7 @@
 package com.morpheusdata.core;
 
 import com.morpheusdata.core.compute.MorpheusComputeDeviceService;
+import com.morpheusdata.core.compute.MorpheusHostDriveService;
 import com.morpheusdata.core.compute.MorpheusComputeServerAccessService;
 import com.morpheusdata.core.compute.MorpheusComputeServerNetworkInterfaceConfig;
 import com.morpheusdata.model.Cloud;
@@ -106,6 +107,13 @@ public interface MorpheusComputeServerService extends MorpheusDataService<Comput
 	 * @return An instance of the ComputeDevice context
 	 */
 	MorpheusComputeDeviceService getComputeDevice();
+
+	/**
+	 * Returns the HostDrive context used for performing CRUD operations on persisted
+	 * {@link HostDrive} records discovered on a host.
+	 * @return An instance of the HostDrive context
+	 */
+	MorpheusHostDriveService getHostDrive();
 
 	/**
 	 * Remove persisted ComputeServers from Morpheus and remove them the {@link com.morpheusdata.model.InstanceScale} they are associated with

@@ -52,6 +52,13 @@ public interface MorpheusSynchronousComputeServerService extends MorpheusSynchro
 	MorpheusSynchronousComputeDeviceService getComputeDevice();
 
 	/**
+	 * Returns the HostDrive context used for performing CRUD operations on persisted
+	 * {@link HostDrive} records discovered on a host.
+	 * @return An instance of the HostDrive context
+	 */
+	MorpheusSynchronousHostDriveService getHostDrive();
+
+	/**
 	 * Returns the ComputePort context used for performing sync operations on {@link ComputePort} related assets within Morpheus.
 	 * @return An instance of the ComputePort context
 	 */
