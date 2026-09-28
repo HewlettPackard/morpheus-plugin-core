@@ -92,7 +92,7 @@ public interface MorpheusStorageServerNodeService extends MorpheusDataService<St
 	 * Find a node by its storage-system-assigned identifier within a storage server.
 	 * @param storageServerId the storage server id
 	 * @param nodeId the node identifier assigned by the storage system
-	 * @return Single of the matching node, or empty if not found
+	 * @return Single of the matching node. Emits an error (NoSuchElementException) when no node matches; callers wanting optional semantics should use {@code onErrorComplete()} or a Maybe
 	 */
 	Single<StorageServerNode> findByNodeId(Long storageServerId, String nodeId);
 
@@ -100,7 +100,7 @@ public interface MorpheusStorageServerNodeService extends MorpheusDataService<St
 	 * Find a node by its external id within a storage server.
 	 * @param storageServerId the storage server id
 	 * @param externalId the external id to search for
-	 * @return Single of the matching node, or empty if not found
+	 * @return Single of the matching node. Emits an error (NoSuchElementException) when no node matches; callers wanting optional semantics should use {@code onErrorComplete()} or a Maybe
 	 */
 	Single<StorageServerNode> findByExternalId(Long storageServerId, String externalId);
 
@@ -109,23 +109,30 @@ public interface MorpheusStorageServerNodeService extends MorpheusDataService<St
 	// ============================================================================
 
 	/**
-	 * Create nodes in bulk during sync operations.
+	 * Create nodes in bulk during sync operations. Delegates to {@link #bulkCreate(java.util.List)}.
+	 * <p>
+	 * The batch is <strong>not atomic</strong>: items are saved in order and a validation failure
+	 * (for example a duplicate {@code nodeId} on the same storage server) stops the batch, but items
+	 * already saved before it remain persisted. Use {@link #bulkCreate(java.util.List)} directly when the
+	 * caller needs the per-item {@code persistedItems}/{@code failedItems} breakdown.
 	 * @param nodes the nodes to create
-	 * @return success indicator
+	 * @return {@code true} only if every node was persisted
 	 */
 	Single<Boolean> create(List<StorageServerNode> nodes);
 
 	/**
-	 * Save (update) nodes in bulk during sync operations.
+	 * Save (update) nodes in bulk during sync operations. Delegates to {@link #bulkSave(java.util.List)}.
+	 * A node whose {@code id} does not exist is reported as failed rather than created.
 	 * @param nodes the nodes to save
-	 * @return success indicator
+	 * @return {@code true} only if every node was saved
 	 */
 	Single<Boolean> save(List<StorageServerNode> nodes);
 
 	/**
-	 * Remove nodes in bulk during sync operations.
+	 * Remove nodes in bulk during sync operations. Delegates to {@link #bulkRemove(java.util.List)}, which
+	 * deletes each node in its own transaction, so one failure does not affect the others.
 	 * @param nodes the nodes to remove
-	 * @return success indicator
+	 * @return {@code true} only if every node was removed
 	 */
 	Single<Boolean> remove(List<StorageServerNodeIdentityProjection> nodes);
 }
