@@ -64,4 +64,23 @@ public interface MorpheusStorageVolumeGroupSnapshotService extends
 	 * @return ServiceResponse with the created snapshot
 	 */
 	Single<ServiceResponse<StorageVolumeGroupSnapshot>> createSnapshot(StorageServer storageServer, StorageVolumeGroup volumeGroup, StorageVolumeGroupSnapshot snapshot, Map<String, Object> opts);
+
+	// ============================================================================
+	// Delete Operation (with Provider Delegation)
+	// ============================================================================
+
+	/**
+	 * Delete a group snapshot.
+	 * <p>
+	 * When the storage server's provider implements
+	 * {@link com.morpheusdata.core.providers.StorageProviderVolumeGroupsFacet}, this delegates to
+	 * {@link com.morpheusdata.core.providers.StorageProviderVolumeGroupsFacet#deleteSnapshot} so the
+	 * snapshot is removed from the array before the domain record is deleted. When no such provider is
+	 * present the record is deleted directly.
+	 *
+	 * @param snapshot the snapshot to delete
+	 * @param opts additional options
+	 * @return ServiceResponse indicating success/failure
+	 */
+	Single<ServiceResponse> deleteSnapshot(StorageVolumeGroupSnapshot snapshot, Map<String, Object> opts);
 }

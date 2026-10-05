@@ -270,4 +270,22 @@ public interface StorageProviderVolumeGroupsFacet {
 	default ServiceResponse<StorageVolumeGroupSnapshot> createSnapshot(StorageServer storageServer, StorageVolumeGroup volumeGroup, StorageVolumeGroupSnapshot snapshot, Map<String, Object> opts) {
 		return ServiceResponse.error("createSnapshot not implemented");
 	}
+
+	/**
+	 * Delete a group snapshot from the storage array.
+	 * <p>
+	 * The plugin should remove the group/consistency-set snapshot identified by
+	 * {@code snapshot.externalId} from the array. A provider that groups volumes but cannot
+	 * delete group snapshots leaves this default in place, which reports the capability as not
+	 * implemented.
+	 *
+	 * @param storageServer the storage server hosting the volume group
+	 * @param volumeGroup the volume group the snapshot was taken against
+	 * @param snapshot the snapshot to delete (its {@code externalId} identifies the array snapshot set)
+	 * @param opts additional options
+	 * @return ServiceResponse indicating success/failure
+	 */
+	default ServiceResponse<StorageVolumeGroupSnapshot> deleteSnapshot(StorageServer storageServer, StorageVolumeGroup volumeGroup, StorageVolumeGroupSnapshot snapshot, Map<String, Object> opts) {
+		return ServiceResponse.error("deleteSnapshot not implemented");
+	}
 }
