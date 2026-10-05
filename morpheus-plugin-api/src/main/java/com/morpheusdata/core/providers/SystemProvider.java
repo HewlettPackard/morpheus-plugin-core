@@ -168,19 +168,27 @@ public interface SystemProvider extends PluginProvider {
 	 * component, such as evacuating workloads, removing the component from any cluster or fabric it participates in,
 	 * tearing down its configuration on dependent components, and releasing any resources it reserved.</p>
 	 *
-	 * <p>The component(s) targeted for removal are carried in {@link SystemRequest#getConfigOptions()}. Plugins should
-	 * read the keys they care about and ignore unknown keys.</p>
+	 * <p>The {@code component} identifies exactly which component is being removed. Its
+	 * {@link SystemComponent#getType()} gives the {@link SystemComponentType}, while
+	 * {@link SystemComponent#getRefType()} and {@link SystemComponent#getRefId()} resolve the underlying resource
+	 * (host, switch, storage array, etc.) the provider needs to act on.</p>
+	 *
+	 * <p>{@link SystemRequest} carries the active process record along with {@code configOptions} describing
+	 * <em>how</em> the removal should be performed — for example the intended depth of cleanup (inventory-only
+	 * removal versus a full device decommission) or a force flag to proceed despite a component being unreachable.
+	 * Plugins should read the keys they care about and ignore unknown keys.</p>
 	 *
 	 * <p>The default implementation is a no-op returning {@code ServiceResponse.success()}. Providers that do not
 	 * support component removal may leave this default in place.</p>
 	 *
 	 * @param system the fully populated plugin model for the target system
-	 * @param systemRequest carries the active process record and the {@code configOptions} identifying the
-	 *                      component(s) to remove
+	 * @param systemRequest carries the active process record and the {@code configOptions} describing how the
+	 *                      removal should be performed
+	 * @param component the component being removed from the system
 	 * @return {@link ServiceResponse#success()} if the component was removed and cleaned up;
 	 *         {@link ServiceResponse#error(String)} with a human-readable message otherwise
 	 */
-	default ServiceResponse removeSystemComponent(System system, SystemRequest systemRequest) { return ServiceResponse.success(); }
+	default ServiceResponse removeSystemComponent(System system, SystemRequest systemRequest, SystemComponent component) { return ServiceResponse.success(); }
 
 	/**
 	 * Applying this facet to a {@link SystemProvider} registers it as a consumer of Central Services
