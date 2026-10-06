@@ -27,6 +27,7 @@ import com.morpheusdata.core.synchronous.backup.MorpheusSynchronousBackupService
 import com.morpheusdata.core.synchronous.cloud.MorpheusSynchronousCloudService;
 import com.morpheusdata.core.synchronous.compute.MorpheusSynchronousComputeServerGroupService;
 import com.morpheusdata.core.synchronous.compute.MorpheusSynchronousComputeServerService;
+import com.morpheusdata.core.synchronous.compute.MorpheusSynchronousHostProfileService;
 import com.morpheusdata.core.synchronous.costing.MorpheusSynchronousCostingService;
 import com.morpheusdata.core.synchronous.cypher.MorpheusSynchronousCypherService;
 import com.morpheusdata.core.synchronous.dashboard.MorpheusSynchronousDashboardService;
@@ -128,6 +129,16 @@ public interface MorpheusServices {
 	 * @see com.morpheusdata.model.ComputeServerGroup
 	 */
 	MorpheusSynchronousComputeServerGroupService getCluster();
+
+	/**
+	 * Returns the Host Profile context used for reserving, revising, and releasing host-level
+	 * CPU, memory, and hugepage capacity. Typically used by a {@code ComputeTypePackageProvider}
+	 * installing or uninstalling a distributed storage cluster.
+	 * @return An instance of the Host Profile Context to be used for calls by various providers
+	 * @see com.morpheusdata.model.ResourceReservation
+	 * @since 1.6.0
+	 */
+	MorpheusSynchronousHostProfileService getHostProfile();
 
 	/**
 	 * Returns the workload context used for syncing workloads within Morpheus.
