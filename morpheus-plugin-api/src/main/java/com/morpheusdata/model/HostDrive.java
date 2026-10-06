@@ -14,12 +14,10 @@ import com.morpheusdata.model.serializers.ModelAsIdOnlySerializer;
  * transient {@code deviceName}/{@code devicePath} the OS assigns it, since those can change
  * across reboots or hardware moves.
  * <p>
- * Rows are populated from live discovery run through the Morpheus agent (see
- * {@link com.morpheusdata.core.MorpheusComputeServerService#listHostDrives(ComputeServer)} and
- * {@link com.morpheusdata.core.MorpheusComputeServerGroupService#listHostDrives(ComputeServerGroup)}).
- * {@code candidate}, {@code eligible}, {@code candidacyReason}, and {@code claimedBy} are left
- * unset by that discovery; the storage provider plugin fills them in before the claim form
- * renders.
+ * Rows are populated by the HVM CLI's drive-inventory sync, which reconciles live discovery into
+ * this persisted store (add/update/delete based on current state). {@code candidate},
+ * {@code eligible}, {@code candidacyReason}, and {@code claimedBy} are left unset by that sync;
+ * the storage provider plugin fills them in before the claim form renders.
  *
  * @since 1.5.1
  * @author HPE Storage Plugin Team

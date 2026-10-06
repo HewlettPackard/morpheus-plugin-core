@@ -22,7 +22,6 @@ import com.morpheusdata.core.MorpheusSynchronousIdentityService;
 import com.morpheusdata.model.ComputeServer;
 import com.morpheusdata.model.ComputeServerGroup;
 import com.morpheusdata.model.ComputeTypeLayout;
-import com.morpheusdata.model.HostDrive;
 import com.morpheusdata.request.AddServerGroupServersRequest;
 import com.morpheusdata.response.ServiceResponse;
 
@@ -48,18 +47,4 @@ public interface MorpheusSynchronousComputeServerGroupService extends MorpheusSy
 	 * @since 1.4.0
 	 */
 	ServiceResponse<List<ComputeServer>> addServerGroupServers(ComputeServerGroup cluster, ComputeTypeLayout layout, AddServerGroupServersRequest request);
-
-	/**
-	 * Enumerates the physical drives present on every host of a cluster.
-	 * Hosts are visited concurrently and one unreachable host does not fail
-	 * the call.
-	 *
-	 * @param cluster the cluster whose hosts are inspected
-	 * @return every drive found across the cluster, each row naming the host
-	 *         it was found on. A host that could not be reached contributes
-	 *         no rows and is named in ServiceResponse.errors against its id,
-	 *         with success false.
-	 * @since 1.5.1
-	 */
-	ServiceResponse<List<HostDrive>> listHostDrives(ComputeServerGroup cluster);
 }
