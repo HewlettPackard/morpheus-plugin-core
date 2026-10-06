@@ -10,7 +10,7 @@ import com.morpheusdata.model.StorageVolumeGroupSnapshot;
 
 /**
  * Lightweight sync projection for {@link StorageVolumeGroupSnapshot}.
- * @since 1.5.0
+ * @since 1.6.0
  */
 public class StorageVolumeGroupSnapshotIdentityProjection extends MorpheusIdentityModel {
 

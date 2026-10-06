@@ -90,7 +90,7 @@ public interface MorpheusStorageService {
 	 * group snapshots taken against a volume group.
 	 *
 	 * @return An instance of the StorageVolumeGroupSnapshot Service
-	 * @since 1.5.0
+	 * @since 1.6.0
 	 */
 	MorpheusStorageVolumeGroupSnapshotService getVolumeGroupSnapshot();
 

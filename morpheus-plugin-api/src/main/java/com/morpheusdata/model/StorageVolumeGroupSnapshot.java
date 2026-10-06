@@ -24,7 +24,7 @@ import java.util.Date;
  * one operation so the members stay mutually coherent. Distinct from {@link Snapshot}, which is
  * per-volume and cannot express consistency across a set.
  *
- * @since 1.5.0
+ * @since 1.6.0
  * @author HPE Storage Plugin Team
  */
 public class StorageVolumeGroupSnapshot extends MorpheusModel {

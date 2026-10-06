@@ -21,7 +21,7 @@ import java.util.Map;
  * A group snapshot is a consistent point-in-time capture of every volume in a
  * {@link StorageVolumeGroup}, taken as one operation.
  *
- * @since 1.5.0
+ * @since 1.6.0
  * @author HPE Storage Plugin Team
  */
 public interface MorpheusStorageVolumeGroupSnapshotService extends

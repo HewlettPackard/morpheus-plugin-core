@@ -18,7 +18,7 @@ import com.morpheusdata.model.projection.StorageVolumeGroupSnapshotIdentityProje
  * {@link com.morpheusdata.model.StorageVolumeGroup}, taken as one operation. Provides the standard
  * CRUD/query methods via {@link MorpheusSynchronousDataService}.
  *
- * @since 1.5.0
+ * @since 1.6.0
  * @author HPE Storage Plugin Team
  */
 public interface MorpheusSynchronousStorageVolumeGroupSnapshotService extends
