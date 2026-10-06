@@ -19,6 +19,7 @@ package com.morpheusdata.core.backup;
 import com.morpheusdata.core.providers.PluginProvider;
 import com.morpheusdata.core.providers.UIExtensionProvider;
 import com.morpheusdata.model.*;
+import com.morpheusdata.response.BackupDetailField;
 import com.morpheusdata.response.ServiceResponse;
 import com.morpheusdata.views.HTMLResponse;
 
@@ -407,4 +408,26 @@ public interface BackupProviderInterface extends PluginProvider, UIExtensionProv
 	 * @return true if the job code is user editable, false if the provider owns it
 	 */
 	default Boolean getHasEditableJobCode() { return true; }
+
+	/**
+	 * Get a list of additional, provider specific fields to render on the Backup detail page in the Appliance UI
+	 * (for example an SLA Domain name). This allows a backup provider to surface additional read-only metadata about
+	 * a backup without requiring a full custom UI tab.
+	 * @param backup the backup to retrieve additional detail fields for
+	 * @return a collection of additional backup detail fields to render, or an empty collection if none apply
+	 */
+	default Collection<BackupDetailField> getBackupDetailFields(com.morpheusdata.model.Backup backup) {
+		return new ArrayList<>();
+	}
+
+	/**
+	 * Determines whether a datastore discovered on a cloud (identified by name) should be excluded from being synced
+	 * into Morpheus as a selectable/provisionable {@link Datastore}. This is primarily used by backup providers that
+	 * create transient datastores (such as live-mounted NFS datastores) that should remain hidden from end users.
+	 * @param datastoreName the name of the datastore as reported by the cloud
+	 * @return true if the datastore should be excluded, false otherwise
+	 */
+	default Boolean shouldExcludeDatastore(String datastoreName) {
+		return false;
+	}
 }
