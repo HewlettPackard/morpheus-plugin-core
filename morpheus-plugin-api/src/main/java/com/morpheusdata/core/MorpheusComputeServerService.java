@@ -195,16 +195,4 @@ public interface MorpheusComputeServerService extends MorpheusDataService<Comput
 	 */
 	Single<ServiceResponse<GetGpuDevicesResponse>> getGpuDevices(GetGpuDevicesRequest request);
 
-	/**
-	 * Enumerates the physical drives present on one host. Discovery runs on the
-	 * host through the agent, so the result reflects the host now rather than
-	 * the last inventory sync.
-	 *
-	 * @param server the host to inspect
-	 * @return facts about every drive found, with candidate, eligible, and
-	 *         candidacyReason unset. Observation only.
-	 * @since 1.5.1
-	 */
-	Single<ServiceResponse<List<HostDrive>>> listHostDrives(ComputeServer server);
-
 }

@@ -20,7 +20,6 @@ package com.morpheusdata.core;
 import com.morpheusdata.model.ComputeServer;
 import com.morpheusdata.model.ComputeServerGroup;
 import com.morpheusdata.model.ComputeTypeLayout;
-import com.morpheusdata.model.HostDrive;
 import com.morpheusdata.model.UpdateDefinition;
 import com.morpheusdata.model.UpdateOperation;
 import com.morpheusdata.request.AddServerGroupServersRequest;
@@ -93,18 +92,4 @@ public interface MorpheusComputeServerGroupService extends MorpheusDataService<C
 	 * @since 1.4.0
 	 */
 	Single<ServiceResponse> refreshUpdate(UpdateOperation updateOperation, ComputeServerGroup serverGroup);
-
-	/**
-	 * Enumerates the physical drives present on every host of a cluster.
-	 * Hosts are visited concurrently and one unreachable host does not fail
-	 * the call.
-	 *
-	 * @param cluster the cluster whose hosts are inspected
-	 * @return every drive found across the cluster, each row naming the host
-	 *         it was found on. A host that could not be reached contributes
-	 *         no rows and is named in ServiceResponse.errors against its id,
-	 *         with success false.
-	 * @since 1.5.1
-	 */
-	Single<ServiceResponse<List<HostDrive>>> listHostDrives(ComputeServerGroup cluster);
 }
