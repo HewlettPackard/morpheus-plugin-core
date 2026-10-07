@@ -78,4 +78,18 @@ public interface MorpheusStorageReplicationPartnerService extends
 	 * @return ServiceResponse indicating success/failure
 	 */
 	Single<ServiceResponse> deleteReplicationPartner(StorageReplicationPartner partner, Map<String, Object> opts);
+
+	/**
+	 * Check if a replication partner can be deleted.
+	 * <p>
+	 * This is a database-only check (e.g. no {@link com.morpheusdata.model.StorageReplicationGroup}
+	 * still references the partner) that callers should run before invoking the storage
+	 * provider's {@link com.morpheusdata.core.providers.StorageProviderReplicationPartnerFacet#deleteReplicationPartner}
+	 * - mirroring {@link MorpheusStorageVolumeGroupService#canDelete}. Array-side delete
+	 * constraints are the provider's own responsibility and are not covered here.
+	 *
+	 * @param partner the replication partner to check
+	 * @return ServiceResponse with canDelete=true/false and a reason if not deletable
+	 */
+	Single<ServiceResponse<Boolean>> canDelete(StorageReplicationPartner partner);
 }
