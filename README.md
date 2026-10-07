@@ -22,6 +22,8 @@ dependencies {
 
 Please refer to the [official documentation](https://developer.morpheusdata.com/docs) for more up to date guides on how to create a plugin.
 
+Maintainers can follow the [release process](docs/release-process.md) to publish plugin core releases.
+
 ### Implement your plugin
 
 Create and implement the `Plugin` class.
@@ -47,5 +49,4 @@ jar {
 ### Plugin Dependencies
 
 Dependancies your plugin requires such as other clouds sdks or similar will be scoped to your plugins classpath. The `PluginManager` creates a new classpath for each plugin loaded. This is done to ensure classes in a plugin do not interfere with Morpheus or other loaded plugins.
-
 
