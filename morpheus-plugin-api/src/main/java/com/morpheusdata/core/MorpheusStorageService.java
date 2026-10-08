@@ -115,7 +115,7 @@ public interface MorpheusStorageService {
 	 * in a scale-out storage system.
 	 *
 	 * @return An instance of the StorageServerNode Service
-	 * @since 1.5.1
+	 * @since 1.6.0
 	 */
 	MorpheusStorageServerNodeService getServerNode();
 
@@ -123,7 +123,7 @@ public interface MorpheusStorageService {
 	 * Returns the StorageServerNodeDisk Service
 	 *
 	 * @return An instance of the StorageServerNodeDisk Service
-	 * @since 1.5.1
+	 * @since 1.6.0
 	 */
 	MorpheusStorageServerNodeDiskService getServerNodeDisk();
 
