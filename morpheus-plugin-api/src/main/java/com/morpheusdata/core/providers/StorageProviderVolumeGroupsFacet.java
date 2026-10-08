@@ -267,8 +267,8 @@ public interface StorageProviderVolumeGroupsFacet {
 	 * @param opts additional options
 	 * @return ServiceResponse with the created snapshot (externalId populated)
 	 */
-	default ServiceResponse<StorageVolumeGroupSnapshot> createSnapshot(StorageServer storageServer, StorageVolumeGroup volumeGroup, StorageVolumeGroupSnapshot snapshot, Map<String, Object> opts) {
-		return ServiceResponse.error("createSnapshot not implemented");
+	default ServiceResponse<StorageVolumeGroupSnapshot> createVolumeGroupSnapshot(StorageServer storageServer, StorageVolumeGroup volumeGroup, StorageVolumeGroupSnapshot snapshot, Map<String, Object> opts) {
+		return ServiceResponse.error("createVolumeGroupSnapshot not implemented");
 	}
 
 	/**
@@ -285,7 +285,7 @@ public interface StorageProviderVolumeGroupsFacet {
 	 * @param opts additional options
 	 * @return ServiceResponse indicating success/failure
 	 */
-	default ServiceResponse<StorageVolumeGroupSnapshot> deleteSnapshot(StorageServer storageServer, StorageVolumeGroup volumeGroup, StorageVolumeGroupSnapshot snapshot, Map<String, Object> opts) {
-		return ServiceResponse.error("deleteSnapshot not implemented");
+	default ServiceResponse<StorageVolumeGroupSnapshot> deleteVolumeGroupSnapshot(StorageServer storageServer, StorageVolumeGroup volumeGroup, StorageVolumeGroupSnapshot snapshot, Map<String, Object> opts) {
+		return ServiceResponse.error("deleteVolumeGroupSnapshot not implemented");
 	}
 }

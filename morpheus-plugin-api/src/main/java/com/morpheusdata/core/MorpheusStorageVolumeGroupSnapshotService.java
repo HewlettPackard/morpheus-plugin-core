@@ -53,7 +53,7 @@ public interface MorpheusStorageVolumeGroupSnapshotService extends
 	 * <p>
 	 * When the storage server's provider implements
 	 * {@link com.morpheusdata.core.providers.StorageProviderVolumeGroupsFacet}, this delegates to
-	 * {@link com.morpheusdata.core.providers.StorageProviderVolumeGroupsFacet#createSnapshot} so the
+	 * {@link com.morpheusdata.core.providers.StorageProviderVolumeGroupsFacet#createVolumeGroupSnapshot} so the
 	 * snapshot is taken on the array; the resulting record is then persisted. When no such provider is
 	 * present the record is persisted directly.
 	 *
@@ -63,7 +63,7 @@ public interface MorpheusStorageVolumeGroupSnapshotService extends
 	 * @param opts additional options
 	 * @return ServiceResponse with the created snapshot
 	 */
-	Single<ServiceResponse<StorageVolumeGroupSnapshot>> createSnapshot(StorageServer storageServer, StorageVolumeGroup volumeGroup, StorageVolumeGroupSnapshot snapshot, Map<String, Object> opts);
+	Single<ServiceResponse<StorageVolumeGroupSnapshot>> createVolumeGroupSnapshot(StorageServer storageServer, StorageVolumeGroup volumeGroup, StorageVolumeGroupSnapshot snapshot, Map<String, Object> opts);
 
 	// ============================================================================
 	// Delete Operation (with Provider Delegation)
@@ -74,7 +74,7 @@ public interface MorpheusStorageVolumeGroupSnapshotService extends
 	 * <p>
 	 * When the storage server's provider implements
 	 * {@link com.morpheusdata.core.providers.StorageProviderVolumeGroupsFacet}, this delegates to
-	 * {@link com.morpheusdata.core.providers.StorageProviderVolumeGroupsFacet#deleteSnapshot} so the
+	 * {@link com.morpheusdata.core.providers.StorageProviderVolumeGroupsFacet#deleteVolumeGroupSnapshot} so the
 	 * snapshot is removed from the array before the domain record is deleted. When no such provider is
 	 * present the record is deleted directly.
 	 *
@@ -82,5 +82,5 @@ public interface MorpheusStorageVolumeGroupSnapshotService extends
 	 * @param opts additional options
 	 * @return ServiceResponse indicating success/failure
 	 */
-	Single<ServiceResponse> deleteSnapshot(StorageVolumeGroupSnapshot snapshot, Map<String, Object> opts);
+	Single<ServiceResponse> deleteVolumeGroupSnapshot(StorageVolumeGroupSnapshot snapshot, Map<String, Object> opts);
 }
