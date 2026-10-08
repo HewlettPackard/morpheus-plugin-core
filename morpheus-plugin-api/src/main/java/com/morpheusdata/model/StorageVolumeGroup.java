@@ -88,6 +88,9 @@ public class StorageVolumeGroup extends StorageVolumeGroupIdentityProjection {
 	@JsonSerialize(using = ModelCollectionAsIdsOnlySerializer.class)
 	protected List<StorageVolume> volumes = new ArrayList<>();
 
+	@JsonSerialize(using = ModelCollectionAsIdsOnlySerializer.class)
+	protected List<StorageVolumeGroupSnapshot> snapshots = new ArrayList<>();
+
 	protected String rawData;
 	protected Boolean enabled = true;
 	protected Date dateCreated;
@@ -232,6 +235,23 @@ public class StorageVolumeGroup extends StorageVolumeGroupIdentityProjection {
 	public void setVolumes(List<StorageVolume> volumes) {
 		this.volumes = volumes;
 		markDirty("volumes", volumes);
+	}
+
+	/**
+	 * Gets the consistent group snapshots taken against this volume group.
+	 * @return the list of group snapshots
+	 */
+	public List<StorageVolumeGroupSnapshot> getSnapshots() {
+		return snapshots;
+	}
+
+	/**
+	 * Sets the consistent group snapshots taken against this volume group.
+	 * @param snapshots the list of group snapshots
+	 */
+	public void setSnapshots(List<StorageVolumeGroupSnapshot> snapshots) {
+		this.snapshots = snapshots;
+		markDirty("snapshots", snapshots);
 	}
 
 	public String getRawData() {
