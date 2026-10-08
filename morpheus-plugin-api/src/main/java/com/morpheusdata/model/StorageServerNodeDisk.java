@@ -33,7 +33,7 @@ import com.morpheusdata.model.serializers.ModelAsIdOnlySerializer;
  * and the reason ({@code candidacyReason}); it does not evaluate candidacy
  * itself.
  *
- * @since 1.5.1
+ * @since 1.6.0
  * @author HPE Storage Plugin Team
  */
 public class StorageServerNodeDisk extends MorpheusModel {

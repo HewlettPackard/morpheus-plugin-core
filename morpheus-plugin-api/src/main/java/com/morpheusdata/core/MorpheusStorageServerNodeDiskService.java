@@ -23,7 +23,7 @@ import java.util.Map;
  * or a resynchronization state change), but a tenant with sufficient permission may
  * also manage them directly through the REST API's CRUD operations below.
  *
- * @since 1.5.1
+ * @since 1.6.0
  * @author HPE Storage Plugin Team
  */
 public interface MorpheusStorageServerNodeDiskService extends

@@ -19,7 +19,7 @@ import java.util.List;
  * synchronous plugin code. Provides {@code bulkCreate}/{@code bulkSave}/{@code bulkRemove} and other
  * standard CRUD/query methods via {@link MorpheusSynchronousDataService}.
  *
- * @since 1.5.1
+ * @since 1.6.0
  * @author HPE Storage Plugin Team
  */
 public interface MorpheusSynchronousStorageServerNodeDiskService extends
