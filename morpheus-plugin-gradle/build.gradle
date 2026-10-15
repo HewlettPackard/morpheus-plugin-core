@@ -59,7 +59,7 @@ java {
 }
 
 dependencies {
-	implementation gradleApi()	
+	implementation gradleApi()
 }
 
 gradlePlugin {
@@ -78,7 +78,7 @@ publishing {
 	repositories {
 		maven {
 			if( !isReleaseVersion ) {
-				url = "https://nexus.bertramlabs.com/content/repositories/snapshots"
+				url = "https://nexus.morpheusdata.com/content/repositories/snapshots"
 				if(project.hasProperty('labsNexusUser')) {
 					credentials {
 						username = labsNexusUser
