@@ -38,7 +38,7 @@ if (isReleaseVersion) {
                 if(project.hasProperty('mavenMorpheusUser')) {
                     username = mavenMorpheusUser
                     password = mavenMorpheusPassword
-                }   
+                }
             }
         }
     }
@@ -46,7 +46,7 @@ if (isReleaseVersion) {
     publishing {
         repositories {
             maven {
-                url = "https://nexus.bertramlabs.com/content/repositories/snapshots"
+                url = "https://nexus.morpheusdata.com/content/repositories/snapshots"
                 if(project.hasProperty('labsNexusUser')) {
                     credentials {
                         username = labsNexusUser
@@ -71,7 +71,7 @@ subprojects { project ->
         apply plugin: 'java'
         apply plugin: 'maven-publish'
         apply plugin: 'signing'
-        
+
         afterEvaluate {
             signing {
                 required { isReleaseVersion && gradle.taskGraph.hasTask("publish") }
@@ -127,7 +127,7 @@ subprojects { project ->
 	// 	}
 	// }
 
-	
+
 }
 
 repositories {
