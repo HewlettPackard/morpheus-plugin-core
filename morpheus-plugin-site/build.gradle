@@ -37,6 +37,10 @@ dependencies {
     compileOnly("io.micronaut.serde:micronaut-serde-processor")
     implementation("io.micronaut.groovy:micronaut-runtime-groovy")
     implementation("io.micronaut:micronaut-http-server-netty")
+    constraints {
+        // MORPH-19075: protobuf-java is transitive via less4j (2.5.0) and Micronaut's BOM (3.23.4)
+        implementation("com.google.protobuf:protobuf-java:3.25.5")
+    }
     implementation("io.micronaut:micronaut-http-client")
 	implementation 'org.yaml:snakeyaml:1.33'
 	implementation 'com.github.jknack:handlebars:4.3.0'
