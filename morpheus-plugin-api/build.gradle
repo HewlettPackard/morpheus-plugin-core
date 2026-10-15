@@ -31,7 +31,8 @@ dependencies {
 	api "org.slf4j:slf4j-parent:$slf4jVersion"
 	api 'com.github.jknack:handlebars:4.3.1'
 	api "org.slf4j:slf4j-api:1.7.26"
-	api 'org.bouncycastle:bcprov-jdk18on:1.78'
+	// MORPH-19077: bcprov 1.78 -> 1.85 (BC CVEs)
+	api 'org.bouncycastle:bcprov-jdk18on:1.85'
 	implementation 'jakarta.servlet:jakarta.servlet-api:6.0.0'
 	implementation "org.codehaus.groovy:groovy:$groovyVersion"
 	implementation "org.codehaus.groovy:groovy-json:$groovyVersion"
