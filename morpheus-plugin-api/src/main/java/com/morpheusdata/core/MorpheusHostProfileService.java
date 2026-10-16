@@ -19,10 +19,12 @@ package com.morpheusdata.core;
 import com.morpheusdata.model.ComputeServer;
 import com.morpheusdata.model.ComputeServerGroup;
 import com.morpheusdata.model.ResourceReservation;
+import com.morpheusdata.model.ResourceReservationApplyResult;
 import com.morpheusdata.model.ResourceReservationRequest;
 import com.morpheusdata.response.ServiceResponse;
 import io.reactivex.rxjava3.core.Single;
 
+import java.util.Map;
 import java.util.List;
 
 /**
@@ -85,4 +87,42 @@ public interface MorpheusHostProfileService {
 	 * @return every reservation held on the cluster's hosts, across all components
 	 */
 	Single<ServiceResponse<List<ResourceReservation>>> listReservations(ComputeServerGroup cluster);
+
+	/**
+	 * Applies every currently recorded reservation on this host: evacuates the host
+	 * (maintenance mode), invokes hvmcli to write/reboot into the reserved state, verifies
+	 * it landed, then restores the host to service. Long-running; the returned
+	 * {@code ServiceResponse} carries a {@code processId} a caller can poll/subscribe to for
+	 * progress, mirroring the existing Process UI used by host-profile remediation.
+	 * <p>
+	 * It does not need a {@code reservedBy} filter to know what to apply — by default it
+	 * applies every {@code reservedBy} entry already recorded against this host, matching
+	 * hvmcli's own behavior of merging all of a host's recorded components into a single
+	 * boot/hugepage state. {@code opts[reservedBy]} is an optional narrowing filter, not a
+	 * requirement for correctness.
+	 * <p>
+	 * If this host cannot be evacuated because it is running a VM that cannot be migrated
+	 * off it (notably the Morpheus appliance/System VM itself, typically deployed on the
+	 * host's local storage — core has no migration mechanism for a VM with no shared
+	 * datastore to move to), this still applies every no-reboot-safe change and returns
+	 * with the host's entry {@code state=BLOCKED} rather than failing the whole call; the
+	 * reboot-requiring remainder is left pending for the caller to resolve (e.g. by
+	 * completing its own install, building a shared datastore, and migrating the blocking
+	 * VM itself) and retry.
+	 *
+	 * @param server the host to apply reservations on
+	 * @param opts optional narrowing, e.g. {@code reservedBy} to validate/recompute a single
+	 *             component's flattened keys
+	 * @return a process-tracked result with one entry in {@code hosts} for this host
+	 */
+	Single<ServiceResponse<ResourceReservationApplyResult>> applyReservation(ComputeServer server, Map opts);
+
+	/**
+	 * Same operation fanned out across every host in the cluster.
+	 *
+	 * @param cluster the cluster to apply reservations across
+	 * @param opts optional narrowing, e.g. {@code reservedBy}
+	 * @return a process-tracked result with one entry in {@code hosts} per cluster host
+	 */
+	Single<ServiceResponse<ResourceReservationApplyResult>> applyReservations(ComputeServerGroup cluster, Map opts);
 }
