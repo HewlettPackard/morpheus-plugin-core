@@ -16,7 +16,6 @@
 
 package com.morpheusdata.core.util;
 
-import com.github.jknack.handlebars.internal.lang3.ArrayUtils;
 import com.morpheusdata.model.*;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
@@ -77,7 +76,11 @@ public class InvoiceUtility {
 	public static String updateDateCheckHash(Date billingStartDate, Date lineItemDate, String existingHash) throws DecoderException {
 		Byte[] hashArray;
 		if(existingHash != null) {
-			hashArray = ArrayUtils.toObject(Hex.decodeHex(existingHash));
+			byte[] decodedHash = Hex.decodeHex(existingHash);
+			hashArray = new Byte[decodedHash.length];
+			for(int x=0;x<decodedHash.length;x++) {
+				hashArray[x] = decodedHash[x];
+			}
 		} else {
 			hashArray = new Byte[96];
 			for(int x=0;x<96;x++) {
