@@ -35,6 +35,10 @@ dependencies {
     assets "com.bertramlabs.plugins:less-asset-pipeline:${assetPipelineVersion}"
     implementation("io.micronaut.serde:micronaut-serde-jackson")
     compileOnly("io.micronaut.serde:micronaut-serde-processor")
+    constraints {
+        // MORPH-19074: gson 2.5 comes transitively via asset-pipeline-micronaut -> less4j
+        implementation("com.google.code.gson:gson:2.8.9")
+    }
     implementation("io.micronaut.groovy:micronaut-runtime-groovy")
     implementation("io.micronaut:micronaut-http-server-netty")
     implementation("io.micronaut:micronaut-http-client")
