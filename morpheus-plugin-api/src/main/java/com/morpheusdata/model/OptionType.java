@@ -119,6 +119,20 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	 * Usage logic can be found in option-type-form.js
 	 **/
 	protected String visibleOnCode;
+	/**
+	 * Controls when this optionType is read only. When the expression matches,
+	 * the input renders read-only instead of being hidden, so the value is still
+	 * displayed and still submitted.
+	 * Uses the same grammar as {@link #visibleOnCode} / {@link #requireOnCode},
+	 * and the same polarity: the state applies when the expression matches.
+	 * Format is 'fieldName:regex'. e.g. 'config.setupApplied:true'
+	 *
+	 * When left null the static {@link #readOnly} flag applies, so existing
+	 * optionTypes are unaffected.
+	 *
+	 * Usage logic can be found in optionType.jsx
+	 **/
+	protected String readOnlyOnCode;
 	protected Boolean showOnEdit = true;
 	protected Boolean displayValueOnDetails = false;
 	protected Boolean showOnCreate = true;
@@ -991,6 +1005,15 @@ public class OptionType extends MorpheusModel implements IModelUuidCodeName {
 	public void setVisibleOnCode(String visibleOnCode) {
 		this.visibleOnCode = visibleOnCode;
 		markDirty("visibleOnCode", visibleOnCode, this.visibleOnCode);
+	}
+
+	public String getReadOnlyOnCode() {
+		return readOnlyOnCode;
+	}
+
+	public void setReadOnlyOnCode(String readOnlyOnCode) {
+		this.readOnlyOnCode = readOnlyOnCode;
+		markDirty("readOnlyOnCode", readOnlyOnCode, this.readOnlyOnCode);
 	}
 
 	public String getVerifyPattern() {
