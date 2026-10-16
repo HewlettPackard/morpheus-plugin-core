@@ -19,9 +19,11 @@ package com.morpheusdata.core.synchronous.compute;
 import com.morpheusdata.model.ComputeServer;
 import com.morpheusdata.model.ComputeServerGroup;
 import com.morpheusdata.model.ResourceReservation;
+import com.morpheusdata.model.ResourceReservationApplyResult;
 import com.morpheusdata.model.ResourceReservationRequest;
 import com.morpheusdata.response.ServiceResponse;
 
+import java.util.Map;
 import java.util.List;
 
 /**
@@ -65,4 +67,30 @@ public interface MorpheusSynchronousHostProfileService {
 	 * @return every reservation held on the cluster's hosts, across all components
 	 */
 	ServiceResponse<List<ResourceReservation>> listReservations(ComputeServerGroup cluster);
+
+	/**
+	 * Applies every currently recorded reservation on this host: evacuates the host
+	 * (maintenance mode), invokes hvmcli to write/reboot into the reserved state, verifies
+	 * it landed, then restores the host to service.
+	 * <p>
+	 * If this host cannot be evacuated because it is running a VM that cannot be migrated
+	 * off it (notably the Morpheus appliance/System VM itself, typically deployed on the
+	 * host's local storage — core has no migration mechanism for a VM with no shared
+	 * datastore to move to), this still applies every no-reboot-safe change and returns
+	 * with the host's entry {@code state=BLOCKED} rather than failing the whole call.
+	 *
+	 * @param server the host to apply reservations on
+	 * @param opts optional narrowing, e.g. {@code reservedBy}
+	 * @return a process-tracked result with one entry in {@code hosts} for this host
+	 */
+	ServiceResponse<ResourceReservationApplyResult> applyReservation(ComputeServer server, Map opts);
+
+	/**
+	 * Same operation fanned out across every host in the cluster.
+	 *
+	 * @param cluster the cluster to apply reservations across
+	 * @param opts optional narrowing, e.g. {@code reservedBy}
+	 * @return a process-tracked result with one entry in {@code hosts} per cluster host
+	 */
+	ServiceResponse<ResourceReservationApplyResult> applyReservations(ComputeServerGroup cluster, Map opts);
 }
