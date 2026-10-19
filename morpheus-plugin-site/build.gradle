@@ -36,6 +36,8 @@ dependencies {
     implementation("io.micronaut.serde:micronaut-serde-jackson")
     compileOnly("io.micronaut.serde:micronaut-serde-processor")
     implementation("io.micronaut.groovy:micronaut-runtime-groovy")
+    // MORPH-19072: Micronaut 4.10 is built on Netty 4.2; its BOM pins 4.2.13.Final (still vulnerable), so raise to the first clean 4.2.x
+    implementation(platform("io.netty:netty-bom:4.2.17.Final"))
     implementation("io.micronaut:micronaut-http-server-netty")
     implementation("io.micronaut:micronaut-http-client")
 	implementation 'org.yaml:snakeyaml:1.33'
