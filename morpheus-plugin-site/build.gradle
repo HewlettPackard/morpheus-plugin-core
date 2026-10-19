@@ -56,7 +56,8 @@ dependencies {
 	implementation 'com.github.jknack:handlebars:4.3.0'
 
 
-	runtimeOnly("ch.qos.logback:logback-classic")
+	// MORPH-19071: explicit version overrides the Micronaut BOM's logback 1.4.11; classic pulls matching logback-core
+	runtimeOnly("ch.qos.logback:logback-classic:1.5.34")
     
     testImplementation("io.micronaut:micronaut-inject-groovy")
     testImplementation("org.junit.jupiter:junit-jupiter-api")
