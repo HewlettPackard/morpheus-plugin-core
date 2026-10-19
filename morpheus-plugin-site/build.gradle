@@ -39,6 +39,10 @@ dependencies {
     // MORPH-19072: Micronaut 4.10 is built on Netty 4.2; its BOM pins 4.2.13.Final (still vulnerable), so raise to the first clean 4.2.x
     implementation(platform("io.netty:netty-bom:4.2.17.Final"))
     implementation("io.micronaut:micronaut-http-server-netty")
+    constraints {
+        // MORPH-19075: protobuf-java is transitive via less4j (2.5.0) and Micronaut's BOM (3.23.4)
+        implementation("com.google.protobuf:protobuf-java:3.25.5")
+    }
     implementation("io.micronaut:micronaut-http-client")
     constraints {
         // MORPH-19076: commons-io 2.3 comes transitively via asset-pipeline-micronaut -> less4j
