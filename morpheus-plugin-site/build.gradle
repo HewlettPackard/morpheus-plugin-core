@@ -40,6 +40,10 @@ dependencies {
     implementation(platform("io.netty:netty-bom:4.2.17.Final"))
     implementation("io.micronaut:micronaut-http-server-netty")
     implementation("io.micronaut:micronaut-http-client")
+    constraints {
+        // MORPH-19076: commons-io 2.3 comes transitively via asset-pipeline-micronaut -> less4j
+        implementation("commons-io:commons-io:2.14.0")
+    }
 	implementation 'org.yaml:snakeyaml:1.33'
 	implementation 'com.github.jknack:handlebars:4.3.0'
 
