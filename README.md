@@ -32,21 +32,30 @@ Create and implement the `Plugin` class.
 
 Plugins are packaged by using the `shadowJar` gradle task. This task bundles all dependencies required for the plugin.
 
-A jar manifest must also be created to tell the PluginManager which class to load for the plugin. For example:
+The Morpheus Gradle plugin can generate `META-INF/morpheus-plugin.yml` and the legacy JAR manifest attributes from one descriptor:
 
 build.gradle
 ```groovy
-jar {
-    manifest {
-        attributes(
-                'Plugin-Class': 'com.morpheusdata.infoblox.InfobloxPlugin',
-                'Plugin-Version': version
-        )
-    }
+morpheusPlugin {
+	descriptor {
+		pluginClass = 'com.example.ClusterLifecyclePlugin'
+		code = 'morpheus-cluster-lifecycle'
+		version = project.version
+
+		dependency('morpheus-networking') {
+			minVersionInclusive = '2.4.0'
+			maxVersionExclusive = '3.0.0'
+		}
+
+		dependency('morpheus-storage') {
+			minVersionInclusive = '5.1.0'
+		}
+	}
 }
 ```
 
-### Plugin Dependencies
+Dependency version bounds are optional. Bounds use dotted numeric versions; the minimum is inclusive and the maximum is exclusive. Plugins without declared dependencies receive an empty dependency list. Existing `plugin.yml`, `META-INF/morpheus.properties`, and `META-INF/MANIFEST.MF` descriptors remain supported.
 
-Dependancies your plugin requires such as other clouds sdks or similar will be scoped to your plugins classpath. The `PluginManager` creates a new classpath for each plugin loaded. This is done to ensure classes in a plugin do not interfere with Morpheus or other loaded plugins.
+### Library Dependencies
 
+Libraries your plugin requires, such as cloud SDKs, are scoped to the plugin classpath. The `PluginManager` creates a new classpath for each plugin loaded so classes in one plugin do not interfere with Morpheus or other loaded plugins.

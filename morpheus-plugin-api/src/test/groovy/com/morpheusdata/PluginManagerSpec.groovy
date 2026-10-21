@@ -1,8 +1,12 @@
 package com.morpheusdata
 
 import com.morpheusdata.core.MorpheusContext
+import com.morpheusdata.core.PluginDescriptorException
 import com.morpheusdata.core.PluginManager
 import spock.lang.Specification
+
+import java.util.jar.JarOutputStream
+import java.util.zip.ZipEntry
 
 class PluginManagerSpec extends Specification {
     void "Register and Deregister plugin from jar"() {
@@ -38,5 +42,102 @@ class PluginManagerSpec extends Specification {
 
         then:
         manager.plugins.size() == 0
+    }
+
+    void "inspectPlugin reads legacy manifest plugins with no dependencies"() {
+        given:
+        File jarFile = new File(this.class.classLoader.getResource("morpheus-plugin-infoblox-1.3.5-all.jar").toURI())
+
+        when:
+        def descriptor = PluginManager.inspectPlugin(jarFile)
+
+        then:
+        descriptor.schemaVersion == 1
+        descriptor.pluginClass == 'com.morpheusdata.infoblox.InfobloxPlugin'
+        descriptor.code == 'infoblox-plugin'
+        descriptor.version == '1.3.5'
+        descriptor.dependencies.empty
+    }
+
+    void "inspectPlugin reads dependency ranges without loading the plugin class"() {
+        given:
+        File jarFile = writeDescriptorJar("""schemaVersion: 1
+pluginClass: com.example.DoesNotExistPlugin
+code: morpheus-cluster-lifecycle
+version: 1.3.0
+dependencies:
+  - code: morpheus-networking
+    version:
+      minInclusive: 2.4.0
+      maxExclusive: 3.0.0
+  - code: morpheus-storage
+    version:
+      minInclusive: 5.1.0
+""")
+
+        when:
+        def descriptor = PluginManager.inspectPlugin(jarFile)
+
+        then:
+        descriptor.pluginClass == 'com.example.DoesNotExistPlugin'
+        descriptor.dependencies*.code == ['morpheus-networking', 'morpheus-storage']
+        descriptor.dependencies[0].minVersionInclusive == '2.4.0'
+        descriptor.dependencies[0].maxVersionExclusive == '3.0.0'
+        descriptor.dependencies[1].minVersionInclusive == '5.1.0'
+        descriptor.dependencies[1].maxVersionExclusive == null
+
+        cleanup:
+        jarFile.delete()
+    }
+
+    void "inspectPlugin rejects unsupported descriptor schemas"() {
+        given:
+        File jarFile = writeDescriptorJar("""schemaVersion: 2
+pluginClass: com.example.MyPlugin
+code: my-plugin
+version: 1.0.0
+dependencies: []
+""")
+
+        when:
+        PluginManager.inspectPlugin(jarFile)
+
+        then:
+        def error = thrown(PluginDescriptorException)
+        error.message.contains('Unsupported plugin descriptor schemaVersion 2')
+
+        cleanup:
+        jarFile.delete()
+    }
+
+    void "inspectPlugin rejects self dependencies"() {
+        given:
+        File jarFile = writeDescriptorJar("""schemaVersion: 1
+pluginClass: com.example.MyPlugin
+code: my-plugin
+version: 1.0.0
+dependencies:
+  - code: my-plugin
+""")
+
+        when:
+        PluginManager.inspectPlugin(jarFile)
+
+        then:
+        def error = thrown(PluginDescriptorException)
+        error.message == "Plugin 'my-plugin' cannot depend on itself"
+
+        cleanup:
+        jarFile.delete()
+    }
+
+    private static File writeDescriptorJar(String descriptor) {
+        File jarFile = File.createTempFile('plugin-descriptor', '.jar')
+        def output = new JarOutputStream(new FileOutputStream(jarFile))
+        output.putNextEntry(new ZipEntry('META-INF/morpheus-plugin.yml'))
+        output.write(descriptor.bytes)
+        output.closeEntry()
+        output.close()
+        return jarFile
     }
 }
