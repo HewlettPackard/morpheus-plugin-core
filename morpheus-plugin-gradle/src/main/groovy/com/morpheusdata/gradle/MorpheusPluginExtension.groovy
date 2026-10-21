@@ -34,6 +34,13 @@ class MorpheusPluginExtension {
 	String i18nTarget = 'i18n'
 	String i18nManifest = 'i18n.manifest'
 
+	final MorpheusPluginDescriptor descriptor = new MorpheusPluginDescriptor()
+
+	void descriptor(Closure configuration) {
+		Closure configured = configuration.rehydrate(descriptor, configuration.owner, configuration.thisObject)
+		configured.resolveStrategy = Closure.DELEGATE_FIRST
+		configured.call()
+	}
 
 	Map toMap() {
 		return [
@@ -45,7 +52,8 @@ class MorpheusPluginExtension {
 			packageManifest: packageManifest,
 			i18nDir: i18nDir,
 			i18nTarget: i18nTarget,
-			i18nManifest: i18nManifest
+			i18nManifest: i18nManifest,
+			descriptor: descriptor
 		]
 	}
 
