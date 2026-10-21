@@ -84,6 +84,7 @@ public class VirtualImage extends VirtualImageIdentityProjection {
 	protected Boolean isSysprep = false;
 	protected Boolean vmToolsInstalled = true;
 	protected Boolean installAgent = true;
+	protected Boolean skipNetworkWait = false;
 	protected String interfaceName = "eth0";
 	protected String blockDeviceConfig;
 	protected String productCode;
@@ -470,6 +471,14 @@ public class VirtualImage extends VirtualImageIdentityProjection {
 
 	public void setInstallAgent(Boolean installAgent) {
 		this.installAgent = installAgent;
+	}
+
+	public Boolean getSkipNetworkWait() {
+		return skipNetworkWait;
+	}
+
+	public void setSkipNetworkWait(Boolean skipNetworkWait) {
+		this.skipNetworkWait = skipNetworkWait;
 	}
 
 	public String getInterfaceName() {
