@@ -35,6 +35,13 @@ public class StorageVolume extends StorageVolumeIdentityProjection {
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected Account account;
 	protected Long cloudId;
+
+	/**
+	 * The id of the virtual image mounted on this volume, such as an ISO in a CD-ROM drive. Null when nothing is mounted.
+	 * @since 1.5.1
+	 */
+	protected Long virtualImageId;
+
 	protected String description;
 	protected String deviceName = "/dev/sda";
 	protected String deviceDisplayName;
@@ -412,6 +419,15 @@ public class StorageVolume extends StorageVolumeIdentityProjection {
 	public void setCloudId(Long cloudId) {
 		this.cloudId = cloudId;
 		markDirty("cloudId", cloudId);
+	}
+
+	public Long getVirtualImageId() {
+		return virtualImageId;
+	}
+
+	public void setVirtualImageId(Long virtualImageId) {
+		this.virtualImageId = virtualImageId;
+		markDirty("virtualImageId", virtualImageId);
 	}
 
 	public StorageServer getStorageServer() {
