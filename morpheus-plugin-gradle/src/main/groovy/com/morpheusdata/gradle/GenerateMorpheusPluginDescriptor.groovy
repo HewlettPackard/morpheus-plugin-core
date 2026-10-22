@@ -50,7 +50,7 @@ class GenerateMorpheusPluginDescriptor extends DefaultTask {
 	@Input
 	List<String> getDependencySpecifications() {
 		dependencies.collect {
-			"${it.code ?: ''}|${it.minVersionInclusive ?: ''}|${it.maxVersionExclusive ?: ''}".toString()
+			"${it.code ?: ''}|${it.minVersion ?: ''}|${it.maxVersion ?: ''}".toString()
 		}
 	}
 
@@ -86,11 +86,11 @@ class GenerateMorpheusPluginDescriptor extends DefaultTask {
 			if(dependency.code == code) {
 				throw new GradleException("Plugin '${code}' cannot depend on itself")
 			}
-			GenerateMorpheusPluginDescriptor.validateVersionBound(dependency.code, 'minVersionInclusive', dependency.minVersionInclusive)
-			GenerateMorpheusPluginDescriptor.validateVersionBound(dependency.code, 'maxVersionExclusive', dependency.maxVersionExclusive)
-			if(dependency.minVersionInclusive && dependency.maxVersionExclusive &&
-				GenerateMorpheusPluginDescriptor.compareVersions(dependency.minVersionInclusive, dependency.maxVersionExclusive) >= 0) {
-				throw new GradleException("Plugin dependency '${dependency.code}' must have minVersionInclusive lower than maxVersionExclusive")
+			GenerateMorpheusPluginDescriptor.validateVersionBound(dependency.code, 'minVersion', dependency.minVersion)
+			GenerateMorpheusPluginDescriptor.validateVersionBound(dependency.code, 'maxVersion', dependency.maxVersion)
+			if(dependency.minVersion && dependency.maxVersion &&
+				GenerateMorpheusPluginDescriptor.compareVersions(dependency.minVersion, dependency.maxVersion) >= 0) {
+				throw new GradleException("Plugin dependency '${dependency.code}' must have minVersion lower than maxVersion")
 			}
 		}
 	}
@@ -127,13 +127,13 @@ class GenerateMorpheusPluginDescriptor extends DefaultTask {
 			lines << 'dependencies:'
 			dependencies.each { dependency ->
 				lines << "  - code: ${GenerateMorpheusPluginDescriptor.quote(dependency.code)}"
-				if(dependency.minVersionInclusive || dependency.maxVersionExclusive) {
+				if(dependency.minVersion || dependency.maxVersion) {
 					lines << '    version:'
-					if(dependency.minVersionInclusive) {
-						lines << "      minInclusive: ${GenerateMorpheusPluginDescriptor.quote(dependency.minVersionInclusive)}"
+					if(dependency.minVersion) {
+						lines << "      min: ${GenerateMorpheusPluginDescriptor.quote(dependency.minVersion)}"
 					}
-					if(dependency.maxVersionExclusive) {
-						lines << "      maxExclusive: ${GenerateMorpheusPluginDescriptor.quote(dependency.maxVersionExclusive)}"
+					if(dependency.maxVersion) {
+						lines << "      max: ${GenerateMorpheusPluginDescriptor.quote(dependency.maxVersion)}"
 					}
 				}
 			}

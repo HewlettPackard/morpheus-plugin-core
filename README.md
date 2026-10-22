@@ -53,18 +53,18 @@ Plugin prerequisites are runtime relationships between installed Morpheus plugin
 morpheusPlugin {
 	requiredPlugins {
 		plugin('morpheus-networking') {
-			minVersionInclusive = '2.4.0'
-			maxVersionExclusive = '3.0.0'
+			minVersion = '2.4.0'
+			maxVersion = '3.0.0'
 		}
 
 		plugin('morpheus-storage') {
-			minVersionInclusive = '5.1.0'
+			minVersion = '5.1.0'
 		}
 	}
 }
 ```
 
-When `requiredPlugins` is configured, the Gradle plugin requires `Plugin-Class`, `Plugin-Version`, and `Morpheus-Code` in the JAR manifest and combines them with these prerequisites to generate `META-INF/morpheus-plugin.yml`. Dependency version bounds are optional. Bounds use dotted numeric versions; the minimum is inclusive and the maximum is exclusive. Existing `plugin.yml`, `META-INF/morpheus.properties`, and `META-INF/MANIFEST.MF` descriptors remain supported.
+When `requiredPlugins` is configured, the Gradle plugin requires `Plugin-Class`, `Plugin-Version`, and `Morpheus-Code` in the JAR manifest and combines them with these prerequisites to generate `META-INF/morpheus-plugin.yml`. Dependency version bounds are optional and use dotted numeric versions. The supported range is `minVersion <= installedVersion < maxVersion`. Existing `plugin.yml`, `META-INF/morpheus.properties`, and `META-INF/MANIFEST.MF` descriptors remain supported.
 
 ### Library Dependencies
 

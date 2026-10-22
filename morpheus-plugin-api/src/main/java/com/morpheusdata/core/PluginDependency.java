@@ -24,25 +24,31 @@ import java.util.Objects;
 public final class PluginDependency {
 
 	private final String code;
-	private final String minVersionInclusive;
-	private final String maxVersionExclusive;
+	private final String minVersion;
+	private final String maxVersion;
 
-	public PluginDependency(String code, String minVersionInclusive, String maxVersionExclusive) {
+	public PluginDependency(String code, String minVersion, String maxVersion) {
 		this.code = code;
-		this.minVersionInclusive = minVersionInclusive;
-		this.maxVersionExclusive = maxVersionExclusive;
+		this.minVersion = minVersion;
+		this.maxVersion = maxVersion;
 	}
 
 	public String getCode() {
 		return code;
 	}
 
-	public String getMinVersionInclusive() {
-		return minVersionInclusive;
+	/**
+	 * Returns the inclusive minimum required version.
+	 */
+	public String getMinVersion() {
+		return minVersion;
 	}
 
-	public String getMaxVersionExclusive() {
-		return maxVersionExclusive;
+	/**
+	 * Returns the exclusive maximum supported version.
+	 */
+	public String getMaxVersion() {
+		return maxVersion;
 	}
 
 	@Override
@@ -55,21 +61,21 @@ public final class PluginDependency {
 		}
 		PluginDependency that = (PluginDependency) o;
 		return Objects.equals(code, that.code) &&
-			Objects.equals(minVersionInclusive, that.minVersionInclusive) &&
-			Objects.equals(maxVersionExclusive, that.maxVersionExclusive);
+			Objects.equals(minVersion, that.minVersion) &&
+			Objects.equals(maxVersion, that.maxVersion);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(code, minVersionInclusive, maxVersionExclusive);
+		return Objects.hash(code, minVersion, maxVersion);
 	}
 
 	@Override
 	public String toString() {
 		return "PluginDependency{" +
 			"code='" + code + '\'' +
-			", minVersionInclusive='" + minVersionInclusive + '\'' +
-			", maxVersionExclusive='" + maxVersionExclusive + '\'' +
+			", minVersion='" + minVersion + '\'' +
+			", maxVersion='" + maxVersion + '\'' +
 			'}';
 	}
 }

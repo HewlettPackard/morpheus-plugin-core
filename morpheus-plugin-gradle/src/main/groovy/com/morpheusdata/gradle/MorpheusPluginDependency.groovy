@@ -19,6 +19,6 @@ package com.morpheusdata.gradle
 class MorpheusPluginDependency {
 
 	String code
-	String minVersionInclusive
-	String maxVersionExclusive
+	String minVersion
+	String maxVersion
 }

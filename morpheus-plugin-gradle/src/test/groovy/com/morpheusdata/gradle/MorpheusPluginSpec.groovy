@@ -42,11 +42,11 @@ jar {
 morpheusPlugin {
 	requiredPlugins {
 		plugin('morpheus-networking') {
-			minVersionInclusive = '2.4.0'
-			maxVersionExclusive = '3.0.0'
+			minVersion = '2.4.0'
+			maxVersion = '3.0.0'
 		}
 		plugin('morpheus-storage') {
-			minVersionInclusive = '5.1.0'
+			minVersion = '5.1.0'
 		}
 	}
 }
@@ -69,11 +69,11 @@ version: '1.3.0'
 dependencies:
   - code: 'morpheus-networking'
     version:
-      minInclusive: '2.4.0'
-      maxExclusive: '3.0.0'
+      min: '2.4.0'
+      max: '3.0.0'
   - code: 'morpheus-storage'
     version:
-      minInclusive: '5.1.0'
+      min: '5.1.0'
 """
 		jarFile.getEntry('META-INF/morpheus-plugin.yml') != null
 		jarFile.manifest.mainAttributes.getValue('Plugin-Class') == 'com.example.ClusterLifecyclePlugin'
