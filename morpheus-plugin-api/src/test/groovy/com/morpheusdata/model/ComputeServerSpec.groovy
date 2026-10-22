@@ -23,4 +23,24 @@ class ComputeServerSpec extends Specification {
 		server.maxSockets == 2L
 		server.isDirty('maxSockets')
 	}
+
+	void "systemUuid defaults to null"() {
+		when:
+		def server = new ComputeServer()
+
+		then:
+		server.systemUuid == null
+	}
+
+	void "systemUuid is stored unchanged and marked dirty"() {
+		given:
+		def server = new ComputeServer()
+
+		when:
+		server.systemUuid = 'ABC'
+
+		then:
+		server.systemUuid == 'ABC'
+		server.isDirty('systemUuid')
+	}
 }
