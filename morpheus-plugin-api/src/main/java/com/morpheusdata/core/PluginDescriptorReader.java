@@ -221,25 +221,29 @@ final class PluginDescriptorReader {
 				throw new PluginDescriptorException("Plugin '" + pluginCode + "' cannot depend on itself");
 			}
 
-			String minVersionInclusive = null;
-			String maxVersionExclusive = null;
+			String minVersion = null;
+			String maxVersion = null;
 			Object versionValue = dependencyValues.get("version");
 			if (versionValue != null) {
 				if (!(versionValue instanceof Map)) {
 					throw new PluginDescriptorException(source + " dependency '" + code + "' version must be an object");
 				}
 				Map<?, ?> versionValues = (Map<?, ?>) versionValue;
-				minVersionInclusive = optionalString(versionValues.get("minInclusive"));
-				maxVersionExclusive = optionalString(versionValues.get("maxExclusive"));
-				validateVersionBound(minVersionInclusive, "minInclusive", code, source);
-				validateVersionBound(maxVersionExclusive, "maxExclusive", code, source);
-				if (minVersionInclusive != null && maxVersionExclusive != null &&
-					compareVersionBounds(minVersionInclusive, maxVersionExclusive) >= 0) {
+				if (versionValues.containsKey("minInclusive") || versionValues.containsKey("maxExclusive")) {
 					throw new PluginDescriptorException(source + " dependency '" + code +
-						"' must have minInclusive lower than maxExclusive");
+						"' must use version bounds 'min' and 'max'");
+				}
+				minVersion = optionalString(versionValues.get("min"));
+				maxVersion = optionalString(versionValues.get("max"));
+				validateVersionBound(minVersion, "min", code, source);
+				validateVersionBound(maxVersion, "max", code, source);
+				if (minVersion != null && maxVersion != null &&
+					compareVersionBounds(minVersion, maxVersion) >= 0) {
+					throw new PluginDescriptorException(source + " dependency '" + code +
+						"' must have min lower than max");
 				}
 			}
-			dependencies.add(new PluginDependency(code, minVersionInclusive, maxVersionExclusive));
+			dependencies.add(new PluginDependency(code, minVersion, maxVersion));
 			index++;
 		}
 		return dependencies;

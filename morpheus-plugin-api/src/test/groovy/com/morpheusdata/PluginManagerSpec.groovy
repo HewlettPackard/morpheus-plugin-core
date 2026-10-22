@@ -68,11 +68,11 @@ version: 1.3.0
 dependencies:
   - code: morpheus-networking
     version:
-      minInclusive: 2.4.0
-      maxExclusive: 3.0.0
+      min: 2.4.0
+      max: 3.0.0
   - code: morpheus-storage
     version:
-      minInclusive: 5.1.0
+      min: 5.1.0
 """)
 
         when:
@@ -81,10 +81,33 @@ dependencies:
         then:
         descriptor.pluginClass == 'com.example.DoesNotExistPlugin'
         descriptor.dependencies*.code == ['morpheus-networking', 'morpheus-storage']
-        descriptor.dependencies[0].minVersionInclusive == '2.4.0'
-        descriptor.dependencies[0].maxVersionExclusive == '3.0.0'
-        descriptor.dependencies[1].minVersionInclusive == '5.1.0'
-        descriptor.dependencies[1].maxVersionExclusive == null
+        descriptor.dependencies[0].minVersion == '2.4.0'
+        descriptor.dependencies[0].maxVersion == '3.0.0'
+        descriptor.dependencies[1].minVersion == '5.1.0'
+        descriptor.dependencies[1].maxVersion == null
+
+        cleanup:
+        jarFile.delete()
+    }
+
+    void "inspectPlugin rejects obsolete dependency version bound names"() {
+        given:
+        File jarFile = writeDescriptorJar("""schemaVersion: 1
+pluginClass: com.example.MyPlugin
+code: my-plugin
+version: 1.0.0
+dependencies:
+  - code: required-plugin
+    version:
+      minInclusive: 2.4.0
+""")
+
+        when:
+        PluginManager.inspectPlugin(jarFile)
+
+        then:
+        def error = thrown(PluginDescriptorException)
+        error.message.contains("must use version bounds 'min' and 'max'")
 
         cleanup:
         jarFile.delete()
