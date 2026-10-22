@@ -16,9 +16,11 @@
 
 package com.morpheusdata.gradle
 
+import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.UnknownTaskException
+import org.gradle.api.tasks.bundling.Jar
 import org.gradle.language.jvm.tasks.ProcessResources
 
 /**
@@ -42,6 +44,7 @@ class MorpheusPlugin implements Plugin<Project> {
 		def scribePackageTask = project.tasks.getByName('scribePackage')
 		def scribeResourcesTask = project.tasks.getByName('scribeResources')
 		def morpheusI18nPackageTask = project.tasks.getByName('i18nPackage')
+		def generatePluginDescriptorTask = project.tasks.register('generateMorpheusPluginDescriptor', GenerateMorpheusPluginDescriptor)
 		//needed?
 		project.afterEvaluate {
 			//get loaded config
@@ -69,6 +72,31 @@ class MorpheusPlugin implements Plugin<Project> {
 				i18nTarget = project.file("${processResources?.destinationDir}/${morpheusPluginConfig.i18nTarget}")
 			}
 
+			if(morpheusPluginConfig.requiredPlugins.configured) {
+				def jarTask = project.tasks.findByName('jar')
+				if(!(jarTask instanceof Jar)) {
+					throw new GradleException('The java plugin must be applied before configuring morpheusPlugin.requiredPlugins')
+				}
+				def manifestAttributes = jarTask.manifest.attributes
+				['Plugin-Class', 'Plugin-Version', 'Morpheus-Code'].each { attribute ->
+					if(!manifestAttributes[attribute]?.toString()?.trim()) {
+						throw new GradleException("JAR manifest attribute '${attribute}' must be specified when morpheusPlugin.requiredPlugins is configured")
+					}
+				}
+				String manifestPluginClass = manifestAttributes['Plugin-Class']?.toString()
+				String manifestPluginVersion = manifestAttributes['Plugin-Version']?.toString()
+				String manifestPluginCode = manifestAttributes['Morpheus-Code']?.toString()
+				generatePluginDescriptorTask.configure {
+					schemaVersion = 1
+					pluginClass = manifestPluginClass
+					code = manifestPluginCode
+					version = manifestPluginVersion
+					dependencies = morpheusPluginConfig.requiredPlugins.plugins
+					outputFile = project.layout.buildDirectory.file('generated/morpheus-plugin/META-INF/morpheus-plugin.yml').get().asFile
+				}
+				processResources.dependsOn(generatePluginDescriptorTask)
+				processResources.from(project.layout.buildDirectory.dir('generated/morpheus-plugin'))
+			}
 
 			//add task dependencies
 			

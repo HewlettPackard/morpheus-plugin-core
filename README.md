@@ -32,21 +32,40 @@ Create and implement the `Plugin` class.
 
 Plugins are packaged by using the `shadowJar` gradle task. This task bundles all dependencies required for the plugin.
 
-A jar manifest must also be created to tell the PluginManager which class to load for the plugin. For example:
+Keep the plugin identity and class-loading metadata in the standard JAR manifest:
 
 build.gradle
 ```groovy
 jar {
-    manifest {
-        attributes(
-                'Plugin-Class': 'com.morpheusdata.infoblox.InfobloxPlugin',
-                'Plugin-Version': version
-        )
-    }
+	manifest {
+		attributes(
+			'Plugin-Class': 'com.example.ClusterLifecyclePlugin',
+			'Plugin-Version': version,
+			'Morpheus-Code': 'morpheus-cluster-lifecycle'
+		)
+	}
 }
 ```
 
-### Plugin Dependencies
+Plugin prerequisites are runtime relationships between installed Morpheus plugins, not Java library dependencies. Declare them separately through the Morpheus Gradle plugin:
 
-Dependancies your plugin requires such as other clouds sdks or similar will be scoped to your plugins classpath. The `PluginManager` creates a new classpath for each plugin loaded. This is done to ensure classes in a plugin do not interfere with Morpheus or other loaded plugins.
+```groovy
+morpheusPlugin {
+	requiredPlugins {
+		plugin('morpheus-networking') {
+			minVersion = '2.4.0'
+			maxVersion = '3.0.0'
+		}
 
+		plugin('morpheus-storage') {
+			minVersion = '5.1.0'
+		}
+	}
+}
+```
+
+When `requiredPlugins` is configured, the Gradle plugin requires `Plugin-Class`, `Plugin-Version`, and `Morpheus-Code` in the JAR manifest and combines them with these prerequisites to generate `META-INF/morpheus-plugin.yml`. Dependency version bounds are optional and use dotted numeric versions. The supported range is `minVersion <= installedVersion < maxVersion`. Existing `plugin.yml`, `META-INF/morpheus.properties`, and `META-INF/MANIFEST.MF` descriptors remain supported.
+
+### Library Dependencies
+
+Libraries your plugin requires, such as cloud SDKs, are scoped to the plugin classpath. The `PluginManager` creates a new classpath for each plugin loaded so classes in one plugin do not interfere with Morpheus or other loaded plugins.

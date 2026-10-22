@@ -32,9 +32,6 @@ import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.jar.Attributes;
-import java.util.jar.JarInputStream;
-import java.util.jar.Manifest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -102,7 +99,7 @@ public class PluginManager {
 	 * @throws IllegalAccessException
 	 * @throws InstantiationException
 	 */
-	Plugin registerPlugin(Class<Plugin> pluginClass, File jarFile, String version) throws IllegalAccessException, InstantiationException, MalformedURLException {
+	Plugin registerPlugin(Class<Plugin> pluginClass, File jarFile, PluginDescriptor descriptor) throws IllegalAccessException, InstantiationException, MalformedURLException, PluginDescriptorException {
 		URL jarUrl = new URL("file", null, jarFile.getAbsolutePath());
 		ClassLoader pluginClassLoader =  new ChildFirstClassLoader(new URL[]{jarUrl}, pluginManagerClassLoader);
 
@@ -111,7 +108,7 @@ public class PluginManager {
 		plugin.setMorpheus(this.morpheus);
 		plugin.setName(pluginClass.toString());
 		plugin.setFileName(jarFile.getAbsolutePath());
-		plugin.setVersion(version);
+		plugin.setVersion(descriptor.getVersion());
 		plugin.setClassLoader(pluginClassLoader);
 		plugin.initialize();
 		if(plugin.getControllers().size() > 0 && !plugin.hasCustomRender()) {
@@ -132,7 +129,7 @@ public class PluginManager {
 	}
 
 	/**
-	 * Given a path to a plugin pathToJar file - create a child classloader, extract the Plugin Manifest and registers.
+	 * Given a path to a plugin JAR, inspect its descriptor and register its plugin class.
 	 * @param pathToJar Path to jar file
 	 * @throws Exception if file does not exist
 	 * @return Plugin the instanced Plugin class loaded from the jar
@@ -142,23 +139,39 @@ public class PluginManager {
 		URL jarUrl = new URL("file", null, jarFile.getAbsolutePath());
 
 		URLClassLoader pluginLoader = URLClassLoader.newInstance(new URL[]{jarUrl}, pluginManagerClassLoader);
-
-		JarInputStream jarStream = new JarInputStream(new FileInputStream(jarFile));
-		Manifest mf = jarStream.getManifest();
-		Attributes attributes = mf.getMainAttributes();
-		String pluginClassName = attributes.getValue("Plugin-Class");
-		String pluginVersion = attributes.getValue("Plugin-Version");
+		PluginDescriptor descriptor = inspectPlugin(jarFile);
+		String pluginClassName = descriptor.getPluginClass();
 
 		try {
 			Class<Plugin> pluginClass = (Class<Plugin>) pluginLoader.loadClass(pluginClassName);
 
-			System.out.println("Loading Plugin " + pluginClassName + ":" + pluginVersion + " from " +  pathToJar);
-			return registerPlugin(pluginClass, jarFile, pluginVersion);
+			System.out.println("Loading Plugin " + pluginClassName + ":" + descriptor.getVersion() + " from " +  pathToJar);
+			return registerPlugin(pluginClass, jarFile, descriptor);
 		} catch (Throwable e) {
 			System.out.println("Unable to load plugin class from " + pathToJar);
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	/**
+	 * Reads and validates plugin metadata without loading or initializing the plugin class.
+	 *
+	 * @param pathToJar path to the plugin JAR
+	 * @return the validated plugin descriptor
+	 */
+	public PluginDescriptor inspectPlugin(String pathToJar) throws IOException, PluginDescriptorException {
+		return inspectPlugin(new File(pathToJar));
+	}
+
+	/**
+	 * Reads and validates plugin metadata without loading or initializing the plugin class.
+	 *
+	 * @param jarFile plugin JAR
+	 * @return the validated plugin descriptor
+	 */
+	public static PluginDescriptor inspectPlugin(File jarFile) throws IOException, PluginDescriptorException {
+		return PluginDescriptorReader.read(jarFile);
 	}
 
 	void deregisterPlugin(Plugin plugin) {
