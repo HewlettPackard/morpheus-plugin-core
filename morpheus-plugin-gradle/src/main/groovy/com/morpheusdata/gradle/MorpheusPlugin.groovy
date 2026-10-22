@@ -16,6 +16,7 @@
 
 package com.morpheusdata.gradle
 
+import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.UnknownTaskException
@@ -71,27 +72,30 @@ class MorpheusPlugin implements Plugin<Project> {
 				i18nTarget = project.file("${processResources?.destinationDir}/${morpheusPluginConfig.i18nTarget}")
 			}
 
-			if(morpheusPluginConfig.descriptor.configured) {
-				def descriptor = morpheusPluginConfig.descriptor
+			if(morpheusPluginConfig.requiredPlugins.configured) {
+				def jarTask = project.tasks.findByName('jar')
+				if(!(jarTask instanceof Jar)) {
+					throw new GradleException('The java plugin must be applied before configuring morpheusPlugin.requiredPlugins')
+				}
+				def manifestAttributes = jarTask.manifest.attributes
+				['Plugin-Class', 'Plugin-Version', 'Morpheus-Code'].each { attribute ->
+					if(!manifestAttributes[attribute]?.toString()?.trim()) {
+						throw new GradleException("JAR manifest attribute '${attribute}' must be specified when morpheusPlugin.requiredPlugins is configured")
+					}
+				}
+				String manifestPluginClass = manifestAttributes['Plugin-Class']?.toString()
+				String manifestPluginVersion = manifestAttributes['Plugin-Version']?.toString()
+				String manifestPluginCode = manifestAttributes['Morpheus-Code']?.toString()
 				generatePluginDescriptorTask.configure {
-					schemaVersion = descriptor.schemaVersion
-					pluginClass = descriptor.pluginClass
-					code = descriptor.code
-					version = descriptor.version
-					dependencies = descriptor.dependencies
+					schemaVersion = 1
+					pluginClass = manifestPluginClass
+					code = manifestPluginCode
+					version = manifestPluginVersion
+					dependencies = morpheusPluginConfig.requiredPlugins.plugins
 					outputFile = project.layout.buildDirectory.file('generated/morpheus-plugin/META-INF/morpheus-plugin.yml').get().asFile
 				}
 				processResources.dependsOn(generatePluginDescriptorTask)
 				processResources.from(project.layout.buildDirectory.dir('generated/morpheus-plugin'))
-
-				def jarTask = project.tasks.findByName('jar')
-				if(jarTask instanceof Jar) {
-					jarTask.manifest.attributes(
-						'Plugin-Class': descriptor.pluginClass,
-						'Plugin-Version': descriptor.version,
-						'Morpheus-Code': descriptor.code
-					)
-				}
 			}
 
 			//add task dependencies

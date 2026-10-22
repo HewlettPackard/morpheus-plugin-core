@@ -32,29 +32,39 @@ Create and implement the `Plugin` class.
 
 Plugins are packaged by using the `shadowJar` gradle task. This task bundles all dependencies required for the plugin.
 
-The Morpheus Gradle plugin can generate `META-INF/morpheus-plugin.yml` and the legacy JAR manifest attributes from one descriptor:
+Keep the plugin identity and class-loading metadata in the standard JAR manifest:
 
 build.gradle
 ```groovy
-morpheusPlugin {
-	descriptor {
-		pluginClass = 'com.example.ClusterLifecyclePlugin'
-		code = 'morpheus-cluster-lifecycle'
-		version = project.version
+jar {
+	manifest {
+		attributes(
+			'Plugin-Class': 'com.example.ClusterLifecyclePlugin',
+			'Plugin-Version': version,
+			'Morpheus-Code': 'morpheus-cluster-lifecycle'
+		)
+	}
+}
+```
 
-		dependency('morpheus-networking') {
+Plugin prerequisites are runtime relationships between installed Morpheus plugins, not Java library dependencies. Declare them separately through the Morpheus Gradle plugin:
+
+```groovy
+morpheusPlugin {
+	requiredPlugins {
+		plugin('morpheus-networking') {
 			minVersionInclusive = '2.4.0'
 			maxVersionExclusive = '3.0.0'
 		}
 
-		dependency('morpheus-storage') {
+		plugin('morpheus-storage') {
 			minVersionInclusive = '5.1.0'
 		}
 	}
 }
 ```
 
-Dependency version bounds are optional. Bounds use dotted numeric versions; the minimum is inclusive and the maximum is exclusive. Plugins without declared dependencies receive an empty dependency list. Existing `plugin.yml`, `META-INF/morpheus.properties`, and `META-INF/MANIFEST.MF` descriptors remain supported.
+When `requiredPlugins` is configured, the Gradle plugin requires `Plugin-Class`, `Plugin-Version`, and `Morpheus-Code` in the JAR manifest and combines them with these prerequisites to generate `META-INF/morpheus-plugin.yml`. Dependency version bounds are optional. Bounds use dotted numeric versions; the minimum is inclusive and the maximum is exclusive. Existing `plugin.yml`, `META-INF/morpheus.properties`, and `META-INF/MANIFEST.MF` descriptors remain supported.
 
 ### Library Dependencies
 
