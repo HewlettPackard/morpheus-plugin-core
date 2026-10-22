@@ -34,10 +34,11 @@ class MorpheusPluginExtension {
 	String i18nTarget = 'i18n'
 	String i18nManifest = 'i18n.manifest'
 
-	final MorpheusPluginDescriptor descriptor = new MorpheusPluginDescriptor()
+	final MorpheusRequiredPlugins requiredPlugins = new MorpheusRequiredPlugins()
 
-	void descriptor(Closure configuration) {
-		Closure configured = configuration.rehydrate(descriptor, configuration.owner, configuration.thisObject)
+	void requiredPlugins(Closure configuration) {
+		requiredPlugins.configured = true
+		Closure configured = configuration.rehydrate(requiredPlugins, configuration.owner, configuration.thisObject)
 		configured.resolveStrategy = Closure.DELEGATE_FIRST
 		configured.call()
 	}
@@ -53,7 +54,7 @@ class MorpheusPluginExtension {
 			i18nDir: i18nDir,
 			i18nTarget: i18nTarget,
 			i18nManifest: i18nManifest,
-			descriptor: descriptor
+			requiredPlugins: requiredPlugins
 		]
 	}
 

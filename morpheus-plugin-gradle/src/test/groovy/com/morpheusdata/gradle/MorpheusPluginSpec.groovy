@@ -18,7 +18,7 @@ class MorpheusPluginSpec extends Specification {
 		projectDir?.deleteDir()
 	}
 
-	void "descriptor DSL generates canonical YAML and legacy manifest attributes"() {
+	void "requiredPlugins DSL generates canonical YAML from existing manifest attributes"() {
 		given:
 		new File(projectDir, 'settings.gradle').text = "rootProject.name = 'descriptor-test'\n"
 		new File(projectDir, 'build.gradle').text = """
@@ -29,16 +29,23 @@ plugins {
 
 version = '1.3.0'
 
+jar {
+	manifest {
+		attributes(
+			'Plugin-Class': 'com.example.ClusterLifecyclePlugin',
+			'Plugin-Version': version,
+			'Morpheus-Code': 'morpheus-cluster-lifecycle'
+		)
+	}
+}
+
 morpheusPlugin {
-	descriptor {
-		pluginClass = 'com.example.ClusterLifecyclePlugin'
-		code = 'morpheus-cluster-lifecycle'
-		version = project.version
-		dependency('morpheus-networking') {
+	requiredPlugins {
+		plugin('morpheus-networking') {
 			minVersionInclusive = '2.4.0'
 			maxVersionExclusive = '3.0.0'
 		}
-		dependency('morpheus-storage') {
+		plugin('morpheus-storage') {
 			minVersionInclusive = '5.1.0'
 		}
 	}
@@ -94,5 +101,43 @@ dependencies:
 		then:
 		def error = thrown(org.gradle.api.GradleException)
 		error.message == "Plugin 'my-plugin' cannot depend on itself"
+	}
+
+	void "requiredPlugins DSL requires plugin identity in the JAR manifest"() {
+		given:
+		new File(projectDir, 'settings.gradle').text = "rootProject.name = 'descriptor-test'\n"
+		new File(projectDir, 'build.gradle').text = """
+plugins {
+	id 'java'
+	id 'com.morpheusdata.morpheus-plugin-gradle'
+}
+
+version = '1.3.0'
+
+jar {
+	manifest {
+		attributes(
+			'Plugin-Class': 'com.example.ClusterLifecyclePlugin',
+			'Plugin-Version': version
+		)
+	}
+}
+
+morpheusPlugin {
+	requiredPlugins {
+		plugin('morpheus-networking')
+	}
+}
+"""
+
+		when:
+		def result = GradleRunner.create()
+			.withProjectDir(projectDir)
+			.withPluginClasspath()
+			.withArguments('jar', '--stacktrace')
+			.buildAndFail()
+
+		then:
+		result.output.contains("JAR manifest attribute 'Morpheus-Code' must be specified when morpheusPlugin.requiredPlugins is configured")
 	}
 }
