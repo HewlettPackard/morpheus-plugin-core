@@ -81,6 +81,24 @@ public interface ProvisionProvider extends PluginProvider {
 	}
 
 	/**
+	 * Provides a Collection of OptionType inputs added to the instance and server resize form, which is called
+	 * 'Reconfigure' in the UI. The option types are synced to the ProvisionType's reconfigure option types when the
+	 * plugin registers (added, updated and removed like {@link #getOptionTypes()}).
+	 * <p>
+	 * Submitted values arrive in the resize opts under each option's fieldContext, for example
+	 * <code>opts.config.&lt;fieldName&gt;</code> for a fieldContext of 'config'. The form displays current values from the
+	 * server's config map, so the provider should persist applied values there. To have a change to only these values
+	 * reach resizeWorkload or resizeServer, override
+	 * {@link WorkloadProvisionProvider.ResizeV2Facet#hasConfigChanges} and
+	 * {@link HostProvisionProvider.ResizeV2Facet#hasConfigChanges}.
+	 * @since 1.5.1
+	 * @return Collection of OptionTypes
+	 */
+	default Collection<OptionType> getReconfigureOptionTypes() {
+		return new ArrayList<OptionType>();
+	}
+
+	/**
 	 * Provides a Collection of StorageVolumeTypes that are available for root StorageVolumes
 	 * @return Collection of StorageVolumeTypes
 	 */
