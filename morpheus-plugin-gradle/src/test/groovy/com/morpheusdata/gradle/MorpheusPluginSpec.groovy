@@ -18,7 +18,7 @@ class MorpheusPluginSpec extends Specification {
 		projectDir?.deleteDir()
 	}
 
-	void "requiredPlugins DSL generates canonical YAML from existing manifest attributes"() {
+	void "requiredPlugins DSL generates plugin descriptor YAML from existing manifest attributes"() {
 		given:
 		new File(projectDir, 'settings.gradle').text = "rootProject.name = 'descriptor-test'\n"
 		new File(projectDir, 'build.gradle').text = """
