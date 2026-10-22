@@ -52,9 +52,9 @@ final class PluginDescriptorReader {
 		}
 
 		try (JarFile jar = new JarFile(jarFile)) {
-			JarEntry canonicalEntry = jar.getJarEntry(PluginDescriptor.DESCRIPTOR_PATH);
-			if (canonicalEntry != null) {
-				Map<String, Object> descriptor = readYaml(jar, canonicalEntry, PluginDescriptor.DESCRIPTOR_PATH);
+			JarEntry descriptorEntry = jar.getJarEntry(PluginDescriptor.DESCRIPTOR_PATH);
+			if (descriptorEntry != null) {
+				Map<String, Object> descriptor = readYaml(jar, descriptorEntry, PluginDescriptor.DESCRIPTOR_PATH);
 				return buildDescriptor(descriptor, PluginDescriptor.DESCRIPTOR_PATH, true);
 			}
 
