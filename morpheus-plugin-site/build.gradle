@@ -38,6 +38,10 @@ dependencies {
     implementation("io.micronaut.serde:micronaut-serde-jackson")
     compileOnly("io.micronaut.serde:micronaut-serde-processor")
     constraints {
+        // rhino 1.7R4 comes transitively via asset-pipeline-micronaut -> less4j
+        implementation("org.mozilla:rhino:1.7.14.1")
+    }
+    constraints {
         // junit 4.11 comes transitively via asset-pipeline-micronaut -> less4j
         implementation("junit:junit:4.13.1")
     }
