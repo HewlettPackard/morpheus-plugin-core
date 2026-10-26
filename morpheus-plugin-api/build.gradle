@@ -55,6 +55,11 @@ dependencies {
 	testImplementation 'cglib:cglib-nodep:3.3.0'
 	testImplementation 'org.objenesis:objenesis:3.1'
 	testImplementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.30'
+	constraints {
+		testImplementation('org.testng:testng:7.5.1') {
+			because('testng 7.4.0 comes transitively via groovy-all and has known CVEs')
+		}
+	}
 }
 
 sourceSets {
