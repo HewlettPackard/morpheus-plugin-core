@@ -55,6 +55,7 @@ public abstract class Plugin implements PluginInterface {
 	protected Map<String, PluginProvider> pluginProviders = new LinkedHashMap<>();
 
 	private PluginManager pluginManager;
+	private PluginDescriptor descriptor;
 
 	/**
 	 * Reference to the main Morpheus Context.
@@ -279,6 +280,14 @@ public abstract class Plugin implements PluginInterface {
 	@Override
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
+	}
+
+	public PluginDescriptor getDescriptor() {
+		return descriptor;
+	}
+
+	void setDescriptor(PluginDescriptor descriptor) {
+		this.descriptor = descriptor;
 	}
 
 	/**
