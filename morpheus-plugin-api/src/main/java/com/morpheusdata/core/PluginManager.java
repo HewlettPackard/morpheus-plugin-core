@@ -109,6 +109,7 @@ public class PluginManager {
 		plugin.setName(pluginClass.toString());
 		plugin.setFileName(jarFile.getAbsolutePath());
 		plugin.setVersion(descriptor.getVersion());
+		plugin.setDescriptor(descriptor);
 		plugin.setClassLoader(pluginClassLoader);
 		plugin.initialize();
 		if(plugin.getControllers().size() > 0 && !plugin.hasCustomRender()) {
@@ -135,13 +136,33 @@ public class PluginManager {
 	 * @return Plugin the instanced Plugin class loaded from the jar
 	 */
 	public Plugin registerPlugin(String pathToJar) throws Exception {
-		File jarFile = new File(pathToJar);
-		URL jarUrl = new URL("file", null, jarFile.getAbsolutePath());
+		return registerPlugin(pathToJar, Collections.emptyList());
+	}
 
-		URLClassLoader pluginLoader = URLClassLoader.newInstance(new URL[]{jarUrl}, pluginManagerClassLoader);
+	/**
+	 * Given a path to a plugin JAR, validate its required plugins against this manager and
+	 * any additional available descriptors before registering its plugin class.
+	 *
+	 * @param pathToJar Path to jar file
+	 * @param additionalAvailablePlugins plugins loaded by another cooperating manager
+	 * @return Plugin the instanced Plugin class loaded from the jar
+	 */
+	public Plugin registerPlugin(String pathToJar, Collection<PluginDescriptor> additionalAvailablePlugins) throws Exception {
+		File jarFile = new File(pathToJar);
 		PluginDescriptor descriptor = inspectPlugin(jarFile);
 		String pluginClassName = descriptor.getPluginClass();
+		List<PluginDescriptor> availablePlugins = new ArrayList<>(getPluginDescriptors());
+		if (additionalAvailablePlugins != null) {
+			availablePlugins.addAll(additionalAvailablePlugins);
+		}
+		PluginLoadPlan loadPlan = PluginLoadResolver.resolve(Collections.singletonList(descriptor), availablePlugins);
+		String resolutionFailure = loadPlan.getFailure(descriptor);
+		if (resolutionFailure != null) {
+			throw new PluginResolutionException(resolutionFailure);
+		}
 
+		URL jarUrl = new URL("file", null, jarFile.getAbsolutePath());
+		URLClassLoader pluginLoader = URLClassLoader.newInstance(new URL[]{jarUrl}, pluginManagerClassLoader);
 		try {
 			Class<Plugin> pluginClass = (Class<Plugin>) pluginLoader.loadClass(pluginClassName);
 
@@ -190,6 +211,15 @@ public class PluginManager {
 	 */
 	public ArrayList<Plugin> getPlugins() {
 		return this.plugins;
+	}
+
+	public List<PluginDescriptor> getPluginDescriptors() {
+		synchronized (this.pluginMutex) {
+			return this.plugins.stream()
+				.map(Plugin::getDescriptor)
+				.filter(Objects::nonNull)
+				.collect(java.util.stream.Collectors.toList());
+		}
 	}
 
 	public Map<Class, List<Route>> getRoutes() {

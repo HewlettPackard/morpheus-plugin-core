@@ -3,6 +3,7 @@ package com.morpheusdata
 import com.morpheusdata.core.MorpheusContext
 import com.morpheusdata.core.PluginDescriptorException
 import com.morpheusdata.core.PluginManager
+import com.morpheusdata.core.PluginResolutionException
 import spock.lang.Specification
 
 import java.util.jar.JarOutputStream
@@ -31,6 +32,7 @@ class PluginManagerSpec extends Specification {
         and: "the classloaders are not the same"
         manager.mainLoader != thePlugin.class.classLoader
         manager.pluginManagerClassLoader != thePlugin.class.classLoader
+        thePlugin.descriptor.code == 'infoblox-plugin'
 
         and: "class loader hierarchy is correct"
         thePlugin.class.classLoader.parent == manager.pluginManagerClassLoader
@@ -169,6 +171,30 @@ requiredPlugins:
         then:
         def error = thrown(PluginDescriptorException)
         error.message == "Plugin 'my-plugin' cannot require itself"
+
+        cleanup:
+        jarFile.delete()
+    }
+
+    void "registerPlugin refuses to load a plugin with a missing required plugin"() {
+        given:
+        def context = Mock(MorpheusContext)
+        def manager = new PluginManager(context)
+        File jarFile = writeDescriptorJar("""schemaVersion: 1
+pluginClass: com.example.DoesNotExistPlugin
+code: my-plugin
+version: 1.0.0
+requiredPlugins:
+  - code: missing-plugin
+""")
+
+        when:
+        manager.registerPlugin(jarFile.absolutePath)
+
+        then:
+        def error = thrown(PluginResolutionException)
+        error.message == "Plugin 'my-plugin' requires plugin 'missing-plugin', but it is not available"
+        manager.plugins.empty
 
         cleanup:
         jarFile.delete()

@@ -66,6 +66,8 @@ morpheusPlugin {
 
 When `requiredPlugins` is configured, the Gradle plugin requires `Plugin-Class`, `Plugin-Version`, and `Morpheus-Code` in the JAR manifest and combines them with the required plugins to generate `META-INF/morpheus-plugin.yml`. Required-plugin version bounds are optional and use dotted numeric versions. The supported range is `minVersion <= installedVersion < maxVersion`. Existing `plugin.yml`, `META-INF/morpheus.properties`, and `META-INF/MANIFEST.MF` descriptors remain supported.
 
+At load time, Morpheus orders plugins so every required plugin is initialized before the plugins that require it. Plugins with missing or incompatible required plugins are not initialized, independent plugins can still load, and required-plugin cycles are reported as load errors.
+
 ### Library Dependencies
 
 Libraries your plugin requires, such as cloud SDKs, are scoped to the plugin classpath. The `PluginManager` creates a new classpath for each plugin loaded so classes in one plugin do not interfere with Morpheus or other loaded plugins.
