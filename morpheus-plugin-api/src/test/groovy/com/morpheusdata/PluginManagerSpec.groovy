@@ -44,7 +44,7 @@ class PluginManagerSpec extends Specification {
         manager.plugins.size() == 0
     }
 
-    void "inspectPlugin reads legacy manifest plugins with no dependencies"() {
+    void "inspectPlugin reads legacy manifest plugins with no required plugins"() {
         given:
         File jarFile = new File(this.class.classLoader.getResource("morpheus-plugin-infoblox-1.3.5-all.jar").toURI())
 
@@ -56,16 +56,16 @@ class PluginManagerSpec extends Specification {
         descriptor.pluginClass == 'com.morpheusdata.infoblox.InfobloxPlugin'
         descriptor.code == 'infoblox-plugin'
         descriptor.version == '1.3.5'
-        descriptor.dependencies.empty
+        descriptor.requiredPlugins.empty
     }
 
-    void "inspectPlugin reads dependency ranges without loading the plugin class"() {
+    void "inspectPlugin reads required plugin ranges without loading the plugin class"() {
         given:
         File jarFile = writeDescriptorJar("""schemaVersion: 1
 pluginClass: com.example.DoesNotExistPlugin
 code: morpheus-cluster-lifecycle
 version: 1.3.0
-dependencies:
+requiredPlugins:
   - code: morpheus-networking
     version:
       min: 2.4.0
@@ -80,23 +80,43 @@ dependencies:
 
         then:
         descriptor.pluginClass == 'com.example.DoesNotExistPlugin'
-        descriptor.dependencies*.code == ['morpheus-networking', 'morpheus-storage']
-        descriptor.dependencies[0].minVersion == '2.4.0'
-        descriptor.dependencies[0].maxVersion == '3.0.0'
-        descriptor.dependencies[1].minVersion == '5.1.0'
-        descriptor.dependencies[1].maxVersion == null
+        descriptor.requiredPlugins*.code == ['morpheus-networking', 'morpheus-storage']
+        descriptor.requiredPlugins[0].minVersion == '2.4.0'
+        descriptor.requiredPlugins[0].maxVersion == '3.0.0'
+        descriptor.requiredPlugins[1].minVersion == '5.1.0'
+        descriptor.requiredPlugins[1].maxVersion == null
 
         cleanup:
         jarFile.delete()
     }
 
-    void "inspectPlugin rejects obsolete dependency version bound names"() {
+    void "inspectPlugin rejects obsolete dependencies key"() {
         given:
         File jarFile = writeDescriptorJar("""schemaVersion: 1
 pluginClass: com.example.MyPlugin
 code: my-plugin
 version: 1.0.0
-dependencies:
+dependencies: []
+""")
+
+        when:
+        PluginManager.inspectPlugin(jarFile)
+
+        then:
+        def error = thrown(PluginDescriptorException)
+        error.message.contains("must use 'requiredPlugins' instead of 'dependencies'")
+
+        cleanup:
+        jarFile.delete()
+    }
+
+    void "inspectPlugin rejects obsolete required plugin version bound names"() {
+        given:
+        File jarFile = writeDescriptorJar("""schemaVersion: 1
+pluginClass: com.example.MyPlugin
+code: my-plugin
+version: 1.0.0
+requiredPlugins:
   - code: required-plugin
     version:
       minInclusive: 2.4.0
@@ -119,7 +139,7 @@ dependencies:
 pluginClass: com.example.MyPlugin
 code: my-plugin
 version: 1.0.0
-dependencies: []
+requiredPlugins: []
 """)
 
         when:
@@ -133,13 +153,13 @@ dependencies: []
         jarFile.delete()
     }
 
-    void "inspectPlugin rejects self dependencies"() {
+    void "inspectPlugin rejects a plugin requiring itself"() {
         given:
         File jarFile = writeDescriptorJar("""schemaVersion: 1
 pluginClass: com.example.MyPlugin
 code: my-plugin
 version: 1.0.0
-dependencies:
+requiredPlugins:
   - code: my-plugin
 """)
 
@@ -148,7 +168,7 @@ dependencies:
 
         then:
         def error = thrown(PluginDescriptorException)
-        error.message == "Plugin 'my-plugin' cannot depend on itself"
+        error.message == "Plugin 'my-plugin' cannot require itself"
 
         cleanup:
         jarFile.delete()

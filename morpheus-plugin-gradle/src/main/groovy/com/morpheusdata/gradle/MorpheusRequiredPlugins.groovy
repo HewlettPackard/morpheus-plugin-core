@@ -18,16 +18,16 @@ package com.morpheusdata.gradle
 
 class MorpheusRequiredPlugins {
 
-	final List<MorpheusPluginDependency> plugins = []
+	final List<MorpheusRequiredPlugin> plugins = []
 	boolean configured = false
 
 	void plugin(String code, Closure configuration = null) {
 		configured = true
-		def dependency = new MorpheusPluginDependency(code: code)
+		def requiredPlugin = new MorpheusRequiredPlugin(code: code)
 		if(configuration) {
-			configure(dependency, configuration)
+			configure(requiredPlugin, configuration)
 		}
-		plugins << dependency
+		plugins << requiredPlugin
 	}
 
 	private static void configure(Object target, Closure configuration) {

@@ -16,7 +16,7 @@
 
 package com.morpheusdata.gradle
 
-class MorpheusPluginDependency {
+class MorpheusRequiredPlugin {
 
 	String code
 	String minVersion

@@ -21,13 +21,13 @@ import java.util.Objects;
 /**
  * A required plugin and its supported version range.
  */
-public final class PluginDependency {
+public final class RequiredPlugin {
 
 	private final String code;
 	private final String minVersion;
 	private final String maxVersion;
 
-	public PluginDependency(String code, String minVersion, String maxVersion) {
+	public RequiredPlugin(String code, String minVersion, String maxVersion) {
 		this.code = code;
 		this.minVersion = minVersion;
 		this.maxVersion = maxVersion;
@@ -56,10 +56,10 @@ public final class PluginDependency {
 		if (this == o) {
 			return true;
 		}
-		if (!(o instanceof PluginDependency)) {
+		if (!(o instanceof RequiredPlugin)) {
 			return false;
 		}
-		PluginDependency that = (PluginDependency) o;
+		RequiredPlugin that = (RequiredPlugin) o;
 		return Objects.equals(code, that.code) &&
 			Objects.equals(minVersion, that.minVersion) &&
 			Objects.equals(maxVersion, that.maxVersion);
@@ -72,7 +72,7 @@ public final class PluginDependency {
 
 	@Override
 	public String toString() {
-		return "PluginDependency{" +
+		return "RequiredPlugin{" +
 			"code='" + code + '\'' +
 			", minVersion='" + minVersion + '\'' +
 			", maxVersion='" + maxVersion + '\'' +
