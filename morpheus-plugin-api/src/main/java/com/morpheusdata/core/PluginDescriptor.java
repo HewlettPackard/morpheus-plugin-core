@@ -32,14 +32,14 @@ public final class PluginDescriptor {
 	private final String pluginClass;
 	private final String code;
 	private final String version;
-	private final List<PluginDependency> dependencies;
+	private final List<RequiredPlugin> requiredPlugins;
 
-	public PluginDescriptor(int schemaVersion, String pluginClass, String code, String version, List<PluginDependency> dependencies) {
+	public PluginDescriptor(int schemaVersion, String pluginClass, String code, String version, List<RequiredPlugin> requiredPlugins) {
 		this.schemaVersion = schemaVersion;
 		this.pluginClass = pluginClass;
 		this.code = code;
 		this.version = version;
-		this.dependencies = Collections.unmodifiableList(new ArrayList<>(dependencies == null ? Collections.emptyList() : dependencies));
+		this.requiredPlugins = Collections.unmodifiableList(new ArrayList<>(requiredPlugins == null ? Collections.emptyList() : requiredPlugins));
 	}
 
 	public int getSchemaVersion() {
@@ -58,7 +58,7 @@ public final class PluginDescriptor {
 		return version;
 	}
 
-	public List<PluginDependency> getDependencies() {
-		return dependencies;
+	public List<RequiredPlugin> getRequiredPlugins() {
+		return requiredPlugins;
 	}
 }

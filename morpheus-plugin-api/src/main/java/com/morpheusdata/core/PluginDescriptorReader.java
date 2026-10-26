@@ -174,8 +174,11 @@ final class PluginDescriptorReader {
 		String pluginClass = requiredString(values.get("pluginClass"), "pluginClass", source);
 		String code = strict ? requiredString(values.get("code"), "code", source) : optionalString(values.get("code"));
 		String version = strict ? requiredString(values.get("version"), "version", source) : optionalString(values.get("version"));
-		List<PluginDependency> dependencies = parseDependencies(values.get("dependencies"), code, source);
-		return new PluginDescriptor(schemaVersion, pluginClass, code, version, dependencies);
+		if (strict && values.containsKey("dependencies")) {
+			throw new PluginDescriptorException(source + " must use 'requiredPlugins' instead of 'dependencies'");
+		}
+		List<RequiredPlugin> requiredPlugins = parseRequiredPlugins(values.get("requiredPlugins"), code, source);
+		return new PluginDescriptor(schemaVersion, pluginClass, code, version, requiredPlugins);
 	}
 
 	private static int parseSchemaVersion(Object value, String source, boolean strict) throws PluginDescriptorException {
@@ -197,40 +200,40 @@ final class PluginDescriptorReader {
 		}
 	}
 
-	private static List<PluginDependency> parseDependencies(Object value, String pluginCode, String source) throws PluginDescriptorException {
-		List<PluginDependency> dependencies = new ArrayList<>();
+	private static List<RequiredPlugin> parseRequiredPlugins(Object value, String pluginCode, String source) throws PluginDescriptorException {
+		List<RequiredPlugin> requiredPlugins = new ArrayList<>();
 		if (value == null) {
-			return dependencies;
+			return requiredPlugins;
 		}
 		if (!(value instanceof Iterable)) {
-			throw new PluginDescriptorException(source + " 'dependencies' must be a list");
+			throw new PluginDescriptorException(source + " 'requiredPlugins' must be a list");
 		}
 
-		Set<String> dependencyCodes = new HashSet<>();
+		Set<String> requiredPluginCodes = new HashSet<>();
 		int index = 0;
 		for (Object item : (Iterable<?>) value) {
 			if (!(item instanceof Map)) {
-				throw new PluginDescriptorException(source + " dependency at index " + index + " must be an object");
+				throw new PluginDescriptorException(source + " required plugin at index " + index + " must be an object");
 			}
-			Map<?, ?> dependencyValues = (Map<?, ?>) item;
-			String code = requiredString(dependencyValues.get("code"), "dependencies[" + index + "].code", source);
-			if (!dependencyCodes.add(code)) {
-				throw new PluginDescriptorException(source + " declares duplicate dependency '" + code + "'");
+			Map<?, ?> requiredPluginValues = (Map<?, ?>) item;
+			String code = requiredString(requiredPluginValues.get("code"), "requiredPlugins[" + index + "].code", source);
+			if (!requiredPluginCodes.add(code)) {
+				throw new PluginDescriptorException(source + " declares duplicate required plugin '" + code + "'");
 			}
 			if (!isBlank(pluginCode) && pluginCode.equals(code)) {
-				throw new PluginDescriptorException("Plugin '" + pluginCode + "' cannot depend on itself");
+				throw new PluginDescriptorException("Plugin '" + pluginCode + "' cannot require itself");
 			}
 
 			String minVersion = null;
 			String maxVersion = null;
-			Object versionValue = dependencyValues.get("version");
+			Object versionValue = requiredPluginValues.get("version");
 			if (versionValue != null) {
 				if (!(versionValue instanceof Map)) {
-					throw new PluginDescriptorException(source + " dependency '" + code + "' version must be an object");
+					throw new PluginDescriptorException(source + " required plugin '" + code + "' version must be an object");
 				}
 				Map<?, ?> versionValues = (Map<?, ?>) versionValue;
 				if (versionValues.containsKey("minInclusive") || versionValues.containsKey("maxExclusive")) {
-					throw new PluginDescriptorException(source + " dependency '" + code +
+					throw new PluginDescriptorException(source + " required plugin '" + code +
 						"' must use version bounds 'min' and 'max'");
 				}
 				minVersion = optionalString(versionValues.get("min"));
@@ -239,19 +242,19 @@ final class PluginDescriptorReader {
 				validateVersionBound(maxVersion, "max", code, source);
 				if (minVersion != null && maxVersion != null &&
 					compareVersionBounds(minVersion, maxVersion) >= 0) {
-					throw new PluginDescriptorException(source + " dependency '" + code +
+					throw new PluginDescriptorException(source + " required plugin '" + code +
 						"' must have min lower than max");
 				}
 			}
-			dependencies.add(new PluginDependency(code, minVersion, maxVersion));
+			requiredPlugins.add(new RequiredPlugin(code, minVersion, maxVersion));
 			index++;
 		}
-		return dependencies;
+		return requiredPlugins;
 	}
 
 	private static void validateVersionBound(String version, String field, String code, String source) throws PluginDescriptorException {
 		if (version != null && !VERSION_BOUND_PATTERN.matcher(version).matches()) {
-			throw new PluginDescriptorException(source + " dependency '" + code + "' " + field +
+			throw new PluginDescriptorException(source + " required plugin '" + code + "' " + field +
 				" must be a dotted numeric version");
 		}
 	}

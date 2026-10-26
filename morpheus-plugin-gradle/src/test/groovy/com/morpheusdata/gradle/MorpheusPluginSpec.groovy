@@ -66,7 +66,7 @@ morpheusPlugin {
 pluginClass: 'com.example.ClusterLifecyclePlugin'
 code: 'morpheus-cluster-lifecycle'
 version: '1.3.0'
-dependencies:
+requiredPlugins:
   - code: 'morpheus-networking'
     version:
       min: '2.4.0'
@@ -84,7 +84,7 @@ dependencies:
 		jarFile?.close()
 	}
 
-	void "descriptor generation rejects a self dependency"() {
+	void "descriptor generation rejects a plugin requiring itself"() {
 		given:
 		def project = ProjectBuilder.builder().withProjectDir(projectDir).build()
 		def task = project.tasks.create('generateDescriptor', GenerateMorpheusPluginDescriptor)
@@ -92,7 +92,7 @@ dependencies:
 		task.pluginClass = 'com.example.MyPlugin'
 		task.code = 'my-plugin'
 		task.version = '1.0.0'
-		task.dependencies = [new MorpheusPluginDependency(code: 'my-plugin')]
+		task.requiredPlugins = [new MorpheusRequiredPlugin(code: 'my-plugin')]
 		task.outputFile = new File(projectDir, 'morpheus-plugin.yml')
 
 		when:
@@ -100,7 +100,7 @@ dependencies:
 
 		then:
 		def error = thrown(org.gradle.api.GradleException)
-		error.message == "Plugin 'my-plugin' cannot depend on itself"
+		error.message == "Plugin 'my-plugin' cannot require itself"
 	}
 
 	void "requiredPlugins DSL requires plugin identity in the JAR manifest"() {

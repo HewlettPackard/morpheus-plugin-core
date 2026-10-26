@@ -42,14 +42,14 @@ class GenerateMorpheusPluginDescriptor extends DefaultTask {
 	String version
 
 	@Internal
-	List<MorpheusPluginDependency> dependencies = []
+	List<MorpheusRequiredPlugin> requiredPlugins = []
 
 	@OutputFile
 	File outputFile
 
 	@Input
-	List<String> getDependencySpecifications() {
-		dependencies.collect {
+	List<String> getRequiredPluginSpecifications() {
+		requiredPlugins.collect {
 			"${it.code ?: ''}|${it.minVersion ?: ''}|${it.maxVersion ?: ''}".toString()
 		}
 	}
@@ -76,28 +76,28 @@ class GenerateMorpheusPluginDescriptor extends DefaultTask {
 		}
 
 		Set<String> codes = []
-		dependencies.each { dependency ->
-			if(!dependency.code?.trim()) {
-				throw new GradleException("Plugin dependency code must be specified")
+		requiredPlugins.each { requiredPlugin ->
+			if(!requiredPlugin.code?.trim()) {
+				throw new GradleException("Required plugin code must be specified")
 			}
-			if(!codes.add(dependency.code)) {
-				throw new GradleException("Plugin descriptor declares duplicate dependency '${dependency.code}'")
+			if(!codes.add(requiredPlugin.code)) {
+				throw new GradleException("Plugin descriptor declares duplicate required plugin '${requiredPlugin.code}'")
 			}
-			if(dependency.code == code) {
-				throw new GradleException("Plugin '${code}' cannot depend on itself")
+			if(requiredPlugin.code == code) {
+				throw new GradleException("Plugin '${code}' cannot require itself")
 			}
-			GenerateMorpheusPluginDescriptor.validateVersionBound(dependency.code, 'minVersion', dependency.minVersion)
-			GenerateMorpheusPluginDescriptor.validateVersionBound(dependency.code, 'maxVersion', dependency.maxVersion)
-			if(dependency.minVersion && dependency.maxVersion &&
-				GenerateMorpheusPluginDescriptor.compareVersions(dependency.minVersion, dependency.maxVersion) >= 0) {
-				throw new GradleException("Plugin dependency '${dependency.code}' must have minVersion lower than maxVersion")
+			GenerateMorpheusPluginDescriptor.validateVersionBound(requiredPlugin.code, 'minVersion', requiredPlugin.minVersion)
+			GenerateMorpheusPluginDescriptor.validateVersionBound(requiredPlugin.code, 'maxVersion', requiredPlugin.maxVersion)
+			if(requiredPlugin.minVersion && requiredPlugin.maxVersion &&
+				GenerateMorpheusPluginDescriptor.compareVersions(requiredPlugin.minVersion, requiredPlugin.maxVersion) >= 0) {
+				throw new GradleException("Required plugin '${requiredPlugin.code}' must have minVersion lower than maxVersion")
 			}
 		}
 	}
 
-	private static void validateVersionBound(String dependencyCode, String field, String value) {
+	private static void validateVersionBound(String requiredPluginCode, String field, String value) {
 		if(value && !VERSION_BOUND_PATTERN.matcher(value).matches()) {
-			throw new GradleException("Plugin dependency '${dependencyCode}' ${field} must be a dotted numeric version")
+			throw new GradleException("Required plugin '${requiredPluginCode}' ${field} must be a dotted numeric version")
 		}
 	}
 
@@ -123,22 +123,22 @@ class GenerateMorpheusPluginDescriptor extends DefaultTask {
 			"code: ${quote(code)}",
 			"version: ${quote(version)}"
 		]
-		if(dependencies) {
-			lines << 'dependencies:'
-			dependencies.each { dependency ->
-				lines << "  - code: ${GenerateMorpheusPluginDescriptor.quote(dependency.code)}"
-				if(dependency.minVersion || dependency.maxVersion) {
+		if(requiredPlugins) {
+			lines << 'requiredPlugins:'
+			requiredPlugins.each { requiredPlugin ->
+				lines << "  - code: ${GenerateMorpheusPluginDescriptor.quote(requiredPlugin.code)}"
+				if(requiredPlugin.minVersion || requiredPlugin.maxVersion) {
 					lines << '    version:'
-					if(dependency.minVersion) {
-						lines << "      min: ${GenerateMorpheusPluginDescriptor.quote(dependency.minVersion)}"
+					if(requiredPlugin.minVersion) {
+						lines << "      min: ${GenerateMorpheusPluginDescriptor.quote(requiredPlugin.minVersion)}"
 					}
-					if(dependency.maxVersion) {
-						lines << "      max: ${GenerateMorpheusPluginDescriptor.quote(dependency.maxVersion)}"
+					if(requiredPlugin.maxVersion) {
+						lines << "      max: ${GenerateMorpheusPluginDescriptor.quote(requiredPlugin.maxVersion)}"
 					}
 				}
 			}
 		} else {
-			lines << 'dependencies: []'
+			lines << 'requiredPlugins: []'
 		}
 		return lines.join('\n') + '\n'
 	}

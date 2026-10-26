@@ -47,7 +47,7 @@ jar {
 }
 ```
 
-Plugin prerequisites are runtime relationships between installed Morpheus plugins, not Java library dependencies. Declare them separately through the Morpheus Gradle plugin:
+Required plugins are runtime relationships between installed Morpheus plugins, not Java library dependencies. Declare them separately through the Morpheus Gradle plugin:
 
 ```groovy
 morpheusPlugin {
@@ -64,7 +64,7 @@ morpheusPlugin {
 }
 ```
 
-When `requiredPlugins` is configured, the Gradle plugin requires `Plugin-Class`, `Plugin-Version`, and `Morpheus-Code` in the JAR manifest and combines them with these prerequisites to generate `META-INF/morpheus-plugin.yml`. Dependency version bounds are optional and use dotted numeric versions. The supported range is `minVersion <= installedVersion < maxVersion`. Existing `plugin.yml`, `META-INF/morpheus.properties`, and `META-INF/MANIFEST.MF` descriptors remain supported.
+When `requiredPlugins` is configured, the Gradle plugin requires `Plugin-Class`, `Plugin-Version`, and `Morpheus-Code` in the JAR manifest and combines them with the required plugins to generate `META-INF/morpheus-plugin.yml`. Required-plugin version bounds are optional and use dotted numeric versions. The supported range is `minVersion <= installedVersion < maxVersion`. Existing `plugin.yml`, `META-INF/morpheus.properties`, and `META-INF/MANIFEST.MF` descriptors remain supported.
 
 ### Library Dependencies
 

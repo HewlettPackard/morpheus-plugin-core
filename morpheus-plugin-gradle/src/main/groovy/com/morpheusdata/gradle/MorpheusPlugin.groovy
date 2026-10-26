@@ -91,7 +91,7 @@ class MorpheusPlugin implements Plugin<Project> {
 					pluginClass = manifestPluginClass
 					code = manifestPluginCode
 					version = manifestPluginVersion
-					dependencies = morpheusPluginConfig.requiredPlugins.plugins
+					requiredPlugins = morpheusPluginConfig.requiredPlugins.plugins
 					outputFile = project.layout.buildDirectory.file('generated/morpheus-plugin/META-INF/morpheus-plugin.yml').get().asFile
 				}
 				processResources.dependsOn(generatePluginDescriptorTask)
