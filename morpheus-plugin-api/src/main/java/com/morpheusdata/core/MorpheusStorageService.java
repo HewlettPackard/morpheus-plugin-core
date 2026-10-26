@@ -95,6 +95,15 @@ public interface MorpheusStorageService {
 	MorpheusStorageVolumeGroupSnapshotService getVolumeGroupSnapshot();
 
 	/**
+	 * Returns the StorageSnapshotPolicy Service for managing the schedule and retention
+	 * policy attached to a volume group.
+	 *
+	 * @return An instance of the StorageSnapshotPolicy Service
+	 * @since 1.6.0
+	 */
+	MorpheusStorageSnapshotPolicyService getSnapshotPolicy();
+
+	/**
 	 * Returns the StorageReplicationGroup Service
 	 *
 	 * @return An instance of the StorageReplicationGroup Service

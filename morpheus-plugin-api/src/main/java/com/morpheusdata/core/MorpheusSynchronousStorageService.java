@@ -51,6 +51,14 @@ public interface MorpheusSynchronousStorageService {
 	MorpheusSynchronousStorageVolumeGroupSnapshotService getVolumeGroupSnapshot();
 
 	/**
+	 * Returns the StorageSnapshotPolicy Service
+	 *
+	 * @return An instance of the StorageSnapshotPolicy Service
+	 * @since 1.6.0
+	 */
+	MorpheusSynchronousStorageSnapshotPolicyService getSnapshotPolicy();
+
+	/**
 	 * Returns the StorageServerNode Service
 	 *
 	 * @return An instance of the StorageServerNode Service
