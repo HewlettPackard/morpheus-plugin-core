@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -50,21 +51,28 @@ public final class PluginLoadResolver {
 			candidates.stream().filter(java.util.Objects::nonNull).collect(Collectors.toList());
 		Map<PluginDescriptor, String> failures = new LinkedHashMap<>();
 		Map<String, List<PluginDescriptor>> candidatesByCode = new LinkedHashMap<>();
+		Set<PluginDescriptor> duplicateCandidates = Collections.newSetFromMap(new IdentityHashMap<>());
 
 		for (PluginDescriptor candidate : candidateList) {
-			candidatesByCode.computeIfAbsent(candidate.getCode(), ignored -> new ArrayList<>()).add(candidate);
+			if (candidate.getCode() != null) {
+				candidatesByCode.computeIfAbsent(candidate.getCode(), ignored -> new ArrayList<>()).add(candidate);
+			}
 		}
 
-		Map<String, PluginDescriptor> uniqueCandidates = new LinkedHashMap<>();
+		Map<String, PluginDescriptor> uniqueCandidatesByCode = new LinkedHashMap<>();
 		for (Map.Entry<String, List<PluginDescriptor>> entry : candidatesByCode.entrySet()) {
 			if (entry.getValue().size() > 1) {
 				for (PluginDescriptor duplicate : entry.getValue()) {
+					duplicateCandidates.add(duplicate);
 					failures.put(duplicate, "Multiple plugin files declare code '" + entry.getKey() + "'");
 				}
 			} else {
-				uniqueCandidates.put(entry.getKey(), entry.getValue().get(0));
+				uniqueCandidatesByCode.put(entry.getKey(), entry.getValue().get(0));
 			}
 		}
+		List<PluginDescriptor> uniqueCandidates = candidateList.stream()
+			.filter(candidate -> !duplicateCandidates.contains(candidate))
+			.collect(Collectors.toList());
 
 		Map<String, PluginDescriptor> availableByCode = new LinkedHashMap<>();
 		if (availablePlugins != null) {
@@ -75,9 +83,9 @@ public final class PluginLoadResolver {
 			}
 		}
 
-		for (PluginDescriptor candidate : uniqueCandidates.values()) {
+		for (PluginDescriptor candidate : uniqueCandidates) {
 			for (RequiredPlugin requiredPlugin : candidate.getRequiredPlugins()) {
-				PluginDescriptor requiredDescriptor = uniqueCandidates.get(requiredPlugin.getCode());
+				PluginDescriptor requiredDescriptor = uniqueCandidatesByCode.get(requiredPlugin.getCode());
 				if (requiredDescriptor == null) {
 					requiredDescriptor = availableByCode.get(requiredPlugin.getCode());
 				}
@@ -94,11 +102,11 @@ public final class PluginLoadResolver {
 			}
 		}
 
-		propagateFailures(uniqueCandidates, failures);
-		detectCycles(uniqueCandidates, failures);
-		propagateFailures(uniqueCandidates, failures);
+		propagateFailures(uniqueCandidates, uniqueCandidatesByCode, failures);
+		detectCycles(uniqueCandidates, uniqueCandidatesByCode, failures);
+		propagateFailures(uniqueCandidates, uniqueCandidatesByCode, failures);
 
-		List<PluginDescriptor> loadOrder = topologicalSort(uniqueCandidates, failures);
+		List<PluginDescriptor> loadOrder = topologicalSort(uniqueCandidates, uniqueCandidatesByCode, failures);
 		return new PluginLoadPlan(loadOrder, failures);
 	}
 
@@ -134,16 +142,20 @@ public final class PluginLoadResolver {
 			"' version " + String.join(" and ", bounds) + ", but version " + availableVersion + " is available";
 	}
 
-	private static void propagateFailures(Map<String, PluginDescriptor> candidates, Map<PluginDescriptor, String> failures) {
+	private static void propagateFailures(
+		List<PluginDescriptor> candidates,
+		Map<String, PluginDescriptor> candidatesByCode,
+		Map<PluginDescriptor, String> failures
+	) {
 		boolean changed;
 		do {
 			changed = false;
-			for (PluginDescriptor candidate : candidates.values()) {
+			for (PluginDescriptor candidate : candidates) {
 				if (failures.containsKey(candidate)) {
 					continue;
 				}
 				for (RequiredPlugin requiredPlugin : candidate.getRequiredPlugins()) {
-					PluginDescriptor requiredDescriptor = candidates.get(requiredPlugin.getCode());
+					PluginDescriptor requiredDescriptor = candidatesByCode.get(requiredPlugin.getCode());
 					if (requiredDescriptor != null && failures.containsKey(requiredDescriptor)) {
 						failures.put(candidate, "Plugin '" + candidate.getCode() + "' requires plugin '" +
 							requiredPlugin.getCode() + "', which could not be loaded: " + failures.get(requiredDescriptor));
@@ -155,19 +167,23 @@ public final class PluginLoadResolver {
 		} while (changed);
 	}
 
-	private static void detectCycles(Map<String, PluginDescriptor> candidates, Map<PluginDescriptor, String> failures) {
+	private static void detectCycles(
+		List<PluginDescriptor> candidates,
+		Map<String, PluginDescriptor> candidatesByCode,
+		Map<PluginDescriptor, String> failures
+	) {
 		Map<PluginDescriptor, Integer> states = new HashMap<>();
 		List<PluginDescriptor> stack = new ArrayList<>();
-		for (PluginDescriptor candidate : candidates.values()) {
+		for (PluginDescriptor candidate : candidates) {
 			if (!failures.containsKey(candidate) && states.getOrDefault(candidate, 0) == 0) {
-				detectCycles(candidate, candidates, failures, states, stack);
+				detectCycles(candidate, candidatesByCode, failures, states, stack);
 			}
 		}
 	}
 
 	private static void detectCycles(
 		PluginDescriptor candidate,
-		Map<String, PluginDescriptor> candidates,
+		Map<String, PluginDescriptor> candidatesByCode,
 		Map<PluginDescriptor, String> failures,
 		Map<PluginDescriptor, Integer> states,
 		List<PluginDescriptor> stack
@@ -175,13 +191,13 @@ public final class PluginLoadResolver {
 		states.put(candidate, 1);
 		stack.add(candidate);
 		for (RequiredPlugin requiredPlugin : candidate.getRequiredPlugins()) {
-			PluginDescriptor requiredDescriptor = candidates.get(requiredPlugin.getCode());
+			PluginDescriptor requiredDescriptor = candidatesByCode.get(requiredPlugin.getCode());
 			if (requiredDescriptor == null || failures.containsKey(requiredDescriptor)) {
 				continue;
 			}
 			int state = states.getOrDefault(requiredDescriptor, 0);
 			if (state == 0) {
-				detectCycles(requiredDescriptor, candidates, failures, states, stack);
+				detectCycles(requiredDescriptor, candidatesByCode, failures, states, stack);
 			} else if (state == 1) {
 				int cycleStart = stack.indexOf(requiredDescriptor);
 				List<PluginDescriptor> cycle = new ArrayList<>(stack.subList(cycleStart, stack.size()));
@@ -198,12 +214,13 @@ public final class PluginLoadResolver {
 	}
 
 	private static List<PluginDescriptor> topologicalSort(
-		Map<String, PluginDescriptor> candidates,
+		List<PluginDescriptor> candidates,
+		Map<String, PluginDescriptor> candidatesByCode,
 		Map<PluginDescriptor, String> failures
 	) {
 		Map<PluginDescriptor, Integer> requiredCounts = new LinkedHashMap<>();
 		Map<PluginDescriptor, Set<PluginDescriptor>> dependents = new LinkedHashMap<>();
-		for (PluginDescriptor candidate : candidates.values()) {
+		for (PluginDescriptor candidate : candidates) {
 			if (!failures.containsKey(candidate)) {
 				requiredCounts.put(candidate, 0);
 				dependents.put(candidate, new LinkedHashSet<>());
@@ -211,7 +228,7 @@ public final class PluginLoadResolver {
 		}
 		for (PluginDescriptor candidate : requiredCounts.keySet()) {
 			for (RequiredPlugin requiredPlugin : candidate.getRequiredPlugins()) {
-				PluginDescriptor requiredDescriptor = candidates.get(requiredPlugin.getCode());
+				PluginDescriptor requiredDescriptor = candidatesByCode.get(requiredPlugin.getCode());
 				if (requiredDescriptor != null && requiredCounts.containsKey(requiredDescriptor)) {
 					requiredCounts.put(candidate, requiredCounts.get(candidate) + 1);
 					dependents.get(requiredDescriptor).add(candidate);

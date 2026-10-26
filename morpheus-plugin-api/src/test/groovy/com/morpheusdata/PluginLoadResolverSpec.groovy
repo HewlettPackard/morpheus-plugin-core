@@ -81,8 +81,40 @@ class PluginLoadResolverSpec extends Specification {
 		plan.failures.isEmpty()
 	}
 
+	void "loads multiple legacy plugins without declared codes"() {
+		given:
+		def tabPlugin = descriptor(null, '1.2.2', [], 'com.morpheusdata.tab.TabPlugin')
+		def taskPlugin = descriptor(null, '1.2.2', [], 'com.morpheusdata.task.ReverseTextTaskPlugin')
+
+		when:
+		def plan = PluginLoadResolver.resolve([tabPlugin, taskPlugin])
+
+		then:
+		plan.loadOrder == [tabPlugin, taskPlugin]
+		plan.failures.isEmpty()
+	}
+
+	void "reports duplicate declared codes without blocking independent plugins"() {
+		given:
+		def firstDuplicate = descriptor('duplicate', '1.0.0')
+		def secondDuplicate = descriptor('duplicate', '2.0.0')
+		def independent = descriptor('independent', '1.0.0')
+
+		when:
+		def plan = PluginLoadResolver.resolve([firstDuplicate, independent, secondDuplicate])
+
+		then:
+		plan.loadOrder == [independent]
+		plan.getFailure(firstDuplicate) == "Multiple plugin files declare code 'duplicate'"
+		plan.getFailure(secondDuplicate) == "Multiple plugin files declare code 'duplicate'"
+	}
+
 	private static PluginDescriptor descriptor(String code, String version, List<RequiredPlugin> requiredPlugins = []) {
-		new PluginDescriptor(1, "com.example.${code.replace('-', '')}.Plugin", code, version, requiredPlugins)
+		descriptor(code, version, requiredPlugins, "com.example.${code.replace('-', '')}.Plugin")
+	}
+
+	private static PluginDescriptor descriptor(String code, String version, List<RequiredPlugin> requiredPlugins, String pluginClass) {
+		new PluginDescriptor(1, pluginClass, code, version, requiredPlugins)
 	}
 
 	private static RequiredPlugin requiredPlugin(String code, String minVersion = null, String maxVersion = null) {
