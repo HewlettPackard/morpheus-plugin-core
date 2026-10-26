@@ -38,6 +38,10 @@ dependencies {
     implementation("io.micronaut.serde:micronaut-serde-jackson")
     compileOnly("io.micronaut.serde:micronaut-serde-processor")
     constraints {
+        // junit 4.11 comes transitively via asset-pipeline-micronaut -> less4j
+        implementation("junit:junit:4.13.1")
+    }
+    constraints {
         // commons-beanutils 1.8.3 comes transitively via asset-pipeline-micronaut -> less4j
         implementation("commons-beanutils:commons-beanutils:1.11.0")
     }
