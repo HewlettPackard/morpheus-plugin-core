@@ -40,9 +40,9 @@ dependencies {
 //	implementation "org.codehaus.groovy:groovy-console:$groovyVersion"
 	compileOnly('com.morpheusdata:cypher-core:0.10.0')
 	implementation 'commons-net:commons-net:3.9.0'
-	implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.1'
-	implementation 'com.fasterxml.jackson.core:jackson-annotations:2.15.1'
-	implementation 'com.fasterxml.jackson.core:jackson-core:2.15.1'
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.11'
+	implementation 'com.fasterxml.jackson.core:jackson-annotations:2.18.11'
+	implementation 'com.fasterxml.jackson.core:jackson-core:2.18.11'
 
 	//implementation group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.4'
 	implementation 'commons-net:commons-net:3.9.0'

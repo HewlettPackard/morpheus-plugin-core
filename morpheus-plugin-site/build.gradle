@@ -38,6 +38,10 @@ dependencies {
     implementation("io.micronaut.serde:micronaut-serde-jackson")
     compileOnly("io.micronaut.serde:micronaut-serde-processor")
     constraints {
+        // jackson-core 2.21.2 comes from the Micronaut BOM and has known CVEs
+        implementation("com.fasterxml.jackson.core:jackson-core:2.21.7")
+    }
+    constraints {
         // MORPH-19074: gson 2.5 comes transitively via asset-pipeline-micronaut -> less4j
         implementation("com.google.code.gson:gson:2.8.9")
     }
