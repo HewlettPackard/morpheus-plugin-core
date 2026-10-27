@@ -34,7 +34,12 @@ public class BuildResizeChangelistRequest<T> {
 	 */
 	protected ComputeServer server;
 	/**
-	 * The desired configuration as a list of maps.
+	 * The desired configuration as a list of maps. For storage volumes, per-volume option values are
+	 * carried in {@code desired[n].config}; existing values are on each existing volume's
+	 * {@code configMap}. Custom volume changelist implementations must preserve this data in
+	 * {@code BuildResizeVolumeChangelistResponse.addList[n].config} and
+	 * {@code BuildResizeVolumeChangelistResponse.updateList[n].updateProps.config}, including nested,
+	 * false, and null values and config-only changes. The SDK does not compute or apply these changes.
 	 */
 	protected List<Map<String, Object>> desired;
 	/**

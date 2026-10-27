@@ -14,6 +14,48 @@ On a cloud implementation there are 2 scheduled jobs for refreshing. There is fi
 
 Finally one must also provide the option types inputs for configuring the add cloud wizard as well as the `ComputeServerType` objects available to this zone type. There should be multiple based often on platform and management state.
 
+==== Per-Volume Provisioning and Reconfigure Options
+
+`com.morpheusdata.core.providers.ProvisionProvider.getStorageVolumeOptionTypes()` supplies per-disk `OptionType` definitions shared across a provision provider's storage types. Its default implementation returns a fresh empty collection, so existing providers need not implement it. The deprecated `com.morpheusdata.core.ProvisionProvider` inherits the same method. These are per-volume fields for provisioning and reconfigure, not general instance `reconfigureOptionTypes`.
+
+`ProvisionType.storageVolumeOptionTypes` carries those shared definitions. Use `StorageVolumeType.provisionOptionTypes` for per-disk fields specific to a storage type. These SDK APIs are available starting in 1.5.1.
+
+`StorageVolumeType.optionTypes` remains the separate, existing contract for standalone StorageServer volume creation and editing. The provisioning and reconfigure disk manager does not consume it, even for fields with `fieldContext = 'config'`. There is no fallback from null or empty `provisionOptionTypes` to `optionTypes`. Set `provisionOptionTypes` explicitly for disk-manager fields; retain standalone fields in `optionTypes` when both forms need options.
+
+IMPORTANT: Both new definition sources require matching appliance support. The storage-type registration path must synchronize `StorageVolumeType.provisionOptionTypes` separately from `optionTypes`. The provider-wide getter additionally requires registration support to populate `ProvisionType.storageVolumeOptionTypes`; support for the storage-type collection alone does not imply support for that getter. Updating the SDK alone will not make these options appear. This contract does not assert support in any released appliance version.
+
+===== Definition Contract
+
+The matching appliance implementation combines `ProvisionType.storageVolumeOptionTypes` and `StorageVolumeType.provisionOptionTypes` with the following rules:
+
+* Eligible definitions have `enabled != false`, `ignoreField != true`, `fieldContext = 'config'`, `fieldSetContext` and `fieldGetContext` unset or `'config'`, and `fieldName != 'permissions'`.
+* Shared object identities or IDs are deduplicated. Distinct definitions with the same nonempty `code`, or equal or ancestor-overlapping paths among `fieldName`, `fieldSetName`, and `fieldGetName`, are rejected. Neither scope has override precedence.
+* Defaults apply to new disks. Fields with `editable = false` are excluded from existing-volume reconfigure edits.
+* Field aliases (`fieldSetName` / `fieldGetName`) address stored values, while submissions retain `fieldName`. Existing volume values are available through `StorageVolume.getConfigMap()` (or `UpdateModel.existingModel.configMap`).
+* Sensitive values are redacted in the UI and restored and validated by the appliance.
+
+These selection, conflict, defaulting, alias, and redaction rules belong to the companion appliance implementation. The SDK transports `OptionType` metadata and configuration values; it does not filter, merge, validate, or execute appliance behavior.
+
+===== Resize and Custom Changelist Payloads
+
+Per-volume values use the existing maps, with no additional payload wrapper:
+
+[cols="1,2",options="header"]
+|===
+|Request / response |Per-volume option values
+|`ResizeRequest` additions |`volumesAdd[n].config`
+|`ResizeRequest` updates |`volumesUpdate[n].updateProps.config`
+|`ResizeV2Request` additions |`volumesAdd[n].updateProps.config`
+|`ResizeV2Request` updates |`volumesUpdate[n].updateProps.config`
+|`BuildResizeChangelistRequest<StorageVolume>` |`desired[n].config`
+|`BuildResizeVolumeChangelistResponse` additions |`addList[n].config`
+|`BuildResizeVolumeChangelistResponse` updates |`updateList[n].updateProps.config`
+|===
+
+For example, a desired volume map can contain `config: [cache: [enabled: false], policy: null]`. Preserve nested data, explicit `false`, and explicit `null`; do not discard these values as if they were absent. Existing values remain on `existingModel.configMap`, separate from the proposed `updateProps.config`.
+
+A provider implementing `ProvisionProvider.BuildResizeVolumeChangelistFacet` must retain per-volume configuration in its add/update response entries, including changes that only modify config and do not resize capacity. V2 additions use the pre-created volume in `existingModel` and the desired values in `updateProps.config`. Merely constructing or serializing these SDK requests does not mutate the existing volume, persist its config, or change the disk. Applying changes belongs to the provider/appliance flow; appliance persistence follows successful provider resize.
+
 ==== Defining Credentials
 
 During the `refresh()` call (and others) the `CloudProvider` implementation will need to reach out to underlying cloud using credentials. There are two ways to define and store the required credentials.
