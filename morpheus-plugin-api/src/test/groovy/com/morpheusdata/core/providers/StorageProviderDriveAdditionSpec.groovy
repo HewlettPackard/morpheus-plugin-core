@@ -8,37 +8,17 @@ import com.morpheusdata.request.StorageOperationRequest
 import com.morpheusdata.response.ServiceResponse
 import spock.lang.Specification
 
+import java.lang.reflect.Modifier
+
 class StorageProviderDriveAdditionSpec extends Specification {
 
-	void "listUnclaimedDrives defaults to an unsuccessful 'not supported' response"() {
+	void "every facet method is abstract, so a provider implementing the facet implements all of it"() {
 		when:
-		def result = new DefaultDriveAdditionProvider().listUnclaimedDrives(new StorageServer(), new StorageServerNode(), [:])
+		def methods = StorageProviderDriveAddition.declaredMethods.findAll { !it.synthetic }
 
 		then:
-		!result.success
-		result.error == 'Drive addition not supported'
-	}
-
-	void "addDrives defaults to an unsuccessful 'not supported' response for #opType"() {
-		when:
-		def result = new DefaultDriveAdditionProvider().addDrives(new StorageServer(), new StorageServerNode(), ['d1'], new StorageOperationRequest(opType: opType))
-
-		then:
-		!result.success
-		result.error == 'Drive addition not supported'
-		result.data == null
-
-		where:
-		opType << StorageOperationRequest.OpType.values()
-	}
-
-	void "refreshDriveAddition defaults to an unsuccessful 'not supported' response"() {
-		when:
-		def result = new DefaultDriveAdditionProvider().refreshDriveAddition(new StorageServer(), new StorageOperation(code: 'op-1'))
-
-		then:
-		!result.success
-		result.error == 'Drive addition not supported'
+		methods*.name as Set == ['listUnclaimedDrives', 'addDrives', 'refreshDriveAddition'] as Set
+		methods.every { Modifier.isAbstract(it.modifiers) && !it.default }
 	}
 
 	void "a provider overriding the facet is dispatched to"() {
@@ -58,14 +38,17 @@ class StorageProviderDriveAdditionSpec extends Specification {
 		refreshed.data.opEntry*.name == ['claiming', 'rebalancing']
 	}
 
-	private static class DefaultDriveAdditionProvider implements StorageProviderDriveAddition {}
-
 	private static class ImplementedDriveAdditionProvider implements StorageProviderDriveAddition {
 		@Override
 		ServiceResponse<Collection<HostDrive>> listUnclaimedDrives(StorageServer storageServer, StorageServerNode node, Map opts) {
 			def drive = new HostDrive()
 			drive.uniqueId = 'wwn-1'
 			return ServiceResponse.success([drive] as Collection<HostDrive>)
+		}
+
+		@Override
+		ServiceResponse<StorageOperation> addDrives(StorageServer storageServer, StorageServerNode node, Collection<String> driveIds, StorageOperationRequest request) {
+			return ServiceResponse.success(new StorageOperation(code: 'add-1', state: StorageOperation.OpState.READY))
 		}
 
 		@Override

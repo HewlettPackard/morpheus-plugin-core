@@ -30,8 +30,9 @@ import java.util.Map;
  * Optional facet for a {@link StorageProvider} that can add drives to an existing
  * {@link StorageServerNode}, growing the node's capacity without adding a host.
  * <p>
- * Every method has a default that returns an unsuccessful {@link ServiceResponse}, so a provider
- * implements only what its array supports.
+ * A provider implements this facet only when its array supports the operation, and implements every
+ * method of it. Morpheus checks for the facet before dispatching and reports the operation as not supported
+ * where the provider does not implement it.
  * <p>
  * The steps reported in {@link StorageOperation#getOpEntry()} are {@code claiming} and
  * {@code rebalancing}. A dry run returns them with the capacity the node holds now and the capacity it
@@ -54,9 +55,7 @@ public interface StorageProviderDriveAddition {
 	 * @param opts additional options
 	 * @return the unclaimed drives with {@code candidate}, {@code eligible} and {@code candidacyReason} filled
 	 */
-	default ServiceResponse<Collection<HostDrive>> listUnclaimedDrives(StorageServer storageServer, StorageServerNode node, Map opts) {
-		return ServiceResponse.error("Drive addition not supported");
-	}
+	ServiceResponse<Collection<HostDrive>> listUnclaimedDrives(StorageServer storageServer, StorageServerNode node, Map opts);
 
 	/**
 	 * Claims the drives and starts the rebalance.
@@ -72,9 +71,7 @@ public interface StorageProviderDriveAddition {
 	 * @param request whether to judge or perform the change, and how it is tracked
 	 * @return the operation with its steps; a refusal is an unsuccessful response
 	 */
-	default ServiceResponse<StorageOperation> addDrives(StorageServer storageServer, StorageServerNode node, Collection<String> driveIds, StorageOperationRequest request) {
-		return ServiceResponse.error("Drive addition not supported");
-	}
+	ServiceResponse<StorageOperation> addDrives(StorageServer storageServer, StorageServerNode node, Collection<String> driveIds, StorageOperationRequest request);
 
 	/**
 	 * Reports how far the rebalance has run.
@@ -83,7 +80,5 @@ public interface StorageProviderDriveAddition {
 	 * @param operation the operation returned by {@link #addDrives}
 	 * @return the operation with its current state and steps
 	 */
-	default ServiceResponse<StorageOperation> refreshDriveAddition(StorageServer storageServer, StorageOperation operation) {
-		return ServiceResponse.error("Drive addition not supported");
-	}
+	ServiceResponse<StorageOperation> refreshDriveAddition(StorageServer storageServer, StorageOperation operation);
 }

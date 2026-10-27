@@ -31,8 +31,9 @@ import java.util.Map;
  * in a software-defined storage cluster. Changing a node's role is also how a host is added to the
  * storage cluster after it joins the compute cluster.
  * <p>
- * Every method has a default that returns an unsuccessful {@link ServiceResponse}, so a provider
- * implements only what its array supports.
+ * A provider implements this facet only when its array supports the operation, and implements every
+ * method of it. Morpheus checks for the facet before dispatching and reports the operation as not supported
+ * where the provider does not implement it.
  * <p>
  * The role change does not claim drives itself. The drives the role needs are claimed through
  * {@link StorageProviderDriveAddition} once the role is applied.
@@ -56,9 +57,7 @@ public interface StorageProviderNodeRole {
 	 * @param opts additional options
 	 * @return every role with its availability
 	 */
-	default ServiceResponse<Collection<NodeRoleOption>> getNodeRoleConstraints(StorageServer storageServer, StorageServerNode node, Map opts) {
-		return ServiceResponse.error("Node role constraints not supported");
-	}
+	ServiceResponse<Collection<NodeRoleOption>> getNodeRoleConstraints(StorageServer storageServer, StorageServerNode node, Map opts);
 
 	/**
 	 * Applies the role.
@@ -75,9 +74,7 @@ public interface StorageProviderNodeRole {
 	 * @param request whether to judge or perform the change, and how it is tracked
 	 * @return the operation with its steps; a refusal is an unsuccessful response
 	 */
-	default ServiceResponse<StorageOperation> applyNodeRole(StorageServer storageServer, StorageServerNode node, String role, Collection<String> driveIds, StorageOperationRequest request) {
-		return ServiceResponse.error("Node role change not supported");
-	}
+	ServiceResponse<StorageOperation> applyNodeRole(StorageServer storageServer, StorageServerNode node, String role, Collection<String> driveIds, StorageOperationRequest request);
 
 	/**
 	 * Reports how far the role change has run.
@@ -86,7 +83,5 @@ public interface StorageProviderNodeRole {
 	 * @param operation the operation returned by {@link #applyNodeRole}
 	 * @return the operation with its current state and steps
 	 */
-	default ServiceResponse<StorageOperation> refreshNodeRole(StorageServer storageServer, StorageOperation operation) {
-		return ServiceResponse.error("Node role change not supported");
-	}
+	ServiceResponse<StorageOperation> refreshNodeRole(StorageServer storageServer, StorageOperation operation);
 }
