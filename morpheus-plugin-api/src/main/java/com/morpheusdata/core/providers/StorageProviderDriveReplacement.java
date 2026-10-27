@@ -31,8 +31,9 @@ import java.util.Map;
  * Optional facet for a {@link StorageProvider} that can replace a failed or failing drive in a
  * {@link com.morpheusdata.model.StorageServerNode}.
  * <p>
- * Every method has a default that returns an unsuccessful {@link ServiceResponse}, so a provider
- * implements only what its array supports.
+ * A provider implements this facet only when its array supports the operation, and implements every
+ * method of it. Morpheus checks for the facet before dispatching and reports the operation as not supported
+ * where the provider does not implement it.
  * <p>
  * The steps reported in {@link StorageOperation#getOpEntry()} are {@code evacuating}, {@code unclaiming},
  * {@code awaiting-swap}, {@code identifying}, {@code claiming} and {@code rebuilding}. A dry run on
@@ -65,9 +66,7 @@ public interface StorageProviderDriveReplacement {
 	 * @param request whether to judge or perform the change, and how it is tracked
 	 * @return the operation with its steps; a refusal is an unsuccessful response
 	 */
-	default ServiceResponse<StorageOperation> evacuateDrive(StorageServer storageServer, StorageServerNodeDisk disk, StorageOperationRequest request) {
-		return ServiceResponse.error("Drive replacement not supported");
-	}
+	ServiceResponse<StorageOperation> evacuateDrive(StorageServer storageServer, StorageServerNodeDisk disk, StorageOperationRequest request);
 
 	/**
 	 * Releases the drive from the array so it can be pulled.
@@ -77,9 +76,7 @@ public interface StorageProviderDriveReplacement {
 	 * @param request whether to judge or perform the change, and how it is tracked
 	 * @return the operation with its steps; a refusal is an unsuccessful response
 	 */
-	default ServiceResponse<StorageOperation> unclaimDrive(StorageServer storageServer, StorageServerNodeDisk disk, StorageOperationRequest request) {
-		return ServiceResponse.error("Drive replacement not supported");
-	}
+	ServiceResponse<StorageOperation> unclaimDrive(StorageServer storageServer, StorageServerNodeDisk disk, StorageOperationRequest request);
 
 	/**
 	 * Picks the drive that was fitted out of what the host now reports, and gives the verdict on it.
@@ -92,9 +89,7 @@ public interface StorageProviderDriveReplacement {
 	 *         A drive carrying the removed {@code uniqueId} is the same drive reseated and is returned
 	 *         ineligible with that as the reason.
 	 */
-	default ServiceResponse<HostDrive> identifyReplacement(StorageServer storageServer, StorageServerNodeDisk removed, Collection<HostDrive> discovered, Map opts) {
-		return ServiceResponse.error("Drive replacement not supported");
-	}
+	ServiceResponse<HostDrive> identifyReplacement(StorageServer storageServer, StorageServerNodeDisk removed, Collection<HostDrive> discovered, Map opts);
 
 	/**
 	 * Claims the replacement and starts the rebuild.
@@ -105,9 +100,7 @@ public interface StorageProviderDriveReplacement {
 	 * @param request whether to judge or perform the change, and how it is tracked
 	 * @return the operation with its steps; a refusal is an unsuccessful response
 	 */
-	default ServiceResponse<StorageOperation> claimDrive(StorageServer storageServer, ComputeServer server, HostDrive drive, StorageOperationRequest request) {
-		return ServiceResponse.error("Drive replacement not supported");
-	}
+	ServiceResponse<StorageOperation> claimDrive(StorageServer storageServer, ComputeServer server, HostDrive drive, StorageOperationRequest request);
 
 	/**
 	 * Reports where the operation has reached, including rebuild progress after the claim. Polled by the
@@ -117,9 +110,7 @@ public interface StorageProviderDriveReplacement {
 	 * @param operation the operation returned by an earlier step
 	 * @return the operation with its current state and steps
 	 */
-	default ServiceResponse<StorageOperation> refreshDriveReplacement(StorageServer storageServer, StorageOperation operation) {
-		return ServiceResponse.error("Drive replacement not supported");
-	}
+	ServiceResponse<StorageOperation> refreshDriveReplacement(StorageServer storageServer, StorageOperation operation);
 
 	/**
 	 * Abandons the operation and returns the node to the state it was in, for an evacuated drive put back
@@ -129,7 +120,5 @@ public interface StorageProviderDriveReplacement {
 	 * @param operation the operation to abandon
 	 * @return the operation with its final state and steps
 	 */
-	default ServiceResponse<StorageOperation> cancelDriveReplacement(StorageServer storageServer, StorageOperation operation) {
-		return ServiceResponse.error("Drive replacement not supported");
-	}
+	ServiceResponse<StorageOperation> cancelDriveReplacement(StorageServer storageServer, StorageOperation operation);
 }
