@@ -31,8 +31,9 @@ import java.util.Map;
  * force now in {@link StorageOperationRequest#getPreviousConfig()} and the edited keys in
  * {@link StorageOperationRequest#getChangedKeys()}, so the plugin defines and decides which fields it accepts.
  * <p>
- * Every method has a default that returns an unsuccessful {@link ServiceResponse}, so a provider
- * implements only what its array supports.
+ * A provider implements this facet only when its array supports the operation, and implements every
+ * method of it. Morpheus checks for the facet before dispatching and reports the operation as not supported
+ * where the provider does not implement it.
  * <p>
  * The steps reported in {@link StorageOperation#getOpEntry()} are the nodes, one entry per node in the order
  * the change takes them, each carrying the reservation that host lands on. A node that needs a reboot says so
@@ -54,9 +55,7 @@ public interface StorageProviderConfiguration {
 	 * @param opts additional options
 	 * @return the fixed fields, each with the reason it cannot change
 	 */
-	default ServiceResponse<StorageConfigurationConstraints> getConfigurationConstraints(StorageServer storageServer, Map opts) {
-		return ServiceResponse.error("Configuration not supported");
-	}
+	ServiceResponse<StorageConfigurationConstraints> getConfigurationConstraints(StorageServer storageServer, Map opts);
 
 	/**
 	 * Applies the change, one node at a time.
@@ -76,9 +75,7 @@ public interface StorageProviderConfiguration {
 	 * @param request the proposed configuration, what is in force now, and whether to judge or perform the change
 	 * @return the operation with one step per node; a refusal is an unsuccessful response
 	 */
-	default ServiceResponse<StorageOperation> applyConfiguration(StorageServer storageServer, StorageOperationRequest request) {
-		return ServiceResponse.error("Configuration not supported");
-	}
+	ServiceResponse<StorageOperation> applyConfiguration(StorageServer storageServer, StorageOperationRequest request);
 
 	/**
 	 * Reports where the change has reached, and on which node. Polled by the process driving the sequence.
@@ -87,7 +84,5 @@ public interface StorageProviderConfiguration {
 	 * @param operation the operation returned by {@link #applyConfiguration}
 	 * @return the operation with its current state and steps
 	 */
-	default ServiceResponse<StorageOperation> refreshConfiguration(StorageServer storageServer, StorageOperation operation) {
-		return ServiceResponse.error("Configuration not supported");
-	}
+	ServiceResponse<StorageOperation> refreshConfiguration(StorageServer storageServer, StorageOperation operation);
 }
