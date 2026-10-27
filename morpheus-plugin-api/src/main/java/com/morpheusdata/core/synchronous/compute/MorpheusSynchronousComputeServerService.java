@@ -163,4 +163,17 @@ public interface MorpheusSynchronousComputeServerService extends MorpheusSynchro
 	 * @since 1.6.0
 	 */
 	ServiceResponse<List<HostDrive>> listHostDrives(ComputeServer server);
+
+	/**
+	 * Turns the identify LED on or off for one drive, on the host that holds it. The drive is named by
+	 * {@code uniqueId} rather than device name, so the light and the claim refer to the same thing.
+	 *
+	 * @param server the host that holds the drive
+	 * @param uniqueId the {@link HostDrive#getUniqueId() uniqueId} of the drive
+	 * @param enabled true to light the drive, false to clear it
+	 * @return success when the host accepted the request. A host whose hardware cannot drive an LED
+	 *         returns success false with the reason.
+	 * @since 1.6.0
+	 */
+	ServiceResponse<Void> locateHostDrive(ComputeServer server, String uniqueId, Boolean enabled);
 }
