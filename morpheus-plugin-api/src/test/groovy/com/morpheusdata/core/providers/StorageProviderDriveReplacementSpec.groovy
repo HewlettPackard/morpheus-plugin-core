@@ -8,76 +8,18 @@ import com.morpheusdata.model.StorageServerNodeDisk
 import com.morpheusdata.request.StorageOperationRequest
 import com.morpheusdata.response.ServiceResponse
 import spock.lang.Specification
-import spock.lang.Unroll
+
+import java.lang.reflect.Modifier
 
 class StorageProviderDriveReplacementSpec extends Specification {
 
-	@Unroll
-	void "evacuateDrive defaults to an unsuccessful 'not supported' response for #opType"() {
+	void "every facet method is abstract, so a provider implementing the facet implements all of it"() {
 		when:
-		def result = new DefaultDriveReplacementProvider().evacuateDrive(new StorageServer(), new StorageServerNodeDisk(), new StorageOperationRequest(opType: opType))
+		def methods = StorageProviderDriveReplacement.declaredMethods.findAll { !it.synthetic }
 
 		then:
-		!result.success
-		result.error == 'Drive replacement not supported'
-		result.data == null
-
-		where:
-		opType << StorageOperationRequest.OpType.values()
-	}
-
-	@Unroll
-	void "unclaimDrive defaults to an unsuccessful 'not supported' response for #opType"() {
-		when:
-		def result = new DefaultDriveReplacementProvider().unclaimDrive(new StorageServer(), new StorageServerNodeDisk(), new StorageOperationRequest(opType: opType))
-
-		then:
-		!result.success
-		result.error == 'Drive replacement not supported'
-		result.data == null
-
-		where:
-		opType << StorageOperationRequest.OpType.values()
-	}
-
-	void "identifyReplacement defaults to an unsuccessful 'not supported' response"() {
-		when:
-		def result = new DefaultDriveReplacementProvider().identifyReplacement(new StorageServer(), new StorageServerNodeDisk(), [new HostDrive()], [:])
-
-		then:
-		!result.success
-		result.error == 'Drive replacement not supported'
-		result.data == null
-	}
-
-	@Unroll
-	void "claimDrive defaults to an unsuccessful 'not supported' response for #opType"() {
-		when:
-		def result = new DefaultDriveReplacementProvider().claimDrive(new StorageServer(), new ComputeServer(), new HostDrive(), new StorageOperationRequest(opType: opType))
-
-		then:
-		!result.success
-		result.error == 'Drive replacement not supported'
-		result.data == null
-
-		where:
-		opType << StorageOperationRequest.OpType.values()
-	}
-
-	void "refreshDriveReplacement and cancelDriveReplacement default to an unsuccessful 'not supported' response"() {
-		given:
-		def provider = new DefaultDriveReplacementProvider()
-		def operation = new StorageOperation(code: 'op-1')
-
-		when:
-		def refreshed = provider.refreshDriveReplacement(new StorageServer(), operation)
-		def cancelled = provider.cancelDriveReplacement(new StorageServer(), operation)
-
-		then:
-		!refreshed.success
-		refreshed.error == 'Drive replacement not supported'
-		!cancelled.success
-		cancelled.error == 'Drive replacement not supported'
+		methods*.name as Set == ['evacuateDrive', 'unclaimDrive', 'identifyReplacement', 'claimDrive', 'refreshDriveReplacement', 'cancelDriveReplacement'] as Set
+		methods.every { Modifier.isAbstract(it.modifiers) && !it.default }
 	}
 
 	void "a provider overriding the facet is dispatched to"() {
@@ -104,8 +46,6 @@ class StorageProviderDriveReplacementSpec extends Specification {
 		refreshed.data.opEntry.find { it.name == 'awaiting-swap' }.state == null
 	}
 
-	private static class DefaultDriveReplacementProvider implements StorageProviderDriveReplacement {}
-
 	private static class ImplementedDriveReplacementProvider implements StorageProviderDriveReplacement {
 		@Override
 		ServiceResponse<StorageOperation> evacuateDrive(StorageServer storageServer, StorageServerNodeDisk disk, StorageOperationRequest request) {
@@ -113,6 +53,21 @@ class StorageProviderDriveReplacementSpec extends Specification {
 			operation.opEntry = ['evacuating', 'unclaiming', 'awaiting-swap', 'identifying', 'claiming', 'rebuilding'].collect {
 				new StorageOperation.OpEntry(name: it, state: StorageOperation.StepState.PASSED)
 			}
+			return ServiceResponse.success(operation)
+		}
+
+		@Override
+		ServiceResponse<StorageOperation> unclaimDrive(StorageServer storageServer, StorageServerNodeDisk disk, StorageOperationRequest request) {
+			return ServiceResponse.success(new StorageOperation(code: 'replace-1', state: StorageOperation.OpState.PENDING))
+		}
+
+		@Override
+		ServiceResponse<StorageOperation> claimDrive(StorageServer storageServer, ComputeServer server, HostDrive drive, StorageOperationRequest request) {
+			return ServiceResponse.success(new StorageOperation(code: 'replace-1', state: StorageOperation.OpState.IN_PROGRESS))
+		}
+
+		@Override
+		ServiceResponse<StorageOperation> cancelDriveReplacement(StorageServer storageServer, StorageOperation operation) {
 			return ServiceResponse.success(operation)
 		}
 
