@@ -6,41 +6,18 @@ import com.morpheusdata.model.StorageServer
 import com.morpheusdata.request.StorageOperationRequest
 import com.morpheusdata.response.ServiceResponse
 import spock.lang.Specification
-import spock.lang.Unroll
+
+import java.lang.reflect.Modifier
 
 class StorageProviderConfigurationSpec extends Specification {
 
-	void "getConfigurationConstraints defaults to an unsuccessful 'not supported' response"() {
+	void "every facet method is abstract, so a provider implementing the facet implements all of it"() {
 		when:
-		def result = new DefaultConfigurationProvider().getConfigurationConstraints(new StorageServer(), [:])
+		def methods = StorageProviderConfiguration.declaredMethods.findAll { !it.synthetic }
 
 		then:
-		!result.success
-		result.error == 'Configuration not supported'
-		result.data == null
-	}
-
-	@Unroll
-	void "applyConfiguration defaults to an unsuccessful 'not supported' response for #opType"() {
-		when:
-		def result = new DefaultConfigurationProvider().applyConfiguration(new StorageServer(), new StorageOperationRequest(opType: opType))
-
-		then:
-		!result.success
-		result.error == 'Configuration not supported'
-		result.data == null
-
-		where:
-		opType << StorageOperationRequest.OpType.values()
-	}
-
-	void "refreshConfiguration defaults to an unsuccessful 'not supported' response"() {
-		when:
-		def result = new DefaultConfigurationProvider().refreshConfiguration(new StorageServer(), new StorageOperation(code: 'op-1'))
-
-		then:
-		!result.success
-		result.error == 'Configuration not supported'
+		methods*.name as Set == ['getConfigurationConstraints', 'applyConfiguration', 'refreshConfiguration'] as Set
+		methods.every { Modifier.isAbstract(it.modifiers) && !it.default }
 	}
 
 	void "a provider overriding the facet is dispatched to"() {
@@ -66,8 +43,6 @@ class StorageProviderConfigurationSpec extends Specification {
 		refreshed.data.state == StorageOperation.OpState.IN_PROGRESS
 		refreshed.data.opEntry*.state == [StorageOperation.StepState.PASSED, null]
 	}
-
-	private static class DefaultConfigurationProvider implements StorageProviderConfiguration {}
 
 	private static class ImplementedConfigurationProvider implements StorageProviderConfiguration {
 		@Override
