@@ -16,6 +16,7 @@
 
 package com.morpheusdata.core;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
@@ -42,6 +43,8 @@ final class PluginDescriptorReader {
 	private static final String LEGACY_YAML_PATH = "plugin.yml";
 	private static final String LEGACY_PROPERTIES_PATH = "META-INF/morpheus.properties";
 	private static final Pattern VERSION_BOUND_PATTERN = Pattern.compile("\\d+(?:\\.\\d+)*");
+	private static final Set<String> REQUIRED_PLUGIN_FIELDS = Set.of("code", "minVersion", "maxVersion");
+	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
 	private PluginDescriptorReader() {
 	}
@@ -52,20 +55,15 @@ final class PluginDescriptorReader {
 		}
 
 		try (JarFile jar = new JarFile(jarFile)) {
-			JarEntry descriptorEntry = jar.getJarEntry(PluginDescriptor.DESCRIPTOR_PATH);
-			if (descriptorEntry != null) {
-				Map<String, Object> descriptor = readYaml(jar, descriptorEntry, PluginDescriptor.DESCRIPTOR_PATH);
-				return buildDescriptor(descriptor, PluginDescriptor.DESCRIPTOR_PATH, true);
-			}
-
 			Manifest manifest = jar.getManifest();
 			Map<String, Object> manifestValues = readManifest(manifest);
 			JarEntry yamlEntry = jar.getJarEntry(LEGACY_YAML_PATH);
 			if (yamlEntry != null) {
 				Map<String, Object> descriptor = readYaml(jar, yamlEntry, LEGACY_YAML_PATH);
 				requireLegacyPluginClass(descriptor, LEGACY_YAML_PATH, "field");
+				rejectRequiredPluginsOutsideManifest(descriptor, LEGACY_YAML_PATH);
 				fillMissingLegacyValues(descriptor, manifestValues);
-				return buildDescriptor(descriptor, LEGACY_YAML_PATH, false);
+				return buildDescriptor(descriptor, LEGACY_YAML_PATH);
 			}
 
 			JarEntry propertiesEntry = jar.getJarEntry(LEGACY_PROPERTIES_PATH);
@@ -73,18 +71,18 @@ final class PluginDescriptorReader {
 				Map<String, Object> descriptor = readProperties(jar, propertiesEntry);
 				requireLegacyPluginClass(descriptor, LEGACY_PROPERTIES_PATH, "property");
 				fillMissingLegacyValues(descriptor, manifestValues);
-				return buildDescriptor(descriptor, LEGACY_PROPERTIES_PATH, false);
+				return buildDescriptor(descriptor, LEGACY_PROPERTIES_PATH);
 			}
 
 			if (manifest != null) {
 				if (isBlank(stringValue(manifestValues.get("pluginClass")))) {
 					throw new PluginDescriptorException("META-INF/MANIFEST.MF is missing required Plugin-Class or pluginClass attribute");
 				}
-				return buildDescriptor(manifestValues, "META-INF/MANIFEST.MF", false);
+				return buildDescriptor(manifestValues, "META-INF/MANIFEST.MF");
 			}
 
-			throw new PluginDescriptorException("No plugin descriptor found (" + PluginDescriptor.DESCRIPTOR_PATH +
-				", plugin.yml, META-INF/morpheus.properties, or META-INF/MANIFEST.MF)");
+			throw new PluginDescriptorException(
+				"No plugin descriptor found (plugin.yml, META-INF/morpheus.properties, or META-INF/MANIFEST.MF)");
 		}
 	}
 
@@ -116,13 +114,15 @@ final class PluginDescriptorReader {
 			properties.load(input);
 		}
 		Map<String, Object> descriptor = new HashMap<>();
-		descriptor.put("pluginClass", properties.getProperty("pluginClass"));
+		if (properties.containsKey("pluginClass")) {
+			descriptor.put("pluginClass", properties.getProperty("pluginClass"));
+		}
 		descriptor.put("code", properties.getProperty("code"));
 		descriptor.put("version", firstNonBlank(properties.getProperty("pluginVersion"), properties.getProperty("version")));
 		return descriptor;
 	}
 
-	private static Map<String, Object> readManifest(Manifest manifest) {
+	private static Map<String, Object> readManifest(Manifest manifest) throws PluginDescriptorException {
 		Map<String, Object> descriptor = new HashMap<>();
 		if (manifest == null) {
 			return descriptor;
@@ -131,6 +131,15 @@ final class PluginDescriptorReader {
 		descriptor.put("pluginClass", getAttributeIgnoreCase(attributes, "Plugin-Class", "pluginClass"));
 		descriptor.put("code", getAttributeIgnoreCase(attributes, "Morpheus-Code"));
 		descriptor.put("version", getAttributeIgnoreCase(attributes, "Plugin-Version"));
+		String requiredPluginsJson = getAttributeIgnoreCase(attributes, PluginDescriptor.REQUIRED_PLUGINS_ATTRIBUTE);
+		if (!isBlank(requiredPluginsJson)) {
+			try {
+				descriptor.put("requiredPlugins", OBJECT_MAPPER.readValue(requiredPluginsJson, Object.class));
+			} catch (IOException e) {
+				throw new PluginDescriptorException("Unable to parse META-INF/MANIFEST.MF " +
+					PluginDescriptor.REQUIRED_PLUGINS_ATTRIBUTE + " JSON: " + e.getMessage(), e);
+			}
+		}
 		return descriptor;
 	}
 
@@ -158,6 +167,17 @@ final class PluginDescriptorReader {
 		if (isBlank(stringValue(descriptor.get("version")))) {
 			descriptor.put("version", manifestValues.get("version"));
 		}
+		if (manifestValues.containsKey("requiredPlugins")) {
+			descriptor.put("requiredPlugins", manifestValues.get("requiredPlugins"));
+		}
+	}
+
+	private static void rejectRequiredPluginsOutsideManifest(Map<String, Object> descriptor, String source)
+		throws PluginDescriptorException {
+		if (descriptor.containsKey("requiredPlugins")) {
+			throw new PluginDescriptorException(source + " must declare required plugins in META-INF/MANIFEST.MF attribute '" +
+				PluginDescriptor.REQUIRED_PLUGINS_ATTRIBUTE + "'");
+		}
 	}
 
 	private static void requireLegacyPluginClass(Map<String, Object> descriptor, String source, String fieldType) throws PluginDescriptorException {
@@ -169,35 +189,22 @@ final class PluginDescriptorReader {
 		}
 	}
 
-	private static PluginDescriptor buildDescriptor(Map<String, Object> values, String source, boolean strict) throws PluginDescriptorException {
-		int schemaVersion = parseSchemaVersion(values.get("schemaVersion"), source, strict);
+	private static PluginDescriptor buildDescriptor(Map<String, Object> values, String source) throws PluginDescriptorException {
 		String pluginClass = requiredString(values.get("pluginClass"), "pluginClass", source);
-		String code = strict ? requiredString(values.get("code"), "code", source) : optionalString(values.get("code"));
-		String version = strict ? requiredString(values.get("version"), "version", source) : optionalString(values.get("version"));
-		if (strict && values.containsKey("dependencies")) {
-			throw new PluginDescriptorException(source + " must use 'requiredPlugins' instead of 'dependencies'");
-		}
+		String code = optionalString(values.get("code"));
+		String version = optionalString(values.get("version"));
 		List<RequiredPlugin> requiredPlugins = parseRequiredPlugins(values.get("requiredPlugins"), code, source);
-		return new PluginDescriptor(schemaVersion, pluginClass, code, version, requiredPlugins);
-	}
-
-	private static int parseSchemaVersion(Object value, String source, boolean strict) throws PluginDescriptorException {
-		if (value == null) {
-			if (strict) {
-				throw new PluginDescriptorException(source + " is missing required 'schemaVersion' field");
+		if (values.containsKey("requiredPlugins")) {
+			if (code == null) {
+				throw new PluginDescriptorException("META-INF/MANIFEST.MF declares " +
+					PluginDescriptor.REQUIRED_PLUGINS_ATTRIBUTE + " but is missing required Morpheus-Code attribute");
 			}
-			return PluginDescriptor.CURRENT_SCHEMA_VERSION;
-		}
-		try {
-			int schemaVersion = Integer.parseInt(String.valueOf(value));
-			if (schemaVersion != PluginDescriptor.CURRENT_SCHEMA_VERSION) {
-				throw new PluginDescriptorException("Unsupported plugin descriptor schemaVersion " + schemaVersion +
-					" in " + source + "; supported version is " + PluginDescriptor.CURRENT_SCHEMA_VERSION);
+			if (version == null) {
+				throw new PluginDescriptorException("META-INF/MANIFEST.MF declares " +
+					PluginDescriptor.REQUIRED_PLUGINS_ATTRIBUTE + " but is missing required Plugin-Version attribute");
 			}
-			return schemaVersion;
-		} catch (NumberFormatException e) {
-			throw new PluginDescriptorException(source + " 'schemaVersion' must be an integer");
 		}
+		return new PluginDescriptor(PluginDescriptor.CURRENT_SCHEMA_VERSION, pluginClass, code, version, requiredPlugins);
 	}
 
 	private static List<RequiredPlugin> parseRequiredPlugins(Object value, String pluginCode, String source) throws PluginDescriptorException {
@@ -206,19 +213,23 @@ final class PluginDescriptorReader {
 			return requiredPlugins;
 		}
 		if (!(value instanceof Iterable)) {
-			throw new PluginDescriptorException(source + " 'requiredPlugins' must be a list");
+			throw new PluginDescriptorException("META-INF/MANIFEST.MF " + PluginDescriptor.REQUIRED_PLUGINS_ATTRIBUTE +
+				" must contain a JSON array");
 		}
 
 		Set<String> requiredPluginCodes = new HashSet<>();
 		int index = 0;
 		for (Object item : (Iterable<?>) value) {
 			if (!(item instanceof Map)) {
-				throw new PluginDescriptorException(source + " required plugin at index " + index + " must be an object");
+				throw new PluginDescriptorException("META-INF/MANIFEST.MF " +
+					PluginDescriptor.REQUIRED_PLUGINS_ATTRIBUTE + " entry at index " + index + " must be a JSON object");
 			}
 			Map<?, ?> requiredPluginValues = (Map<?, ?>) item;
-			String code = requiredString(requiredPluginValues.get("code"), "requiredPlugins[" + index + "].code", source);
+			String code = requiredString(requiredPluginValues.get("code"),
+				PluginDescriptor.REQUIRED_PLUGINS_ATTRIBUTE + "[" + index + "].code", "META-INF/MANIFEST.MF");
 			if (!requiredPluginCodes.add(code)) {
-				throw new PluginDescriptorException(source + " declares duplicate required plugin '" + code + "'");
+				throw new PluginDescriptorException("META-INF/MANIFEST.MF " +
+					PluginDescriptor.REQUIRED_PLUGINS_ATTRIBUTE + " declares duplicate required plugin '" + code + "'");
 			}
 			if (!isBlank(pluginCode) && pluginCode.equals(code)) {
 				throw new PluginDescriptorException("Plugin '" + pluginCode + "' cannot require itself");
@@ -226,25 +237,25 @@ final class PluginDescriptorReader {
 
 			String minVersion = null;
 			String maxVersion = null;
-			Object versionValue = requiredPluginValues.get("version");
-			if (versionValue != null) {
-				if (!(versionValue instanceof Map)) {
-					throw new PluginDescriptorException(source + " required plugin '" + code + "' version must be an object");
+			if (requiredPluginValues.containsKey("version") || requiredPluginValues.containsKey("min") ||
+				requiredPluginValues.containsKey("max")) {
+				throw new PluginDescriptorException("META-INF/MANIFEST.MF required plugin '" + code +
+					"' must use version fields 'minVersion' and 'maxVersion'");
+			}
+			for (Object field : requiredPluginValues.keySet()) {
+				if (!REQUIRED_PLUGIN_FIELDS.contains(String.valueOf(field))) {
+					throw new PluginDescriptorException("META-INF/MANIFEST.MF required plugin '" + code +
+						"' contains unsupported field '" + field + "'");
 				}
-				Map<?, ?> versionValues = (Map<?, ?>) versionValue;
-				if (versionValues.containsKey("minInclusive") || versionValues.containsKey("maxExclusive")) {
-					throw new PluginDescriptorException(source + " required plugin '" + code +
-						"' must use version bounds 'min' and 'max'");
-				}
-				minVersion = optionalString(versionValues.get("min"));
-				maxVersion = optionalString(versionValues.get("max"));
-				validateVersionBound(minVersion, "min", code, source);
-				validateVersionBound(maxVersion, "max", code, source);
-				if (minVersion != null && maxVersion != null &&
-					compareVersionBounds(minVersion, maxVersion) >= 0) {
-					throw new PluginDescriptorException(source + " required plugin '" + code +
-						"' must have min lower than max");
-				}
+			}
+			minVersion = optionalString(requiredPluginValues.get("minVersion"));
+			maxVersion = optionalString(requiredPluginValues.get("maxVersion"));
+			validateVersionBound(minVersion, "minVersion", code, "META-INF/MANIFEST.MF");
+			validateVersionBound(maxVersion, "maxVersion", code, "META-INF/MANIFEST.MF");
+			if (minVersion != null && maxVersion != null &&
+				compareVersionBounds(minVersion, maxVersion) >= 0) {
+				throw new PluginDescriptorException("META-INF/MANIFEST.MF required plugin '" + code +
+					"' must have minVersion lower than maxVersion");
 			}
 			requiredPlugins.add(new RequiredPlugin(code, minVersion, maxVersion));
 			index++;

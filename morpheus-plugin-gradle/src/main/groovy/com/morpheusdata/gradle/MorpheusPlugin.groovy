@@ -44,7 +44,6 @@ class MorpheusPlugin implements Plugin<Project> {
 		def scribePackageTask = project.tasks.getByName('scribePackage')
 		def scribeResourcesTask = project.tasks.getByName('scribeResources')
 		def morpheusI18nPackageTask = project.tasks.getByName('i18nPackage')
-		def generatePluginDescriptorTask = project.tasks.register('generateMorpheusPluginDescriptor', GenerateMorpheusPluginDescriptor)
 		//needed?
 		project.afterEvaluate {
 			//get loaded config
@@ -83,19 +82,10 @@ class MorpheusPlugin implements Plugin<Project> {
 						throw new GradleException("JAR manifest attribute '${attribute}' must be specified when morpheusPlugin.requiredPlugins is configured")
 					}
 				}
-				String manifestPluginClass = manifestAttributes['Plugin-Class']?.toString()
-				String manifestPluginVersion = manifestAttributes['Plugin-Version']?.toString()
 				String manifestPluginCode = manifestAttributes['Morpheus-Code']?.toString()
-				generatePluginDescriptorTask.configure {
-					schemaVersion = 1
-					pluginClass = manifestPluginClass
-					code = manifestPluginCode
-					version = manifestPluginVersion
-					requiredPlugins = morpheusPluginConfig.requiredPlugins.plugins
-					outputFile = project.layout.buildDirectory.file('generated/morpheus-plugin/META-INF/morpheus-plugin.yml').get().asFile
-				}
-				processResources.dependsOn(generatePluginDescriptorTask)
-				processResources.from(project.layout.buildDirectory.dir('generated/morpheus-plugin'))
+				jarTask.manifest.attributes(
+					'Morpheus-Required-Plugins': morpheusPluginConfig.requiredPlugins.toManifestJson(manifestPluginCode)
+				)
 			}
 
 			//add task dependencies

@@ -26,7 +26,7 @@ import java.util.List;
 public final class PluginDescriptor {
 
 	public static final int CURRENT_SCHEMA_VERSION = 1;
-	public static final String DESCRIPTOR_PATH = "META-INF/morpheus-plugin.yml";
+	public static final String REQUIRED_PLUGINS_ATTRIBUTE = "Morpheus-Required-Plugins";
 
 	private final int schemaVersion;
 	private final String pluginClass;

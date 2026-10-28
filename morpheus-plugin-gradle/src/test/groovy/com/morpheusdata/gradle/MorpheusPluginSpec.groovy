@@ -1,7 +1,7 @@
 package com.morpheusdata.gradle
 
+import groovy.json.JsonSlurper
 import org.gradle.testkit.runner.GradleRunner
-import org.gradle.testfixtures.ProjectBuilder
 import spock.lang.Specification
 
 import java.util.jar.JarFile
@@ -18,7 +18,7 @@ class MorpheusPluginSpec extends Specification {
 		projectDir?.deleteDir()
 	}
 
-	void "requiredPlugins DSL generates plugin descriptor YAML from existing manifest attributes"() {
+	void "requiredPlugins DSL writes JSON to the JAR manifest"() {
 		given:
 		new File(projectDir, 'settings.gradle').text = "rootProject.name = 'descriptor-test'\n"
 		new File(projectDir, 'build.gradle').text = """
@@ -58,24 +58,17 @@ morpheusPlugin {
 			.withPluginClasspath()
 			.withArguments('jar', '--stacktrace')
 			.build()
-		File descriptorFile = new File(projectDir, 'build/generated/morpheus-plugin/META-INF/morpheus-plugin.yml')
 		JarFile jarFile = new JarFile(new File(projectDir, 'build/libs/descriptor-test-1.3.0.jar'))
+		def requiredPlugins = new JsonSlurper().parseText(
+			jarFile.manifest.mainAttributes.getValue('Morpheus-Required-Plugins')
+		)
 
 		then:
-		descriptorFile.text == """schemaVersion: 1
-pluginClass: 'com.example.ClusterLifecyclePlugin'
-code: 'morpheus-cluster-lifecycle'
-version: '1.3.0'
-requiredPlugins:
-  - code: 'morpheus-networking'
-    version:
-      min: '2.4.0'
-      max: '3.0.0'
-  - code: 'morpheus-storage'
-    version:
-      min: '5.1.0'
-"""
-		jarFile.getEntry('META-INF/morpheus-plugin.yml') != null
+		requiredPlugins == [
+			[code: 'morpheus-networking', minVersion: '2.4.0', maxVersion: '3.0.0'],
+			[code: 'morpheus-storage', minVersion: '5.1.0']
+		]
+		jarFile.getEntry('META-INF/morpheus-plugin.yml') == null
 		jarFile.manifest.mainAttributes.getValue('Plugin-Class') == 'com.example.ClusterLifecyclePlugin'
 		jarFile.manifest.mainAttributes.getValue('Plugin-Version') == '1.3.0'
 		jarFile.manifest.mainAttributes.getValue('Morpheus-Code') == 'morpheus-cluster-lifecycle'
@@ -84,23 +77,33 @@ requiredPlugins:
 		jarFile?.close()
 	}
 
-	void "descriptor generation rejects a plugin requiring itself"() {
+	void "manifest generation rejects a plugin requiring itself"() {
 		given:
-		def project = ProjectBuilder.builder().withProjectDir(projectDir).build()
-		def task = project.tasks.create('generateDescriptor', GenerateMorpheusPluginDescriptor)
-		task.schemaVersion = 1
-		task.pluginClass = 'com.example.MyPlugin'
-		task.code = 'my-plugin'
-		task.version = '1.0.0'
-		task.requiredPlugins = [new MorpheusRequiredPlugin(code: 'my-plugin')]
-		task.outputFile = new File(projectDir, 'morpheus-plugin.yml')
+		def requiredPlugins = new MorpheusRequiredPlugins()
+		requiredPlugins.plugin('my-plugin')
 
 		when:
-		task.generate()
+		requiredPlugins.toManifestJson('my-plugin')
 
 		then:
 		def error = thrown(org.gradle.api.GradleException)
 		error.message == "Plugin 'my-plugin' cannot require itself"
+	}
+
+	void "manifest generation rejects an invalid required plugin version range"() {
+		given:
+		def requiredPlugins = new MorpheusRequiredPlugins()
+		requiredPlugins.plugin('required-plugin') {
+			minVersion = '2.0.0'
+			maxVersion = '1.0.0'
+		}
+
+		when:
+		requiredPlugins.toManifestJson('my-plugin')
+
+		then:
+		def error = thrown(org.gradle.api.GradleException)
+		error.message == "Required plugin 'required-plugin' must have minVersion lower than maxVersion"
 	}
 
 	void "requiredPlugins DSL requires plugin identity in the JAR manifest"() {
