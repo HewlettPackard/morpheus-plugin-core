@@ -80,22 +80,8 @@ public interface ProvisionProvider extends PluginProvider {
 		return new ArrayList<OptionType>();
 	}
 
-	/**
-	 * Provides per-disk configuration fields shared across this provider's storage volume types during
-	 * provisioning and reconfigure. These are not general instance reconfigure options.
-	 * Type-specific fields are supplied by {@link StorageVolumeType#getProvisionOptionTypes()}.
-	 * {@link StorageVolumeType#getOptionTypes()} is reserved for standalone storage volume forms.
-	 * <p>
-	 * Use {@code fieldContext = "config"}; set/get contexts must be unset or {@code "config"}.
-	 * Definitions must not conflict by code or field path with type-specific fields. Submitted values
-	 * travel in each volume's {@code config} map, not in the option definitions.
-	 * <p>
-	 * Companion appliance registration support is required to populate
-	 * {@link ProvisionType#getStorageVolumeOptionTypes()} and expose these fields. The SDK alone does
-	 * not register, filter, merge, validate, or execute volume configuration.
-	 * @return per-volume option definitions; by default a fresh empty collection
-	 * @since 1.5.1
-	 */
+	/** Shared per-disk provisioning/reconfigure fields; requires appliance registration support.
+	 * @since 1.5.1 */
 	default Collection<OptionType> getStorageVolumeOptionTypes() {
 		return new ArrayList<OptionType>();
 	}

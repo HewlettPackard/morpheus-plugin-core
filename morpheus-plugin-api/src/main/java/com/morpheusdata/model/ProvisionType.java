@@ -71,12 +71,6 @@ public class ProvisionType extends MorpheusModel implements IModelCodeName {
 	protected String backupType;
 	protected Boolean disableRootDatastore = false;
 
-	/**
-	 * Per-disk configuration fields shared across storage types, not general reconfigure options.
-	 * Complements {@link StorageVolumeType#getProvisionOptionTypes()}, not standalone
-	 * {@link StorageVolumeType#getOptionTypes()}. Requires companion appliance registration of
-	 * {@link com.morpheusdata.core.providers.ProvisionProvider#getStorageVolumeOptionTypes()}.
-	 */
 	protected Collection<OptionType> storageVolumeOptionTypes;
 
 	protected String viewSet;
@@ -300,10 +294,8 @@ public class ProvisionType extends MorpheusModel implements IModelCodeName {
 		return disableRootDatastore;
 	}
 
-	/**
-	 * @return shared per-volume option definitions, or null when not assigned
-	 * @since 1.5.1
-	 */
+	/** Shared per-disk provisioning/reconfigure fields, or null when unset.
+	 * @since 1.5.1 */
 	public Collection<OptionType> getStorageVolumeOptionTypes() {
 		return storageVolumeOptionTypes;
 	}
@@ -601,10 +593,6 @@ public class ProvisionType extends MorpheusModel implements IModelCodeName {
 		markDirty("disableRootDatastore", disableRootDatastore);
 	}
 
-	/**
-	 * @param storageVolumeOptionTypes shared per-volume option definitions; null is preserved
-	 * @since 1.5.1
-	 */
 	public void setStorageVolumeOptionTypes(Collection<OptionType> storageVolumeOptionTypes) {
 		this.storageVolumeOptionTypes = storageVolumeOptionTypes;
 		markDirty("storageVolumeOptionTypes", storageVolumeOptionTypes);

@@ -277,44 +277,22 @@ public class StorageVolumeType extends MorpheusModel {
 		this.maxIOPS = maxIOPS;
 	}
 
-	/**
-	 * Fields for standalone StorageServer volume creation and editing. These are not used by the
-	 * provisioning or reconfigure disk manager, even when their field context is {@code "config"}.
-	 * Use {@link #getProvisionOptionTypes()} for per-disk provisioning and reconfigure fields.
-	 * @return standalone volume option definitions, or null when not assigned
-	 */
+	/** Standalone volume fields; use {@link #getProvisionOptionTypes()} for provisioning/reconfigure. */
 	public Collection<OptionType> getOptionTypes() {
 		return optionTypes;
 	}
 
-	/**
-	 * @param optionTypes standalone volume option definitions; null is preserved
-	 */
 	public void setOptionTypes(Collection<OptionType> optionTypes) {
 		this.optionTypes = optionTypes;
 		markDirty("optionTypes", optionTypes);
 	}
 
-	/**
-	 * Per-disk configuration fields specific to this storage type during provisioning and reconfigure.
-	 * These complement {@link ProvisionType#getStorageVolumeOptionTypes()}, without override precedence.
-	 * This collection is independent of {@link #getOptionTypes()}; there is no fallback to standalone options.
-	 * Use {@code fieldContext = "config"} and unset or {@code "config"} set/get contexts; definitions
-	 * must not conflict by code or field path. The companion appliance selects eligible fields, applies
-	 * defaults to new disks, and excludes {@code editable = false} fields from existing-volume edits.
-	 * Values are carried in per-volume {@code config} maps; existing values are available from
-	 * {@link StorageVolume#getConfigMap()}. The SDK only transports definitions and values.
-	 * @return type-specific per-disk option definitions, or null when not assigned
-	 * @since 1.5.1
-	 */
+	/** Type-specific per-disk provisioning/reconfigure fields; no fallback to {@link #getOptionTypes()}.
+	 * @since 1.5.1 */
 	public Collection<OptionType> getProvisionOptionTypes() {
 		return provisionOptionTypes;
 	}
 
-	/**
-	 * @param provisionOptionTypes per-disk provisioning and reconfigure definitions; null is preserved
-	 * @since 1.5.1
-	 */
 	public void setProvisionOptionTypes(Collection<OptionType> provisionOptionTypes) {
 		this.provisionOptionTypes = provisionOptionTypes;
 		markDirty("provisionOptionTypes", provisionOptionTypes);

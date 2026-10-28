@@ -56,19 +56,11 @@ public class ResizeRequest {
 	 */
 	public List<StorageVolume> volumesDelete;
 
-	/**
-	 * StorageVolumes that should be added. Per-volume option values are carried in
-	 * {@code volumesAdd[n].config}, a map that may contain nested values, false, or null.
-	 * The SDK transports this map without filtering, merging, validation, or execution.
-	 */
+	/** Volumes to add, with per-volume options in {@code config}. */
 	public List<Map> volumesAdd;
 
-	/**
-	 * StorageVolumes that should be updated, including config-only changes. Desired per-volume option
-	 * values are carried in {@code volumesUpdate[n].updateProps.config}. Existing values are available
-	 * from {@code volumesUpdate[n].existingModel.configMap}. Providers must preserve config data when
-	 * handling the changelist; the SDK does not apply it to the existing model or the underlying disk.
-	 */
+	/** Volumes to update, including config-only changes in {@code updateProps.config}.
+	 * Existing values remain in {@code existingModel.configMap}. */
 	public List<UpdateModel<StorageVolume>> volumesUpdate;
 
 	/**
