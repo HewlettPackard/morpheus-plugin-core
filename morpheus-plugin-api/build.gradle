@@ -40,9 +40,9 @@ dependencies {
 //	implementation "org.codehaus.groovy:groovy-console:$groovyVersion"
 	compileOnly('com.morpheusdata:cypher-core:0.10.0')
 	implementation 'commons-net:commons-net:3.9.0'
-	implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.1'
-	implementation 'com.fasterxml.jackson.core:jackson-annotations:2.15.1'
-	implementation 'com.fasterxml.jackson.core:jackson-core:2.15.1'
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.11'
+	implementation 'com.fasterxml.jackson.core:jackson-annotations:2.18.11'
+	implementation 'com.fasterxml.jackson.core:jackson-core:2.18.11'
 
 	//implementation group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.4'
 	implementation 'commons-net:commons-net:3.9.0'
@@ -55,6 +55,11 @@ dependencies {
 	testImplementation 'cglib:cglib-nodep:3.3.0'
 	testImplementation 'org.objenesis:objenesis:3.1'
 	testImplementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.30'
+	constraints {
+		testImplementation('org.testng:testng:7.5.1') {
+			because('testng 7.4.0 comes transitively via groovy-all and has known CVEs')
+		}
+	}
 }
 
 sourceSets {
