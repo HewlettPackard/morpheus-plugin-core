@@ -4,9 +4,12 @@ import com.morpheusdata.core.MorpheusContext
 import com.morpheusdata.core.PluginDescriptorException
 import com.morpheusdata.core.PluginManager
 import com.morpheusdata.core.PluginResolutionException
+import groovy.json.JsonOutput
 import spock.lang.Specification
 
+import java.util.jar.Attributes
 import java.util.jar.JarOutputStream
+import java.util.jar.Manifest
 import java.util.zip.ZipEntry
 
 class PluginManagerSpec extends Specification {
@@ -63,19 +66,15 @@ class PluginManagerSpec extends Specification {
 
     void "inspectPlugin reads required plugin ranges without loading the plugin class"() {
         given:
-        File jarFile = writeDescriptorJar("""schemaVersion: 1
-pluginClass: com.example.DoesNotExistPlugin
-code: morpheus-cluster-lifecycle
-version: 1.3.0
-requiredPlugins:
-  - code: morpheus-networking
-    version:
-      min: 2.4.0
-      max: 3.0.0
-  - code: morpheus-storage
-    version:
-      min: 5.1.0
-""")
+        File jarFile = writeManifestDescriptorJar(
+            'com.example.DoesNotExistPlugin',
+            'morpheus-cluster-lifecycle',
+            '1.3.0',
+            JsonOutput.toJson([
+                [code: 'morpheus-networking', minVersion: '2.4.0', maxVersion: '3.0.0'],
+                [code: 'morpheus-storage', minVersion: '5.1.0']
+            ])
+        )
 
         when:
         def descriptor = PluginManager.inspectPlugin(jarFile)
@@ -92,13 +91,12 @@ requiredPlugins:
         jarFile.delete()
     }
 
-    void "inspectPlugin rejects obsolete dependencies key"() {
+    void "inspectPlugin does not read the removed separate descriptor"() {
         given:
         File jarFile = writeDescriptorJar("""schemaVersion: 1
 pluginClass: com.example.MyPlugin
 code: my-plugin
 version: 1.0.0
-dependencies: []
 """)
 
         when:
@@ -106,50 +104,97 @@ dependencies: []
 
         then:
         def error = thrown(PluginDescriptorException)
-        error.message.contains("must use 'requiredPlugins' instead of 'dependencies'")
+        error.message.contains('No plugin descriptor found')
 
         cleanup:
         jarFile.delete()
     }
 
-    void "inspectPlugin rejects obsolete required plugin version bound names"() {
+    void "inspectPlugin rejects obsolete required plugin version shapes"() {
         given:
-        File jarFile = writeDescriptorJar("""schemaVersion: 1
-pluginClass: com.example.MyPlugin
-code: my-plugin
-version: 1.0.0
-requiredPlugins:
-  - code: required-plugin
-    version:
-      minInclusive: 2.4.0
-""")
+        File jarFile = writeManifestDescriptorJar(
+            'com.example.MyPlugin',
+            'my-plugin',
+            '1.0.0',
+            JsonOutput.toJson([[code: 'required-plugin', version: [minInclusive: '2.4.0']]])
+        )
 
         when:
         PluginManager.inspectPlugin(jarFile)
 
         then:
         def error = thrown(PluginDescriptorException)
-        error.message.contains("must use version bounds 'min' and 'max'")
+        error.message.contains("must use version fields 'minVersion' and 'maxVersion'")
 
         cleanup:
         jarFile.delete()
     }
 
-    void "inspectPlugin rejects unsupported descriptor schemas"() {
+    void "inspectPlugin rejects malformed required plugin JSON"() {
         given:
-        File jarFile = writeDescriptorJar("""schemaVersion: 2
-pluginClass: com.example.MyPlugin
-code: my-plugin
-version: 1.0.0
-requiredPlugins: []
-""")
+        File jarFile = writeManifestDescriptorJar(
+            'com.example.MyPlugin',
+            'my-plugin',
+            '1.0.0',
+            '[{"code":"required-plugin"}'
+        )
 
         when:
         PluginManager.inspectPlugin(jarFile)
 
         then:
         def error = thrown(PluginDescriptorException)
-        error.message.contains('Unsupported plugin descriptor schemaVersion 2')
+        error.message.contains('Unable to parse META-INF/MANIFEST.MF Morpheus-Required-Plugins JSON')
+
+        cleanup:
+        jarFile.delete()
+    }
+
+    void "inspectPlugin rejects invalid required plugin JSON entries"() {
+        given:
+        File jarFile = writeManifestDescriptorJar(
+            'com.example.MyPlugin',
+            'my-plugin',
+            '1.0.0',
+            requiredPluginsJson
+        )
+
+        when:
+        PluginManager.inspectPlugin(jarFile)
+
+        then:
+        def error = thrown(PluginDescriptorException)
+        error.message.contains(expectedError)
+
+        cleanup:
+        jarFile.delete()
+
+        where:
+        requiredPluginsJson                                                        | expectedError
+        JsonOutput.toJson([code: 'required-plugin'])                              | 'must contain a JSON array'
+        JsonOutput.toJson([[:]])                                                   | "missing required 'Morpheus-Required-Plugins[0].code' field"
+        JsonOutput.toJson([[code: 'required-plugin'], [code: 'required-plugin']])  | "declares duplicate required plugin 'required-plugin'"
+        JsonOutput.toJson([[code: 'required-plugin', minimumVersion: '1.0.0']])    | "contains unsupported field 'minimumVersion'"
+        JsonOutput.toJson([[code: 'required-plugin', minVersion: 'version-one']]) | 'minVersion must be a dotted numeric version'
+        JsonOutput.toJson([[code: 'required-plugin', minVersion: '2.0.0',
+                            maxVersion: '1.0.0']])                                  | 'must have minVersion lower than maxVersion'
+    }
+
+    void "inspectPlugin requires manifest identity when required plugins are declared"() {
+        given:
+        File jarFile = writeManifestDescriptorJar(
+            'com.example.MyPlugin',
+            null,
+            '1.0.0',
+            JsonOutput.toJson([])
+        )
+
+        when:
+        PluginManager.inspectPlugin(jarFile)
+
+        then:
+        def error = thrown(PluginDescriptorException)
+        error.message.contains('missing required Morpheus-Code attribute')
 
         cleanup:
         jarFile.delete()
@@ -157,13 +202,12 @@ requiredPlugins: []
 
     void "inspectPlugin rejects a plugin requiring itself"() {
         given:
-        File jarFile = writeDescriptorJar("""schemaVersion: 1
-pluginClass: com.example.MyPlugin
-code: my-plugin
-version: 1.0.0
-requiredPlugins:
-  - code: my-plugin
-""")
+        File jarFile = writeManifestDescriptorJar(
+            'com.example.MyPlugin',
+            'my-plugin',
+            '1.0.0',
+            JsonOutput.toJson([[code: 'my-plugin']])
+        )
 
         when:
         PluginManager.inspectPlugin(jarFile)
@@ -180,13 +224,12 @@ requiredPlugins:
         given:
         def context = Mock(MorpheusContext)
         def manager = new PluginManager(context)
-        File jarFile = writeDescriptorJar("""schemaVersion: 1
-pluginClass: com.example.DoesNotExistPlugin
-code: my-plugin
-version: 1.0.0
-requiredPlugins:
-  - code: missing-plugin
-""")
+        File jarFile = writeManifestDescriptorJar(
+            'com.example.DoesNotExistPlugin',
+            'my-plugin',
+            '1.0.0',
+            JsonOutput.toJson([[code: 'missing-plugin']])
+        )
 
         when:
         manager.registerPlugin(jarFile.absolutePath)
@@ -207,6 +250,26 @@ requiredPlugins:
         output.write(descriptor.bytes)
         output.closeEntry()
         output.close()
+        return jarFile
+    }
+
+    private static File writeManifestDescriptorJar(String pluginClass, String code, String version,
+                                                   String requiredPluginsJson = null) {
+        File jarFile = File.createTempFile('plugin-manifest', '.jar')
+        def manifest = new Manifest()
+        def attributes = manifest.mainAttributes
+        attributes.put(Attributes.Name.MANIFEST_VERSION, '1.0')
+        attributes.putValue('Plugin-Class', pluginClass)
+        if(code != null) {
+            attributes.putValue('Morpheus-Code', code)
+        }
+        if(version != null) {
+            attributes.putValue('Plugin-Version', version)
+        }
+        if(requiredPluginsJson != null) {
+            attributes.putValue('Morpheus-Required-Plugins', requiredPluginsJson)
+        }
+        new JarOutputStream(new FileOutputStream(jarFile), manifest).close()
         return jarFile
     }
 }

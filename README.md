@@ -32,7 +32,7 @@ Create and implement the `Plugin` class.
 
 Plugins are packaged by using the `shadowJar` gradle task. This task bundles all dependencies required for the plugin.
 
-Keep the plugin identity and class-loading metadata in the standard JAR manifest:
+A jar manifest must also be created to tell the PluginManager which class to load for the plugin. For example:
 
 build.gradle
 ```groovy
@@ -47,7 +47,7 @@ jar {
 }
 ```
 
-Required plugins are runtime relationships between installed Morpheus plugins, not Java library dependencies. Declare them separately through the Morpheus Gradle plugin:
+Required plugins are runtime relationships between installed Morpheus plugins. Declare them separately through the Morpheus Gradle plugin:
 
 ```groovy
 morpheusPlugin {
@@ -64,7 +64,13 @@ morpheusPlugin {
 }
 ```
 
-When `requiredPlugins` is configured, the Gradle plugin requires `Plugin-Class`, `Plugin-Version`, and `Morpheus-Code` in the JAR manifest and combines them with the required plugins to generate `META-INF/morpheus-plugin.yml`. Required-plugin version bounds are optional and use dotted numeric versions. The supported range is `minVersion <= installedVersion < maxVersion`. Existing `plugin.yml`, `META-INF/morpheus.properties`, and `META-INF/MANIFEST.MF` descriptors remain supported.
+When `requiredPlugins` is configured, the Gradle plugin requires `Plugin-Class`, `Plugin-Version`, and `Morpheus-Code` in `META-INF/MANIFEST.MF` and writes the requirements as compact JSON in the `Morpheus-Required-Plugins` attribute:
+
+```text
+Morpheus-Required-Plugins: [{"code":"morpheus-networking","minVersion":"2.4.0","maxVersion":"3.0.0"},{"code":"morpheus-storage","minVersion":"5.1.0"}]
+```
+
+Manifest writers may fold long attribute values across continuation lines; the manifest API reconstructs the complete JSON value when reading it. Required-plugin version bounds are optional and use dotted numeric versions. The supported range is `minVersion <= installedVersion < maxVersion`. Existing `plugin.yml` and `META-INF/morpheus.properties` identity descriptors remain supported, but required plugins are declared only through `Morpheus-Required-Plugins` in the JAR manifest.
 
 At load time, Morpheus orders plugins so every required plugin is initialized before the plugins that require it. Plugins with missing or incompatible required plugins are not initialized, independent plugins can still load, and required-plugin cycles are reported as load errors.
 
