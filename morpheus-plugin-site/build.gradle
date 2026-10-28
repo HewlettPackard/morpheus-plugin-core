@@ -55,7 +55,7 @@ dependencies {
         implementation("commons-io:commons-io:2.14.0")
     }
 	implementation 'org.yaml:snakeyaml:1.33'
-	implementation 'com.github.jknack:handlebars:4.3.0'
+	implementation 'com.github.jknack:handlebars:4.5.2'
 
 
 	// MORPH-19071: explicit version overrides the Micronaut BOM's logback 1.4.11; classic pulls matching logback-core
