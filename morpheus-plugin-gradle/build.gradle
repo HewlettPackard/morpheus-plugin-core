@@ -60,6 +60,13 @@ java {
 
 dependencies {
 	implementation gradleApi()
+	testImplementation localGroovy()
+	testImplementation gradleTestKit()
+	testImplementation "org.spockframework:spock-core:$spockVersion"
+}
+
+test {
+	useJUnitPlatform()
 }
 
 gradlePlugin {

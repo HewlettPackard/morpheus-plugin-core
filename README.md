@@ -37,16 +37,43 @@ A jar manifest must also be created to tell the PluginManager which class to loa
 build.gradle
 ```groovy
 jar {
-    manifest {
-        attributes(
-                'Plugin-Class': 'com.morpheusdata.infoblox.InfobloxPlugin',
-                'Plugin-Version': version
-        )
-    }
+	manifest {
+		attributes(
+			'Plugin-Class': 'com.example.ClusterLifecyclePlugin',
+			'Plugin-Version': version,
+			'Morpheus-Code': 'morpheus-cluster-lifecycle'
+		)
+	}
 }
 ```
 
-### Plugin Dependencies
+Required plugins are runtime relationships between installed Morpheus plugins. Declare them separately through the Morpheus Gradle plugin:
 
-Dependancies your plugin requires such as other clouds sdks or similar will be scoped to your plugins classpath. The `PluginManager` creates a new classpath for each plugin loaded. This is done to ensure classes in a plugin do not interfere with Morpheus or other loaded plugins.
+```groovy
+morpheusPlugin {
+	requiredPlugins {
+		plugin('morpheus-networking') {
+			minVersion = '2.4.0'
+			maxVersion = '3.0.0'
+		}
 
+		plugin('morpheus-storage') {
+			minVersion = '5.1.0'
+		}
+	}
+}
+```
+
+When `requiredPlugins` is configured, the Gradle plugin requires `Plugin-Class`, `Plugin-Version`, and `Morpheus-Code` in `META-INF/MANIFEST.MF` and writes the requirements as compact JSON in the `Morpheus-Required-Plugins` attribute:
+
+```text
+Morpheus-Required-Plugins: [{"code":"morpheus-networking","minVersion":"2.4.0","maxVersion":"3.0.0"},{"code":"morpheus-storage","minVersion":"5.1.0"}]
+```
+
+Manifest writers may fold long attribute values across continuation lines; the manifest API reconstructs the complete JSON value when reading it. Required-plugin version bounds are optional and use dotted numeric versions. The supported range is `minVersion <= installedVersion < maxVersion`. Existing `plugin.yml` and `META-INF/morpheus.properties` identity descriptors remain supported, but required plugins are declared only through `Morpheus-Required-Plugins` in the JAR manifest.
+
+At load time, Morpheus orders plugins so every required plugin is initialized before the plugins that require it. Plugins with missing or incompatible required plugins are not initialized, independent plugins can still load, and required-plugin cycles are reported as load errors.
+
+### Library Dependencies
+
+Libraries your plugin requires, such as cloud SDKs, are scoped to the plugin classpath. The `PluginManager` creates a new classpath for each plugin loaded so classes in one plugin do not interfere with Morpheus or other loaded plugins.
