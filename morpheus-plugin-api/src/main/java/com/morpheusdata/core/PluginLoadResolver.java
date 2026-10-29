@@ -102,9 +102,26 @@ public final class PluginLoadResolver {
 			}
 		}
 
-		propagateFailures(uniqueCandidates, uniqueCandidatesByCode, failures);
-		detectCycles(uniqueCandidates, uniqueCandidatesByCode, failures);
-		propagateFailures(uniqueCandidates, uniqueCandidatesByCode, failures);
+		Map<String, PluginDescriptor> prospectiveByCode = new LinkedHashMap<>(availableByCode);
+		for (String candidateCode : candidatesByCode.keySet()) {
+			prospectiveByCode.remove(candidateCode);
+		}
+		prospectiveByCode.putAll(uniqueCandidatesByCode);
+		List<PluginDescriptor> prospectivePlugins = new ArrayList<>(uniqueCandidates);
+		for (PluginDescriptor available : prospectiveByCode.values()) {
+			if (!uniqueCandidatesByCode.containsKey(available.getCode())) {
+				prospectivePlugins.add(available);
+			}
+		}
+		Map<PluginDescriptor, String> graphFailures = new LinkedHashMap<>(failures);
+		propagateFailures(prospectivePlugins, prospectiveByCode, graphFailures);
+		detectCycles(prospectivePlugins, prospectiveByCode, graphFailures);
+		propagateFailures(prospectivePlugins, prospectiveByCode, graphFailures);
+		for (PluginDescriptor candidate : uniqueCandidates) {
+			if (graphFailures.containsKey(candidate)) {
+				failures.put(candidate, graphFailures.get(candidate));
+			}
+		}
 
 		List<PluginDescriptor> loadOrder = topologicalSort(uniqueCandidates, uniqueCandidatesByCode, failures);
 		return new PluginLoadPlan(loadOrder, failures);
