@@ -86,6 +86,15 @@ public interface MorpheusStorageService {
 	MorpheusStorageVolumeGroupService getVolumeGroup();
 
 	/**
+	 * Returns the StorageVolumeGroupSnapshot Service for managing consistent
+	 * group snapshots taken against a volume group.
+	 *
+	 * @return An instance of the StorageVolumeGroupSnapshot Service
+	 * @since 1.6.0
+	 */
+	MorpheusStorageVolumeGroupSnapshotService getVolumeGroupSnapshot();
+
+	/**
 	 * Returns the StorageReplicationGroup Service
 	 *
 	 * @return An instance of the StorageReplicationGroup Service
@@ -100,6 +109,23 @@ public interface MorpheusStorageService {
 	 * @since 1.5.0
 	 */
 	MorpheusStorageReplicationPartnerService getReplicationPartner();
+
+	/**
+	 * Returns the StorageServerNode Service for managing the hosts that participate
+	 * in a scale-out storage system.
+	 *
+	 * @return An instance of the StorageServerNode Service
+	 * @since 1.6.0
+	 */
+	MorpheusStorageServerNodeService getServerNode();
+
+	/**
+	 * Returns the StorageServerNodeDisk Service
+	 *
+	 * @return An instance of the StorageServerNodeDisk Service
+	 * @since 1.6.0
+	 */
+	MorpheusStorageServerNodeDiskService getServerNodeDisk();
 
 	/**
 	 * Validates an update on a {@link StorageServer} before executing the update.

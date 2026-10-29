@@ -38,6 +38,10 @@ public class AffinityGroup extends MorpheusIdentityModel {
 
 	protected Collection<ComputeServer> servers;
 
+	//combined VM-to-Host rule members; legacy VM-to-VM rules use servers instead
+	protected HostVmGroup vmGroup;
+	protected HostVmGroup hostGroup;
+
 	public String getName() {
 		return name;
 	}
@@ -126,8 +130,26 @@ public class AffinityGroup extends MorpheusIdentityModel {
 		this.pool = pool;
 	}
 
+	public HostVmGroup getVmGroup() {
+		return vmGroup;
+	}
+
+	public void setVmGroup(HostVmGroup vmGroup) {
+		this.vmGroup = vmGroup;
+	}
+
+	public HostVmGroup getHostGroup() {
+		return hostGroup;
+	}
+
+	public void setHostGroup(HostVmGroup hostGroup) {
+		this.hostGroup = hostGroup;
+	}
+
 	public enum AffinityType {
 		KEEP_SEPARATE,
-		KEEP_TOGETHER
+		KEEP_TOGETHER,
+		KEEP_SEPARATE_MUST,
+		KEEP_TOGETHER_MUST
 	}
 }

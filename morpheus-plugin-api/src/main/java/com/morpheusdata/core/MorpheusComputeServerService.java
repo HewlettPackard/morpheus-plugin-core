@@ -17,6 +17,7 @@
 package com.morpheusdata.core;
 
 import com.morpheusdata.core.compute.MorpheusComputeDeviceService;
+import com.morpheusdata.core.compute.MorpheusHostDriveService;
 import com.morpheusdata.core.compute.MorpheusComputeServerAccessService;
 import com.morpheusdata.core.compute.MorpheusComputeServerNetworkInterfaceConfig;
 import com.morpheusdata.model.Cloud;
@@ -108,6 +109,13 @@ public interface MorpheusComputeServerService extends MorpheusDataService<Comput
 	MorpheusComputeDeviceService getComputeDevice();
 
 	/**
+	 * Returns the HostDrive context used for performing CRUD operations on persisted
+	 * {@link HostDrive} records discovered on a host.
+	 * @return An instance of the HostDrive context
+	 */
+	MorpheusHostDriveService getHostDrive();
+
+	/**
 	 * Remove persisted ComputeServers from Morpheus and remove them the {@link com.morpheusdata.model.InstanceScale} they are associated with
 	 * @param computeServers ComputeServers to delete
 	 * @param instanceScale the InstanceScale instance to remove the servers from
@@ -186,5 +194,17 @@ public interface MorpheusComputeServerService extends MorpheusDataService<Comput
 	 * @since 1.5.1
 	 */
 	Single<ServiceResponse<GetGpuDevicesResponse>> getGpuDevices(GetGpuDevicesRequest request);
+
+	/**
+	 * Enumerates the physical drives present on one host. Discovery runs on the
+	 * host through the agent, so the result reflects the host now rather than
+	 * the last inventory sync.
+	 *
+	 * @param server the host to inspect
+	 * @return facts about every drive found, with candidate, eligible, and
+	 *         candidacyReason unset. Observation only.
+	 * @since 1.5.1
+	 */
+	Single<ServiceResponse<List<HostDrive>>> listHostDrives(ComputeServer server);
 
 }

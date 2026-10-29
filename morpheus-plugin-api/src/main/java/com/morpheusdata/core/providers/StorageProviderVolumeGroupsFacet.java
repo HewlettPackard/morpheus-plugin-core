@@ -19,6 +19,7 @@ package com.morpheusdata.core.providers;
 import com.morpheusdata.model.StorageServer;
 import com.morpheusdata.model.StorageVolume;
 import com.morpheusdata.model.StorageVolumeGroup;
+import com.morpheusdata.model.StorageVolumeGroupSnapshot;
 import com.morpheusdata.response.ServiceResponse;
 
 import java.util.Collection;
@@ -242,5 +243,49 @@ public interface StorageProviderVolumeGroupsFacet {
 	 */
 	default ServiceResponse<StorageVolumeGroup> refreshVolumeGroup(StorageServer storageServer, StorageVolumeGroup volumeGroup) {
 		return ServiceResponse.success(volumeGroup);
+	}
+
+	// ============================================================================
+	// Snapshot Operations
+	// ============================================================================
+
+	/**
+	 * Take a consistent snapshot of every volume in the group as a single operation.
+	 * <p>
+	 * The plugin should:
+	 * <ol>
+	 *   <li>Take a group/consistency-set snapshot on the storage array</li>
+	 *   <li>Set the externalId on the snapshot from the array response</li>
+	 *   <li>Honor {@code snapshot.applicationConsistent} (quiesce members) when supported</li>
+	 * </ol>
+	 * A provider that groups volumes but cannot snapshot the group leaves this default in place,
+	 * which reports the capability as not implemented.
+	 *
+	 * @param storageServer the storage server hosting the volume group
+	 * @param volumeGroup the volume group to snapshot
+	 * @param snapshot the snapshot to create (name, origin, applicationConsistent)
+	 * @param opts additional options
+	 * @return ServiceResponse with the created snapshot (externalId populated)
+	 */
+	default ServiceResponse<StorageVolumeGroupSnapshot> createVolumeGroupSnapshot(StorageServer storageServer, StorageVolumeGroup volumeGroup, StorageVolumeGroupSnapshot snapshot, Map<String, Object> opts) {
+		return ServiceResponse.error("createVolumeGroupSnapshot not implemented");
+	}
+
+	/**
+	 * Delete a group snapshot from the storage array.
+	 * <p>
+	 * The plugin should remove the group/consistency-set snapshot identified by
+	 * {@code snapshot.externalId} from the array. A provider that groups volumes but cannot
+	 * delete group snapshots leaves this default in place, which reports the capability as not
+	 * implemented.
+	 *
+	 * @param storageServer the storage server hosting the volume group
+	 * @param volumeGroup the volume group the snapshot was taken against
+	 * @param snapshot the snapshot to delete (its {@code externalId} identifies the array snapshot set)
+	 * @param opts additional options
+	 * @return ServiceResponse indicating success/failure
+	 */
+	default ServiceResponse<StorageVolumeGroupSnapshot> deleteVolumeGroupSnapshot(StorageServer storageServer, StorageVolumeGroup volumeGroup, StorageVolumeGroupSnapshot snapshot, Map<String, Object> opts) {
+		return ServiceResponse.error("deleteVolumeGroupSnapshot not implemented");
 	}
 }

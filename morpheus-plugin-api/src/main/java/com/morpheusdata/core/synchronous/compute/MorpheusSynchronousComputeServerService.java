@@ -35,6 +35,8 @@ import com.morpheusdata.response.GetGpuDevicesResponse;
 import com.morpheusdata.response.ServiceResponse;
 import io.reactivex.rxjava3.core.Single;
 
+import java.util.List;
+
 public interface MorpheusSynchronousComputeServerService extends MorpheusSynchronousDataService<ComputeServer, ComputeServerIdentityProjection>, MorpheusSynchronousIdentityService<ComputeServerIdentityProjection> {
 
 	/**
@@ -48,6 +50,13 @@ public interface MorpheusSynchronousComputeServerService extends MorpheusSynchro
 	 * @return An instance of the ComputeDevice context
 	 */
 	MorpheusSynchronousComputeDeviceService getComputeDevice();
+
+	/**
+	 * Returns the HostDrive context used for performing CRUD operations on persisted
+	 * {@link HostDrive} records discovered on a host.
+	 * @return An instance of the HostDrive context
+	 */
+	MorpheusSynchronousHostDriveService getHostDrive();
 
 	/**
 	 * Returns the ComputePort context used for performing sync operations on {@link ComputePort} related assets within Morpheus.
@@ -142,4 +151,16 @@ public interface MorpheusSynchronousComputeServerService extends MorpheusSynchro
 	 * @since 1.5.1
 	 */
 	ServiceResponse<GetGpuDevicesResponse> getGpuDevices(GetGpuDevicesRequest request);
+
+	/**
+	 * Enumerates the physical drives present on one host. Discovery runs on the
+	 * host through the agent, so the result reflects the host now rather than
+	 * the last inventory sync.
+	 *
+	 * @param server the host to inspect
+	 * @return facts about every drive found, with candidate, eligible, and
+	 *         candidacyReason unset. Observation only.
+	 * @since 1.6.0
+	 */
+	ServiceResponse<List<HostDrive>> listHostDrives(ComputeServer server);
 }

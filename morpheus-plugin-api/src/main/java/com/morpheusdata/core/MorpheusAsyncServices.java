@@ -127,6 +127,16 @@ public interface MorpheusAsyncServices {
 	MorpheusComputeServerGroupService getCluster();
 
 	/**
+	 * Returns the Host Profile context used for reserving, revising, and releasing host-level
+	 * CPU, memory, and hugepage capacity. Typically used by a {@code ComputeTypePackageProvider}
+	 * installing or uninstalling a distributed storage cluster.
+	 * @return An instance of the Host Profile Context to be used for calls by various providers
+	 * @see com.morpheusdata.model.ResourceReservation
+	 * @since 1.6.0
+	 */
+	MorpheusHostProfileService getHostProfile();
+
+	/**
 	 * Returns the workload context used for syncing workloads within Morpheus.
 	 * Typically this would be called by a {@link CloudProvider}.
 	 * @return An instance of the workload Context to be used for calls by various providers
@@ -582,6 +592,13 @@ public interface MorpheusAsyncServices {
 	MorpheusCurrencyConversionService getCurrency();
 
 	MorpheusAffinityGroupService getAffinityGroup();
+
+	/**
+	 * Returns the MorpheusHostVmGroupService for managing Host/VM groups used by combined
+	 * VM-to-Host affinity rules.
+	 * @return an instance of the MorpheusHostVmGroupService
+	 */
+	MorpheusHostVmGroupService getHostVmGroup();
 
 	/**
 	 * Returns the MorpheusLlmService for managing LLM Engine model and integration contexts.
