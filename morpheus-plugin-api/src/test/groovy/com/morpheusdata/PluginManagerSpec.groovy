@@ -1,6 +1,8 @@
 package com.morpheusdata
 
 import com.morpheusdata.core.MorpheusContext
+import com.morpheusdata.core.Plugin
+import com.morpheusdata.core.PluginDescriptor
 import com.morpheusdata.core.PluginDescriptorException
 import com.morpheusdata.core.PluginManager
 import com.morpheusdata.core.PluginResolutionException
@@ -241,6 +243,54 @@ version: 1.0.0
 
         cleanup:
         jarFile.delete()
+    }
+
+    void "cyclic replacement from a cooperating manager leaves the old plugin registered"() {
+        given:
+        def manager = new PluginManager(Mock(MorpheusContext))
+        def cooperatingManager = new PluginManager(Mock(MorpheusContext))
+        File originalFile = writeManifestDescriptorJar(ReplacementPlugin.name, 'a', '1.0.0')
+        File replacementFile = writeManifestDescriptorJar(
+            ReplacementPlugin.name, 'a', '2.0.0', JsonOutput.toJson([[code: 'b']])
+        )
+        ReplacementPlugin.initializations = 0
+        ReplacementPlugin.destructions = 0
+        def original = manager.registerPlugin(originalFile.absolutePath)
+        cooperatingManager.plugins.add(Stub(Plugin) {
+            getDescriptor() >> new PluginDescriptor(1, 'com.example.B', 'b', '1.0.0', [
+                new com.morpheusdata.core.RequiredPlugin('a', null, null)
+            ])
+        })
+
+        when:
+        manager.registerPlugin(replacementFile.absolutePath, cooperatingManager.pluginDescriptors)
+
+        then:
+        def error = thrown(PluginResolutionException)
+        error.message == 'Required plugin cycle detected: a -> b -> a'
+        original != null
+        manager.plugins == [original]
+        original.version == '1.0.0'
+        ReplacementPlugin.initializations == 1
+        ReplacementPlugin.destructions == 0
+
+        cleanup:
+        originalFile.delete()
+        replacementFile.delete()
+    }
+
+    static class ReplacementPlugin extends Plugin {
+        static int initializations
+        static int destructions
+
+        @Override
+        String getCode() { 'a' }
+
+        @Override
+        void initialize() { initializations++ }
+
+        @Override
+        void onDestroy() { destructions++ }
     }
 
     private static File writeDescriptorJar(String descriptor) {

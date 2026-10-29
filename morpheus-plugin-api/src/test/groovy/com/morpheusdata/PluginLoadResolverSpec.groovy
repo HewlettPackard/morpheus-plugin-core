@@ -94,6 +94,55 @@ class PluginLoadResolverSpec extends Specification {
 		plan.failures.isEmpty()
 	}
 
+	void "rejects a replacement cycle through already loaded plugins without exposing their failures"() {
+		given:
+		def oldA = descriptor('a', '1.0.0')
+		def replacementA = descriptor('a', '2.0.0', [requiredPlugin('b')])
+		def loadedB = descriptor('b', '1.0.0', [requiredPlugin('a')])
+		def independent = descriptor('independent', '1.0.0')
+
+		when:
+		def plan = PluginLoadResolver.resolve([replacementA, independent], [oldA, loadedB])
+
+		then:
+		plan.loadOrder == [independent]
+		plan.failures.keySet() == [replacementA] as Set
+		plan.getFailure(replacementA) == 'Required plugin cycle detected: a -> b -> a'
+	}
+
+	void "rejects a transitive replacement cycle through multiple already loaded plugins"() {
+		given:
+		def oldA = descriptor('a', '1.0.0')
+		def replacementA = descriptor('a', '2.0.0', [requiredPlugin('c')])
+		def loadedB = descriptor('b', '1.0.0', [requiredPlugin('a')])
+		def loadedC = descriptor('c', '1.0.0', [requiredPlugin('b')])
+		def dependent = descriptor('dependent', '1.0.0', [requiredPlugin('b')])
+
+		when:
+		def plan = PluginLoadResolver.resolve([replacementA, dependent], [oldA, loadedB, loadedC])
+
+		then:
+		plan.loadOrder.empty
+		plan.failures.keySet() == [replacementA, dependent] as Set
+		plan.getFailure(replacementA) == 'Required plugin cycle detected: a -> c -> b -> a'
+		plan.getFailure(dependent).contains("requires plugin 'b', which could not be loaded")
+	}
+
+	void "valid replacement supersedes the old descriptor without reloading available plugins"() {
+		given:
+		def oldA = descriptor('a', '1.0.0', [requiredPlugin('b')])
+		def replacementA = descriptor('a', '2.0.0')
+		def loadedB = descriptor('b', '1.0.0', [requiredPlugin('a')])
+		def incoming = descriptor('incoming', '1.0.0', [requiredPlugin('a', '2.0.0')])
+
+		when:
+		def plan = PluginLoadResolver.resolve([incoming, replacementA], [oldA, loadedB])
+
+		then:
+		plan.loadOrder == [replacementA, incoming]
+		plan.failures.isEmpty()
+	}
+
 	void "reports duplicate declared codes without blocking independent plugins"() {
 		given:
 		def firstDuplicate = descriptor('duplicate', '1.0.0')
