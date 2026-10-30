@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Based on {@link com.github.jknack.handlebars.io.CompositeTemplateLoader}
@@ -49,7 +50,7 @@ public class DynamicTemplateLoader implements TemplateLoader {
 	 * @param loaders The template loader chain. At least two loaders must be provided.
 	 */
 	public DynamicTemplateLoader(final TemplateLoader... loaders) {
-		this.delegates = Arrays.asList(loaders);
+		this.delegates = new CopyOnWriteArrayList<>(Arrays.asList(loaders));
 	}
 
 	@Override
