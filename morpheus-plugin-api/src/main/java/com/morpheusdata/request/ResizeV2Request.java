@@ -56,17 +56,11 @@ public class ResizeV2Request {
 	 */
 	public List<StorageVolume> volumesDelete;
 
-	/**
-	 * StorageVolumes that should be added
-	 * <p>
-	 * This use the UpdateModel to represent the morpheus pre-created entity, and the associated data for
-	 * entity as provided by the user and morpheus.
-	 */
+	/** Volumes to add, pairing pre-created entities with desired options in {@code updateProps.config}. */
 	public List<UpdateModel<StorageVolume>> volumesAdd;
 
-	/**
-	 * StorageVolumes that should be updated
-	 */
+	/** Volumes to update, including config-only changes in {@code updateProps.config}.
+	 * Existing values remain in {@code existingModel.configMap}. */
 	public List<UpdateModel<StorageVolume>> volumesUpdate;
 
 	/**

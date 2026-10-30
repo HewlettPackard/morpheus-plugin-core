@@ -64,6 +64,7 @@ public class StorageVolumeType extends MorpheusModel {
 
 	// associations
 	Collection<OptionType> optionTypes;
+	Collection<OptionType> provisionOptionTypes;
 
 	public String getName() {
 		return name;
@@ -276,13 +277,25 @@ public class StorageVolumeType extends MorpheusModel {
 		this.maxIOPS = maxIOPS;
 	}
 
+	/** Standalone volume fields; use {@link #getProvisionOptionTypes()} for provisioning/reconfigure. */
 	public Collection<OptionType> getOptionTypes() {
 		return optionTypes;
 	}
 
 	public void setOptionTypes(Collection<OptionType> optionTypes) {
-		markDirty("optionTypes", this.optionTypes);
 		this.optionTypes = optionTypes;
+		markDirty("optionTypes", optionTypes);
+	}
+
+	/** Type-specific per-disk provisioning/reconfigure fields; no fallback to {@link #getOptionTypes()}.
+	 * @since 1.5.1 */
+	public Collection<OptionType> getProvisionOptionTypes() {
+		return provisionOptionTypes;
+	}
+
+	public void setProvisionOptionTypes(Collection<OptionType> provisionOptionTypes) {
+		this.provisionOptionTypes = provisionOptionTypes;
+		markDirty("provisionOptionTypes", provisionOptionTypes);
 	}
 
 	public Boolean getMultiAttachSupported() {

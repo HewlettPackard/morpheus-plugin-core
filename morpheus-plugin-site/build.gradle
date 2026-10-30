@@ -38,6 +38,22 @@ dependencies {
     implementation("io.micronaut.serde:micronaut-serde-jackson")
     compileOnly("io.micronaut.serde:micronaut-serde-processor")
     constraints {
+        // rhino 1.7R4 comes transitively via asset-pipeline-micronaut -> less4j
+        implementation("org.mozilla:rhino:1.7.14.1")
+    }
+    constraints {
+        // junit 4.11 comes transitively via asset-pipeline-micronaut -> less4j
+        implementation("junit:junit:4.13.1")
+    }
+    constraints {
+        // commons-beanutils 1.8.3 comes transitively via asset-pipeline-micronaut -> less4j
+        implementation("commons-beanutils:commons-beanutils:1.11.0")
+    }
+    constraints {
+        // jackson-core 2.21.2 comes from the Micronaut BOM and has known CVEs
+        implementation("com.fasterxml.jackson.core:jackson-core:2.21.7")
+    }
+    constraints {
         // MORPH-19074: gson 2.5 comes transitively via asset-pipeline-micronaut -> less4j
         implementation("com.google.code.gson:gson:2.8.9")
     }
@@ -55,7 +71,7 @@ dependencies {
         implementation("commons-io:commons-io:2.14.0")
     }
 	implementation 'org.yaml:snakeyaml:1.33'
-	implementation 'com.github.jknack:handlebars:4.3.0'
+	implementation 'com.github.jknack:handlebars:4.5.2'
 
 
 	// MORPH-19071: explicit version overrides the Micronaut BOM's logback 1.4.11; classic pulls matching logback-core
