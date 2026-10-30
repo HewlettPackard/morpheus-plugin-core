@@ -80,6 +80,12 @@ public interface ProvisionProvider extends PluginProvider {
 		return new ArrayList<OptionType>();
 	}
 
+	/** Shared per-disk provisioning/reconfigure fields; requires appliance registration support.
+	 * @since 1.5.1 */
+	default Collection<OptionType> getStorageVolumeOptionTypes() {
+		return new ArrayList<OptionType>();
+	}
+
 	/**
 	 * Provides a Collection of OptionType inputs added to the instance and server resize form, which is called
 	 * 'Reconfigure' in the UI. The option types are synced to the ProvisionType's reconfigure option types when the

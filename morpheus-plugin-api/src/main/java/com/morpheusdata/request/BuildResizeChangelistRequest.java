@@ -33,9 +33,7 @@ public class BuildResizeChangelistRequest<T> {
 	 * The compute server being resized.
 	 */
 	protected ComputeServer server;
-	/**
-	 * The desired configuration as a list of maps.
-	 */
+	/** Desired configuration maps; preserve per-volume {@code config} in custom add/update changelists. */
 	protected List<Map<String, Object>> desired;
 	/**
 	 * The existing items of type T.
