@@ -139,6 +139,7 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 	protected String serverVendor;
 	protected String serverModel;
 	protected String serialNumber;
+	protected String systemUuid;
 	protected String statusMessage;
 	protected String rootVolumeId;
 	protected String tags;
@@ -876,6 +877,27 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 	public void setSerialNumber(String serialNumber) {
 		this.serialNumber = serialNumber;
 		markDirty("serialNumber",serialNumber);
+	}
+
+	/**
+	 * Returns the SMBIOS/hardware system UUID, used to recognize the same physical host across providers. This is
+	 * distinct from {@link #getUuid()}, which is the Morpheus record UUID. Collectors should set a value normalized
+	 * through {@link com.morpheusdata.core.util.SystemUuidUtility#normalize(String)}.
+	 * @return the system UUID, or null when unknown
+	 * @since 1.5.1
+	 */
+	public String getSystemUuid() {
+		return systemUuid;
+	}
+
+	/**
+	 * Sets the SMBIOS/hardware system UUID. The value is stored as given; it is not normalized here.
+	 * @param systemUuid the system UUID
+	 * @since 1.5.1
+	 */
+	public void setSystemUuid(String systemUuid) {
+		this.systemUuid = systemUuid;
+		markDirty("systemUuid", systemUuid);
 	}
 
 	public String getStatusMessage() {

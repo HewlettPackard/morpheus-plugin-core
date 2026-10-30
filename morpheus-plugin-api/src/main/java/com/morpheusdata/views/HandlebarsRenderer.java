@@ -76,8 +76,8 @@ public class HandlebarsRenderer implements Renderer<Handlebars> {
 	 */
 	public void removeTemplateLoader(ClassLoader classLoader) {
 		for(TemplateLoader templateLoader : this.loader.getTemplateLoaders()) {
-			if (templateLoader.getClass().getClassLoader() == classLoader) {
-				this.loader.removeTemplateLoader(loader);
+			if (templateLoader instanceof HandlebarsPluginTemplateLoader && ((HandlebarsPluginTemplateLoader) templateLoader).getClassLoader() == classLoader) {
+				this.loader.removeTemplateLoader(templateLoader);
 				break;
 			}
 		}

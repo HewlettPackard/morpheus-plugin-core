@@ -80,6 +80,56 @@ public interface ProvisionProvider extends PluginProvider {
 		return new ArrayList<OptionType>();
 	}
 
+	/** Shared per-disk provisioning/reconfigure fields; requires appliance registration support.
+	 * @since 1.5.1 */
+	default Collection<OptionType> getStorageVolumeOptionTypes() {
+		return new ArrayList<OptionType>();
+	}
+
+	/**
+	 * Provides a Collection of OptionType inputs added to the instance and server resize form, which is called
+	 * 'Reconfigure' in the UI. The option types are synced to the ProvisionType's reconfigure option types when the
+	 * plugin registers (added, updated and removed like {@link #getOptionTypes()}).
+	 * <p>
+	 * Use a fieldContext of 'config'. Submitted values arrive in the resize opts as
+	 * <code>opts.config.&lt;fieldName&gt;</code>, and the form fills in current values from the server's config map, so
+	 * the provider should persist applied values there. Secret and password values are not sent back to the form, so a
+	 * resize request may omit them; treat a missing key as unchanged.
+	 * <p>
+	 * To have a change to only these values reach resizeWorkload or resizeServer, override hasConfigChanges on the
+	 * resize facet the provider implements: {@link WorkloadProvisionProvider.ResizeV2Facet#hasConfigChanges},
+	 * {@link WorkloadProvisionProvider.ResizeFacet#hasConfigChanges},
+	 * {@link HostProvisionProvider.ResizeV2Facet#hasConfigChanges} or
+	 * {@link HostProvisionProvider.ResizeFacet#hasConfigChanges}.
+	 * @since 1.5.1
+	 * @return Collection of OptionTypes
+	 */
+	default Collection<OptionType> getReconfigureOptionTypes() {
+		return new ArrayList<OptionType>();
+	}
+
+	/**
+	 * Provides a Collection of OptionType inputs added to the instance and server resize form, which is called
+	 * 'Reconfigure' in the UI. The option types are synced to the ProvisionType's reconfigure option types when the
+	 * plugin registers (added, updated and removed like {@link #getOptionTypes()}).
+	 * <p>
+	 * Use a fieldContext of 'config'. Submitted values arrive in the resize opts as
+	 * <code>opts.config.&lt;fieldName&gt;</code>, and the form fills in current values from the server's config map, so
+	 * the provider should persist applied values there. Secret and password values are not sent back to the form, so a
+	 * resize request may omit them; treat a missing key as unchanged.
+	 * <p>
+	 * To have a change to only these values reach resizeWorkload or resizeServer, override hasConfigChanges on the
+	 * resize facet the provider implements: {@link WorkloadProvisionProvider.ResizeV2Facet#hasConfigChanges},
+	 * {@link WorkloadProvisionProvider.ResizeFacet#hasConfigChanges},
+	 * {@link HostProvisionProvider.ResizeV2Facet#hasConfigChanges} or
+	 * {@link HostProvisionProvider.ResizeFacet#hasConfigChanges}.
+	 * @since 1.5.1
+	 * @return Collection of OptionTypes
+	 */
+	default Collection<OptionType> getReconfigureOptionTypes() {
+		return new ArrayList<OptionType>();
+	}
+
 	/**
 	 * Provides a Collection of StorageVolumeTypes that are available for root StorageVolumes
 	 * @return Collection of StorageVolumeTypes

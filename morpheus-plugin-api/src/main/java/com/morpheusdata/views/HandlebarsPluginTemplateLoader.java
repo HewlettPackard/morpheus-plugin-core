@@ -49,6 +49,14 @@ public class HandlebarsPluginTemplateLoader extends AbstractTemplateLoader {
 		setSuffix(DEFAULT_SUFFIX);
 	}
 
+	/**
+	 * Returns the class loader templates are resolved from.
+	 * @return the class loader this template loader was created with
+	 */
+	public ClassLoader getClassLoader() {
+		return classLoader;
+	}
+
 	@Override
 	public TemplateSource sourceAt(String uri) throws IOException {
 		String location = resolve(normalize(uri));

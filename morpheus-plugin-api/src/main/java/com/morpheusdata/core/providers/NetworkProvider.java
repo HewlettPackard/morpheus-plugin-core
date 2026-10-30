@@ -189,6 +189,13 @@ public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 	default Boolean hasSwitches() { return false; }
 
 	/**
+	 * Gets the {@link SwitchesProvider} used to list and manage switches and their ports. Only consulted when
+	 * {@link #hasSwitches()} returns true.
+	 * @return the SwitchesProvider, or null if switches are not supported
+	 */
+	default SwitchesProvider getSwitchesProvider() { return null; }
+
+	/**
 	 * Gets the floating ip provider
 	 * @return FloatingIpProvider
 	 */

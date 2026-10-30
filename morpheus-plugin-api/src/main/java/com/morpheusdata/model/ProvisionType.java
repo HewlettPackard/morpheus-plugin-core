@@ -16,6 +16,8 @@
 
 package com.morpheusdata.model;
 
+import java.util.Collection;
+
 public class ProvisionType extends MorpheusModel implements IModelCodeName {
 
 	protected String code;
@@ -68,6 +70,8 @@ public class ProvisionType extends MorpheusModel implements IModelCodeName {
 	protected Integer maxDisk;
 	protected String backupType;
 	protected Boolean disableRootDatastore = false;
+
+	protected Collection<OptionType> storageVolumeOptionTypes;
 
 	protected String viewSet;
 	protected String containerService;
@@ -288,6 +292,12 @@ public class ProvisionType extends MorpheusModel implements IModelCodeName {
 
 	public Boolean getDisableRootDatastore() {
 		return disableRootDatastore;
+	}
+
+	/** Shared per-disk provisioning/reconfigure fields, or null when unset.
+	 * @since 1.5.1 */
+	public Collection<OptionType> getStorageVolumeOptionTypes() {
+		return storageVolumeOptionTypes;
 	}
 
 	public String getViewSet() {
@@ -581,6 +591,11 @@ public class ProvisionType extends MorpheusModel implements IModelCodeName {
 	public void setDisableRootDatastore(Boolean disableRootDatastore) {
 		this.disableRootDatastore = disableRootDatastore;
 		markDirty("disableRootDatastore", disableRootDatastore);
+	}
+
+	public void setStorageVolumeOptionTypes(Collection<OptionType> storageVolumeOptionTypes) {
+		this.storageVolumeOptionTypes = storageVolumeOptionTypes;
+		markDirty("storageVolumeOptionTypes", storageVolumeOptionTypes);
 	}
 
 	public void setViewSet(String viewSet) {

@@ -33,16 +33,49 @@ configurations {
 dependencies {
     implementation "com.bertramlabs.plugins:asset-pipeline-micronaut:${assetPipelineVersion}"
     assets "com.bertramlabs.plugins:less-asset-pipeline:${assetPipelineVersion}"
+    // MORPH-19070: override Micronaut's Netty BOM (4.1.97.Final) to cover Netty CVEs; keeps all io.netty:* aligned
+    implementation(platform("io.netty:netty-bom:4.1.137.Final"))
     implementation("io.micronaut.serde:micronaut-serde-jackson")
     compileOnly("io.micronaut.serde:micronaut-serde-processor")
+    constraints {
+        // rhino 1.7R4 comes transitively via asset-pipeline-micronaut -> less4j
+        implementation("org.mozilla:rhino:1.7.14.1")
+    }
+    constraints {
+        // junit 4.11 comes transitively via asset-pipeline-micronaut -> less4j
+        implementation("junit:junit:4.13.1")
+    }
+    constraints {
+        // commons-beanutils 1.8.3 comes transitively via asset-pipeline-micronaut -> less4j
+        implementation("commons-beanutils:commons-beanutils:1.11.0")
+    }
+    constraints {
+        // jackson-core 2.21.2 comes from the Micronaut BOM and has known CVEs
+        implementation("com.fasterxml.jackson.core:jackson-core:2.21.7")
+    }
+    constraints {
+        // MORPH-19074: gson 2.5 comes transitively via asset-pipeline-micronaut -> less4j
+        implementation("com.google.code.gson:gson:2.8.9")
+    }
     implementation("io.micronaut.groovy:micronaut-runtime-groovy")
+    // MORPH-19072: Micronaut 4.10 is built on Netty 4.2; its BOM pins 4.2.13.Final (still vulnerable), so raise to the first clean 4.2.x
+    implementation(platform("io.netty:netty-bom:4.2.17.Final"))
     implementation("io.micronaut:micronaut-http-server-netty")
+    constraints {
+        // MORPH-19075: protobuf-java is transitive via less4j (2.5.0) and Micronaut's BOM (3.23.4)
+        implementation("com.google.protobuf:protobuf-java:3.25.5")
+    }
     implementation("io.micronaut:micronaut-http-client")
+    constraints {
+        // MORPH-19076: commons-io 2.3 comes transitively via asset-pipeline-micronaut -> less4j
+        implementation("commons-io:commons-io:2.14.0")
+    }
 	implementation 'org.yaml:snakeyaml:1.33'
-	implementation 'com.github.jknack:handlebars:4.3.0'
+	implementation 'com.github.jknack:handlebars:4.5.2'
 
 
-	runtimeOnly("ch.qos.logback:logback-classic")
+	// MORPH-19071: explicit version overrides the Micronaut BOM's logback 1.4.11; classic pulls matching logback-core
+	runtimeOnly("ch.qos.logback:logback-classic:1.5.34")
     
     testImplementation("io.micronaut:micronaut-inject-groovy")
     testImplementation("org.junit.jupiter:junit-jupiter-api")

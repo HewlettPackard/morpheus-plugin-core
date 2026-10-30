@@ -29,9 +29,10 @@ dependencies {
 	api 'org.apache.httpcomponents:httpmime:4.5.13'
 	api 'com.github.seancfoley:ipaddress:5.4.1'
 	api "org.slf4j:slf4j-parent:$slf4jVersion"
-	api 'com.github.jknack:handlebars:4.3.1'
+	api 'com.github.jknack:handlebars:4.5.2'
 	api "org.slf4j:slf4j-api:1.7.26"
-	api 'org.bouncycastle:bcprov-jdk18on:1.78'
+	// MORPH-19077: bcprov 1.78 -> 1.85 (BC CVEs)
+	api 'org.bouncycastle:bcprov-jdk18on:1.85'
 	implementation 'jakarta.servlet:jakarta.servlet-api:6.0.0'
 	implementation "org.codehaus.groovy:groovy:$groovyVersion"
 	implementation "org.codehaus.groovy:groovy-json:$groovyVersion"
@@ -39,9 +40,9 @@ dependencies {
 //	implementation "org.codehaus.groovy:groovy-console:$groovyVersion"
 	compileOnly('com.morpheusdata:cypher-core:0.10.0')
 	implementation 'commons-net:commons-net:3.9.0'
-	implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.1'
-	implementation 'com.fasterxml.jackson.core:jackson-annotations:2.15.1'
-	implementation 'com.fasterxml.jackson.core:jackson-core:2.15.1'
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.11'
+	implementation 'com.fasterxml.jackson.core:jackson-annotations:2.18.11'
+	implementation 'com.fasterxml.jackson.core:jackson-core:2.18.11'
 
 	//implementation group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.4'
 	implementation 'commons-net:commons-net:3.9.0'
@@ -54,6 +55,11 @@ dependencies {
 	testImplementation 'cglib:cglib-nodep:3.3.0'
 	testImplementation 'org.objenesis:objenesis:3.1'
 	testImplementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.30'
+	constraints {
+		testImplementation('org.testng:testng:7.5.1') {
+			because('testng 7.4.0 comes transitively via groovy-all and has known CVEs')
+		}
+	}
 }
 
 sourceSets {
