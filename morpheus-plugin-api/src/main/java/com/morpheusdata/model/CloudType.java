@@ -44,6 +44,7 @@ public class CloudType extends CloudTypeIdentityProjection {
 	protected Boolean hasNetworks = false;
 	protected Boolean hasResourcePools = false;
 	protected Boolean hasAffinityGroups = false;
+	protected Boolean hasHostVmGroups = false;
 	protected Boolean provisionRequiresResourcePool = false;
 	protected Boolean hideScopedResourcePools = false;
 	protected Boolean hasHosts = true;
@@ -696,5 +697,13 @@ public class CloudType extends CloudTypeIdentityProjection {
 
 	public void setHasAffinityGroups(Boolean hasAffinityGroups) {
 		this.hasAffinityGroups = hasAffinityGroups;
+	}
+
+	public Boolean getHasHostVmGroups() {
+		return hasHostVmGroups;
+	}
+
+	public void setHasHostVmGroups(Boolean hasHostVmGroups) {
+		this.hasHostVmGroups = hasHostVmGroups;
 	}
 }
