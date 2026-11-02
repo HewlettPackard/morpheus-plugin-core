@@ -39,7 +39,9 @@ public class AffinityGroup extends MorpheusIdentityModel {
 	protected Collection<ComputeServer> servers;
 
 	//combined VM-to-Host rule members; legacy VM-to-VM rules use servers instead
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected HostVmGroup vmGroup;
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected HostVmGroup hostGroup;
 
 	public String getName() {
