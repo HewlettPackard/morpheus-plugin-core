@@ -112,6 +112,30 @@ version: 1.0.0
         jarFile.delete()
     }
 
+    void "inspectPlugin preserves qualified version bounds #minimum to #maximum"() {
+        given:
+        File jarFile = writeManifestDescriptorJar(
+            'com.example.DoesNotExistPlugin', 'my-plugin', '1.0.0-SNAPSHOT',
+            JsonOutput.toJson([[code: 'required-plugin', minVersion: minimum, maxVersion: maximum]])
+        )
+
+        when:
+        def descriptor = PluginManager.inspectPlugin(jarFile)
+
+        then:
+        descriptor.version == '1.0.0-SNAPSHOT'
+        descriptor.requiredPlugins[0].minVersion == minimum
+        descriptor.requiredPlugins[0].maxVersion == maximum
+
+        cleanup:
+        jarFile.delete()
+
+        where:
+        minimum            | maximum
+        '1.0.0.dev'        | '2.0.0-SNAPSHOT'
+        '1.0.0-SNAPSHOT'   | '2.0.0.dev.1'
+    }
+
     void "inspectPlugin rejects obsolete required plugin version shapes"() {
         given:
         File jarFile = writeManifestDescriptorJar(
@@ -178,8 +202,12 @@ version: 1.0.0
         JsonOutput.toJson([[code: 'required-plugin'], [code: 'required-plugin']])  | "declares duplicate required plugin 'required-plugin'"
         JsonOutput.toJson([[code: 'required-plugin', minimumVersion: '1.0.0']])    | "contains unsupported field 'minimumVersion'"
         JsonOutput.toJson([[code: 'required-plugin', minVersion: 'version-one']]) | 'minVersion must be a dotted numeric version'
+        JsonOutput.toJson([[code: 'required-plugin', minVersion: '1.0..dev']])   | 'minVersion must be a dotted numeric version'
+        JsonOutput.toJson([[code: 'required-plugin', maxVersion: '2.0-']])      | 'maxVersion must be a dotted numeric version'
         JsonOutput.toJson([[code: 'required-plugin', minVersion: '2.0.0',
                             maxVersion: '1.0.0']])                                  | 'must have minVersion lower than maxVersion'
+        JsonOutput.toJson([[code: 'required-plugin', minVersion: '2.0.0.dev',
+                            maxVersion: '2.0-SNAPSHOT']])                            | 'must have minVersion lower than maxVersion'
     }
 
     void "inspectPlugin requires manifest identity when required plugins are declared"() {

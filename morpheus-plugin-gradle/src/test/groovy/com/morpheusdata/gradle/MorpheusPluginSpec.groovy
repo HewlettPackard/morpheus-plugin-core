@@ -42,8 +42,8 @@ jar {
 morpheusPlugin {
 	requiredPlugins {
 		plugin('morpheus-networking') {
-			minVersion = '2.4.0'
-			maxVersion = '3.0.0'
+			minVersion = '${minimum}'
+			maxVersion = '${maximum}'
 		}
 		plugin('morpheus-storage') {
 			minVersion = '5.1.0'
@@ -65,7 +65,7 @@ morpheusPlugin {
 
 		then:
 		requiredPlugins == [
-			[code: 'morpheus-networking', minVersion: '2.4.0', maxVersion: '3.0.0'],
+			[code: 'morpheus-networking', minVersion: minimum, maxVersion: maximum],
 			[code: 'morpheus-storage', minVersion: '5.1.0']
 		]
 		jarFile.getEntry('META-INF/morpheus-plugin.yml') == null
@@ -75,6 +75,11 @@ morpheusPlugin {
 
 		cleanup:
 		jarFile?.close()
+
+		where:
+		minimum          | maximum
+		'2.4.0'          | '3.0.0'
+		'2.4.0.dev'      | '3.0.0-SNAPSHOT'
 	}
 
 	void "manifest generation rejects a plugin requiring itself"() {
@@ -94,8 +99,8 @@ morpheusPlugin {
 		given:
 		def requiredPlugins = new MorpheusRequiredPlugins()
 		requiredPlugins.plugin('required-plugin') {
-			minVersion = '2.0.0'
-			maxVersion = '1.0.0'
+			minVersion = minimum
+			maxVersion = maximum
 		}
 
 		when:
@@ -104,6 +109,30 @@ morpheusPlugin {
 		then:
 		def error = thrown(org.gradle.api.GradleException)
 		error.message == "Required plugin 'required-plugin' must have minVersion lower than maxVersion"
+
+		where:
+		minimum          | maximum
+		'2.0.0'          | '1.0.0'
+		'2.0.0.dev'      | '2.0-SNAPSHOT'
+		'2.0.0-SNAPSHOT' | '1.9.9.dev'
+	}
+
+	void "manifest generation rejects malformed qualified bound #version"() {
+		given:
+		def requiredPlugins = new MorpheusRequiredPlugins()
+		requiredPlugins.plugin('required-plugin') {
+			minVersion = version
+		}
+
+		when:
+		requiredPlugins.toManifestJson('my-plugin')
+
+		then:
+		def error = thrown(org.gradle.api.GradleException)
+		error.message.contains('minVersion must be a dotted numeric version')
+
+		where:
+		version << ['dev', '1.0..dev', '1.0-', '1.0-SNAPSHOT!']
 	}
 
 	void "requiredPlugins DSL requires plugin identity in the JAR manifest"() {

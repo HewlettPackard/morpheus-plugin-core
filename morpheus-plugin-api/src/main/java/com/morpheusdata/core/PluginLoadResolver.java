@@ -16,7 +16,8 @@
 
 package com.morpheusdata.core;
 
-import java.math.BigInteger;
+import com.morpheusdata.core.util.PluginVersion;
+
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,15 +30,12 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
  * Resolves required plugins into a safe load order without loading plugin classes.
  */
 public final class PluginLoadResolver {
-
-	private static final Pattern VERSION_PATTERN = Pattern.compile("\\d+(?:\\.\\d+)*");
 
 	private PluginLoadResolver() {
 	}
@@ -132,16 +130,17 @@ public final class PluginLoadResolver {
 			return null;
 		}
 		String availableVersion = requiredDescriptor.getVersion();
-		if (availableVersion == null || !VERSION_PATTERN.matcher(availableVersion).matches()) {
+		if (!PluginVersion.isValid(availableVersion)) {
 			return "Plugin '" + candidate.getCode() + "' requires plugin '" + requiredPlugin.getCode() +
-				"', but its version '" + availableVersion + "' is not a dotted numeric version";
+				"', but its version '" + availableVersion +
+				"' is not a dotted numeric version with an optional dot- or hyphen-separated qualifier";
 		}
 		if (requiredPlugin.getMinVersion() != null &&
-			compareVersions(availableVersion, requiredPlugin.getMinVersion()) < 0) {
+			PluginVersion.compare(availableVersion, requiredPlugin.getMinVersion()) < 0) {
 			return incompatibleVersionMessage(candidate, requiredPlugin, availableVersion);
 		}
 		if (requiredPlugin.getMaxVersion() != null &&
-			compareVersions(availableVersion, requiredPlugin.getMaxVersion()) >= 0) {
+			PluginVersion.compare(availableVersion, requiredPlugin.getMaxVersion()) >= 0) {
 			return incompatibleVersionMessage(candidate, requiredPlugin, availableVersion);
 		}
 		return null;
@@ -275,18 +274,4 @@ public final class PluginLoadResolver {
 		return loadOrder;
 	}
 
-	private static int compareVersions(String left, String right) {
-		String[] leftParts = left.split("\\.");
-		String[] rightParts = right.split("\\.");
-		int size = Math.max(leftParts.length, rightParts.length);
-		for (int i = 0; i < size; i++) {
-			BigInteger leftPart = i < leftParts.length ? new BigInteger(leftParts[i]) : BigInteger.ZERO;
-			BigInteger rightPart = i < rightParts.length ? new BigInteger(rightParts[i]) : BigInteger.ZERO;
-			int comparison = leftPart.compareTo(rightPart);
-			if (comparison != 0) {
-				return comparison;
-			}
-		}
-		return 0;
-	}
 }

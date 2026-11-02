@@ -16,14 +16,11 @@
 
 package com.morpheusdata.gradle
 
+import com.morpheusdata.core.util.PluginVersion
 import groovy.json.JsonOutput
 import org.gradle.api.GradleException
 
-import java.util.regex.Pattern
-
 class MorpheusRequiredPlugins {
-
-	private static final Pattern VERSION_BOUND_PATTERN = Pattern.compile(/\d+(?:\.\d+)*/)
 
 	final List<MorpheusRequiredPlugin> plugins = []
 	boolean configured = false
@@ -66,31 +63,16 @@ class MorpheusRequiredPlugins {
 			validateVersionBound(requiredPlugin.code, 'minVersion', requiredPlugin.minVersion)
 			validateVersionBound(requiredPlugin.code, 'maxVersion', requiredPlugin.maxVersion)
 			if(requiredPlugin.minVersion && requiredPlugin.maxVersion &&
-				compareVersions(requiredPlugin.minVersion, requiredPlugin.maxVersion) >= 0) {
+				PluginVersion.compare(requiredPlugin.minVersion, requiredPlugin.maxVersion) >= 0) {
 				throw new GradleException("Required plugin '${requiredPlugin.code}' must have minVersion lower than maxVersion")
 			}
 		}
 	}
 
 	private static void validateVersionBound(String requiredPluginCode, String field, String value) {
-		if(value && !VERSION_BOUND_PATTERN.matcher(value).matches()) {
-			throw new GradleException("Required plugin '${requiredPluginCode}' ${field} must be a dotted numeric version")
+		if(value && !PluginVersion.isValid(value)) {
+			throw new GradleException("Required plugin '${requiredPluginCode}' ${field} must be a dotted numeric version with an optional dot- or hyphen-separated qualifier")
 		}
-	}
-
-	private static int compareVersions(String left, String right) {
-		def leftParts = left.tokenize('.').collect { new BigInteger(it) }
-		def rightParts = right.tokenize('.').collect { new BigInteger(it) }
-		int size = Math.max(leftParts.size(), rightParts.size())
-		for(int i = 0; i < size; i++) {
-			BigInteger leftPart = i < leftParts.size() ? leftParts[i] : BigInteger.ZERO
-			BigInteger rightPart = i < rightParts.size() ? rightParts[i] : BigInteger.ZERO
-			int comparison = leftPart <=> rightPart
-			if(comparison != 0) {
-				return comparison
-			}
-		}
-		return 0
 	}
 
 	private static void configure(Object target, Closure configuration) {

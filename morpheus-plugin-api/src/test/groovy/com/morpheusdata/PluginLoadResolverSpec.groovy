@@ -68,6 +68,54 @@ class PluginLoadResolverSpec extends Specification {
 		plan.getFailure(dependent).contains("requires plugin 'plugin-a', which could not be loaded")
 	}
 
+	void "compares qualified installed version #installed numerically against #minimum to #maximum"() {
+		given:
+		def required = descriptor('required', installed)
+		def candidate = descriptor('candidate', '1.0.0', [requiredPlugin('required', minimum, maximum)])
+
+		when:
+		def plan = PluginLoadResolver.resolve([candidate], [required])
+
+		then:
+		if(compatible) {
+			assert plan.loadOrder == [candidate]
+			assert plan.failures.isEmpty()
+		} else {
+			assert plan.loadOrder.empty
+			assert plan.getFailure(candidate).contains("but version ${installed} is available")
+		}
+
+		where:
+		installed              | minimum             | maximum             | compatible
+		'1.2.0.dev'            | '1.2.0'             | '2.0.0'             | true
+		'1.2.0-SNAPSHOT'       | '1.2.0'             | '2.0.0'             | true
+		'1.2.0'                | '1.2.0-SNAPSHOT'    | '2.0.0.dev'         | true
+		'1.2'                  | '1.2.0.dev'         | null                | true
+		'1.10.0.dev.2'         | '1.9.0-SNAPSHOT'    | '2.0.0'             | true
+		'2147483648-SNAPSHOT'  | '2147483647'        | '2147483649.dev'    | true
+		'1.1.9-SNAPSHOT'       | '1.2.0.dev'         | '2.0.0'             | false
+		'2.0.0.dev'            | '1.2.0'             | '2.0.0'             | false
+		'2.0.0-SNAPSHOT'       | '1.2.0'             | '2.0.0.dev'         | false
+		'2.0.0'                | null                | '2.0.0-SNAPSHOT'    | false
+	}
+
+	void "rejects malformed installed versions without blocking independent plugins"() {
+		given:
+		def required = descriptor('required', installed)
+		def candidate = descriptor('candidate', '1.0.0', [requiredPlugin('required', '1.0.0')])
+		def independent = descriptor('independent', '1.0.0')
+
+		when:
+		def plan = PluginLoadResolver.resolve([candidate, independent], [required])
+
+		then:
+		plan.loadOrder == [independent]
+		plan.getFailure(candidate).contains("version '${installed}' is not a dotted numeric version")
+
+		where:
+		installed << ['dev', '1.0..dev', '1.0-SNAPSHOT!', null]
+	}
+
 	void "accepts required plugins already loaded by another manager"() {
 		given:
 		def networking = descriptor('networking', '2.5.0')

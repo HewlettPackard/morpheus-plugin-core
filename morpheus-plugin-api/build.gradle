@@ -65,6 +65,7 @@ dependencies {
 
 sourceSets {
     main {
+        java.srcDir rootProject.file('shared/src/main/java')
         compileClasspath += configurations.provided
     }
 }

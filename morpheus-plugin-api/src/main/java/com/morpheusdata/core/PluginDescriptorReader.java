@@ -17,6 +17,7 @@
 package com.morpheusdata.core;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.morpheusdata.core.util.PluginVersion;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
@@ -24,7 +25,6 @@ import org.yaml.snakeyaml.constructor.SafeConstructor;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -36,13 +36,11 @@ import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
-import java.util.regex.Pattern;
 
 final class PluginDescriptorReader {
 
 	private static final String LEGACY_YAML_PATH = "plugin.yml";
 	private static final String LEGACY_PROPERTIES_PATH = "META-INF/morpheus.properties";
-	private static final Pattern VERSION_BOUND_PATTERN = Pattern.compile("\\d+(?:\\.\\d+)*");
 	private static final Set<String> REQUIRED_PLUGIN_FIELDS = Set.of("code", "minVersion", "maxVersion");
 	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
@@ -253,7 +251,7 @@ final class PluginDescriptorReader {
 			validateVersionBound(minVersion, "minVersion", code, "META-INF/MANIFEST.MF");
 			validateVersionBound(maxVersion, "maxVersion", code, "META-INF/MANIFEST.MF");
 			if (minVersion != null && maxVersion != null &&
-				compareVersionBounds(minVersion, maxVersion) >= 0) {
+				PluginVersion.compare(minVersion, maxVersion) >= 0) {
 				throw new PluginDescriptorException("META-INF/MANIFEST.MF required plugin '" + code +
 					"' must have minVersion lower than maxVersion");
 			}
@@ -264,25 +262,10 @@ final class PluginDescriptorReader {
 	}
 
 	private static void validateVersionBound(String version, String field, String code, String source) throws PluginDescriptorException {
-		if (version != null && !VERSION_BOUND_PATTERN.matcher(version).matches()) {
+		if (version != null && !PluginVersion.isValid(version)) {
 			throw new PluginDescriptorException(source + " required plugin '" + code + "' " + field +
-				" must be a dotted numeric version");
+				" must be a dotted numeric version with an optional dot- or hyphen-separated qualifier");
 		}
-	}
-
-	private static int compareVersionBounds(String left, String right) {
-		String[] leftParts = left.split("\\.");
-		String[] rightParts = right.split("\\.");
-		int size = Math.max(leftParts.length, rightParts.length);
-		for (int i = 0; i < size; i++) {
-			BigInteger leftPart = i < leftParts.length ? new BigInteger(leftParts[i]) : BigInteger.ZERO;
-			BigInteger rightPart = i < rightParts.length ? new BigInteger(rightParts[i]) : BigInteger.ZERO;
-			int comparison = leftPart.compareTo(rightPart);
-			if (comparison != 0) {
-				return comparison;
-			}
-		}
-		return 0;
 	}
 
 	private static String requiredString(Object value, String field, String source) throws PluginDescriptorException {
