@@ -9,9 +9,11 @@ class PluginManagerControllerSpec extends Specification {
 		def manager = new PluginManager(Mock(MorpheusContext))
 		def jarFile = File.createTempFile("controller-plugin", ".jar")
 		jarFile.deleteOnExit()
+		def descriptor = new PluginDescriptor(PluginDescriptor.CURRENT_SCHEMA_VERSION,
+			ControllerNoRendererPlugin.name, "controllerNoRendererPlugin", "1.0.0", [])
 
 		when:
-		def plugin = manager.registerPlugin(ControllerNoRendererPlugin, jarFile, "1.0.0")
+		def plugin = manager.registerPlugin(ControllerNoRendererPlugin, jarFile, descriptor)
 
 		then:
 		noExceptionThrown()
