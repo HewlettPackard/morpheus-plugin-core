@@ -226,4 +226,80 @@ class MyBackupProvider extends MorpheusBackupProvider {
 
 See the https://github.com/gomorpheus/morpheus-digital-ocean-plugin[DigitalOcean Plugin] for a full example implementation of plugin that utilizes the Morpheus Backup Provider.
 
+[#backup-info-rows]
+==== Backup Info Rows
+
+Use https://developer.morpheusdata.com/api/com/morpheusdata/core/providers/BackupResourceViewUIFacet.html[BackupResourceViewUIFacet] to add rows to the existing backup info section. This is for provider-specific fields that belong next to the standard backup details, such as whether a backup is driven by a policy and the policy name, or that the backup was created manually. It does not add a tab and it does not replace the backup view.
+
+Requires Morpheus UI 9.0.2 or later and Plugin API 1.5.2 or later. The generated API documentation for the provider is published from the interface JavaDoc.
+
+Register the provider from the plugin `initialize()` method, the same way other providers are registered:
+
+[source,groovy]
+----
+class MyPlugin extends Plugin {
+
+	@Override
+	void initialize() {
+		this.registerProvider(new MyBackupInfoProvider(this, morpheus))
+	}
+}
+----
+
+`show()` is called after Morpheus has already checked permissions. Return true only for backups this plugin owns. Compare the backup provider type code so another provider's backups do not pick up these rows.
+
+`getDetailViewInfo()` returns one `DetailEntry` per row:
+
+* `i18nLabel` is a message key and is tried first
+* `fallbackLabel` is plain text used when that key is missing
+* `value` is the displayed text. Null or blank values are skipped
+
+[source,groovy]
+----
+class MyBackupInfoProvider implements BackupResourceViewUIFacet {
+
+	Plugin plugin
+	MorpheusContext morpheus
+
+	MyBackupInfoProvider(Plugin plugin, MorpheusContext morpheus) {
+		this.plugin = plugin
+		this.morpheus = morpheus
+	}
+
+	@Override
+	String getCode() {
+		return 'my-backup-info'
+	}
+
+	@Override
+	String getName() {
+		return 'My Backup Info'
+	}
+
+	@Override
+	Boolean show(Backup backup, User user, Account account) {
+		return backup?.backupProvider?.type?.code == 'my-backup-provider'
+	}
+
+	@Override
+	List<DetailEntry> getDetailViewInfo(Backup backup) {
+		String policyName = resolvePolicyName(backup)
+		if(policyName) {
+			return [new DetailEntry('gomorpheus.label.policy', 'Policy', policyName)]
+		}
+		return [new DetailEntry('gomorpheus.label.policy', 'Policy', 'Manual')]
+	}
+}
+----
+
+Also implement `getPlugin()` and `getMorpheus()` from `PluginProvider`.
+
+Morpheus appends the rows to:
+
+* Instance backup views
+* The backup detail info section
+* The backup API detail payload, as `backupInfoFields`
+
+A failure in one provider is logged and does not hide the rest of the info section.
+
 	

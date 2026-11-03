@@ -16,6 +16,10 @@ getRenderer().renderTemplate("prefix/someview", model);
 
 Do not provide the suffix (.hbs) - you may also pass a `com.morpheusdata.views.ViewModel` into the view to use when rendering the html.
 
+=== Resource info rows
+
+To add label/value rows to an existing info section without a tab, implement `ResourceViewUIFacet`. Backup details use `BackupResourceViewUIFacet`. See <<BackupPlugins.adoc#backup-info-rows, Backup Info Rows>>.
+
 
 === Asset helper
 
