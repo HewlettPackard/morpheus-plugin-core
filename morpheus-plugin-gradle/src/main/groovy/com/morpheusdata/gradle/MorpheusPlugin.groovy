@@ -16,9 +16,11 @@
 
 package com.morpheusdata.gradle
 
+import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.UnknownTaskException
+import org.gradle.api.tasks.bundling.Jar
 import org.gradle.language.jvm.tasks.ProcessResources
 
 /**
@@ -69,6 +71,22 @@ class MorpheusPlugin implements Plugin<Project> {
 				i18nTarget = project.file("${processResources?.destinationDir}/${morpheusPluginConfig.i18nTarget}")
 			}
 
+			if(morpheusPluginConfig.requiredPlugins.configured) {
+				def jarTask = project.tasks.findByName('jar')
+				if(!(jarTask instanceof Jar)) {
+					throw new GradleException('The java plugin must be applied before configuring morpheusPlugin.requiredPlugins')
+				}
+				def manifestAttributes = jarTask.manifest.attributes
+				['Plugin-Class', 'Plugin-Version', 'Morpheus-Code'].each { attribute ->
+					if(!manifestAttributes[attribute]?.toString()?.trim()) {
+						throw new GradleException("JAR manifest attribute '${attribute}' must be specified when morpheusPlugin.requiredPlugins is configured")
+					}
+				}
+				String manifestPluginCode = manifestAttributes['Morpheus-Code']?.toString()
+				jarTask.manifest.attributes(
+					'Morpheus-Required-Plugins': morpheusPluginConfig.requiredPlugins.toManifestJson(manifestPluginCode)
+				)
+			}
 
 			//add task dependencies
 			
