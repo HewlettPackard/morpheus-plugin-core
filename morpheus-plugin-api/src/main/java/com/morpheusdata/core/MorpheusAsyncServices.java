@@ -584,6 +584,13 @@ public interface MorpheusAsyncServices {
 	MorpheusAffinityGroupService getAffinityGroup();
 
 	/**
+	 * Returns the MorpheusHostVmGroupService for managing Host/VM groups used by combined
+	 * VM-to-Host affinity rules.
+	 * @return an instance of the MorpheusHostVmGroupService
+	 */
+	MorpheusHostVmGroupService getHostVmGroup();
+
+	/**
 	 * Returns the MorpheusLlmService for managing LLM Engine model and integration contexts.
 	 * @return an instance of the MorpheusLlmService
 	 */
