@@ -17,6 +17,7 @@
 package com.morpheusdata.core.providers;
 
 import com.morpheusdata.model.StorageServer;
+import com.morpheusdata.model.StorageSnapshotPolicy;
 import com.morpheusdata.model.StorageVolume;
 import com.morpheusdata.model.StorageVolumeGroup;
 import com.morpheusdata.model.StorageVolumeGroupSnapshot;
@@ -107,6 +108,8 @@ public interface StorageProviderVolumeGroupsFacet {
 	 *   <li>Optionally remove volumes from the group first (based on opts)</li>
 	 *   <li>Delete the volume group/set from the array</li>
 	 * </ol>
+	 * Core removes the group's snapshot policy through {@link #removeSnapshotPolicy} before calling this,
+	 * so {@code volumeGroup.snapshotPolicy} is null here.
 	 *
 	 * @param storageServer the storage server
 	 * @param volumeGroup the volume group to delete
@@ -287,5 +290,64 @@ public interface StorageProviderVolumeGroupsFacet {
 	 */
 	default ServiceResponse<StorageVolumeGroupSnapshot> deleteVolumeGroupSnapshot(StorageServer storageServer, StorageVolumeGroup volumeGroup, StorageVolumeGroupSnapshot snapshot, Map<String, Object> opts) {
 		return ServiceResponse.error("deleteVolumeGroupSnapshot not implemented");
+	}
+
+	// ============================================================================
+	// Snapshot Policy Operation
+	// ============================================================================
+
+	/**
+	 * Apply (create, update or disable) a snapshot policy on a volume group's array.
+	 * <p>
+	 * Core calls this on every save, so the provider always sees the full desired state. A provider
+	 * that supports a native array scheduler should reconcile the array with the policy:
+	 * <ul>
+	 *   <li>{@code useNativeScheduler} and {@code enabled} are both true: create or update the array
+	 *       schedule for the group's consistency set, and set {@code policy.externalId} to the array
+	 *       schedule's identifier.</li>
+	 *   <li>Otherwise: remove any array schedule identified by {@code policy.externalId} and clear
+	 *       {@code externalId}, so the core scheduler (or nothing, when disabled) drives the policy.</li>
+	 *   <li>Settings the array cannot honor (for example an interval below the array's minimum)
+	 *       should be rejected with an error rather than silently adjusted.</li>
+	 * </ul>
+	 * A provider that leaves scheduling to the Morpheus core scheduler leaves this default in place,
+	 * which accepts the policy unchanged so the core scheduler drives it.
+	 * <p>
+	 * Core reads {@code externalId} from the policy returned in the response data, or from the policy
+	 * passed in when no data is returned.
+	 * <p>
+	 * Core holds a lock on the group's snapshot policy while it calls this method,
+	 * {@link #removeSnapshotPolicy}, and (while deleting a volume group) {@link #canDeleteVolumeGroup} and
+	 * {@link #deleteVolumeGroup}. The lock is not re-entrant, so these methods must not call
+	 * {@link com.morpheusdata.core.MorpheusStorageSnapshotPolicyService} for the same volume group.
+	 *
+	 * @param storageServer the storage server hosting the volume group
+	 * @param volumeGroup the volume group the policy applies to
+	 * @param policy the policy settings to apply
+	 * @param opts additional options
+	 * @return ServiceResponse with the applied policy ({@code externalId} reflecting the array schedule, if any)
+	 * @since 1.7.0
+	 */
+	default ServiceResponse<StorageSnapshotPolicy> applySnapshotPolicy(StorageServer storageServer, StorageVolumeGroup volumeGroup, StorageSnapshotPolicy policy, Map<String, Object> opts) {
+		return ServiceResponse.success(policy);
+	}
+
+	/**
+	 * Remove a snapshot policy's array-side state before the policy is deleted.
+	 * <p>
+	 * A provider that created an array schedule in {@link #applySnapshotPolicy} should delete the
+	 * schedule identified by {@code policy.externalId}. Core deletes the policy record only after this
+	 * succeeds. See {@link #applySnapshotPolicy} for the lock core holds while calling it. A provider with no array-side state leaves this default in place, which succeeds
+	 * without contacting the array.
+	 *
+	 * @param storageServer the storage server hosting the volume group
+	 * @param volumeGroup the volume group the policy belongs to
+	 * @param policy the policy being deleted (its {@code externalId} identifies any array schedule)
+	 * @param opts additional options
+	 * @return ServiceResponse indicating success/failure
+	 * @since 1.7.0
+	 */
+	default ServiceResponse removeSnapshotPolicy(StorageServer storageServer, StorageVolumeGroup volumeGroup, StorageSnapshotPolicy policy, Map<String, Object> opts) {
+		return ServiceResponse.success();
 	}
 }
