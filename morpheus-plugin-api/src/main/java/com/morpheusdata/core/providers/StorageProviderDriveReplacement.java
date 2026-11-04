@@ -115,6 +115,10 @@ public interface StorageProviderDriveReplacement {
 	/**
 	 * Abandons the operation and returns the node to the state it was in, for an evacuated drive put back
 	 * rather than replaced.
+	 * <p>
+	 * Morpheus may call this again for the same operation when it did not record the earlier answer, for example
+	 * after a restart. A repeated call must not fail because the undo was already started or finished; it returns
+	 * where the undo has reached.
 	 *
 	 * @param storageServer the storage cluster
 	 * @param operation the operation to abandon
