@@ -60,6 +60,7 @@ public class Instance extends InstanceIdentityProjection {
 	public InstanceScale scale;
 	public Boolean autoScale = false;
 	public String statusMessage;
+	public String errorMessage;
 	public Date expireDate;
 	public String tags;
 	public Long maxStorage;
@@ -334,6 +335,14 @@ public class Instance extends InstanceIdentityProjection {
 
 	public void setStatusMessage(String statusMessage) {
 		this.statusMessage = statusMessage;
+	}
+
+	public String getErrorMessage() {
+		return errorMessage;
+	}
+
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
 	}
 
 	public Date getExpireDate() {
