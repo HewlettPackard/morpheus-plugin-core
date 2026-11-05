@@ -451,6 +451,33 @@ public interface CloudProvider extends PluginProvider {
 		return ServiceResponse.success(cloudPool);
 	}
 
+	/**
+	 * Indicates whether this cloud can delete virtual image locations from the cloud itself. When {@code true}, the
+	 * location and image delete dialogs offer "remove from cloud", and Morpheus calls
+	 * {@link #deleteVirtualImageLocation(Cloud, VirtualImageLocation)} for each of the image's locations in this cloud
+	 * when the user chooses it.
+	 * @since 1.6.0
+	 * @return true if the cloud can delete virtual image locations, false otherwise
+	 */
+	default Boolean canDeleteVirtualImages() {
+		return false;
+	}
+
+	/**
+	 * Deletes a virtual image location from the cloud, such as a template or an uploaded image file. Morpheus calls this
+	 * only when {@link #canDeleteVirtualImages()} returns true and the user chose to remove the image from the cloud, before
+	 * it deletes the location record. Return success once the cloud copy is gone (or was already gone); Morpheus then
+	 * deletes the record, so don't remove it yourself. Return an error to keep the record: the delete stops and the user
+	 * sees the error message. Return success without touching the cloud for locations this cloud shouldn't delete.
+	 * @since 1.6.0
+	 * @param cloud the cloud the location belongs to
+	 * @param virtualImageLocation the location to delete, including its virtual image, externalId, code and remotePath
+	 * @return a ServiceResponse with success true, or false and a msg explaining why the location couldn't be deleted
+	 */
+	default ServiceResponse deleteVirtualImageLocation(Cloud cloud, VirtualImageLocation virtualImageLocation) {
+		return ServiceResponse.error("Deleting virtual image locations from the cloud is not implemented", null);
+	}
+
 
 	/**
 	 * Returns the Costing Provider to be used for costing services. If this is not specified a StandardCostingService
