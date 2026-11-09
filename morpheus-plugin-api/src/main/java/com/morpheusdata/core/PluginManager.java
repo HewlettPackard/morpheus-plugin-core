@@ -148,6 +148,35 @@ public class PluginManager {
 	 * @return Plugin the instanced Plugin class loaded from the jar
 	 */
 	public Plugin registerPlugin(String pathToJar, Collection<PluginDescriptor> additionalAvailablePlugins) throws Exception {
+		try {
+			return registerPluginOrThrow(pathToJar, additionalAvailablePlugins);
+		} catch (PluginLoadException e) {
+			log.error("Unable to load plugin class from {}", pathToJar, e.getCause());
+			return null;
+		}
+	}
+
+	/**
+	 * Same as {@link #registerPlugin(String)} but reports a load failure to the caller instead of returning null.
+	 *
+	 * @param pathToJar Path to jar file
+	 * @return Plugin the instanced Plugin class loaded from the jar, never null
+	 * @throws PluginLoadException if the plugin class could not be loaded or initialized
+	 */
+	public Plugin registerPluginOrThrow(String pathToJar) throws Exception {
+		return registerPluginOrThrow(pathToJar, Collections.emptyList());
+	}
+
+	/**
+	 * Same as {@link #registerPlugin(String, Collection)} but reports a load failure to the caller instead of
+	 * returning null. Descriptor and dependency resolution failures are thrown as they are by the null-returning method.
+	 *
+	 * @param pathToJar Path to jar file
+	 * @param additionalAvailablePlugins plugins loaded by another cooperating manager
+	 * @return Plugin the instanced Plugin class loaded from the jar, never null
+	 * @throws PluginLoadException if the plugin class could not be loaded or initialized
+	 */
+	public Plugin registerPluginOrThrow(String pathToJar, Collection<PluginDescriptor> additionalAvailablePlugins) throws Exception {
 		File jarFile = new File(pathToJar);
 		PluginDescriptor descriptor = inspectPlugin(jarFile);
 		String pluginClassName = descriptor.getPluginClass();
@@ -169,8 +198,8 @@ public class PluginManager {
 			log.info("Loading Plugin {}:{} from {}", pluginClassName, descriptor.getVersion(), pathToJar);
 			return registerPlugin(pluginClass, jarFile, descriptor);
 		} catch (Throwable e) {
-			log.error("Unable to load plugin class from {}", pathToJar, e);
-			return null;
+			String detail = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
+			throw new PluginLoadException("Unable to load plugin class " + pluginClassName + ": " + detail, e);
 		}
 	}
 
