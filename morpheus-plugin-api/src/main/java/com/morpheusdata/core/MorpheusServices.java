@@ -31,6 +31,8 @@ import com.morpheusdata.core.synchronous.compute.MorpheusSynchronousHostProfileS
 import com.morpheusdata.core.synchronous.costing.MorpheusSynchronousCostingService;
 import com.morpheusdata.core.synchronous.cypher.MorpheusSynchronousCypherService;
 import com.morpheusdata.core.synchronous.dashboard.MorpheusSynchronousDashboardService;
+import com.morpheusdata.core.synchronous.event.MorpheusSynchronousEventCollectorService;
+import com.morpheusdata.core.synchronous.event.MorpheusSynchronousEventHistoryService;
 import com.morpheusdata.core.synchronous.integration.MorpheusSynchronousAccountInventoryService;
 import com.morpheusdata.core.synchronous.integration.MorpheusSynchronousIntegrationService;
 import com.morpheusdata.core.synchronous.library.MorpheusSynchronousLibraryService;
@@ -590,4 +592,22 @@ public interface MorpheusServices {
 	 * @return an instance of {@link MorpheusSynchronousUpdateDefinitionService}
 	 */
 	MorpheusSynchronousUpdateDefinitionService getUpdateDefinition();
+
+	/**
+	 * @return blocking owner-bound event subscription operations
+	 * @throws UnsupportedOperationException when the appliance does not implement event subscriptions
+	 * @since 1.7.0
+	 */
+	default MorpheusSynchronousEventCollectorService getEventCollector() {
+		throw new UnsupportedOperationException("Event subscriptions are not supported by this appliance");
+	}
+
+	/**
+	 * @return blocking filtered event history operations
+	 * @throws UnsupportedOperationException when the appliance does not implement event history
+	 * @since 1.7.0
+	 */
+	default MorpheusSynchronousEventHistoryService getEventHistory() {
+		throw new UnsupportedOperationException("Event history is not supported by this appliance");
+	}
 }

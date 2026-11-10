@@ -24,6 +24,8 @@ import com.morpheusdata.core.cloud.MorpheusCloudService;
 import com.morpheusdata.core.costing.MorpheusCostingService;
 import com.morpheusdata.core.cypher.MorpheusCypherService;
 import com.morpheusdata.core.dashboard.MorpheusDashboardService;
+import com.morpheusdata.core.event.MorpheusEventCollectorService;
+import com.morpheusdata.core.event.MorpheusEventHistoryService;
 import com.morpheusdata.core.guidance.MorpheusAccountDiscoveryService;
 import com.morpheusdata.core.integration.MorpheusAccountInventoryService;
 import com.morpheusdata.core.integration.MorpheusIntegrationService;
@@ -604,4 +606,22 @@ public interface MorpheusAsyncServices {
 	 * @return an instance of {@link MorpheusUpdateDefinitionService}
 	 */
 	MorpheusUpdateDefinitionService getUpdateDefinition();
+
+	/**
+	 * @return owner-bound event subscription operations
+	 * @throws UnsupportedOperationException when the appliance does not implement event subscriptions
+	 * @since 1.7.0
+	 */
+	default MorpheusEventCollectorService getEventCollector() {
+		throw new UnsupportedOperationException("Event subscriptions are not supported by this appliance");
+	}
+
+	/**
+	 * @return filtered event history operations
+	 * @throws UnsupportedOperationException when the appliance does not implement event history
+	 * @since 1.7.0
+	 */
+	default MorpheusEventHistoryService getEventHistory() {
+		throw new UnsupportedOperationException("Event history is not supported by this appliance");
+	}
 }
