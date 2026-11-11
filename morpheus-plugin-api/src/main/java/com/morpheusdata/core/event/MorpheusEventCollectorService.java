@@ -13,8 +13,10 @@ import io.reactivex.rxjava3.core.Single;
 /**
  * Owner-bound durable subscriptions, not a publisher or public collector-lease API.
  * Every operation revalidates {@link EventConsumerContext}, current permissions and subscription
- * ownership. A subscription ID or filter is not authorization. Events Full is required except
- * listing, which permits Events Read. Unavailable dependencies return explicit failures.
+ * ownership. A subscription ID or filter is not authorization. Plugin calls follow the
+ * tenant-scoped trusted SDK policy described by EventConsumerContext. REST callers separately
+ * require Events Full except listing, which permits Events Read. Unavailable dependencies
+ * return explicit failures.
  *
  * <p>Events can be lost, duplicated or reordered. Reconcile authoritative inventory on startup,
  * after outages/loss, and periodically. Register/resume the subscription before scanning inventory;

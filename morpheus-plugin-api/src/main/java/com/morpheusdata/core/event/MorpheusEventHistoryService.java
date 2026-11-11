@@ -11,7 +11,8 @@ import com.morpheusdata.response.ServiceResponse;
 import io.reactivex.rxjava3.core.Single;
 
 /**
- * Filtered, authorized history with bounded pagination; requires Events Read or Full.
+ * Filtered, authorized history with bounded pagination under EventConsumerContext's
+ * tenant-scoped trusted SDK policy. REST callers separately require Events Read or Full.
  * Every query revalidates the loaded plugin, account/integration and current resource access.
  * Search outages return explicit dependency failures, not successful empty history.
  * History is retained for up to 30 days, independently of live ACKs. It is not a complete

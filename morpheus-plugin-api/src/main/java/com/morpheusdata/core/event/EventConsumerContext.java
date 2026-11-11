@@ -12,8 +12,10 @@ import java.util.Objects;
  * JVM-local caller information, not a credential, registration or collector lease.
  * Core must validate the exact loaded plugin instance and resolve/authorize the account and
  * optional integration on every operation. IDs are untrusted selectors, never grants.
- * An integration must belong to both the plugin and account. Without an integration,
- * core must independently authorize the plugin's access to the selected account.
+ * Under the existing trusted SDK model, an enabled, loaded plugin may select an active
+ * account; every event operation remains restricted to that account. An optional integration
+ * must belong to both the plugin and account and has its own subscription owner identity.
+ * This is not a sandbox for in-process plugin code. REST users separately require Events RBAC.
  * Calls after plugin unload must fail; unloading must not delete durable subscriptions.
  *
  * @since 1.7.0

@@ -10,7 +10,8 @@ import java.util.List;
 
 /**
  * Immutable subscription definition. Core validates bounded names, explicit nonempty supported
- * canonical event codes, resource scope and caller permissions. No client-supplied owner or queue.
+ * canonical event codes or supported category selectors such as {@code vm.*}, resource scope
+ * and caller permissions. No client-supplied owner or queue.
  * @since 1.7.0
  */
 public class EventSubscriptionCreateRequest implements Serializable {
