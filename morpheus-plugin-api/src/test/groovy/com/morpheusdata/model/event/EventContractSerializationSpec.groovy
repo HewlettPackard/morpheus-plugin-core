@@ -91,6 +91,7 @@ class EventContractSerializationSpec extends Specification {
 		def json = '''{
 			"events":[{"uuid":"e1","eventType":"future.outcome","details":{"newDetail":[1,2]}}],
 			"nextCursor":"history-page","futurePage":1,
+			"retentionStart":"2026-10-12T00:00:00Z","retentionEnd":"2026-11-10T02:00:00Z",
 			"summary":{"lastSuccessfulIndexAt":"2026-11-10T01:00:00Z",
 				"observedLossCount":4294967299,"firstObservedLossAt":null,
 				"lastObservedLossAt":"2026-11-09T00:00:00Z","futureSummary":true}
@@ -109,6 +110,10 @@ class EventContractSerializationSpec extends Specification {
 		restored.summary.observedLossCount == 4294967299L
 		restored.summary.firstObservedLossAt == null
 		restored.summary.lastObservedLossAt.before(restored.summary.lastSuccessfulIndexAt)
+		restored.retentionStart.toInstant().toString() == '2026-10-12T00:00:00Z'
+		restored.retentionEnd.toInstant().toString() == '2026-11-10T02:00:00Z'
+		mapper.readTree(mapper.writeValueAsBytes(restored)).retentionStart.textual
+		mapper.readValue('{"events":[]}', EventHistoryPage).retentionStart == null
 		mapper.readValue('{"events":[]}', EventHistoryPage).summary == null
 	}
 

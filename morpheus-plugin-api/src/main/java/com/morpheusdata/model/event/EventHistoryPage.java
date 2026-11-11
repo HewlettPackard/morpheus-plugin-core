@@ -6,7 +6,9 @@
 package com.morpheusdata.model.event;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -19,8 +21,18 @@ public class EventHistoryPage implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public List<EventEnvelope> events;
-	/** Opaque continuation for unchanged filters/owner; null at the end. No snapshot guarantee. */
+	/**
+	 * Opaque continuation for unchanged filters/owner; null when the bounded scan is exhausted.
+	 * An empty authorized page can still have a continuation. Each continuation expires after
+	 * 15 idle minutes; using it returns a fresh continuation. No snapshot guarantee.
+	 */
 	public String nextCursor;
+	/** Inclusive UTC retention boundary, not the earliest indexed event or a completeness claim. */
+	@JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "UTC")
+	public Date retentionStart;
+	/** Exclusive UTC retention boundary observed for this page, not the latest indexed event. */
+	@JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "UTC")
+	public Date retentionEnd;
 	/** Appliance-wide observations, not completeness of this filtered page or tenant. */
 	public EventHistorySummary summary;
 }

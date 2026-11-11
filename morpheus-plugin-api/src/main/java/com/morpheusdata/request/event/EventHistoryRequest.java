@@ -30,6 +30,6 @@ public class EventHistoryRequest implements Serializable {
 	public Date to;
 	/** Positive page size; null uses the bounded server default. */
 	public Integer maxResults;
-	/** Prior nextCursor with unchanged filters/owner; null starts a search. */
+	/** Prior nextCursor with unchanged filters/owner; expires after 15 idle minutes. Null starts a search. */
 	public String cursor;
 }
