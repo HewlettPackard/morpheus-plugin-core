@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 Morpheus Data, LLC.
+ * Copyright 2026 HPE Development Company, L.P.
  * Licensed under the PLUGIN CORE SOURCE LICENSE.
  * https://raw.githubusercontent.com/gomorpheus/morpheus-plugin-core/v1.0.x/LICENSE
  */
