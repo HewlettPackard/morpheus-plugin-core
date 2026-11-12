@@ -377,6 +377,37 @@ public interface DatastoreTypeProvider extends PluginProvider {
 	}
 
 	/**
+	 * Optional support for snapshots of an entire data store, independent of any VM, instance, or volume snapshot.
+	 * Implement this alongside DatastoreTypeProvider, not SnapshotFacet. Existing snapshot facets are unaffected.
+	 * @since 1.7.0
+	 */
+	public interface SnapshotDatastoreFacet {
+		/**
+		 * Creates a point-in-time copy of the data store's backing storage.
+		 * @param datastore the data store to snapshot
+		 * @return unsaved snapshot facts, including the provider's externalId and optional backing volume
+		 */
+		ServiceResponse<Snapshot> createSnapshot(Datastore datastore);
+
+		/**
+		 * Restores the entire data store, not an individual VM or volume. The implementation must reject
+		 * unsafe reverts while the data store is in use, or coordinate any required quiescing.
+		 * @param datastore the data store to restore
+		 * @param snapshot the snapshot belonging to this data store
+		 * @return the result of restoring the snapshot
+		 */
+		ServiceResponse<Snapshot> revertSnapshot(Datastore datastore, Snapshot snapshot);
+
+		/**
+		 * Deletes a snapshot of the data store.
+		 * @param datastore the data store owning the snapshot
+		 * @param snapshot the snapshot to delete
+		 * @return the result of deleting the snapshot
+		 */
+		ServiceResponse removeSnapshot(Datastore datastore, Snapshot snapshot);
+	}
+
+	/**
 	 * This facet is used to provide additional hooks for compute provisioning tasks.
 	 * @since 1.2.10
 	 * @author Mike Carlin
