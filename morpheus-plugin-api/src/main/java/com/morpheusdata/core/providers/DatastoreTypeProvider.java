@@ -405,14 +405,6 @@ public interface DatastoreTypeProvider extends PluginProvider {
 		 * @return the result of deleting the snapshot
 		 */
 		ServiceResponse removeSnapshot(Datastore datastore, Snapshot snapshot);
-
-		/**
-		 * Lists snapshots known to the provider, for explicit discovery or reconciliation.
-		 * Normal Core listing reads persisted DATASTORE snapshots without calling this method.
-		 * @param datastore the data store whose snapshots should be discovered
-		 * @return snapshots known to the provider
-		 */
-		ServiceResponse<List<Snapshot>> listSnapshots(Datastore datastore);
 	}
 
 	/**
