@@ -3,10 +3,38 @@
 **Note:** Morpheus Plugin API is now 1.0! This means calls that are used will be supported for a longer period of time and given appropriate deprecation warnings when necessary. Morpheus Plugin API `1.3.x` requires a minimum Morpheus version of `8.1.x`. Morpheus Plugin API `1.2.x` requires Morpheus `8.0.x`, and Morpheus `7.0.x` runs on Core version `1.1.x`.
 
 * **1.5.1**
-** *ComputeServer Enhancements*
-*** Added `systemUuid` to `ComputeServer` and `SystemUuidUtility` for normalizing and validating system UUIDs.
+** *Storage Replication Support*
+*** Added `StorageReplicationGroup` and `StorageReplicationPartner` models, identity projections, and `MorpheusSynchronousStorageReplicationGroupService`/`MorpheusSynchronousStorageReplicationPartnerService` for an SDS storage replication domain model SDK.
+*** Split the replication provider facet into separate CRUD and action interfaces, with provider-delegated CRUD for replication groups and partners.
+** *Storage Volume Group Support*
+*** Added `StorageVolumeGroup` model, identity projection, and `MorpheusSynchronousStorageVolumeGroupService` to the plugin API.
 ** *Storage Provider File Share Enhancements*
 *** Added `validateFileShare`, `syncFileShare`, `createFileShareAccess`, and `deleteFileShareAccess` default methods to `StorageProviderFileShares`, each defaulting to a no-op success response so existing implementations do not need to override them.
+** *Storage Enhancements*
+*** Added `supportsVolumeSet` to `StorageVolumeType`.
+*** Added `nativeVolume` property to volume type.
+** *GPU Inventory*
+*** Added `GetGpuDevicesRequest`/`GetGpuDevicesResponse` and `GpuDeviceInfo`/`GpuDeviceKind` models for retrieving GPU device inventory from providers.
+** *Account Credential Enhancements*
+*** Added `AccountCredentialRequest` model and interfaces for creating `AccountCredential`s.
+** *Central Action Provider*
+*** Added `CentralActionProvider` plugin interface, with a reference sample plugin and author docs.
+** *System Enhancements*
+*** Added a `removeSystemComponent(System, SystemRequest, SystemComponent)` default method to `SystemProvider` so plugins can run cleanup/decommission logic when a component is removed from an existing system.
+** *Backup Enhancements*
+*** Added `BackupResourceViewUIFacet` so backup providers can contribute a custom resource view.
+*** Added `getBackupDetailFields(Backup)` and `shouldExcludeDatastore(String)` default methods to `BackupProviderInterface` so backup providers can add read-only detail fields and exclude provider-managed datastores from sync, without core needing provider-specific hardcoding.
+** *Provision Enhancements*
+*** Added support for provider-specific config changes in resize/reconfigure requests on `HostProvisionProvider`/`WorkloadProvisionProvider`.
+*** Added `canChangeServicePlanOnConvertToManaged` to `ProvisionProvider`.
+** *Compute Server Enhancements*
+*** Added `maxSockets` to the `ComputeServer` model.
+*** Added `systemUuid` to `ComputeServer` and `SystemUuidUtility` for normalizing and validating system UUIDs.
+** *Convert to Managed Enhancements*
+*** Added `opts` field to `BeforeConvertToManagedRequest`.
+** *Misc*
+*** Removed the SNI-stripping `prepareSocket` override in `HttpApiClient`/`RestApiUtil`.
+*** Removed system-specific process update overloads.
 
 * **1.5.0**
 ** *Action Provider Support*
