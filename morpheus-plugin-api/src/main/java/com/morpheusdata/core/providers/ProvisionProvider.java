@@ -406,6 +406,28 @@ public interface ProvisionProvider extends PluginProvider {
 	}
 
 	/**
+	 * Indicates if the datastore of existing volumes can be changed on reconfigure
+	 * @return Boolean
+	 * @since 1.6.0
+	 */
+	default public Boolean canChangeDatastoreOnResize() {
+		return false;
+	}
+
+	/**
+	 * Indicates if the datastore of an existing volume may be changed when the server is reconfigured. Core asks
+	 * this for each existing volume on Reconfigure. Override it to decide per volume, e.g. to unlock an empty CD-ROM.
+	 * Decide from the server and volume as loaded; do not make remote calls.
+	 * @param server the server being reconfigured
+	 * @param volume the existing volume whose datastore field is being evaluated
+	 * @return true if the volume's datastore may be changed; by default {@link #canChangeDatastoreOnResize()}
+	 * @since 1.6.0
+	 */
+	default public Boolean canChangeVolumeDatastore(ComputeServer server, StorageVolume volume) {
+		return canChangeDatastoreOnResize();
+	}
+
+	/**
 	 * Indicates if the network can be changed
 	 * @return Boolean
 	 */
