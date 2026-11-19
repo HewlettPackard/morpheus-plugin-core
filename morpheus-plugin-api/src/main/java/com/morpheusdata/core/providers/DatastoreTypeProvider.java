@@ -378,7 +378,6 @@ public interface DatastoreTypeProvider extends PluginProvider {
 
 	/**
 	 * Optional support for snapshots of an entire data store, independent of any VM, instance, or volume snapshot.
-	 * Implement this alongside DatastoreTypeProvider, not SnapshotFacet. Existing snapshot facets are unaffected.
 	 * @since 1.7.0
 	 */
 	public interface SnapshotDatastoreFacet {
