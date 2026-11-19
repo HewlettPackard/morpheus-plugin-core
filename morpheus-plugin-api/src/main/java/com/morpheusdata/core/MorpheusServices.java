@@ -575,6 +575,13 @@ public interface MorpheusServices {
 	MorpheusSynchronousAffinityGroupService getAffinityGroup();
 
 	/**
+	 * Returns the {@link MorpheusSynchronousHostVmGroupService} for synchronous CRUD access to
+	 * {@link com.morpheusdata.model.HostVmGroup} objects used by combined VM-to-Host affinity rules.
+	 * @return an instance of {@link MorpheusSynchronousHostVmGroupService}
+	 */
+	MorpheusSynchronousHostVmGroupService getHostVmGroup();
+
+	/**
 	 * Returns the {@link MorpheusSynchronousUpdateDefinitionService} for synchronous CRUD access to {@link com.morpheusdata.model.UpdateDefinition} objects.
 	 * @return an instance of {@link MorpheusSynchronousUpdateDefinitionService}
 	 */
