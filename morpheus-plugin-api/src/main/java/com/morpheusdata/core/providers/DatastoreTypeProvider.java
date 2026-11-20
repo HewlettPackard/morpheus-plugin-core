@@ -111,6 +111,13 @@ public interface DatastoreTypeProvider extends PluginProvider {
 	default boolean getCheckpointTargetCapable() { return false; }
 
 	/**
+	 * Flags if this datastore supports storing VM secure metadata. If true, the option to enable VM secure metadata
+	 * storage will be available.
+	 * @return whether, or not this datastore supports VM secure metadata
+	 */
+	default boolean getSupportsVmSecureMetadataCapable() { return false; }
+
+	/**
 	 * Flags if this datastore can be created by the user. Some datastores are system injected and cannot be created by the user
 	 * @return whether, or not this datastore can be created by the user
 	 */
