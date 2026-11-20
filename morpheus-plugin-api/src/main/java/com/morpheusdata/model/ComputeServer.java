@@ -164,6 +164,7 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 	protected GuestConsoleType guestConsoleType;
 	protected String consoleKeymap;
 	protected ServerGroupMemberStatus serverGroupMemberStatus;
+	protected Boolean maintenanceMode = false;
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected ComputeServerIdentityProjection parentServer;
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
@@ -1051,6 +1052,20 @@ public class ComputeServer extends ComputeServerIdentityProjection {
 	public void setGuestConsolePreferred(Boolean guestConsolePreferred) {
 		this.guestConsolePreferred = guestConsolePreferred;
 		markDirty("guestConsolePreferred", guestConsolePreferred);
+	}
+
+	/**
+	 * Whether this host is in hypervisor maintenance mode. Hosts in maintenance mode should be excluded
+	 * from workload placement. May be null for records that predate this flag; treat null as false.
+	 * @return true if the host is in maintenance mode
+	 */
+	public Boolean getMaintenanceMode() {
+		return maintenanceMode;
+	}
+
+	public void setMaintenanceMode(Boolean maintenanceMode) {
+		this.maintenanceMode = maintenanceMode;
+		markDirty("maintenanceMode", maintenanceMode);
 	}
 
 	public GuestConsoleType getGuestConsoleType() {
