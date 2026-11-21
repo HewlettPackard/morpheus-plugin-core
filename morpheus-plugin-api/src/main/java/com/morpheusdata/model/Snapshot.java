@@ -44,6 +44,8 @@ public class Snapshot extends SnapshotIdentityProjection {
 	@JsonSerialize(using= ModelCollectionAsIdsOnlySerializer.class)
 	protected List<Snapshot> snapshots = new ArrayList<>();
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
+	protected Datastore datastore;
+	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected StorageVolume volume;
 	@JsonSerialize(using= ModelAsIdOnlySerializer.class)
 	protected StorageVolumeType volumeType;
@@ -118,6 +120,18 @@ public class Snapshot extends SnapshotIdentityProjection {
 
 	public void setRegion(CloudRegion region) {
 		this.region = region;
+	}
+
+	/**
+	 * @return the data store associated with this snapshot, or {@code null} if this snapshot is not associated with a data store
+	 */
+	public Datastore getDatastore() {
+		return datastore;
+	}
+
+	public void setDatastore(Datastore datastore) {
+		this.datastore = datastore;
+		markDirty("datastore", datastore);
 	}
 
 	public StorageVolume getVolume() {
