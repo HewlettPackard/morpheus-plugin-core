@@ -93,4 +93,40 @@ public interface MorpheusSynchronousHostProfileService {
 	 * @return a process-tracked result with one entry in {@code hosts} per cluster host
 	 */
 	ServiceResponse<ResourceReservationApplyResult> applyReservations(ComputeServerGroup cluster, Map opts);
+
+	/**
+	 * Removes one component's reservation from this host, evacuating and rebooting it only when
+	 * the release requires it. Idempotent: a host where {@code reservedBy} holds nothing is
+	 * returned as {@code SKIPPED}.
+	 * <p>
+	 * <b>Ordering contract:</b> a successful host release does <b>not</b> remove the recorded
+	 * reservation from the Host Profile. Callers must release on the host first, using this
+	 * method, and only then remove the recorded reservation with {@link #releaseResources}.
+	 *
+	 * @param server the host to release the reservation on
+	 * @param reservedBy the component whose reservation is released
+	 * @param opts optional settings, e.g. timeouts and polling intervals
+	 * @return a process-tracked result with one entry in {@code hosts} for this host
+	 * @since 1.7.0
+	 */
+	default ServiceResponse<ResourceReservationApplyResult> releaseReservation(ComputeServer server, String reservedBy, Map opts) {
+		return ServiceResponse.error("releaseReservation is not supported by this implementation");
+	}
+
+	/**
+	 * Same operation fanned out across every host in the cluster.
+	 * <p>
+	 * <b>Ordering contract:</b> a successful host release does <b>not</b> remove the recorded
+	 * reservation from the Host Profile. Callers must release on the hosts first, using this
+	 * method, and only then remove the recorded reservation with {@link #releaseResources}.
+	 *
+	 * @param cluster the cluster to release the reservation across
+	 * @param reservedBy the component whose reservation is released
+	 * @param opts optional settings, e.g. timeouts and polling intervals
+	 * @return a process-tracked result with one entry in {@code hosts} per cluster host
+	 * @since 1.7.0
+	 */
+	default ServiceResponse<ResourceReservationApplyResult> releaseReservations(ComputeServerGroup cluster, String reservedBy, Map opts) {
+		return ServiceResponse.error("releaseReservations is not supported by this implementation");
+	}
 }

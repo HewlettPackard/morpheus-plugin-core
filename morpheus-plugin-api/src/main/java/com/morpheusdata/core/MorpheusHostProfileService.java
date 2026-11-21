@@ -125,4 +125,53 @@ public interface MorpheusHostProfileService {
 	 * @return a process-tracked result with one entry in {@code hosts} per cluster host
 	 */
 	Single<ServiceResponse<ResourceReservationApplyResult>> applyReservations(ComputeServerGroup cluster, Map opts);
+
+	/**
+	 * Removes one component's reservation from this host: reads the host's current reservation
+	 * state, evacuates the host (maintenance mode) when the release needs a reboot, invokes
+	 * hvmcli to release the component's reserved capacity, verifies it is gone, then restores
+	 * the host to service. Long-running; the returned {@code ServiceResponse} carries a
+	 * {@code processId} a caller can poll/subscribe to for progress.
+	 * <p>
+	 * This is idempotent: if {@code reservedBy} holds nothing on the host, the host's entry is
+	 * returned with {@code state=SKIPPED} and nothing is changed. A release that needs no reboot
+	 * runs directly without evacuating the host. As with {@link #applyReservation}, a host that
+	 * cannot be evacuated because of a VM that cannot be migrated off it is reported as
+	 * {@code state=BLOCKED} (or {@code PENDING_REBOOT} when the reboot is deferred) rather than
+	 * failing the whole call.
+	 * <p>
+	 * <b>Ordering contract:</b> a successful host release does <b>not</b> remove the recorded
+	 * reservation from the Host Profile. Callers must release on the host first, using this
+	 * method, and only then remove the recorded reservation with {@link #releaseResources}.
+	 * Removing the record first leaves the host still holding the reserved capacity with nothing
+	 * recording that it is held.
+	 *
+	 * @param server the host to release the reservation on
+	 * @param reservedBy the component whose reservation is released
+	 * @param opts optional settings, e.g. timeouts and polling intervals
+	 * @return a process-tracked result with one entry in {@code hosts} for this host
+	 * @since 1.7.0
+	 */
+	default Single<ServiceResponse<ResourceReservationApplyResult>> releaseReservation(ComputeServer server, String reservedBy, Map opts) {
+		return Single.just(ServiceResponse.error("releaseReservation is not supported by this implementation"));
+	}
+
+	/**
+	 * Same operation fanned out across every host in the cluster. A host that holds nothing for
+	 * {@code reservedBy} is reported as {@code SKIPPED}; one host failing or being blocked does
+	 * not prevent the remaining hosts from being released.
+	 * <p>
+	 * <b>Ordering contract:</b> a successful host release does <b>not</b> remove the recorded
+	 * reservation from the Host Profile. Callers must release on the hosts first, using this
+	 * method, and only then remove the recorded reservation with {@link #releaseResources}.
+	 *
+	 * @param cluster the cluster to release the reservation across
+	 * @param reservedBy the component whose reservation is released
+	 * @param opts optional settings, e.g. timeouts and polling intervals
+	 * @return a process-tracked result with one entry in {@code hosts} per cluster host
+	 * @since 1.7.0
+	 */
+	default Single<ServiceResponse<ResourceReservationApplyResult>> releaseReservations(ComputeServerGroup cluster, String reservedBy, Map opts) {
+		return Single.just(ServiceResponse.error("releaseReservations is not supported by this implementation"));
+	}
 }
