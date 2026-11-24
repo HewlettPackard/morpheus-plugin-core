@@ -40,6 +40,9 @@ import java.util.Collection;
  */
 public interface NetworkProvider extends PluginProvider, UIExtensionProvider {
 
+	/** Network provider hooks for the per-host OS update lifecycle. */
+	interface OsUpdateLifecycleFacet extends PluginProvider.OsUpdateLifecycleFacet {}
+
 	/**
 	 * Some older clouds have a network server type code that is the exact same as the cloud code. This allows one to set it
 	 * to match and in doing so the provider will be fetched via the cloud providers {@link CloudProvider#getDefaultNetworkServerTypeCode()} method.

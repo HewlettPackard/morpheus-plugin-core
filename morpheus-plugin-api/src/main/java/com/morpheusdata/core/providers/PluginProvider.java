@@ -21,6 +21,7 @@ import com.morpheusdata.core.MorpheusContext;
 import com.morpheusdata.core.Plugin;
 import com.morpheusdata.model.AccountIntegration;
 import com.morpheusdata.model.CheckLevel;
+import com.morpheusdata.model.ComputeServer;
 import com.morpheusdata.model.UpdateOperation;
 import com.morpheusdata.model.UpdateDefinition;
 import com.morpheusdata.model.event.*;
@@ -107,6 +108,71 @@ public interface PluginProvider {
 		 * @see NetworkEvent
 		 */
 		void onEvent(E event, AccountIntegration integration);
+	}
+
+	/**
+	 * Steps a plugin adds to the per-host OS update. Declared once here, then
+	 * extended by a named subtype on each provider type that can implement it.
+	 *
+	 * The orchestrator resolves implementers by that named subtype, so a provider
+	 * that implements only this base interface is never called. This follows
+	 * MvmProvisionFacet, which NetworkProvider and DatastoreTypeProvider each
+	 * declare and KvmProvisionService resolves with instanceof.
+	 *
+	 * Every method defaults to a no-op, so a plugin implements only the phases it
+	 * needs. The orchestrator calls every registered facet at each phase, whether
+	 * the cluster runs the built-in implementation or a provider supplied by a
+	 * plugin.
+	 *
+	 * A method that returns ServiceResponse.error aborts the host, and the
+	 * failureAction strategy decides what happens to the rest of the cluster.
+	 *
+	 * Use this instead of OsUpdateProvider when the plugin does not need to
+	 * replace the update flow and only needs to add a step.
+	 */
+	public interface OsUpdateLifecycleFacet {
+		/** Order across plugins at the same phase. Lower runs first. */
+		default int getLifecyclePriority() { return 100; }
+
+		/** PRE_MAINTENANCE. Before cordon and virtual machine evacuation. */
+		default ServiceResponse onPreMaintenance(ComputeServer host, UpdateDefinition update) {
+			return ServiceResponse.success();
+		}
+
+		/** POST_MAINTENANCE. After maintenance mode is entered, before the update. */
+		default ServiceResponse onPostMaintenance(ComputeServer host, UpdateDefinition update) {
+			return ServiceResponse.success();
+		}
+
+		/** PRE_UPDATE. After staging, before hvmcli runs. */
+		default ServiceResponse onPreUpdate(ComputeServer host, UpdateDefinition update) {
+			return ServiceResponse.success();
+		}
+
+		/** POST_UPDATE. After hvmcli completes, before firmware. */
+		default ServiceResponse onPostUpdate(ComputeServer host, UpdateDefinition update) {
+			return ServiceResponse.success();
+		}
+
+		/** FIRMWARE. Alongside the firmware step, after the OS update and before the reboot. */
+		default ServiceResponse onFirmware(ComputeServer host, UpdateDefinition update) {
+			return ServiceResponse.success();
+		}
+
+		/** PRE_REBOOT. Immediately before the reboot command. */
+		default ServiceResponse onPreReboot(ComputeServer host, UpdateDefinition update) {
+			return ServiceResponse.success();
+		}
+
+		/** POST_REBOOT. After the host comes back online, before uncordon. */
+		default ServiceResponse onPostReboot(ComputeServer host, UpdateDefinition update) {
+			return ServiceResponse.success();
+		}
+
+		/** POST_UNCORDON. After the host is back in service. */
+		default ServiceResponse onPostUncordon(ComputeServer host, UpdateDefinition update) {
+			return ServiceResponse.success();
+		}
 	}
 
 	public interface UpdateFacet<T> {

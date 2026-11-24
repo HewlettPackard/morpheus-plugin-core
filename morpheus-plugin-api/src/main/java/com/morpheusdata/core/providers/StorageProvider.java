@@ -34,6 +34,9 @@ import java.util.Map;
  */
 public interface StorageProvider extends PluginProvider,UIExtensionProvider {
 
+	/** Storage provider hooks for the per-host OS update lifecycle. */
+	interface OsUpdateLifecycleFacet extends PluginProvider.OsUpdateLifecycleFacet {}
+
 	/**
 	 * Returns the description of the provider type
 	 * @return String
